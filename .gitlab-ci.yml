@@ -1,0 +1,19 @@
+stages:
+  - delivery
+
+before_script:
+  - export CI_AUTO_TAGGING_IS_ENABLED="true"
+  - export CI_AUTO_TAGGING_MESSAGE="GitLab CI continuous delivery auto tagging job"
+  - export CI_AUTO_TAGGING_TAG_NAME="deliverable"
+  - export CI_GIT_SERVER_URL="git.talsen.team"
+  - export CI_GIT_SERVER_USER_GIT="git"
+  - export CI_GIT_SERVER_SSH_PORT="30222"
+
+mark-repository-as-deliverable:
+  stage: 'delivery'
+  except:
+    refs:
+      - deliverable
+  script:
+    - echo "Mark repository as deliverable..."
+    - /bin/bash /utility/auto-tagging/run-auto-tagging.sh
