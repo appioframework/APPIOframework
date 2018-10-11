@@ -2,3 +2,5 @@
 
 !.gitignore
 !.gitlab-ci.yml
+
+!README.md
