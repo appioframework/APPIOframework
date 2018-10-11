@@ -1,5 +1,15 @@
 *
 
+!tmp-coverage/
+!tmp-coverage/my-library/
+!tmp-coverage/my-library/math.cs
+!tmp-coverage/my-library/my-library.csproj.cs
+!tmp-coverage/test-my-library/
+!tmp-coverage/test-my-library/test-math.cs
+!tmp-coverage/test-my-library/test-my-library.csproj
+!tmp-coverage/code-coverage.sln
+!tmp-coverage/README.md
+
 !.gitignore
 !.gitlab-ci.yml
 
