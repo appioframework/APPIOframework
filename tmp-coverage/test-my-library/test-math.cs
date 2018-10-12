@@ -1,13 +1,12 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 using MyLibrary;
 
 namespace TestMyLibrary
 {
-    [TestClass]
     public class TestMath
     {
-        // [TestMethod]
+        // [Test]
         // public void AddShouldReturnSumOfAPlusB()
         // {
         //     const float a           = 1.0f;
@@ -20,9 +19,8 @@ namespace TestMyLibrary
         //     Assert.AreEqual( expectedSum, sum );
         // }
 
-        [DataRow( -1 )]
-        [DataRow( -2354 )]
-        [DataTestMethod]
+        [TestCase( -   1 )]
+        [TestCase( -2354 )]
         public void IsValidPercentShouldReturnFalseForNegativeValues( int percent )
         {
             var result
@@ -31,9 +29,8 @@ namespace TestMyLibrary
             Assert.IsFalse( result );
         }
 
-        [DataRow( 150 )]
-        [DataRow( 472935 )]
-        [DataTestMethod]
+        [TestCase(    150 )]
+        [TestCase( 472935 )]
         public void IsValidPercentShouldReturnFalseForGreaterThan100( int percent )
         {
             var result
@@ -42,12 +39,11 @@ namespace TestMyLibrary
             Assert.IsFalse( result );
         }
 
-        [DataRow( 60 )]
-        [DataRow( 29 )]
-        [DataRow( 1 )]
-        [DataRow( 99 )]
-        [DataRow( 0 )]
-        [DataTestMethod]
+        [TestCase( 60 )]
+        [TestCase( 29 )]
+        [TestCase(  1 )]
+        [TestCase( 99 )]
+        [TestCase(  0 )]
         public void IsValidPercentShouldReturnTrueFor0To100( int percent )
         {
             var result
