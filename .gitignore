@@ -1,5 +1,17 @@
 *
 
+!oppo-terminal.sln
+!oppo-terminal/
+!oppo-terminal/ConsoleWriter.cs
+!oppo-terminal/IWriter.cs
+!oppo-terminal/oppo-terminal.csproj
+!oppo-terminal/OppoTerminal.cs
+!oppo-terminal/Program.cs
+
+!oppo-terminal.tests/
+!oppo-terminal.tests/oppo-terminal.tests.csproj
+!oppo-terminal.tests/WriterTests.cs
+
 !tmp-coverage/
 !tmp-coverage/my-library/
 !tmp-coverage/my-library/math.cs
