@@ -27,6 +27,8 @@ build-debian-installer:
 
 mark-repository-as-deliverable:
   stage: 'delivery'
+  tags:
+    - 'set-delivery-tag'
   except:
     refs:
       - deliverable
