@@ -1,4 +1,6 @@
 stages:
+  - build-dotnet-application
+  - build-debian-installer
   - delivery
 
 before_script:
@@ -8,6 +10,20 @@ before_script:
   - export CI_GIT_SERVER_URL="git.talsen.team"
   - export CI_GIT_SERVER_USER_GIT="git"
   - export CI_GIT_SERVER_SSH_PORT="30222"
+
+build-dotnet-application:
+  stage: 'build-dotnet-application'
+  tags:
+    - 'dotnet-core'
+  script:
+    - echo "not implemented yet"
+
+build-debian-installer:
+  stage: 'build-debian-installer'
+  tags:
+    - 'debian-installer'
+  script:
+    - echo "not implemented yet"
 
 mark-repository-as-deliverable:
   stage: 'delivery'
