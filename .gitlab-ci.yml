@@ -15,6 +15,9 @@ build-dotnet-application:
   stage: 'build-dotnet-application'
   tags:
     - 'dotnet-core'
+  except:
+    refs:
+      - deliverable
   script:
     - echo "not implemented yet"
 
@@ -22,6 +25,9 @@ build-debian-installer:
   stage: 'build-debian-installer'
   tags:
     - 'debian-installer'
+  except:
+    refs:
+      - deliverable
   script:
     - echo "not implemented yet"
 
