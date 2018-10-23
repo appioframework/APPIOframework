@@ -22,7 +22,7 @@ build-test-dotnet-application:
   script:
     - dotnet build oppo-terminal.sln
     - dotnet test oppo-terminal.tests.sln /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-
+    - dotnet tool install --global dotnet-sonarscanner
 publish-dotnet-application:
   stage: 'publish'
   tags:
