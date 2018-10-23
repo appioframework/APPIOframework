@@ -1,8 +1,9 @@
 #!/bin/bash
-set -euo pipefail
-cat << \EOF >> ~/.bash_profile
-# Add .NET Core SDK tools
-export PATH="$PATH:/root/.dotnet/tools"
-EOF
 
-dotnet tool install --global dotnet-sonarscanner
+set -euo pipefail
+
+export PATH="$PATH:/root/.dotnet/tools"                \
+   && dotnet tool install --global dotnet-sonarscanner \
+   && dotnet sonarscanner begin /k:"oppo-terminal" /d:sonar.host.url="https://sonarqube.talsen.team" /d:sonar.cs.opencover.reportsPaths="oppo-terminal.tests\coverage.opencover.xml" \
+   && dotnet build oppo-terminal.sln                   \
+   && dotnet sonarscanner end
