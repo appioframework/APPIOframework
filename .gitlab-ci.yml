@@ -61,10 +61,10 @@ build-debian-installer:
     - cd ..
     - dpkg --build oppo-terminal
 
-integration-test:
+run-integration-test:
   dependencies: 
     - 'build-debian-installer'
-  stage: 'integration'
+  stage: 'integration-test'
   tags:
     - 'dotnet-core'
     - 'integration-test'
