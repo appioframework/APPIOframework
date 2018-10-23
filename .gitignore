@@ -1,4 +1,6 @@
 *
+!.vscode/
+!.vscode/tasks.json
 
 !oppo-terminal.sln
 !oppo-terminal/
@@ -8,6 +10,7 @@
 !oppo-terminal/OppoTerminal.cs
 !oppo-terminal/Program.cs
 
+!oppo-terminal.tests.sln
 !oppo-terminal.tests/
 !oppo-terminal.tests/oppo-terminal.tests.csproj
 !oppo-terminal.tests/WriterTests.cs
