@@ -48,8 +48,9 @@ build-debian-installer:
   except:
     refs:
       - deliverable
-  script:
+  script:    
     - cd installer/oppo-terminal
+    - chmod -R 0664 DEBIAN
     - mkdir -p usr/bin
     - cp ../../publish/* usr/bin
     - rm -f usr/bin/*.pdb
