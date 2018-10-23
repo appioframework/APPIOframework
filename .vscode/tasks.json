@@ -19,6 +19,17 @@
                 "kind":      "build",
                 "isDefault":  true
             }
-        }       
+        },
+        {
+            "label":         "dotnet-build",
+            "type":          "shell",
+            "command":       "dotnet",
+            "args":
+            [
+                            "build",
+                            "oppo-terminal.sln"
+            ],
+            "problemMatcher": [ ]         
+        }            
     ]
 }
