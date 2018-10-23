@@ -27,6 +27,9 @@ publish-dotnet-application:
   stage: 'publish'
   tags:
     - 'dotnet-core'
+  artifacts:
+    paths:
+      -  'publish'
   except:
     refs:
       - deliverable
@@ -35,6 +38,8 @@ publish-dotnet-application:
     - dotnet publish -c Release -o ../publish
 
 build-debian-installer:
+  dependencies: 
+    - 'publish-dotnet-application'
   stage: 'installer'
   tags:
     - 'debian-installer'
@@ -42,7 +47,14 @@ build-debian-installer:
     refs:
       - deliverable
   script:
-    - echo "not implemented yet"
+    - cd installer/oppo-terminal
+    - mkdir -p usr/bin
+    - cp ../../publish/* usr/bin
+    - rm -f usr/bin/*.pdb
+    - cd ..
+    - dpkg --build oppo-terminal
+    - ls -AL
+    - ls -Al oppo-terminal/usr/bin
 
 mark-repository-as-deliverable:
   stage: 'delivery'
