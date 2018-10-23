@@ -2,7 +2,8 @@ stages:
   - build-test
   - publish
   - installer
-  - delivery
+  - integration-test
+  - delivery 
 
 before_script:
   - export CI_AUTO_TAGGING_IS_ENABLED="true"
@@ -42,6 +43,9 @@ publish-dotnet-application:
 build-debian-installer:
   dependencies: 
     - 'publish-dotnet-application'
+  artifacts:
+    paths:
+      -  'installer/oppo-terminal.deb'
   stage: 'installer'
   tags:
     - 'debian-installer'
@@ -56,6 +60,21 @@ build-debian-installer:
     - rm -f usr/bin/*.pdb
     - cd ..
     - dpkg --build oppo-terminal
+
+integration-test:
+  dependencies: 
+    - 'build-debian-installer'
+  stage: 'integration'
+  tags:
+    - 'dotnet-core'
+    - 'integration-test'
+  except:
+    refs:
+      - deliverable
+  script:
+    - cd installer
+    - dpkg -i oppo-terminal.deb
+    - dotnet /usr/bin/oppo-terminal.dll
 
 mark-repository-as-deliverable:
   stage: 'delivery'
