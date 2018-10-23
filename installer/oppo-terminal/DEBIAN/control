@@ -1,7 +1,7 @@
 Package: OPPO-terminal-installer
 Architecture: all
 Maintainer: Talsen Team
-Depends: debconf (>= 0.5.00), rsync, dotnet-sdk-2.1
+Depends: debconf (>= 0.5.00), dotnet-sdk-2.1
 Priority: optional
 Version: 0.1
 Description: OPPO-Terminal is used to create OPPO artefacts in your locall file storage.
