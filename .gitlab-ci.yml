@@ -72,6 +72,8 @@ run-integration-test:
     refs:
       - deliverable
   script:
+    - dpkg-query -l
+    - dotnet --version
     - cd installer
     - dpkg -i oppo-terminal.deb
     - dotnet /usr/bin/oppo-terminal.dll
