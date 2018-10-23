@@ -19,7 +19,7 @@ build-dotnet-application:
     refs:
       - deliverable
   script:
-    - echo "not implemented yet"
+    - dotnet build oppo-terminal.sln
 
 build-debian-installer:
   stage: 'build-debian-installer'
