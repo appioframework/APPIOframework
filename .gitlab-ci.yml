@@ -56,7 +56,6 @@ build-debian-installer:
     - rm -f usr/bin/*.pdb
     - cd ..
     - dpkg --build oppo-terminal
-    - dpkg -i oppo-terminal.deb
 
 mark-repository-as-deliverable:
   stage: 'delivery'
