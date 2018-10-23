@@ -16,6 +16,7 @@ build-test-dotnet-application:
   stage: 'build-test'
   tags:
     - 'dotnet-core'
+    - 'build'
   except:
     refs:
       - deliverable
@@ -27,6 +28,7 @@ publish-dotnet-application:
   stage: 'publish'
   tags:
     - 'dotnet-core'
+    - 'build'
   artifacts:
     paths:
       -  'publish'
