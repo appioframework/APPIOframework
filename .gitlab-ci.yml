@@ -21,7 +21,7 @@ build-test-dotnet-application:
       - deliverable
   script:    
     - dotnet test oppo-terminal.tests.sln /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-    - dotnet tool install --global dotnet-sonarscanner
+    - dotnet tool install dotnet-sonarscanner
     - dotnet sonarscanner begin /k:"oppo-terminal" /d:sonar.host.url="https://sonarqube.talsen.team" /d:sonar.cs.opencover.reportsPaths="oppo-terminal.tests\coverage.opencover.xml"
     - dotnet build oppo-terminal.sln
     - dotnet sonarscanner end
