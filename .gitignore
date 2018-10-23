@@ -2,6 +2,9 @@
 !.vscode/
 !.vscode/tasks.json
 
+!bash-gitlab-ci/
+!bash-gitlab-ci/install-sonarscanner.sh
+
 !oppo-terminal.sln
 !oppo-terminal/
 !oppo-terminal/ConsoleWriter.cs
