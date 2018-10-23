@@ -1,6 +1,7 @@
 stages:
-  - build-dotnet-application
-  - build-debian-installer
+  - build-test
+  - publish
+  - installer
   - delivery
 
 before_script:
@@ -11,8 +12,8 @@ before_script:
   - export CI_GIT_SERVER_USER_GIT="git"
   - export CI_GIT_SERVER_SSH_PORT="30222"
 
-build-dotnet-application:
-  stage: 'build-dotnet-application'
+build-test-dotnet-application:
+  stage: 'build-test'
   tags:
     - 'dotnet-core'
   except:
@@ -20,9 +21,21 @@ build-dotnet-application:
       - deliverable
   script:
     - dotnet build oppo-terminal.sln
+    - dotnet test oppo-terminal.tests.sln /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+
+publish-dotnet-application:
+  stage: 'publish'
+  tags:
+    - 'dotnet-core'
+  except:
+    refs:
+      - deliverable
+  script:
+    - cd oppo-teminal
+    - dotnet publish -c Release -o ../publish
 
 build-debian-installer:
-  stage: 'build-debian-installer'
+  stage: 'installer'
   tags:
     - 'debian-installer'
   except:
