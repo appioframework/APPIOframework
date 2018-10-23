@@ -21,10 +21,14 @@ build-test-dotnet-application:
       - deliverable
   script:    
     - dotnet test oppo-terminal.tests.sln /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-    - dotnet tool install --tool-path="tools" dotnet-sonarscanner
-    - dotnet tools/sonarscanner begin /k:"oppo-terminal" /d:sonar.host.url="https://sonarqube.talsen.team" /d:sonar.cs.opencover.reportsPaths="oppo-terminal.tests\coverage.opencover.xml"
+    - cat << \EOF >> ~/.bash_profile
+      # Add .NET Core SDK tools
+      export PATH="$PATH:/root/.dotnet/tools"
+      EOF
+    - dotnet tool install --global dotnet-sonarscanner
+    - dotnet sonarscanner begin /k:"oppo-terminal" /d:sonar.host.url="https://sonarqube.talsen.team" /d:sonar.cs.opencover.reportsPaths="oppo-terminal.tests\coverage.opencover.xml"
     - dotnet build oppo-terminal.sln
-    - dotnet tools/sonarscanner end
+    - dotnet sonarscanner end
 publish-dotnet-application:
   stage: 'publish'
   tags:
