@@ -4,12 +4,7 @@ namespace OPPO.Terminal
     {
         public OppoTerminal(IWriter writer)
         {
-            if (writer != null)
             writer.WriteLine("Hello from OPPO");
-        }
-
-        public void Run()
-        {
         }
     }
 }
