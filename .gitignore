@@ -30,24 +30,6 @@
 !src/oppo-terminal.tests/oppo-terminal.tests.csproj
 !src/oppo-terminal.tests/WriterTests.cs
 
-!tmp-coverage/
-!tmp-coverage/my-library/
-!tmp-coverage/my-library/math.cs
-!tmp-coverage/my-library/my-library.csproj.cs
-!tmp-coverage/test-my-library/
-!tmp-coverage/test-my-library/test-math.cs
-!tmp-coverage/test-my-library/test-my-library.csproj
-!tmp-coverage/code-coverage.sln
-!tmp-coverage/README.md
-
-!tmp-static-analysis/
-!tmp-static-analysis/my-library/
-!tmp-static-analysis/my-library/ca.ruleset
-!tmp-static-analysis/my-library/math.cs
-!tmp-static-analysis/my-library/my-library.csproj
-!tmp-static-analysis/static-analysis.sln
-!tmp-static-analysis/README.md
-
 !.gitignore
 !.gitlab-ci.yml
 
