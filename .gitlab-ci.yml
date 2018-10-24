@@ -37,8 +37,8 @@ publish-dotnet-application:
     refs:
       - deliverable
   script:
-    - cd oppo-terminal
-    - dotnet publish -c Release -o ../publish
+    - cd src/oppo-terminal
+    - dotnet publish -c Release -o ../../publish
 
 build-debian-installer:
   dependencies: 

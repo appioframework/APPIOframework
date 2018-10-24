@@ -12,18 +12,19 @@
 !installer/oppo-terminal/DEBIAN/control
 !installer/oppo-terminal/DEBIAN/copyright
 
-!oppo-terminal.sln
-!oppo-terminal/
-!oppo-terminal/ConsoleWriter.cs
-!oppo-terminal/IWriter.cs
-!oppo-terminal/oppo-terminal.csproj
-!oppo-terminal/OppoTerminal.cs
-!oppo-terminal/Program.cs
+!src/
+!src/oppo-terminal.sln
+!src/oppo-terminal/
+!src/oppo-terminal/ConsoleWriter.cs
+!src/oppo-terminal/IWriter.cs
+!src/oppo-terminal/oppo-terminal.csproj
+!src/oppo-terminal/OppoTerminal.cs
+!src/oppo-terminal/Program.cs
 
-!oppo-terminal.tests.sln
-!oppo-terminal.tests/
-!oppo-terminal.tests/oppo-terminal.tests.csproj
-!oppo-terminal.tests/WriterTests.cs
+!src/oppo-terminal.tests.sln
+!src/oppo-terminal.tests/
+!src/oppo-terminal.tests/oppo-terminal.tests.csproj
+!src/oppo-terminal.tests/WriterTests.cs
 
 !tmp-coverage/
 !tmp-coverage/my-library/
