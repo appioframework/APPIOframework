@@ -4,6 +4,7 @@
 
 !bash-gitlab-ci/
 !bash-gitlab-ci/run-sonarscanner.sh
+!bash-gitlab-ci/run-tests.sh
 
 !installer/
 !installer/oppo-terminal/

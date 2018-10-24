@@ -22,7 +22,7 @@ build-test-dotnet-application:
     refs:
       - deliverable
   script:    
-    - dotnet test oppo-terminal.tests.sln /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+    - /bin/bash bash-gitlab-ci/run-tests.sh
     - /bin/bash bash-gitlab-ci/run-sonarscanner.sh
     
 publish-dotnet-application:
