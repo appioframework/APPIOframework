@@ -11,6 +11,10 @@
 !installer/oppo-terminal/DEBIAN/conffiles
 !installer/oppo-terminal/DEBIAN/control
 !installer/oppo-terminal/DEBIAN/copyright
+!installer/oppo-terminal
+!installer/oppo-terminal/usr
+!installer/oppo-terminal/usr/bin
+!installer/oppo-terminal/usr/bin/oppo
 
 !src/
 !src/oppo-terminal.sln

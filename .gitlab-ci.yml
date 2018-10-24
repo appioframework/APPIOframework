@@ -74,7 +74,7 @@ run-integration-test:
   script:
     - cd installer
     - dpkg -i oppo-terminal.deb
-    - dotnet /usr/bin/oppo-terminal.dll
+    - oppo
 
 mark-repository-as-deliverable:
   stage: 'delivery'
