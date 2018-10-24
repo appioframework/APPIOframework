@@ -6,9 +6,5 @@ namespace OPPO.Terminal
         {
             writer.WriteLine("Hello from OPPO");
         }
-
-        public void Run()
-        {
-        }
     }
 }
