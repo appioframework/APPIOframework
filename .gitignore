@@ -34,4 +34,5 @@
 !.gitignore
 !.gitlab-ci.yml
 
+!LICENCE
 !README.md
