@@ -9,6 +9,8 @@
             "args":
             [
                             "test",
+                            "-c",
+                            "Release",
                             "oppo-terminal.tests.sln",
                             "/p:CollectCoverage=true",
                             "/p:CoverletOutputFormat=opencover"
@@ -27,7 +29,9 @@
             "args":
             [
                             "build",
-                            "oppo-terminal.sln"
+                            "-c",
+                            "Release",
+                            "oppo-terminal.sln",
             ],
             "problemMatcher": [ ]         
         }            
