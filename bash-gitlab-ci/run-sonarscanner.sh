@@ -14,4 +14,4 @@ export PATH="$PATH:/root/.dotnet/tools"                                         
                           /d:sonar.cs.opencover.reportsPaths="src/oppo-terminal.tests/coverage.opencover.xml" \
    && dotnet build oppo-terminal.sln                                                                          \
    && dotnet sonarscanner end                                                                                 \
-                          /d:sonar.login=d4b89ca5e7fc262d936c0cc4fa85f733e6c3ce02
+                          /d:sonar.login=${SONAR_LOGIN}
