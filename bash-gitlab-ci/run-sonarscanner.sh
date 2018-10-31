@@ -12,6 +12,6 @@ export PATH="$PATH:/root/.dotnet/tools"                                         
                           /d:sonar.gitlab.project_id=${CI_PROJECT_ID}                                         \
                           /d:sonar.gitlab.failure_notification_mode=exit-code                                 \
                           /d:sonar.cs.opencover.reportsPaths="src/*.tests/coverage.opencover.xml"             \
-   && dotnet build oppo.sln                                                                                   \
+   && /bin/bash bash-gitlab-ci/run-build.sh                                                                   \
    && dotnet sonarscanner end                                                                                 \
                           /d:sonar.login=${SONAR_LOGIN}

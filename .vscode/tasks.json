@@ -20,13 +20,10 @@
         {
             "label":         "dotnet-build",
             "type":          "shell",
-            "command":       "dotnet",
+            "command":       "/bin/bash",
             "args":
             [
-                            "build",
-                            "-c",
-                            "Release",
-                            "oppo.sln",
+                             "bash-gitlab-ci/run-build.sh"
             ],
             "problemMatcher": [ ]         
         }            
