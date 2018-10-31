@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <RootNamespace>OPPO.Resources</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="open62541/open62541.c" />
+    <EmbeddedResource Include="open62541/open62541.h" />
+    <EmbeddedResource Include="open62541/main.c" />
+  </ItemGroup>
+
+</Project>

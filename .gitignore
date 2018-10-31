@@ -26,6 +26,12 @@
 !src/oppo-objectmodel.tests/oppo-objectmodel.tests.csproj
 !src/oppo-objectmodel.tests/*.cs
 
+!src/oppo-resources/
+!src/oppo-resources/open62541/
+!src/oppo-resources/open62541/*.c
+!src/oppo-resources/open62541/*.h
+!src/oppo-resources/oppo-resources.csproj
+
 !src/oppo-terminal/
 !src/oppo-terminal/oppo-terminal.csproj
 !src/oppo-terminal/*.cs
