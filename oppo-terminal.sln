@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "oppo-terminal", "src\oppo-terminal\oppo-terminal.csproj", "{B176CB29-056C-405B-A4F6-078F4818068F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{797CB072-3835-489B-8DA8-EC3B9FB1903E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "oppo-objectmodel", "src\oppo-objectmodel\oppo-objectmodel.csproj", "{7D23B0E2-EDCF-4B28-B286-1E08737EFFF0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +34,20 @@ Global
 		{B176CB29-056C-405B-A4F6-078F4818068F}.Release|x64.Build.0 = Release|Any CPU
 		{B176CB29-056C-405B-A4F6-078F4818068F}.Release|x86.ActiveCfg = Release|Any CPU
 		{B176CB29-056C-405B-A4F6-078F4818068F}.Release|x86.Build.0 = Release|Any CPU
+		{7D23B0E2-EDCF-4B28-B286-1E08737EFFF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D23B0E2-EDCF-4B28-B286-1E08737EFFF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D23B0E2-EDCF-4B28-B286-1E08737EFFF0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7D23B0E2-EDCF-4B28-B286-1E08737EFFF0}.Debug|x64.Build.0 = Debug|Any CPU
+		{7D23B0E2-EDCF-4B28-B286-1E08737EFFF0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7D23B0E2-EDCF-4B28-B286-1E08737EFFF0}.Debug|x86.Build.0 = Debug|Any CPU
+		{7D23B0E2-EDCF-4B28-B286-1E08737EFFF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D23B0E2-EDCF-4B28-B286-1E08737EFFF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D23B0E2-EDCF-4B28-B286-1E08737EFFF0}.Release|x64.ActiveCfg = Release|Any CPU
+		{7D23B0E2-EDCF-4B28-B286-1E08737EFFF0}.Release|x64.Build.0 = Release|Any CPU
+		{7D23B0E2-EDCF-4B28-B286-1E08737EFFF0}.Release|x86.ActiveCfg = Release|Any CPU
+		{7D23B0E2-EDCF-4B28-B286-1E08737EFFF0}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7D23B0E2-EDCF-4B28-B286-1E08737EFFF0} = {797CB072-3835-489B-8DA8-EC3B9FB1903E}
 	EndGlobalSection
 EndGlobal

@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "oppo-terminal.tests", "src\oppo-terminal.tests\oppo-terminal.tests.csproj", "{D42B5858-CD79-4A7E-9FDA-D1C1524EE4D2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FB8AE980-D483-4C18-8965-B105364466D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "oppo-objectmodel.tests", "src\oppo-objectmodel.tests\oppo-objectmodel.tests.csproj", "{8BEA80A4-129D-4A1A-A421-8A065550144B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +34,20 @@ Global
 		{D42B5858-CD79-4A7E-9FDA-D1C1524EE4D2}.Release|x64.Build.0 = Release|Any CPU
 		{D42B5858-CD79-4A7E-9FDA-D1C1524EE4D2}.Release|x86.ActiveCfg = Release|Any CPU
 		{D42B5858-CD79-4A7E-9FDA-D1C1524EE4D2}.Release|x86.Build.0 = Release|Any CPU
+		{8BEA80A4-129D-4A1A-A421-8A065550144B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BEA80A4-129D-4A1A-A421-8A065550144B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BEA80A4-129D-4A1A-A421-8A065550144B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8BEA80A4-129D-4A1A-A421-8A065550144B}.Debug|x64.Build.0 = Debug|Any CPU
+		{8BEA80A4-129D-4A1A-A421-8A065550144B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8BEA80A4-129D-4A1A-A421-8A065550144B}.Debug|x86.Build.0 = Debug|Any CPU
+		{8BEA80A4-129D-4A1A-A421-8A065550144B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BEA80A4-129D-4A1A-A421-8A065550144B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BEA80A4-129D-4A1A-A421-8A065550144B}.Release|x64.ActiveCfg = Release|Any CPU
+		{8BEA80A4-129D-4A1A-A421-8A065550144B}.Release|x64.Build.0 = Release|Any CPU
+		{8BEA80A4-129D-4A1A-A421-8A065550144B}.Release|x86.ActiveCfg = Release|Any CPU
+		{8BEA80A4-129D-4A1A-A421-8A065550144B}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8BEA80A4-129D-4A1A-A421-8A065550144B} = {FB8AE980-D483-4C18-8965-B105364466D8}
 	EndGlobalSection
 EndGlobal

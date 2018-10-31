@@ -5,15 +5,10 @@
         {
             "label":         "dotnet-test",
             "type":          "shell",
-            "command":       "dotnet",
+            "command":       "/bin/bash",
             "args":
             [
-                            "test",
-                            "-c",
-                            "Release",
-                            "oppo-terminal.tests.sln",
-                            "/p:CollectCoverage=true",
-                            "/p:CoverletOutputFormat=opencover"
+                            "bash-gitlab-ci/run-tests.sh"
             ],
             "problemMatcher": [ ],
             "group":
