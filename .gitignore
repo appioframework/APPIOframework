@@ -20,21 +20,18 @@
 
 !src/
 !src/oppo-objectmodel/
-!src/oppo-objectmodel/Class1.cs
 !src/oppo-objectmodel/oppo-objectmodel.csproj
+!src/oppo-objectmodel/*.cs
 !src/oppo-objectmodel.tests/
 !src/oppo-objectmodel.tests/oppo-objectmodel.tests.csproj
-!src/oppo-objectmodel.tests/UnitTest1.cs
+!src/oppo-objectmodel.tests/*.cs
 
 !src/oppo-terminal/
-!src/oppo-terminal/ConsoleWriter.cs
-!src/oppo-terminal/IWriter.cs
 !src/oppo-terminal/oppo-terminal.csproj
-!src/oppo-terminal/OppoTerminal.cs
-!src/oppo-terminal/Program.cs
+!src/oppo-terminal/*.cs
 !src/oppo-terminal.tests/
 !src/oppo-terminal.tests/oppo-terminal.tests.csproj
-!src/oppo-terminal.tests/WriterTests.cs
+!src/oppo-terminal.tests/*.cs
 
 !.gitignore
 !.gitlab-ci.yml

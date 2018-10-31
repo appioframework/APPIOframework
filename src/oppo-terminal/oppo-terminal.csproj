@@ -7,7 +7,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <RootNamespace>oppo_terminal</RootNamespace>
+    <RootNamespace>OPPO.Terminal</RootNamespace>
   </PropertyGroup>
 
 </Project>
