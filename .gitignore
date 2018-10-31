@@ -18,7 +18,6 @@
 !installer/oppo-terminal/usr/bin/oppo
 
 !src/
-!src/oppo-terminal.sln
 !src/oppo-objectmodel/
 !src/oppo-objectmodel/Class1.cs
 !src/oppo-objectmodel/oppo-objectmodel.csproj
@@ -32,7 +31,6 @@
 !src/oppo-terminal/OppoTerminal.cs
 !src/oppo-terminal/Program.cs
 
-!src/oppo-terminal.tests.sln
 !src/oppo-terminal.tests/
 !src/oppo-terminal.tests/oppo-terminal.tests.csproj
 !src/oppo-terminal.tests/WriterTests.cs
@@ -40,5 +38,7 @@
 !.gitignore
 !.gitlab-ci.yml
 
+!oppo.sln
+!oppo.tests.sln
 !LICENCE
 !README.md

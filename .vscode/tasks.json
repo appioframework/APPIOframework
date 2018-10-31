@@ -26,7 +26,7 @@
                             "build",
                             "-c",
                             "Release",
-                            "oppo-terminal.sln",
+                            "oppo.sln",
             ],
             "problemMatcher": [ ]         
         }            
