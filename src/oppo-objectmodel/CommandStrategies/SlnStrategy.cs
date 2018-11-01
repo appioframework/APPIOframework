@@ -18,8 +18,8 @@ namespace Oppo.ObjectModel.CommandStrategies
 
         public string Execute(IEnumerable<string> inputsArgs)
         {
-            var stretegy = _factory.GetStrategy(inputsArgs.First());
-
+            var strategy = _factory.GetStrategy(inputsArgs.First());
+            // resume work here
             _fileSystemWrapper.CreateFile("dummyName", "sln");
             return Constants.CommandResults.Success;
         }

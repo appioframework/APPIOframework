@@ -6,19 +6,19 @@ namespace Oppo.ObjectModel
 {
     public class SlnCommandStrategyFactory : ISlnCommandStrategyFactory
     {
-        private readonly Dictionary< string, ISlnCommandStrategy > commands
+        private readonly Dictionary< string, ISlnCommandStrategy > slnCommands
             = new Dictionary< string, ISlnCommandStrategy >();
 
         public SlnCommandStrategyFactory()
         {
-            commands.Add(Constants.SlnCommandName.New, new SlnNewCommandStrategy());
+            slnCommands.Add(Constants.SlnCommandName.New, new SlnNewCommandStrategy());
         }
 
-        public ISlnCommandStrategy GetStrategy( string commandName )
+        public ISlnCommandStrategy GetStrategy( string slnCommandName )
         {
-            if ( commands.ContainsKey( commandName ?? string.Empty ) )
+            if ( slnCommands.ContainsKey( slnCommandName ?? string.Empty ) )
             {
-                return commands[ commandName ];
+                return slnCommands[ slnCommandName ];
             }
 
             return new SlnCommandNotExistentStrategy();
