@@ -17,11 +17,13 @@ namespace Oppo.ObjectModel.Tests
         public void ShouldExcecuteStrategy()
         {
             // Arrange
+            var inputParams = new List<string>(){"new", "-n", "testslns"};
             var mockFileSystemMock = new Mock<IFileSystem>();
-            var slnStretegy = new SlnStrategy(mockFileSystemMock.Object);
+            var mockSlnCommandsStrategyFactory = new Mock<ISlnCommandStrategyFactory>();
+            var slnStretegy = new SlnStrategy(mockFileSystemMock.Object, mockSlnCommandsStrategyFactory.Object);
             
             // Act
-            var strategyResult = slnStretegy.Execute(new List<string>());
+            var strategyResult = slnStretegy.Execute(inputParams);
             
             // Assert
             Assert.AreEqual(strategyResult, Constants.CommandResults.Success);      

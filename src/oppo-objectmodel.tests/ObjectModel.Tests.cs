@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Oppo.ObjectModel;
+using Oppo.ObjectModel.CommandStrategies;
 using Moq;
 using System.Collections.Generic;
 using System;

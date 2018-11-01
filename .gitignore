@@ -22,8 +22,10 @@
 !src/oppo-objectmodel/
 !src/oppo-objectmodel/oppo-objectmodel.csproj
 !src/oppo-objectmodel/*.cs
-!src/oppo-objectmodel/command-strategies/
+!src/oppo-objectmodel/CommandStrategies/
 !src/oppo-objectmodel/**/*.cs
+!src/oppo-objectmodel/CommandStrategies/SlnCommands/
+
 !src/oppo-objectmodel.tests/
 !src/oppo-objectmodel.tests/oppo-objectmodel.tests.csproj
 !src/oppo-objectmodel.tests/*.cs

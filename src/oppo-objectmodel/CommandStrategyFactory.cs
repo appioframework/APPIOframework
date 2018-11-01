@@ -10,7 +10,7 @@ namespace Oppo.ObjectModel
 
         public CommandStrategyFactory()
         {
-            commands.Add( Constants.CommandName.Sln, new SlnStrategy(new FileSystemWrapper()) );
+            commands.Add( Constants.CommandName.Sln, new SlnStrategy(new FileSystemWrapper(), new SlnCommandStrategyFactory()) );
         }
 
         public ICommandStrategy GetStrategy( string commandName )
