@@ -8,15 +8,9 @@ namespace Oppo.ObjectModel
     [ExcludeFromCodeCoverage]
     public class FileSystemWrapper : IFileSystem
     {
-        public void CreateFile(string filePath)
+        public void CreateFile(string filePath, string fileContent)
         {
-            using(var fileStream = File.Create(filePath))
-            {
-                var msg = new UTF8Encoding().GetBytes("Hello from OPPO");
-                fileStream.Write(msg);
-            }
-            
-            
+           File.WriteAllText(filePath, fileContent);
         }
     }
 }

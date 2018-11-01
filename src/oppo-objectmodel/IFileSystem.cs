@@ -2,6 +2,6 @@ namespace Oppo.ObjectModel
 {
     public interface IFileSystem
     {
-        void CreateFile(string filePath);
+        void CreateFile(string filePath, string fileContent);
     }    
 }

@@ -17,11 +17,11 @@ namespace Oppo.ObjectModel.Tests
             // Arrange
             var filecreated = false;
             var mockFileSystem = new Mock<IFileSystem>();
-            mockFileSystem.Setup(fs => fs.CreateFile(It.IsAny<string>())).Callback(() => filecreated = true);
+            mockFileSystem.Setup(fs => fs.CreateFile(It.IsAny<string>(), It.IsAny<string>())).Callback(() => filecreated = true);
             var fileManager = new FileManager(mockFileSystem.Object);
 
             // Act
-            fileManager.CreateFile("anyName");
+            fileManager.CreateFile("anyName", "any content");
             
             // Assert
             Assert.IsTrue(filecreated);

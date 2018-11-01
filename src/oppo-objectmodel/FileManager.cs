@@ -9,9 +9,9 @@ namespace Oppo.ObjectModel
             _fileSystem = fileSystem;
         }
 
-        public void CreateFile(string filePath)
+        public void CreateFile(string filePath, string fileContent)
         {
-            _fileSystem.CreateFile(filePath);
+            _fileSystem.CreateFile(filePath, fileContent);
         }
     }
 }
