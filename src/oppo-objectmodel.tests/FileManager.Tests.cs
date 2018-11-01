@@ -14,17 +14,17 @@ namespace Oppo.ObjectModel.Tests
         [Test]
         public void ShouldCreateSlnFile()
         {
-            // // Arrange
-            // var filecreated = false;
-            // var mockFileSystem = new Mock<IFileSystem>();
-            // mockFileSystem.Setup(fs => fs.CreateFile(It.IsAny<string>())).Callback(() => filecreated = true);
+            // Arrange
+            var filecreated = false;
+            var mockFileSystem = new Mock<IFileSystem>();
+            mockFileSystem.Setup(fs => fs.CreateFile(It.IsAny<string>())).Callback(() => filecreated = true);
+            var fileManager = new FileManager(mockFileSystem.Object);
+
+            // Act
+            fileManager.CreateFile("anyName");
             
-            // // Act
-            // var fileManager = new FileManager(mockFileSystem.Object);
-            
-            // // Assert
-            // Assert.IsTrue(filecreated);
-            Assert.Pass();
+            // Assert
+            Assert.IsTrue(filecreated);
         }
     }
 }
