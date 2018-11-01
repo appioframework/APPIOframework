@@ -9,7 +9,7 @@ namespace Oppo.ObjectModel
         {
             if (inputParams == null)
             {
-                throw new ArgumentNullException("Missing input params");
+                throw new ArgumentNullException(nameof(inputParams));
             }
         }
     }
