@@ -1,6 +1,6 @@
-using OPPO.ObjectModel;
+using Oppo.ObjectModel;
 
-namespace OPPO.Terminal
+namespace Oppo.Terminal
 {
     public class OppoTerminal
     {

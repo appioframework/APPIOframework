@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace OPPO.Terminal
+namespace Oppo.Terminal
 {
     [ExcludeFromCodeCoverage]
     public class ConsoleWriter : IWriter

@@ -6,7 +6,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <RootNamespace>OPPO.ObjectModel</RootNamespace>
+    <RootNamespace>Oppo.ObjectModel</RootNamespace>
   </PropertyGroup>
 
 </Project>

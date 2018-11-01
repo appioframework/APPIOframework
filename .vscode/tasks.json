@@ -26,6 +26,16 @@
                              "bash-gitlab-ci/run-build.sh"
             ],
             "problemMatcher": [ ]         
-        }            
+        },
+        {
+            "label":         "dotnet-build-all",
+            "type":          "shell",
+            "command":       "/bin/bash",
+            "args":
+            [
+                             "bash-gitlab-ci/run-build-all.sh"
+            ],
+            "problemMatcher": [ ]         
+        }                  
     ]
 }

@@ -1,4 +1,4 @@
-namespace OPPO.ObjectModel
+namespace Oppo.ObjectModel
 {
     public static class Constants
     {

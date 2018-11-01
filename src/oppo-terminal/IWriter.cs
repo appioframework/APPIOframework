@@ -1,4 +1,4 @@
-namespace OPPO.Terminal
+namespace Oppo.Terminal
 {
     public interface IWriter
     {

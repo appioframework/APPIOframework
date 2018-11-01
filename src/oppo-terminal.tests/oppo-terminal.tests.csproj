@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <RootNamespace>OPPO.Terminal.Tests</RootNamespace>
+    <RootNamespace>Oppo.Terminal.Tests</RootNamespace>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>

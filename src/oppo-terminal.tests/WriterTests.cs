@@ -1,7 +1,8 @@
 using NUnit.Framework;
-using OPPO.Terminal;
+using Oppo.Terminal;
 using Moq;
-namespace OPPO.Terminal.Tests
+
+namespace Oppo.Terminal.Tests
 {
     public class WriterTests
     {

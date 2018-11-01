@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <RootNamespace>OPPO.Resources</RootNamespace>
+    <RootNamespace>Oppo.Resources</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
