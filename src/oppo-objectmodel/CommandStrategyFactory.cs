@@ -3,7 +3,7 @@ using Oppo.ObjectModel.CommandStrategies;
 
 namespace Oppo.ObjectModel
 {
-    public class CommandStrategyFactory
+    public class CommandStrategyFactory : ICommandStrategyFactory
     {
         private readonly Dictionary< string, ICommandStrategy > commands
             = new Dictionary< string, ICommandStrategy >();
