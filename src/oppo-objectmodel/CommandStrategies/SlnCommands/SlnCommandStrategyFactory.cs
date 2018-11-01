@@ -11,18 +11,17 @@ namespace Oppo.ObjectModel
 
         public SlnCommandStrategyFactory()
         {
-            
+            commands.Add(Constants.SlnCommandName.New, new SlnNewCommandStrategy());
         }
 
         public ISlnCommandStrategy GetStrategy( string commandName )
         {
-            // if ( commands.ContainsKey( commandName ?? string.Empty ) )
-            // {
-            //     return commands[ commandName ];
-            // }
+            if ( commands.ContainsKey( commandName ?? string.Empty ) )
+            {
+                return commands[ commandName ];
+            }
 
-            // return new SlnCommandNotExistentStrategy();
-            throw new NotImplementedException();
+            return new SlnCommandNotExistentStrategy();
         }
     }
 }

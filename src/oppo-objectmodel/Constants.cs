@@ -14,5 +14,10 @@ namespace Oppo.ObjectModel
             public const string Success = "success";
             public const string Failure = "failure";
         }
+
+        public static class SlnCommandName
+        {
+            public const string New = "new";            
+        }
     }
 }

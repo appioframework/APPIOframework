@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using Oppo.ObjectModel.CommandStrategies;
 
-namespace Oppo.ObjectModel
+namespace Oppo.ObjectModel.CommandStrategies
 {
     public class CommandStrategyFactory : ICommandStrategyFactory
     {
