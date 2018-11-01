@@ -20,7 +20,7 @@ namespace Oppo.Terminal.Tests
             mockWriter.Setup(mw => mw.WriteLine(It.IsAny<string>())).Callback(() => messageWrittenOut = true);
             
             // Act
-            var oppoTerminal = new OppoTerminal(mockWriter.Object);
+            var oppoTerminal = new OppoTerminal(mockWriter.Object, new string[0]);
             
             // Assert
             Assert.IsTrue(messageWrittenOut, "Should be true");
