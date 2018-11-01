@@ -8,5 +8,11 @@ namespace Oppo.ObjectModel
         {
             public const string Sln = "sln";
         }
+
+        public static class CommandResults
+        {
+            public const string Success = "success";
+            public const string Failure = "failure";
+        }
     }
 }
