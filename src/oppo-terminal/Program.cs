@@ -8,7 +8,7 @@ namespace Oppo.Terminal
     {
         static void Main(string[] args)
         {
-            new OppoTerminal(new ConsoleWriter());            
+            new OppoTerminal(new ConsoleWriter(), args);            
         }
     }
 }
