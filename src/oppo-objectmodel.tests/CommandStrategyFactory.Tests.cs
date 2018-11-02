@@ -12,17 +12,39 @@ namespace Oppo.ObjectModel.Tests
         {
         }
 
-        [Test]
-        public void CommandStrategyFactory_ShouldReturn_CommandNotExistentStrategy()
+        [TestCase( null )]
+        [TestCase( "" )]
+        [TestCase( "iioh4ohf" )]
+        [TestCase( "abc" )]
+        [TestCase( "5zh" )]
+        [TestCase( "@/40&" )]
+        [TestCase( "New" )]
+        [TestCase( "CREATE" )]
+        [TestCase( "slN" )]
+        public void CommandStrategyFactory_ShouldReturn_CommandNotExistentStrategy( string commandName )
         {
             // Arrange
             var factory = new CommandStrategyFactory();
 
             // Act
-            var strategy = factory.GetStrategy( null );
+            var strategy = factory.GetStrategy( commandName );
             
             // Assert
             Assert.IsInstanceOf< CommandNotExistentStrategy >( strategy );
+        }
+
+        [Test]
+        public void CommandStrategyFactory_ShouldReturn_SlnStrategy()
+        {
+            // Arrange
+            const string commandName = Constants.CommandName.Sln;
+            var factory = new CommandStrategyFactory();
+
+            // Act
+            var strategy = factory.GetStrategy( commandName );
+            
+            // Assert
+            Assert.IsInstanceOf< SlnStrategy >( strategy );
         }
     }
 }
