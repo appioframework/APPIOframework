@@ -61,7 +61,7 @@ build-debian-installer:
     - cd ..
     - dpkg --build oppo-terminal
 
-run-integration-test--hello:
+prepare-integration-test:
   dependencies: 
     - 'build-debian-installer'
   stage: 'integration-test'
@@ -71,8 +71,13 @@ run-integration-test--hello:
   except:
     refs:
       - deliverable
-  script:
+  before_script:
     - /bin/bash bash-gitlab-ci/run-installer.sh
+
+run-integration-test--hello:
+  extends:
+    - prepare-integration-test
+  script:
     - /bin/bash bash-gitlab-ci/integration-tests/run-hello.sh
 
 mark-repository-as-deliverable:
