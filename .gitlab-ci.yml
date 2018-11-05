@@ -74,7 +74,7 @@ run-integration-test:
   script:
     - cd installer
     - dpkg -i oppo-terminal.deb
-    - oppo
+    - oppo hello
 
 mark-repository-as-deliverable:
   stage: 'delivery'
