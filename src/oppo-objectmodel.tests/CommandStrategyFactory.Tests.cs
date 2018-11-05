@@ -10,25 +10,25 @@ namespace Oppo.ObjectModel.Tests
         {
         }
 
-        [TestCase( null )]
-        [TestCase( "" )]
-        [TestCase( "iioh4ohf" )]
-        [TestCase( "abc" )]
-        [TestCase( "5zh" )]
-        [TestCase( "@/40&" )]
-        [TestCase( "New" )]
-        [TestCase( "CREATE" )]
-        [TestCase( "slN" )]
-        public void CommandStrategyFactory_ShouldReturn_CommandNotExistentStrategy( string commandName )
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("iioh4ohf")]
+        [TestCase("abc")]
+        [TestCase("5zh")]
+        [TestCase("@/40&")]
+        [TestCase("New")]
+        [TestCase("CREATE")]
+        [TestCase("slN")]
+        public void CommandStrategyFactory_ShouldReturn_CommandNotExistentStrategy(string commandName)
         {
             // Arrange
             var factory = new CommandStrategyFactory();
 
             // Act
-            var strategy = factory.GetStrategy( commandName );
-            
+            var strategy = factory.GetStrategy(commandName);
+
             // Assert
-            Assert.IsInstanceOf< CommandNotExistentStrategy >( strategy );
+            Assert.IsInstanceOf<CommandNotExistentStrategy>(strategy);
         }
 
         [Test]
@@ -39,10 +39,10 @@ namespace Oppo.ObjectModel.Tests
             var factory = new CommandStrategyFactory();
 
             // Act
-            var strategy = factory.GetStrategy( commandName );
-            
+            var strategy = factory.GetStrategy(commandName);
+
             // Assert
-            Assert.IsInstanceOf< SlnStrategy >( strategy );
+            Assert.IsInstanceOf<SlnStrategy>(strategy);
         }
     }
 }
