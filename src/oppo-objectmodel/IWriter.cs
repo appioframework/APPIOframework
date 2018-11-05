@@ -1,4 +1,4 @@
-namespace Oppo.Terminal
+namespace Oppo.ObjectModel
 {
     public interface IWriter
     {

@@ -1,7 +1,5 @@
 using NUnit.Framework;
-using Oppo.ObjectModel;
 using Oppo.ObjectModel.CommandStrategies;
-using Moq;
 using System.Collections.Generic;
 
 
@@ -15,7 +13,7 @@ namespace Oppo.ObjectModel.Tests
         }
 
         [Test]
-        public void ShouldExcecuteStrategy()
+        public void ShouldExecuteStrategy()
         {
             // Arrange
             var strategy = new CommandNotExistentStrategy();

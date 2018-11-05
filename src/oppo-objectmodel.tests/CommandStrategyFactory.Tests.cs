@@ -1,7 +1,5 @@
 using NUnit.Framework;
-using Oppo.ObjectModel;
 using Oppo.ObjectModel.CommandStrategies;
-using Moq;
 
 namespace Oppo.ObjectModel.Tests
 {
