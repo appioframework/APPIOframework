@@ -31,7 +31,7 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
                     return Constants.CommandResults.Failure;
                 }
 
-                _fileSystemWrapper.CreateFile(Path.Combine(secondInputParam, Constants.FileExtension.OppoSln), _fileSystemWrapper.LoadTemplateFile(Oppo.Resources.Resources.OppoSlnTemplateFileName));
+                _fileSystemWrapper.CreateFile($"{secondInputParam}{Constants.FileExtension.OppoSln}", _fileSystemWrapper.LoadTemplateFile(Oppo.Resources.Resources.OppoSlnTemplateFileName));
                 return Constants.CommandResults.Success;
             }
 

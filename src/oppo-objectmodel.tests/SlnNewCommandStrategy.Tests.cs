@@ -2,7 +2,6 @@ using NUnit.Framework;
 using Moq;
 using Oppo.ObjectModel.CommandStrategies.SlnCommands;
 using System.Linq;
-using System.IO;
 
 namespace Oppo.ObjectModel.Tests
 {
@@ -44,7 +43,7 @@ namespace Oppo.ObjectModel.Tests
             // Arrange
             var mockFileSystemMock = new Mock<IFileSystem>();                        
             var slnNewCommandStrategy = new SlnNewCommandStrategy(mockFileSystemMock.Object);
-            var calculatedFileName = Path.Combine(inputParams.Skip(1).FirstOrDefault(), Constants.FileExtension.OppoSln);
+            var calculatedFileName = $"{inputParams.Skip(1).FirstOrDefault()}{Constants.FileExtension.OppoSln}";
 
             // Act
             var strategyResult = slnNewCommandStrategy.Execute(inputParams);

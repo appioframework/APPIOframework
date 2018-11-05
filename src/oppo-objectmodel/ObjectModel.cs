@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Oppo.ObjectModel
 {
-    public class ObjectModel
+    public class ObjectModel : IObjectModel
     {
         private readonly ICommandStrategyFactory _commandStrategyFactory;
         public ObjectModel(ICommandStrategyFactory commandStrategyFactory)
