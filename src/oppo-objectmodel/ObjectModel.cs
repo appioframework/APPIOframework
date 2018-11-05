@@ -18,9 +18,10 @@ namespace Oppo.ObjectModel
             {
                 throw new ArgumentNullException(nameof(inputParams));
             }
-           
-            var strategy = _commandStrategyFactory.GetStrategy(inputParams.First());
-            return strategy.Execute(inputParams.Skip(1));
+
+            var inputParamsArray = inputParams.ToArray();
+            var strategy = _commandStrategyFactory.GetStrategy(inputParamsArray.First());
+            return strategy.Execute(inputParamsArray.Skip(1));
         }
     }
 }

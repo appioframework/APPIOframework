@@ -1,9 +1,7 @@
-using Oppo.ObjectModel.CommandStrategies.SlnCommands;
-
-namespace Oppo.ObjectModel
+namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 {
     public interface ISlnCommandStrategyFactory
     {       
-        ISlnCommandStrategy GetStrategy( string slnCommandName );
+        ISlnCommandStrategy GetStrategy(string slnCommandName);
     }
 }

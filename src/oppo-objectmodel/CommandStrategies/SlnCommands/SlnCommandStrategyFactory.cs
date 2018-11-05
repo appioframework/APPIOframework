@@ -1,26 +1,22 @@
 using System.Collections.Generic;
-using Oppo.ObjectModel.CommandStrategies.SlnCommands;
 
-namespace Oppo.ObjectModel
+namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 {
     public class SlnCommandStrategyFactory : ISlnCommandStrategyFactory
     {
-        private readonly IFileSystem _fileSystemWrapper;
-
-        private readonly Dictionary<string, ISlnCommandStrategy> slnCommands
+        private readonly Dictionary<string, ISlnCommandStrategy> _slnCommands
             = new Dictionary<string, ISlnCommandStrategy>();
 
         public SlnCommandStrategyFactory(IFileSystem fileSystemWrapper)
         {
-            _fileSystemWrapper = fileSystemWrapper;
-            slnCommands.Add(Constants.SlnCommandName.New, new SlnNewCommandStrategy(fileSystemWrapper));
+            _slnCommands.Add(Constants.SlnCommandName.New, new SlnNewCommandStrategy(fileSystemWrapper));
         }
 
         public ISlnCommandStrategy GetStrategy(string slnCommandName)
         {
-            if (slnCommands.ContainsKey(slnCommandName ?? string.Empty))
+            if (_slnCommands.ContainsKey(slnCommandName ?? string.Empty))
             {
-                return slnCommands[slnCommandName];
+                return _slnCommands[slnCommandName];
             }
 
             return new SlnCommandNotExistentStrategy();

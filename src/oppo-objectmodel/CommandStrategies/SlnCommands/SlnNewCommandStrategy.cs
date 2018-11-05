@@ -6,31 +6,32 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 {
     public class SlnNewCommandStrategy : ISlnCommandStrategy
     {
-        private readonly IFileSystem fileSystemWrapper;
+        private readonly IFileSystem _fileSystemWrapper;
 
         public SlnNewCommandStrategy(IFileSystem fileSystemWrapper)
         {
-            this.fileSystemWrapper = fileSystemWrapper;
+            _fileSystemWrapper = fileSystemWrapper;
         }
 
         public string Execute(IEnumerable<string> inputParams)
         {
-            var firstInputParam = inputParams.FirstOrDefault();
-            var seccondInputParam = inputParams.Skip(1).FirstOrDefault();
+            var inputParamsArray = inputParams.ToArray();
+            var firstInputParam = inputParamsArray.FirstOrDefault();
+            var secondInputParam = inputParamsArray.Skip(1).FirstOrDefault();
             
             if (firstInputParam == Constants.SlnNewCommandArguments.Name || firstInputParam == Constants.SlnNewCommandArguments.VerboseName)
             {            
-                if (string.IsNullOrEmpty(seccondInputParam))
+                if (string.IsNullOrEmpty(secondInputParam))
                 {
                     return Constants.CommandResults.Failure;
                 }
 
-                if (fileSystemWrapper.GetInvalidFileNameChars().Any(seccondInputParam.Contains))
+                if (_fileSystemWrapper.GetInvalidFileNameChars().Any(secondInputParam.Contains))
                 {
                     return Constants.CommandResults.Failure;
                 }
 
-                fileSystemWrapper.CreateFile(Path.Combine(seccondInputParam, Constants.FileExtension.OppoSln), fileSystemWrapper.LoadTemplateFile(Oppo.Resources.Resources.OppoSlnTemplateFileName));
+                _fileSystemWrapper.CreateFile(Path.Combine(secondInputParam, Constants.FileExtension.OppoSln), _fileSystemWrapper.LoadTemplateFile(Oppo.Resources.Resources.OppoSlnTemplateFileName));
                 return Constants.CommandResults.Success;
             }
 

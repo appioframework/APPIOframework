@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Oppo.ObjectModel.CommandStrategies.SlnCommands;
 
 namespace Oppo.ObjectModel.CommandStrategies
 {
@@ -15,8 +16,9 @@ namespace Oppo.ObjectModel.CommandStrategies
 
         public string Execute(IEnumerable<string> inputsArgs)
         {
-            var strategy = _factory.GetStrategy(inputsArgs.FirstOrDefault());
-            return strategy.Execute(inputsArgs.Skip(1));
+            var inputsArgsArray = inputsArgs.ToArray();
+            var strategy = _factory.GetStrategy(inputsArgsArray.FirstOrDefault());
+            return strategy.Execute(inputsArgsArray.Skip(1));
         }
     }
 }
