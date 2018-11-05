@@ -8,9 +8,9 @@ namespace Oppo.ObjectModel.CommandStrategies
         private readonly Dictionary<string, ICommandStrategy> _commands
             = new Dictionary<string, ICommandStrategy>();
 
-        public CommandStrategyFactory()
+        public CommandStrategyFactory(IWriter writer)
         {
-            _commands.Add(Constants.CommandName.Hello, new HelloStrategy(null));
+            _commands.Add(Constants.CommandName.Hello, new HelloStrategy(writer));
             _commands.Add(Constants.CommandName.Sln, new SlnStrategy(new SlnCommandStrategyFactory(new FileSystemWrapper())));
         }
 

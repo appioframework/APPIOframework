@@ -1,3 +1,4 @@
+using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies;
 
@@ -22,7 +23,8 @@ namespace Oppo.ObjectModel.Tests
         public void CommandStrategyFactory_ShouldReturn_CommandNotExistentStrategy(string commandName)
         {
             // Arrange
-            var factory = new CommandStrategyFactory();
+            var writerMock = new Mock<IWriter>();
+            var factory = new CommandStrategyFactory(writerMock.Object);
 
             // Act
             var strategy = factory.GetStrategy(commandName);
@@ -36,7 +38,8 @@ namespace Oppo.ObjectModel.Tests
         {
             // Arrange
             const string commandName = Constants.CommandName.Sln;
-            var factory = new CommandStrategyFactory();
+            var writerMock = new Mock<IWriter>();
+            var factory = new CommandStrategyFactory(writerMock.Object);
 
             // Act
             var strategy = factory.GetStrategy(commandName);
@@ -50,8 +53,9 @@ namespace Oppo.ObjectModel.Tests
         {
             // Arrange
             const string commandName = Constants.CommandName.Hello;
-            var factory = new CommandStrategyFactory();
-            
+            var writerMock = new Mock<IWriter>();
+            var factory = new CommandStrategyFactory(writerMock.Object);
+
             // Act
             var strategy = factory.GetStrategy(commandName);
 

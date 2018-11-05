@@ -9,9 +9,9 @@ namespace Oppo.Terminal
     {
         static int Main(string[] args)
         {
-            var commandFactory = new CommandStrategyFactory();
-            var objectModel = new ObjectModel.ObjectModel(commandFactory);
             var writer = new ConsoleWriter();
+            var commandFactory = new CommandStrategyFactory(writer);
+            var objectModel = new ObjectModel.ObjectModel(commandFactory);
             var terminal = new OppoTerminal(objectModel, writer);
 
             var result = Constants.CommandResults.Success;
