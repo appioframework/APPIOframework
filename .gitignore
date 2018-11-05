@@ -46,6 +46,7 @@
 !.gitignore
 !.gitlab-ci.yml
 
+!oppo.build.sln
 !oppo.sln
 !oppo.tests.sln
 !LICENCE
