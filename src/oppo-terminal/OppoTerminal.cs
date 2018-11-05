@@ -14,7 +14,6 @@ namespace Oppo.Terminal
 
         public string Execute(string[] inputParams)
         {
-            System.Console.WriteLine("caveman :P");
             return _objectModel.ExecuteCommand(inputParams);
         }
     }
