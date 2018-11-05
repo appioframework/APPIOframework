@@ -7,7 +7,6 @@ namespace Oppo.Terminal
         public OppoTerminal(IWriter writer, string[] args)
         {
             writer.WriteLine(Constants.HelloString);
-            
         }
     }
 }

@@ -1,10 +1,9 @@
 using NUnit.Framework;
-using Oppo.Terminal;
 using Moq;
 
 namespace Oppo.Terminal.Tests
 {
-    public class WriterTests
+    public class OppoTerminalTests
     {
         [SetUp]
         public void Setup()
