@@ -3,6 +3,7 @@ stages:
   - publish
   - installer
   - integration-test
+  - integration-test--execution
   - delivery 
 
 before_script:
@@ -78,6 +79,7 @@ prepare-integration-test:
 
 run-integration-test--hello:
   extends: prepare-integration-test
+  stage: 'integration-test--execution'
   script:
     - /bin/bash bash-gitlab-ci/integration-tests/run-hello.sh
 
