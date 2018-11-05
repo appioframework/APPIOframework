@@ -74,7 +74,7 @@ prepare-integration-test:
   before_script:
     - /bin/bash bash-gitlab-ci/run-installer.sh
   script:
-    - :
+    - echo "Preparation done ..."
 
 run-integration-test--hello:
   extends: prepare-integration-test
