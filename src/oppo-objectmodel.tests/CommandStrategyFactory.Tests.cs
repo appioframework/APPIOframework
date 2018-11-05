@@ -2,6 +2,7 @@ using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies;
 using Oppo.ObjectModel.CommandStrategies.BuildCommands;
+using Oppo.ObjectModel.CommandStrategies.PublishCommands;
 
 namespace Oppo.ObjectModel.Tests
 {
@@ -77,6 +78,21 @@ namespace Oppo.ObjectModel.Tests
 
             // Assert
             Assert.IsInstanceOf<BuildStrategy>(strategy);
+        }
+
+        [Test]
+        public void CommandStrategyFactory_ShouldReturn_PublishStrategy()
+        {
+            // Arrange
+            const string commandName = Constants.CommandName.Publish;
+            var writerMock = new Mock<IWriter>();
+            var factory = new CommandStrategyFactory(writerMock.Object);
+
+            // Act
+            var strategy = factory.GetStrategy(commandName);
+
+            // Assert
+            Assert.IsInstanceOf<PublishStrategy>(strategy);
         }
     }
 }

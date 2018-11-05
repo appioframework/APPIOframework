@@ -14,6 +14,7 @@ namespace Oppo.ObjectModel
             public const string Sln = "sln";
             public const string Hello = "hello";
             public const string Build = "build";
+            public const string Publish = "publish";
         }
 
         public static class CommandResults
@@ -39,6 +40,9 @@ namespace Oppo.ObjectModel
             public const string ModelRebuild= "-r";
         }
 
-
+        public static class PublishCommandArguments
+        {
+            public const string ModeAll = "-all";
+        }
     }
 }
