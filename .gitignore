@@ -4,10 +4,8 @@
 
 !bash-gitlab-ci/
 !bash-gitlab-ci/integration-tests/
-!bash-gitlab-ci/integration-tests/*.sh
-!bash-gitlab-ci/run-build.sh
-!bash-gitlab-ci/run-sonarscanner.sh
-!bash-gitlab-ci/run-tests.sh
+!bash-gitlab-ci/*.sh
+!bash-gitlab-ci/**/*.sh
 
 !installer/
 !installer/oppo-terminal/
