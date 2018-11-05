@@ -4,7 +4,13 @@ set -euo pipefail
 
 mkdir sln-new--success
 cd    sln-new--success
-oppo sln new -n "my-solution"
+
+if [ "${1}" = "verbose" ];
+then
+  oppo sln new --name "my-solution"
+else
+  oppo sln new -n "my-solution"
+fi
 
 if [ ! -f "my-solution.opposln" ];
 then

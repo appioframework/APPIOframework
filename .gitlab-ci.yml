@@ -3,7 +3,9 @@ stages:
   - publish
   - installer
   - integration-test
-  - integration-test--execution
+  - integration-test--execution--1
+  - integration-test--execution--2
+  - integration-test--execution--3
   - delivery 
 
 before_script:
@@ -79,15 +81,21 @@ prepare-integration-test:
 
 run-integration-test--hello:
   extends: prepare-integration-test
-  stage: 'integration-test--execution'
+  stage: 'integration-test--execution--1'
   script:
     - /bin/bash bash-gitlab-ci/integration-tests/run-hello.sh
 
 run-integration-test--sln-new--success:
   extends: prepare-integration-test
-  stage: 'integration-test--execution'
+  stage: 'integration-test--execution--2'
   script:
     - /bin/bash bash-gitlab-ci/integration-tests/run-sln-new--success.sh
+
+run-integration-test--sln-new--success:
+  extends: prepare-integration-test
+  stage: 'integration-test--execution--3'
+  script:
+    - /bin/bash bash-gitlab-ci/integration-tests/run-sln-new--success.sh verbose
 
 mark-repository-as-deliverable:
   stage: 'delivery'
