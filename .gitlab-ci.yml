@@ -83,6 +83,12 @@ run-integration-test--hello:
   script:
     - /bin/bash bash-gitlab-ci/integration-tests/run-hello.sh
 
+run-integration-test--sln-new--success:
+  extends: prepare-integration-test
+  stage: 'integration-test--execution'
+  script:
+    - /bin/bash bash-gitlab-ci/integration-tests/run-sln-new--success.sh
+
 mark-repository-as-deliverable:
   stage: 'delivery'
   tags:
