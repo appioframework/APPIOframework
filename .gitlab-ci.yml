@@ -89,7 +89,7 @@ run-integration-test--sln-new--success:
   extends: prepare-integration-test
   stage: 'integration-test--execution--2'
   script:
-    - /bin/bash bash-gitlab-ci/integration-tests/run-sln-new--success.sh
+    - /bin/bash bash-gitlab-ci/integration-tests/run-sln-new--success.sh -
 
 run-integration-test--sln-new-verbose--success:
   extends: prepare-integration-test
