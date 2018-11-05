@@ -61,7 +61,7 @@ build-debian-installer:
     - cd ..
     - dpkg --build oppo-terminal
 
-run-integration-test:
+run-integration-test--hello:
   dependencies: 
     - 'build-debian-installer'
   stage: 'integration-test'
