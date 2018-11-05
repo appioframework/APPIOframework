@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Oppo.ObjectModel.CommandStrategies.SlnCommands;
 
 namespace Oppo.ObjectModel

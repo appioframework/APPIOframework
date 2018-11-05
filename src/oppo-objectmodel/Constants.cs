@@ -4,6 +4,11 @@ namespace Oppo.ObjectModel
     {
         public const string HelloString = "Hello from OPPO";
 
+        public static class FileExtension
+        {
+            public const string OppoSln = ".opposln";
+        }
+
         public static class CommandName
         {
             public const string Sln = "sln";
@@ -19,5 +24,13 @@ namespace Oppo.ObjectModel
         {
             public const string New = "new";            
         }
+
+        public static class SlnNewCommandArguments
+        {
+            public const string Name = "-n";
+            public const string VerboseName = "--name";
+        }
+
+        
     }
 }

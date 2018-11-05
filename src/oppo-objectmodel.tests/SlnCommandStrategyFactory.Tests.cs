@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using Oppo.ObjectModel;
 using Oppo.ObjectModel.CommandStrategies.SlnCommands;
 using Moq;
 
@@ -12,39 +11,41 @@ namespace Oppo.ObjectModel.Tests
         {
         }
 
-        [TestCase( null )]
-        [TestCase( "" )]
-        [TestCase( "iioh4ohf" )]
-        [TestCase( "abc" )]
-        [TestCase( "5zh" )]
-        [TestCase( "@/40&" )]
-        [TestCase( "New" )]
-        [TestCase( "CREATE" )]        
-    
-        public void SlnCommandStrategyFactory_ShouldReturn_CommandNotExistentStrategy( string commandName )
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("iioh4ohf")]
+        [TestCase("abc")]
+        [TestCase("5zh")]
+        [TestCase("@/40&")]
+        [TestCase("New")]
+        [TestCase("CREATE")]
+
+        public void SlnCommandStrategyFactory_ShouldReturn_CommandNotExistentStrategy(string commandName)
         {
             // Arrange
-            var factory = new SlnCommandStrategyFactory();
+            var mockFileSystemMock = new Mock<IFileSystem>();
+            var factory = new SlnCommandStrategyFactory(mockFileSystemMock.Object);
 
             // Act
-            var strategy = factory.GetStrategy( commandName );
-            
+            var strategy = factory.GetStrategy(commandName);
+
             // Assert
-            Assert.IsInstanceOf< SlnCommandNotExistentStrategy >( strategy );
+            Assert.IsInstanceOf<SlnCommandNotExistentStrategy>(strategy);
         }
 
         [Test]
         public void SlnCommandStrategyFactory_ShouldReturn_SlnNewStrategy()
         {
             // Arrange
+            var mockFileSystemMock = new Mock<IFileSystem>();
             const string commandName = Constants.SlnCommandName.New;
-            var factory = new SlnCommandStrategyFactory();
+            var factory = new SlnCommandStrategyFactory(mockFileSystemMock.Object);
 
             // Act
-            var strategy = factory.GetStrategy( commandName );
-            
+            var strategy = factory.GetStrategy(commandName);
+
             // Assert
-            Assert.IsInstanceOf< SlnNewCommandStrategy >( strategy );
+            Assert.IsInstanceOf<SlnNewCommandStrategy>(strategy);
         }
     }
 }

@@ -1,29 +1,40 @@
 using NUnit.Framework;
-using Oppo.ObjectModel;
 using Oppo.ObjectModel.CommandStrategies;
 using Moq;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 namespace Oppo.ObjectModel.Tests
 {
     public class ObjectModelTests
     {
+
+        private static string[][] ValidInputs()
+        {
+            return new[]
+            {
+                new []{ "sln", "new", "-n", "anyName" },
+                new []{ "sln", "new", "-n", "ABC" },
+                new []{ "sln", "new", "--name", "ABC" }
+            };
+        }
+
         [SetUp]
         public void Setup()
         {
         }
 
         [Test]
-        public void ShouldGetValidInputParams()
+        public void ShouldGetValidInputParams([ValueSource(nameof(ValidInputs))] string[] inputParams)
         {
             // Arrange
             var strategyMock = new Mock<ICommandStrategy>();           
             var mockCommandStrategyFactory = new Mock<ICommandStrategyFactory>();
-            var inputParams = new List<string>(){"sln", "new", "-n", "testslns"};
-            var slnInputParams = new List<string>(){"new", "-n", "testslns"};
+
+            var slnInputParams = inputParams.Skip(1);
             var objectModel = new ObjectModel(mockCommandStrategyFactory.Object);
-            mockCommandStrategyFactory.Setup(factory => factory.GetStrategy("sln")).Returns(strategyMock.Object);
+            mockCommandStrategyFactory.Setup(factory => factory.GetStrategy(inputParams.FirstOrDefault())).Returns(strategyMock.Object);
             strategyMock.Setup(s=>s.Execute(slnInputParams)).Returns(Constants.CommandResults.Success);
             
             // Act

@@ -7,7 +7,7 @@ namespace Oppo.ObjectModel
     public class ObjectModel
     {
         private readonly ICommandStrategyFactory _commandStrategyFactory;
-        public ObjectModel( ICommandStrategyFactory commandStrategyFactory)
+        public ObjectModel(ICommandStrategyFactory commandStrategyFactory)
         {
             _commandStrategyFactory = commandStrategyFactory;
         }
