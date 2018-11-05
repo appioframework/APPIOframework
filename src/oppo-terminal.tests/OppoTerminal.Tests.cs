@@ -38,17 +38,13 @@ namespace Oppo.Terminal.Tests
         public void OppoTerminal_Should_WriteMessage()
         {
             // Arrange
-            var messageWrittenOut = false;
             var objectModelMock = new Mock<IObjectModel>();
-            var mockWriter = new Mock<IWriter>();
-            mockWriter.Setup(mw => mw.WriteLine(It.IsAny<string>())).Callback(() => messageWrittenOut = true);
             
             // Act
-            var oppoTerminal = new OppoTerminal(objectModelMock.Object, mockWriter.Object);
+            var oppoTerminal = new OppoTerminal(objectModelMock.Object);
             
             // Assert
             Assert.IsInstanceOf<OppoTerminal>(oppoTerminal);
-            Assert.IsTrue(messageWrittenOut, "Should be true");
         }
 
         [Test]
@@ -57,9 +53,8 @@ namespace Oppo.Terminal.Tests
             // Arrange
             var objectModelMock = new Mock<IObjectModel>();
             objectModelMock.Setup(x => x.ExecuteCommand(It.IsAny<string[]>())).Returns(data.Result);
-            var mockWriter = new Mock<IWriter>();
 
-            var oppoTerminal = new OppoTerminal(objectModelMock.Object, mockWriter.Object);
+            var oppoTerminal = new OppoTerminal(objectModelMock.Object);
 
             // Act
             var result = oppoTerminal.Execute(data.Input);

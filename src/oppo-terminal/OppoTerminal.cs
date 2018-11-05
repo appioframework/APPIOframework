@@ -6,10 +6,9 @@ namespace Oppo.Terminal
     {
         private readonly IObjectModel _objectModel;
 
-        public OppoTerminal(IObjectModel objectModel, IWriter writer)
+        public OppoTerminal(IObjectModel objectModel)
         {
             _objectModel = objectModel;
-            writer.WriteLine(Constants.HelloString);
         }
 
         public string Execute(string[] inputParams)

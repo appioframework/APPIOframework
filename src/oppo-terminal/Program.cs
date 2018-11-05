@@ -12,7 +12,7 @@ namespace Oppo.Terminal
             var writer = new ConsoleWriter();
             var commandFactory = new CommandStrategyFactory(writer);
             var objectModel = new ObjectModel.ObjectModel(commandFactory);
-            var terminal = new OppoTerminal(objectModel, writer);
+            var terminal = new OppoTerminal(objectModel);
 
             var result = Constants.CommandResults.Success;
             if (args?.Length > 0)
