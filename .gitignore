@@ -34,6 +34,7 @@
 !src/oppo-resources/open62541/
 !src/oppo-resources/open62541/*.c
 !src/oppo-resources/open62541/*.h
+!src/oppo-resources/*.cs
 !src/oppo-resources/oppo-resources.csproj
 
 !src/oppo-terminal/
