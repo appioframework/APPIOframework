@@ -13,6 +13,7 @@ namespace Oppo.ObjectModel
         {
             public const string Sln = "sln";
             public const string Hello = "hello";
+            public const string Build = "build";
         }
 
         public static class CommandResults
@@ -32,6 +33,12 @@ namespace Oppo.ObjectModel
             public const string VerboseName = "--name";
         }
 
-        
+        public static class BuildCommandArguments
+        {
+            public const string ModeAll = "-all";
+            public const string ModelRebuild= "-r";
+        }
+
+
     }
 }

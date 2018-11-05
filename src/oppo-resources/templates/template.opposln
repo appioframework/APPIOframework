@@ -1,4 +1,8 @@
 {
   "version": "1.0",
-  "projects": []
+  "projects": {
+    "project": {
+      "@id": "simpleServer"
+    }
+  }
 }

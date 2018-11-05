@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Oppo.ObjectModel.CommandStrategies.BuildCommands;
 using Oppo.ObjectModel.CommandStrategies.SlnCommands;
 
 namespace Oppo.ObjectModel.CommandStrategies
@@ -12,6 +13,7 @@ namespace Oppo.ObjectModel.CommandStrategies
         {
             _commands.Add(Constants.CommandName.Hello, new HelloStrategy(writer));
             _commands.Add(Constants.CommandName.Sln, new SlnStrategy(new SlnCommandStrategyFactory(new FileSystemWrapper())));
+            _commands.Add(Constants.CommandName.Build, new BuildStrategy());
         }
 
         public ICommandStrategy GetStrategy(string commandName)

@@ -19,6 +19,8 @@ namespace Oppo.ObjectModel.Tests
         [TestCase("@/40&")]
         [TestCase("New")]
         [TestCase("CREATE")]
+        [TestCase("Build")]
+        [TestCase("built")]
 
         public void SlnCommandStrategyFactory_ShouldReturn_CommandNotExistentStrategy(string commandName)
         {
