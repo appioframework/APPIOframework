@@ -27,6 +27,7 @@
 !src/oppo-objectmodel/CommandStrategies/SlnCommands/
 !src/oppo-objectmodel/CommandStrategies/BuildCommands/
 !src/oppo-objectmodel/CommandStrategies/PublishCommands/
+!src/oppo-objectmodel/CommandStrategies/HelpCommands/
 
 !src/oppo-objectmodel.tests/
 !src/oppo-objectmodel.tests/oppo-objectmodel.tests.csproj

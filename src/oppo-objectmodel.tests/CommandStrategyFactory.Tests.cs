@@ -22,6 +22,7 @@ namespace Oppo.ObjectModel.Tests
         [TestCase("New")]
         [TestCase("CREATE")]
         [TestCase("slN")]
+        [TestCase("Help")]
         public void CommandStrategyFactory_ShouldReturn_CommandNotExistentStrategy(string commandName)
         {
             // Arrange
@@ -93,6 +94,36 @@ namespace Oppo.ObjectModel.Tests
 
             // Assert
             Assert.IsInstanceOf<PublishStrategy>(strategy);
+        }
+
+        [Test]
+        public void CommandStrategyFactory_ShouldReturn_HelpStrategy()
+        {
+            // Arrange
+            const string commandName = Constants.CommandName.Help;
+            var writerMock = new Mock<IWriter>();
+            var factory = new CommandStrategyFactory(writerMock.Object);
+
+            // Act
+            var strategy = factory.GetStrategy(commandName);
+
+            // Assert
+            Assert.IsInstanceOf<HelpStrategy>(strategy);
+        }
+
+        [Test]
+        public void CommandStrategyFactory_ShouldReturn_HelpStrategy_Short()
+        {
+            // Arrange
+            const string commandName = Constants.CommandName.ShortHelp;
+            var writerMock = new Mock<IWriter>();
+            var factory = new CommandStrategyFactory(writerMock.Object);
+
+            // Act
+            var strategy = factory.GetStrategy(commandName);
+
+            // Assert
+            Assert.IsInstanceOf<HelpStrategy>(strategy);
         }
     }
 }

@@ -16,6 +16,10 @@ namespace Oppo.ObjectModel.CommandStrategies
             _commands.Add(Constants.CommandName.Sln, new SlnStrategy(new SlnCommandStrategyFactory(new FileSystemWrapper())));
             _commands.Add(Constants.CommandName.Build, new BuildStrategy());
             _commands.Add(Constants.CommandName.Publish, new PublishStrategy());
+
+            var helpStrategy = new HelpStrategy();
+            _commands.Add(Constants.CommandName.Help, helpStrategy);
+            _commands.Add(Constants.CommandName.ShortHelp, helpStrategy);
         }
 
         public ICommandStrategy GetStrategy(string commandName)

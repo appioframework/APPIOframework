@@ -15,6 +15,8 @@ namespace Oppo.ObjectModel
             public const string Hello = "hello";
             public const string Build = "build";
             public const string Publish = "publish";
+            public const string Help = "help";
+            public const string ShortHelp= "?";
         }
 
         public static class CommandResults
