@@ -2,4 +2,4 @@
 
 set -euo pipefail
 
-dotnet build -c Release oppo.tests.sln 
+dotnet test -c Release oppo.tests.sln /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
