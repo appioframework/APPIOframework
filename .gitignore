@@ -3,6 +3,8 @@
 !.vscode/tasks.json
 
 !bash-gitlab-ci/
+!bash-gitlab-ci/integration-tests/
+!bash-gitlab-ci/integration-tests/*.sh
 !bash-gitlab-ci/run-build.sh
 !bash-gitlab-ci/run-sonarscanner.sh
 !bash-gitlab-ci/run-tests.sh

@@ -74,7 +74,7 @@ run-integration-test:
   script:
     - cd installer
     - dpkg -i oppo-terminal.deb
-    - oppo hello
+    - /bin/bash bash-gitlab-ci/integration-tests/run-hello.sh
 
 mark-repository-as-deliverable:
   stage: 'delivery'
