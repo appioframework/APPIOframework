@@ -44,5 +44,19 @@ namespace Oppo.ObjectModel.Tests
             // Assert
             Assert.IsInstanceOf<SlnStrategy>(strategy);
         }
+
+        [Test]
+        public void CommandStrategyFactory_ShouldReturn_HelloStrategy()
+        {
+            // Arrange
+            const string commandName = Constants.CommandName.Hello;
+            var factory = new CommandStrategyFactory();
+            
+            // Act
+            var strategy = factory.GetStrategy(commandName);
+
+            // Assert
+            Assert.IsInstanceOf<HelloStrategy>(strategy);
+        }
     }
 }

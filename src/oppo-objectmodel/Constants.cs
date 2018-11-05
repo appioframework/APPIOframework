@@ -12,6 +12,7 @@ namespace Oppo.ObjectModel
         public static class CommandName
         {
             public const string Sln = "sln";
+            public const string Hello = "hello";
         }
 
         public static class CommandResults
