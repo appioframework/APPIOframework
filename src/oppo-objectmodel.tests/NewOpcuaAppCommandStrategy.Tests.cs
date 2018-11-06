@@ -50,18 +50,22 @@ namespace Oppo.ObjectModel.Tests
         public void NewOpcuaAppCommandStrategy_ShouldCreate_SlnAndProjectRelevantFiles([ValueSource(nameof(ValidInputs))]string[] inputParams)
         {
             // Arrange
-            var projectDirectoryName = $"{inputParams.Skip(1).First()}";
+            var projectDirectoryName = $"{inputParams.ElementAt(1)}";
             var opcuaSourceCode = Path.Combine(projectDirectoryName, Constants.DirectoryName.SourceCode);
-            var projectFileName = $"{inputParams.Skip(1).First()}{Constants.FileExtension.OppoProject}";
+            var projectFileName = $"{inputParams.ElementAt(1)}{Constants.FileExtension.OppoProject}";
             var projectFilePath = Path.Combine(projectDirectoryName, projectFileName);
+            var mesonBuildFilePath = Path.Combine(projectDirectoryName, Resources.Resources.OppoOpcuaAppTemplateFileName_meson_build);
+            var maincFile = Path.Combine(opcuaSourceCode, Resources.Resources.OppoOpcuaAppTemplateFileName_main_c);
+            var open62541cFile = Path.Combine(opcuaSourceCode, Resources.Resources.OppoOpcuaAppTemplateFileName_open62541_c);
+            var open62541hFile = Path.Combine(opcuaSourceCode, Resources.Resources.OppoOpcuaAppTemplateFileName_open62541_h);
 
             var fileSystemMock = new Mock<IFileSystem>();
             fileSystemMock.Setup(f => f.CombinePaths(projectDirectoryName, projectFileName)).Returns(projectFilePath);
             fileSystemMock.Setup(f => f.CombinePaths(projectDirectoryName, Constants.DirectoryName.SourceCode)).Returns(opcuaSourceCode);
-            fileSystemMock.Setup(f => f.CombinePaths(opcuaSourceCode, Constants.FileName.SourceCode_main_c)).Returns(Path.Combine(opcuaSourceCode, Resources.Resources.OppoOpcuaAppTemplateFileName_main_c));
-            fileSystemMock.Setup(f => f.CombinePaths(opcuaSourceCode, Constants.FileName.SourceCode_meson_build)).Returns(Path.Combine(opcuaSourceCode, Resources.Resources.OppoOpcuaAppTemplateFileName_meson_build));
-            fileSystemMock.Setup(f => f.CombinePaths(opcuaSourceCode, Constants.FileName.SourceCode_open62541_c)).Returns(Path.Combine(opcuaSourceCode, Resources.Resources.OppoOpcuaAppTemplateFileName_open62541_c));
-            fileSystemMock.Setup(f => f.CombinePaths(opcuaSourceCode, Constants.FileName.SourceCode_open62541_h)).Returns(Path.Combine(opcuaSourceCode, Resources.Resources.OppoOpcuaAppTemplateFileName_open62541_h));
+            fileSystemMock.Setup(f => f.CombinePaths(projectDirectoryName, Constants.FileName.SourceCode_meson_build)).Returns(mesonBuildFilePath);
+            fileSystemMock.Setup(f => f.CombinePaths(opcuaSourceCode, Constants.FileName.SourceCode_main_c)).Returns(maincFile);
+            fileSystemMock.Setup(f => f.CombinePaths(opcuaSourceCode, Constants.FileName.SourceCode_open62541_c)).Returns(open62541cFile);
+            fileSystemMock.Setup(f => f.CombinePaths(opcuaSourceCode, Constants.FileName.SourceCode_open62541_h)).Returns(open62541hFile);
             
 
             var objectUnderTest = new NewOpcuaAppCommandStrategy(fileSystemMock.Object);
@@ -73,8 +77,9 @@ namespace Oppo.ObjectModel.Tests
             Assert.AreEqual(Constants.CommandResults.Success, result);
             fileSystemMock.Verify(x => x.CreateDirectory(projectDirectoryName), Times.Once);
             fileSystemMock.Verify(x => x.CreateDirectory(opcuaSourceCode), Times.Once);
-            fileSystemMock.Verify(x => x.CreateFile(It.Is<string>(s=>s.StartsWith(opcuaSourceCode)), It.IsAny<string>()), Times.Exactly(4));
+            fileSystemMock.Verify(x => x.CreateFile(It.Is<string>(s=>s.StartsWith(opcuaSourceCode)), It.IsAny<string>()), Times.Exactly(3));
             fileSystemMock.Verify(x => x.CreateFile(projectFilePath, It.IsAny<string>()), Times.Once);
+            fileSystemMock.Verify(x => x.CreateFile(mesonBuildFilePath, It.IsAny<string>()), Times.Once);
             fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName), Times.Once);
             fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_main_c), Times.Once);
             fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_meson_build), Times.Once);
