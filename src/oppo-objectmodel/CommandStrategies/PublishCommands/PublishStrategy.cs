@@ -5,9 +5,9 @@ namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
 {
     public class PublishStrategy : ICommandStrategy
     {
-        public string Execute(IEnumerable<string> inputsArgs)
+        public string Execute(IEnumerable<string> inputsParams)
         {
-            var firstInputParam = inputsArgs.FirstOrDefault();
+            var firstInputParam = inputsParams.FirstOrDefault();
 
             if (firstInputParam == Constants.PublishCommandArguments.ModeAll)
             {

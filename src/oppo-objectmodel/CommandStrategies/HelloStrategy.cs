@@ -11,7 +11,7 @@ namespace Oppo.ObjectModel.CommandStrategies
             _writer = writer;
         }
 
-        public string Execute(IEnumerable<string> inputsArgs)
+        public string Execute(IEnumerable<string> inputsParams)
         {
             _writer.WriteLine(Constants.HelloString);
             return Constants.CommandResults.Success;

@@ -14,9 +14,9 @@ namespace Oppo.ObjectModel.CommandStrategies
             _factory = factory;
         }
 
-        public string Execute(IEnumerable<string> inputsArgs)
+        public string Execute(IEnumerable<string> inputsParams)
         {
-            var inputsArgsArray = inputsArgs.ToArray();
+            var inputsArgsArray = inputsParams.ToArray();
             var strategy = _factory.GetStrategy(inputsArgsArray.FirstOrDefault());
             return strategy.Execute(inputsArgsArray.Skip(1));
         }

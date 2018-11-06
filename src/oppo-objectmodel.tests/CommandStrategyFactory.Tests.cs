@@ -125,5 +125,20 @@ namespace Oppo.ObjectModel.Tests
             // Assert
             Assert.IsInstanceOf<HelpStrategy>(strategy);
         }
+
+        [Test]
+        public void CommandStrategyFactory_ShouldReturn_NewStrategy()
+        {
+            // Arrange
+            const string commandName = Constants.CommandName.New;
+            var writerMock = new Mock<IWriter>();
+            var factory = new CommandStrategyFactory(writerMock.Object);
+
+            // Act
+            var strategy = factory.GetStrategy(commandName);
+
+            // Assert
+            Assert.IsInstanceOf<NewStrategy>(strategy);
+        }
     }
 }

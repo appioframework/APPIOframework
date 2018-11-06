@@ -11,6 +11,7 @@ namespace Oppo.ObjectModel
 
         public static class CommandName
         {
+            public const string New = "new";
             public const string Sln = "sln";
             public const string Hello = "hello";
             public const string Build = "build";
@@ -31,6 +32,17 @@ namespace Oppo.ObjectModel
         }
 
         public static class SlnNewCommandArguments
+        {
+            public const string Name = "-n";
+            public const string VerboseName = "--name";
+        }
+
+        public static class NewCommandName
+        {
+            public const string Sln = "sln";
+        }
+
+        public static class NewSlnCommandArguments
         {
             public const string Name = "-n";
             public const string VerboseName = "--name";

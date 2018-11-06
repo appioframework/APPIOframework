@@ -6,9 +6,9 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 {
     public class BuildStrategy : ICommandStrategy
     {
-        public string Execute(IEnumerable<string> inputsArgs)
+        public string Execute(IEnumerable<string> inputsParams)
         {
-            var firstInputParam = inputsArgs.FirstOrDefault();
+            var firstInputParam = inputsParams.FirstOrDefault();
 
             if (firstInputParam == Constants.BuildCommandArguments.ModeAll)
             {

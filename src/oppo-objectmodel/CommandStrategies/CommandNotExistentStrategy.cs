@@ -5,7 +5,7 @@ namespace Oppo.ObjectModel.CommandStrategies
     public class CommandNotExistentStrategy
         : ICommandStrategy
     {
-        public string Execute(IEnumerable<string> inputsArgs)
+        public string Execute(IEnumerable<string> inputsParams)
         {
             return Constants.CommandResults.Failure;
         }
