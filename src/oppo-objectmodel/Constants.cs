@@ -32,6 +32,18 @@ namespace Oppo.ObjectModel
             public const string OpcuaApp = "opcuaapp";
         }
 
+        public static class DirectoryName
+        {
+            public const string SourceCode = "src";
+        }
+
+        public static class FileName
+        {
+            public const string SourceCode_main_c = "main.c";
+            public const string SourceCode_open62541_c = "open62541.c";
+            public const string SourceCode_open62541_h = "open62541.h";
+        }
+
         public static class NewSlnCommandArguments
         {
             public const string Name = "-n";

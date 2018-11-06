@@ -31,17 +31,33 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
             if (_fileSystem.GetInvalidFileNameChars().Any(opcuaAppName.Contains))
             {
                 return Constants.CommandResults.Failure;
-            }            
+            }
 
             if (_fileSystem.GetInvalidPathChars().Any(opcuaAppName.Contains))
             {
                 return Constants.CommandResults.Failure;
             }
 
+            DeployTemplateOpcuaApp(opcuaAppName);
+            DeployTemplateOpcuaSourceFiles(opcuaAppName);
+
+            return Constants.CommandResults.Success;
+        }
+
+        private void DeployTemplateOpcuaApp(string opcuaAppName)
+        {
             _fileSystem.CreateDirectory(opcuaAppName);
             var filePath = _fileSystem.CombinePaths(opcuaAppName, $"{opcuaAppName}{Constants.FileExtension.OppoProject}");
             _fileSystem.CreateFile(filePath, _fileSystem.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName));
-            return Constants.CommandResults.Success;
+        }
+
+        private void DeployTemplateOpcuaSourceFiles(string opcuaAppDirectoryName)
+        {
+            var sourceCodeFilePath = _fileSystem.CombinePaths(opcuaAppDirectoryName, Constants.DirectoryName.SourceCode);
+            _fileSystem.CreateDirectory(sourceCodeFilePath);
+            _fileSystem.CreateFile(_fileSystem.CombinePaths(sourceCodeFilePath, Constants.FileName.SourceCode_main_c), _fileSystem.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_main_c));
+            _fileSystem.CreateFile(_fileSystem.CombinePaths(sourceCodeFilePath, Constants.FileName.SourceCode_open62541_c), _fileSystem.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_open62541_c));
+            _fileSystem.CreateFile(_fileSystem.CombinePaths(sourceCodeFilePath, Constants.FileName.SourceCode_open62541_h), _fileSystem.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_open62541_h));
         }
     }
 }
