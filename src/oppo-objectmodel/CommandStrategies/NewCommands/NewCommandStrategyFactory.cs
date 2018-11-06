@@ -9,6 +9,7 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
         public NewCommandStrategyFactory(IFileSystem fileSystem)
         {
             _commands.Add(Constants.NewCommandName.Sln, new NewSlnCommandStrategy(fileSystem));
+            _commands.Add(Constants.NewCommandName.OpcuaApp, new NewOpcuaAppCommandStrategy(fileSystem));
         }
 
         public INewCommandStrategy GetStrategy(string commandName)

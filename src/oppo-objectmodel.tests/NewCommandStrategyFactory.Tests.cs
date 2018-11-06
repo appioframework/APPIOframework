@@ -35,6 +35,8 @@ namespace Oppo.ObjectModel.Tests
         [TestCase("CREATE")]
         [TestCase("Build")]
         [TestCase("built")]
+        [TestCase("OPCUAapp")]
+        [TestCase("opcua-app")]
         public void NewCommandStrategyFactory_ShouldReturn_CommandNotExistentStrategy(string commandName)
         {
             // Arrange
@@ -61,6 +63,21 @@ namespace Oppo.ObjectModel.Tests
 
             // Assert
             Assert.IsInstanceOf<NewSlnCommandStrategy>(strategy);
+        }
+
+        [Test]
+        public void NewCommandStrategyFactory_ShouldReturn_NewOpcuaAppStrategy()
+        {
+            // Arrange
+            var mockFileSystemMock = new Mock<IFileSystem>();
+            const string commandName = Constants.NewCommandName.OpcuaApp;
+            var factory = new NewCommandStrategyFactory(mockFileSystemMock.Object);
+
+            // Act
+            var strategy = factory.GetStrategy(commandName);
+
+            // Assert
+            Assert.IsInstanceOf<NewOpcuaAppCommandStrategy>(strategy);
         }
     }
 }

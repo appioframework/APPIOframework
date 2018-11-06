@@ -6,6 +6,10 @@ namespace Oppo.ObjectModel
         
         char[] GetInvalidFileNameChars();
 
+        char[] GetInvalidPathChars();
+
         string LoadTemplateFile(string fileName);
+        void CreateDirectory(string directoryName);
+        string CombinePaths(params string[] paths);
     }    
 }

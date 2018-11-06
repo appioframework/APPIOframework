@@ -7,6 +7,7 @@ namespace Oppo.ObjectModel
         public static class FileExtension
         {
             public const string OppoSln = ".opposln";
+            public const string OppoProject = ".oppoproj";
         }
 
         public static class CommandName
@@ -28,6 +29,7 @@ namespace Oppo.ObjectModel
         public static class NewCommandName
         {
             public const string Sln = "sln";
+            public const string OpcuaApp = "opcuaapp";
         }
 
         public static class NewSlnCommandArguments
@@ -35,6 +37,13 @@ namespace Oppo.ObjectModel
             public const string Name = "-n";
             public const string VerboseName = "--name";
         }
+
+        public static class NewOpcuaAppCommandArguments
+        {
+            public const string Name = "-n";
+            public const string VerboseName = "--name";
+        }
+
 
         public static class BuildCommandArguments
         {

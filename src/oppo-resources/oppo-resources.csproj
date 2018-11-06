@@ -16,4 +16,8 @@
     <EmbeddedResource Include="templates\template.opposln" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="templates\template.oppoproj" />
+  </ItemGroup>
+
 </Project>

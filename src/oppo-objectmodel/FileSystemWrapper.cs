@@ -6,6 +6,16 @@ namespace Oppo.ObjectModel
     [ExcludeFromCodeCoverage]
     public class FileSystemWrapper : IFileSystem
     {
+        public string CombinePaths(params string[] paths)
+        {
+            return Path.Combine(paths);
+        }
+
+        public void CreateDirectory(string directoryName)
+        {
+            Directory.CreateDirectory(directoryName);
+        }
+
         public void CreateFile(string filePath, string fileContent)
         {
            File.WriteAllText(filePath, fileContent);
@@ -14,6 +24,11 @@ namespace Oppo.ObjectModel
         public char[] GetInvalidFileNameChars()
         {
             return Path.GetInvalidFileNameChars();
+        }
+
+        public char[] GetInvalidPathChars()
+        {
+            return Path.GetInvalidPathChars();
         }
 
         public string LoadTemplateFile(string fileName)
