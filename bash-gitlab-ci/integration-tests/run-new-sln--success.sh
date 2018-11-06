@@ -2,8 +2,8 @@
 
 set -euo pipefail
 
-mkdir sln-new--success
-cd    sln-new--success
+mkdir new-sln--success
+cd    new-sln--success
 
 if [ "${1}" = "verbose" ];
 then
@@ -17,3 +17,6 @@ then
   echo "oppo solution file does not exist ..."
   exit 1
 fi
+
+cd ..
+rm -rf new-sln--success
