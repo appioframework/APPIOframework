@@ -18,7 +18,7 @@ then
   exit 1
 fi
 
-if [ ! -f "my-app/src/main.c"] && [ ! -f "my-app/src/open62541.c"] && [ ! -f "my-app/src/open62541.h"];
+if [ ! -f "my-app/src/main.c" ] && [ ! -f "my-app/src/open62541.c" ] && [ ! -f "my-app/src/open62541.h" ];
 then
   echo "any oppo project source file does not exist ..."
   exit 1
