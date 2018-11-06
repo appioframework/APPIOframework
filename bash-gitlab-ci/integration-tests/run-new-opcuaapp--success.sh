@@ -12,9 +12,9 @@ else
   oppo new opcuaapp -n "my-app"
 fi
 
-if [ ! -f "my-app/my-app.oppoproj" ];
+if [ ! -f "my-app/my-app.oppoproj" ] && [ ! -f "my-app/meson.build" ];
 then
-  echo "oppo project file does not exist ..."
+  echo "oppo project / meson.build file does not exist ..."
   exit 1
 fi
 
