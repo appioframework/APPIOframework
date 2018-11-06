@@ -3,6 +3,7 @@ using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies;
 using Oppo.ObjectModel.CommandStrategies.BuildCommands;
 using Oppo.ObjectModel.CommandStrategies.PublishCommands;
+using Oppo.ObjectModel.CommandStrategies.HelpCommands;
 
 namespace Oppo.ObjectModel.Tests
 {
