@@ -6,8 +6,6 @@ stages:
   - integration-test--execution--1
   - integration-test--execution--2
   - integration-test--execution--3
-  - integration-test--execution--4
-  - integration-test--execution--5
   - delivery 
 
 before_script:
@@ -87,27 +85,15 @@ run-integration-test--hello:
   script:
     - /bin/bash bash-gitlab-ci/integration-tests/run-hello.sh
 
-run-integration-test--sln-new--success:
-  extends: prepare-integration-test
-  stage: 'integration-test--execution--2'
-  script:
-    - /bin/bash bash-gitlab-ci/integration-tests/run-sln-new--success.sh -
-
-run-integration-test--sln-new-verbose--success:
-  extends: prepare-integration-test
-  stage: 'integration-test--execution--3'
-  script:
-    - /bin/bash bash-gitlab-ci/integration-tests/run-sln-new--success.sh verbose
-    
 run-integration-test--new-sln--success:
   extends: prepare-integration-test
-  stage: 'integration-test--execution--4'
+  stage: 'integration-test--execution--2'
   script:
     - /bin/bash bash-gitlab-ci/integration-tests/run-new-sln--success.sh -
 
 run-integration-test--new-sln-verbose--success:
   extends: prepare-integration-test
-  stage: 'integration-test--execution--5'
+  stage: 'integration-test--execution--3'
   script:
     - /bin/bash bash-gitlab-ci/integration-tests/run-new-sln--success.sh verbose
 
