@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.IO;
 using System.Diagnostics.CodeAnalysis;
 
@@ -9,6 +10,19 @@ namespace Oppo.ObjectModel
         public string CombinePaths(params string[] paths)
         {
             return Path.Combine(paths);
+        }
+
+        public bool CallExecutable(string name, string workingDirectory, string args)
+        {
+            var info = new ProcessStartInfo(name, args)
+            {
+                WorkingDirectory = workingDirectory,
+            };
+
+            var process = Process.Start(info);
+            process?.WaitForExit();
+
+            return process?.ExitCode == 0;
         }
 
         public void CreateDirectory(string directoryName)

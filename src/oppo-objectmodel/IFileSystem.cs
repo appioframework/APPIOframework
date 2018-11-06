@@ -11,5 +11,7 @@ namespace Oppo.ObjectModel
         string LoadTemplateFile(string fileName);
         void CreateDirectory(string directoryName);
         string CombinePaths(params string[] paths);
+
+        bool CallExecutable(string name, string workingDirectory, string args);
     }    
 }

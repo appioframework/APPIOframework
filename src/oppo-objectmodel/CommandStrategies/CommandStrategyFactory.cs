@@ -15,7 +15,7 @@ namespace Oppo.ObjectModel.CommandStrategies
         {
             _commands.Add(Constants.CommandName.Hello, new HelloStrategy(writer));
             _commands.Add(Constants.CommandName.New, new NewStrategy(new NewCommandStrategyFactory(new FileSystemWrapper())));
-            _commands.Add(Constants.CommandName.Build, new BuildStrategy());
+            _commands.Add(Constants.CommandName.Build, new BuildStrategy(new FileSystemWrapper()));
             _commands.Add(Constants.CommandName.Publish, new PublishStrategy());
 
             var helpStrategy = new HelpStrategy();
