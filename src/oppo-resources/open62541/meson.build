@@ -4,10 +4,10 @@ project('simple-meson-example', 'c',
         default_options : [ 'warning_level=3', 'buildtype=debugoptimized', 'c_std=c11' ]
 )
 
-app_sources  = [ files('main.c', 'open62541.c'),
+app_sources  = [ files('src/main.c', 'src/open62541.c'),
 ]
 
-app_inc      = [
+app_inc      = [ include_directories('src')
 ]
 
 app_deps     = [ 
