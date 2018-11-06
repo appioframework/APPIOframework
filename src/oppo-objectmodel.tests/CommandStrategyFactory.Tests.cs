@@ -35,22 +35,7 @@ namespace Oppo.ObjectModel.Tests
             // Assert
             Assert.IsInstanceOf<CommandNotExistentStrategy>(strategy);
         }
-
-        [Test]
-        public void CommandStrategyFactory_ShouldReturn_SlnStrategy()
-        {
-            // Arrange
-            const string commandName = Constants.CommandName.Sln;
-            var writerMock = new Mock<IWriter>();
-            var factory = new CommandStrategyFactory(writerMock.Object);
-
-            // Act
-            var strategy = factory.GetStrategy(commandName);
-
-            // Assert
-            Assert.IsInstanceOf<SlnStrategy>(strategy);
-        }
-
+        
         [Test]
         public void CommandStrategyFactory_ShouldReturn_HelloStrategy()
         {
