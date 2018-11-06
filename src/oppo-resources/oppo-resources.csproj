@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="open62541\meson.build" />
     <None Remove="templates\template.opposln" />
   </ItemGroup>
 
@@ -13,6 +14,7 @@
     <EmbeddedResource Include="open62541/open62541.c" />
     <EmbeddedResource Include="open62541/open62541.h" />
     <EmbeddedResource Include="open62541/main.c" />
+    <EmbeddedResource Include="open62541\meson.build" />
     <EmbeddedResource Include="templates\template.opposln" />
   </ItemGroup>
 
