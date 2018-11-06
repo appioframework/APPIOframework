@@ -23,5 +23,10 @@ namespace Oppo.ObjectModel
             var strategy = _commandStrategyFactory.GetStrategy(inputParamsArray.First());
             return strategy.Execute(inputParamsArray.Skip(1));
         }
+
+        public void Test()
+        {
+            System.Console.WriteLine("coverage failure");
+        }
     }
 }
