@@ -56,6 +56,7 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
             var sourceCodeFilePath = _fileSystem.CombinePaths(opcuaAppDirectoryName, Constants.DirectoryName.SourceCode);
             _fileSystem.CreateDirectory(sourceCodeFilePath);
             _fileSystem.CreateFile(_fileSystem.CombinePaths(sourceCodeFilePath, Constants.FileName.SourceCode_main_c), _fileSystem.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_main_c));
+            _fileSystem.CreateFile(_fileSystem.CombinePaths(sourceCodeFilePath, Constants.FileName.SourceCode_meson_build), _fileSystem.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_meson_build));
             _fileSystem.CreateFile(_fileSystem.CombinePaths(sourceCodeFilePath, Constants.FileName.SourceCode_open62541_c), _fileSystem.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_open62541_c));
             _fileSystem.CreateFile(_fileSystem.CombinePaths(sourceCodeFilePath, Constants.FileName.SourceCode_open62541_h), _fileSystem.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_open62541_h));
         }

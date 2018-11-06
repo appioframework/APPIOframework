@@ -40,6 +40,7 @@ namespace Oppo.ObjectModel
         public static class FileName
         {
             public const string SourceCode_main_c = "main.c";
+            public const string SourceCode_meson_build = "meson.build";
             public const string SourceCode_open62541_c = "open62541.c";
             public const string SourceCode_open62541_h = "open62541.h";
         }
