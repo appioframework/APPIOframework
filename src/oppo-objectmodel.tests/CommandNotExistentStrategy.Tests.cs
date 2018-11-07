@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies;
+using System;
 using System.Collections.Generic;
 
 
@@ -23,6 +24,18 @@ namespace Oppo.ObjectModel.Tests
             
             // AssertP
             Assert.AreEqual(strategyResult, Constants.CommandResults.Failure);             
+        }
+
+        [Test]
+        public void ShouldThrowNotSupportedExceptionOnGetHelpText()
+        {
+            // Arrange
+            var strategy = new CommandNotExistentStrategy();
+
+            // Act            
+
+            // Assert
+            Assert.Throws<NotSupportedException>(() => strategy.GetHelpText());
         }
     }
 }
