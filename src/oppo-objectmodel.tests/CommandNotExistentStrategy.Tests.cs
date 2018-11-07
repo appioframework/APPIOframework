@@ -36,6 +36,6 @@ namespace Oppo.ObjectModel.Tests
 
             // Assert
             Assert.Throws<NotSupportedException>(() => strategy.GetHelpText());
-        }
+        }       
     }
 }
