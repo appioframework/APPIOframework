@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Oppo.ObjectModel.Extensions;
 
 namespace Oppo.ObjectModel.CommandStrategies.VersionCommands
 {
@@ -18,10 +19,9 @@ namespace Oppo.ObjectModel.CommandStrategies.VersionCommands
         public string Execute(IEnumerable<string> inputsParams)
         {
             var printableInfos = new Dictionary<string, string>();
-            foreach (var assemblyInfo in _reflection.GetOppoAssemblyInfos())
+            foreach (var info in _reflection.GetOppoAssemblyInfos())
             {
-                var versionString = $"{assemblyInfo.AssemblyVersion.Major}.{assemblyInfo.AssemblyVersion.Minor}.{assemblyInfo.AssemblyVersion.Revision}";
-                printableInfos.Add(assemblyInfo.AssemblyName, string.Format(Resources.text.version.VersionText.AssemblyVersionInfo, versionString));
+                printableInfos.Add(info.AssemblyName, string.Format(Resources.text.version.VersionText.AssemblyVersionInfo, info.AssemblyVersion.ToPrintableString()));
             }
 
             _writer.WriteLines(printableInfos);
