@@ -107,7 +107,8 @@ namespace Oppo.ObjectModel.Tests
         public void ShouldReturnCommandName()
         {
             // Arrange
-            var publishStrategy = new PublishStrategy();
+            var fileSystemMock = new Mock<IFileSystem>();
+            var publishStrategy = new PublishStrategy(fileSystemMock.Object);
 
             // Act
             var commandName = publishStrategy.Name;
