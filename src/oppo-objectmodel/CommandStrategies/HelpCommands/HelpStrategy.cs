@@ -4,7 +4,7 @@ namespace Oppo.ObjectModel.CommandStrategies.HelpCommands
 {
     public class HelpStrategy : ICommandStrategy
     {
-        private IWriter _writer;
+        private readonly IWriter _writer;
         private readonly List<ICommandStrategy> _availableCommands;
 
         public HelpStrategy(IWriter writer, List<ICommandStrategy> availableCommands)
