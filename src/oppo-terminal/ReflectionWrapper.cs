@@ -1,5 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Linq;
+﻿using System;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Oppo.ObjectModel;
 
@@ -24,7 +25,8 @@ namespace Oppo.Terminal
 
         private static AssemblyInfo GetAssemblyInfo(Assembly assembly)
         {
-            return new AssemblyInfo(assembly.ManifestModule.Name, assembly.GetCustomAttributes<AssemblyVersionAttribute>().First(), assembly.GetCustomAttributes<AssemblyFileVersionAttribute>().First());
+            var fileVersionString = FileVersionInfo.GetVersionInfo(assembly.Location).FileVersion;
+            return new AssemblyInfo(assembly.ManifestModule.Name, assembly.GetName().Version, new Version(fileVersionString));
         }
     }
 }

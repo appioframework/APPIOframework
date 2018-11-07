@@ -19,7 +19,7 @@ namespace Oppo.ObjectModel.CommandStrategies.VersionCommands
         {
             foreach (var assemblyInfo in _reflection.GetOppoAssemblyInfos())
             {
-                _writer.WriteLine($"{assemblyInfo.AssemblyName}: {assemblyInfo.AssemblyVersion.Version}, file {assemblyInfo.AssemblyFileVersion.Version}");
+                _writer.WriteLine($"  {assemblyInfo.AssemblyName}: {assemblyInfo.AssemblyVersion}, file {assemblyInfo.AssemblyFileVersion}");
             }
 
             return Constants.CommandResults.Success;

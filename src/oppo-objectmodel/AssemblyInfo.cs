@@ -1,12 +1,12 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Oppo.ObjectModel
 {
     [ExcludeFromCodeCoverage]
     public class AssemblyInfo
     {
-        public AssemblyInfo(string name, AssemblyVersionAttribute version, AssemblyFileVersionAttribute fileVersion)
+        public AssemblyInfo(string name, Version version, Version fileVersion)
         {
             AssemblyName = name;
             AssemblyVersion = version;
@@ -14,7 +14,7 @@ namespace Oppo.ObjectModel
         }
 
         public string AssemblyName { get; }
-        public AssemblyVersionAttribute AssemblyVersion { get; }
-        public AssemblyFileVersionAttribute AssemblyFileVersion { get; }
+        public Version AssemblyVersion { get; }
+        public Version AssemblyFileVersion { get; }
     }
 }

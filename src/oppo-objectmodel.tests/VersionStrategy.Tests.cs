@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+﻿using System;
 using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies;
@@ -25,21 +25,21 @@ namespace Oppo.ObjectModel.Tests
             {
                 new[]
                 {
-                    new AssemblyInfo("assembly-1", new AssemblyVersionAttribute("0.0.0.0"), new AssemblyFileVersionAttribute("0.0.0.0")),
+                    new AssemblyInfo("assembly-1", new Version("0.0.0.0"), new Version("0.0.0.0")),
                 },
                 new[]
                 {
-                    new AssemblyInfo("assembly-1", new AssemblyVersionAttribute("0.0.0.0"), new AssemblyFileVersionAttribute("0.0.4.0")),
-                    new AssemblyInfo("assembly-2", new AssemblyVersionAttribute("0.2.0.0"), new AssemblyFileVersionAttribute("0.0.0.0")),
+                    new AssemblyInfo("assembly-1", new Version("0.0.0.0"), new Version("0.0.4.0")),
+                    new AssemblyInfo("assembly-2", new Version("0.2.0.0"), new Version("0.0.0.0")),
                 },
                 new[]
                 {
-                    new AssemblyInfo("assembly-1", new AssemblyVersionAttribute("0.0.0.0"), new AssemblyFileVersionAttribute("0.0.4.0")),
-                    new AssemblyInfo("assembly-4", new AssemblyVersionAttribute("0.5.0.6"), new AssemblyFileVersionAttribute("0.0.3.0")),
-                    new AssemblyInfo("assembly-2", new AssemblyVersionAttribute("0.2.0.0"), new AssemblyFileVersionAttribute("0.0.0.7")),
-                    new AssemblyInfo("assembly-5", new AssemblyVersionAttribute("9.0.0.0"), new AssemblyFileVersionAttribute("3.0.0.0")),
-                    new AssemblyInfo("assembly-3", new AssemblyVersionAttribute("0.0.1.0"), new AssemblyFileVersionAttribute("0.1.0.0")),
-                    new AssemblyInfo("assembly-6", new AssemblyVersionAttribute("0.1.4.3"), new AssemblyFileVersionAttribute("0.1.0.0")),
+                    new AssemblyInfo("assembly-1", new Version("0.0.0.0"), new Version("0.0.4.0")),
+                    new AssemblyInfo("assembly-4", new Version("0.5.0.6"), new Version("0.0.3.0")),
+                    new AssemblyInfo("assembly-2", new Version("0.2.0.0"), new Version("0.0.0.7")),
+                    new AssemblyInfo("assembly-5", new Version("9.0.0.0"), new Version("3.0.0.0")),
+                    new AssemblyInfo("assembly-3", new Version("0.0.1.0"), new Version("0.1.0.0")),
+                    new AssemblyInfo("assembly-6", new Version("0.1.4.3"), new Version("0.1.0.0")),
                 },
             };
         }
