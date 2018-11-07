@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies;
@@ -72,8 +74,9 @@ namespace Oppo.ObjectModel.Tests
             var result = objectUnderTest.Execute(inputParams);
 
             // Assert
+            var versionRegex = new Regex(@"^\d+.\d+.\d+$");
             Assert.AreEqual(Constants.CommandResults.Success, result);
-            writerMock.Verify(x => x.WriteLines(It.IsAny<Dictionary<string, string>>()), Times.AtLeastOnce);
+            writerMock.Verify(x => x.WriteLines(It.Is<Dictionary<string, string>>(d => d.Values.All(v => versionRegex.IsMatch(v)))), Times.AtLeastOnce);
         }
 
         [Test]

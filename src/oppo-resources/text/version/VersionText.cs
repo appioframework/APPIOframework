@@ -2,6 +2,6 @@
 {
     public static class VersionText
     {
-        public const string AssemblyVersionInfo = "Assembly: {0}, File: {1}";
+        public const string AssemblyVersionInfo = "{0}";
     }
 }

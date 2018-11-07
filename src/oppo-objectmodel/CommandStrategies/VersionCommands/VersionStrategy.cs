@@ -20,7 +20,8 @@ namespace Oppo.ObjectModel.CommandStrategies.VersionCommands
             var printableInfos = new Dictionary<string, string>();
             foreach (var assemblyInfo in _reflection.GetOppoAssemblyInfos())
             {
-                printableInfos.Add(assemblyInfo.AssemblyName, string.Format(Resources.text.version.VersionText.AssemblyVersionInfo, assemblyInfo.AssemblyVersion, assemblyInfo.AssemblyFileVersion));
+                var versionString = $"{assemblyInfo.AssemblyVersion.Major}.{assemblyInfo.AssemblyVersion.Minor}.{assemblyInfo.AssemblyVersion.Revision}";
+                printableInfos.Add(assemblyInfo.AssemblyName, string.Format(Resources.text.version.VersionText.AssemblyVersionInfo, versionString));
             }
 
             _writer.WriteLines(printableInfos);
