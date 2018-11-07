@@ -5,9 +5,9 @@ using Oppo.ObjectModel.CommandStrategies;
 namespace Oppo.Terminal
 {
     [ExcludeFromCodeCoverage]
-    static class Program
+    internal static class Program
     {
-        static int Main(string[] args)
+        internal static int Main(string[] args)
         {
             var writer = new ConsoleWriter();
             var commandFactory = new CommandStrategyFactory(writer);
