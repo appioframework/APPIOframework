@@ -30,6 +30,7 @@
 !src/oppo-objectmodel/CommandStrategies/NewCommands/
 !src/oppo-objectmodel/CommandStrategies/HelloCommands/
 !src/oppo-objectmodel/CommandStrategies/CommandNotExistent/
+!src/oppo-objectmodel/CommandStrategies/VersionCommands/
 
 !src/oppo-objectmodel.tests/
 !src/oppo-objectmodel.tests/oppo-objectmodel.tests.csproj

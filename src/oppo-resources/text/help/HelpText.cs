@@ -9,5 +9,6 @@
         public static string HelpEndCommand => "\nRun \"oppo [command] --help\" for more information about a command";
         public static string HelpCommand => "This prints the help";
         public static string HelloCommand => "This prints the hello oppo msg";
+        public static string VersionCommand => "This prints the version information";
     }
 }

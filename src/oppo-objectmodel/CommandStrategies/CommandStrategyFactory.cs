@@ -6,6 +6,7 @@ using Oppo.ObjectModel.CommandStrategies.HelloCommands;
 using Oppo.ObjectModel.CommandStrategies.HelpCommands;
 using Oppo.ObjectModel.CommandStrategies.NewCommands;
 using Oppo.ObjectModel.CommandStrategies.PublishCommands;
+using Oppo.ObjectModel.CommandStrategies.VersionCommands;
 
 namespace Oppo.ObjectModel.CommandStrategies
 {
@@ -14,12 +15,13 @@ namespace Oppo.ObjectModel.CommandStrategies
         private readonly Dictionary<string, ICommandStrategy> _commands
             = new Dictionary<string, ICommandStrategy>();
 
-        public CommandStrategyFactory(IWriter writer)
+        public CommandStrategyFactory(IReflection reflection, IWriter writer)
         {
             _commands.Add(Constants.CommandName.Hello, new HelloStrategy(writer));
             _commands.Add(Constants.CommandName.New, new NewStrategy(new NewCommandStrategyFactory(new FileSystemWrapper())));
             _commands.Add(Constants.CommandName.Build, new BuildStrategy(new FileSystemWrapper()));
             _commands.Add(Constants.CommandName.Publish, new PublishStrategy(new FileSystemWrapper()));
+            _commands.Add(Constants.CommandName.Version, new VersionStrategy(reflection, writer));
 
             // help command must be added as last one, because it hold a reference to all others commands for help messages
             var helpStrategy = new HelpStrategy(writer, _commands.Values.ToList());
