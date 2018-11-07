@@ -1,67 +1,61 @@
+using System.Linq;
+using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies;
-using Moq;
-using System.Collections.Generic;
 using Oppo.ObjectModel.CommandStrategies.PublishCommands;
-using System.Linq;
 
 namespace Oppo.ObjectModel.Tests
 {
     public class PublishStrategyTests
     {
-        private static string[][] InvalidInputs()
-        {
-            return new[] 
-            { 
-                new []{ "Publish", "", "" },
-                new []{ "", "" },
-                new []{ "publish" },
-                new []{ "p", "all" },
-                new []{ "Publish", "-all" },
-                new []{ "-All" },
-                new []{ "-aLL" },
-                new []{ "-R" },
-                new string[]{ }
-            };
-        }
-
-        private static string[][] ValidInputs()
+        private static string[][] ValidInputsPublishApplication()
         {
             return new[]
             {
-                new []{"-all"}                
+                new[] {"-n", "hugo"},
+                new[] {"--name", "hugo"},
+                new[] {"-n", "another"},
+                new[] {"--name", "app-name"},
             };
         }
 
-        [SetUp]
-        public void Setup()
+        [Test]
+        public void PublishStrategy_ShouldImplement_ICommandStrategy()
         {
+            // Arrange
+            var fileSystemMock = new Mock<IFileSystem>();
+
+            // Act
+            var objectUnderTest = new PublishStrategy(fileSystemMock.Object);
+
+            // Assert
+            Assert.IsInstanceOf<ICommandStrategy>(objectUnderTest);
         }
 
         [Test]
-        public void ShouldExcecuteStrategy_Success([ValueSource(nameof(ValidInputs))] string[] inputParams)
+        public void PublishStrategy_ShouldCreate_PublishDirectoryContainingApplicationFiles([ValueSource(nameof(ValidInputsPublishApplication))] string[] inputParams)
         {
             // Arrange
-            var publishStrategy = new PublishStrategy();
-
-            // Act
-            var strategyResult = publishStrategy.Execute(inputParams);
+            var applicationName = inputParams.ElementAt(1);
+            const string buildDirectory = "build";
+            const string publishDirectory = "publish";
+            const string applicationSourcePath = "source";
+            const string applicationTargetPath = "target";
             
-            // Assert
-            Assert.AreEqual(strategyResult, Constants.CommandResults.Success);      
-        }
-
-        [Test]
-        public void ShouldExcecuteStrategy_Fail_MissingParameter([ValueSource(nameof(InvalidInputs))] string[] inputParams)
-        {
-            // Arrange
-            var publishStrategy = new PublishStrategy();
-
+            var fileSystemMock = new Mock<IFileSystem>();
+            fileSystemMock.Setup(x => x.CombinePaths(applicationName, Constants.DirectoryName.Publish)).Returns(publishDirectory);
+            fileSystemMock.Setup(x => x.CombinePaths(applicationName, Constants.DirectoryName.MesonBuild)).Returns(buildDirectory);
+            fileSystemMock.Setup(x => x.CombinePaths(buildDirectory, Constants.ExecutableName.App)).Returns(applicationSourcePath);
+            fileSystemMock.Setup(x => x.CombinePaths(publishDirectory, Constants.ExecutableName.App)).Returns(applicationTargetPath);
+            var objectUnderTest = new PublishStrategy(fileSystemMock.Object);
+            
             // Act
-            var strategyResult = publishStrategy.Execute(inputParams);
+            var result = objectUnderTest.Execute(inputParams);
 
             // Assert
-            Assert.AreEqual(strategyResult, Constants.CommandResults.Failure);
+            Assert.AreEqual(Constants.CommandResults.Success, result);
+            fileSystemMock.Verify(x => x.CreateDirectory(publishDirectory), Times.Once);
+            fileSystemMock.Verify(x => x.CopyFile(applicationSourcePath, applicationTargetPath), Times.Once);
         }
 
         [Test]

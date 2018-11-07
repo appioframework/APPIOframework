@@ -13,5 +13,7 @@ namespace Oppo.ObjectModel
         string CombinePaths(params string[] paths);
 
         bool CallExecutable(string name, string workingDirectory, string args);
+
+        void CopyFile(string source, string target);
     }    
 }

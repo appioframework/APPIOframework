@@ -25,6 +25,11 @@ namespace Oppo.ObjectModel
             return process?.ExitCode == 0;
         }
 
+        public void CopyFile(string source, string target)
+        {
+            File.Copy(source, target, true);
+        }
+
         public void CreateDirectory(string directoryName)
         {
             Directory.CreateDirectory(directoryName);

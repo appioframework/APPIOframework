@@ -36,12 +36,14 @@ namespace Oppo.ObjectModel
         {
             public const string SourceCode = "src";
             public const string MesonBuild = "build";
+            public const string Publish = "publish";
         }
 
         public static class ExecutableName
         {
             public const string Meson = "meson";
             public const string Ninja = "ninja";
+            public const string App = "app";
         }
 
         public static class FileName
@@ -73,7 +75,6 @@ namespace Oppo.ObjectModel
 
         public static class PublishCommandArguments
         {
-            public const string ModeAll = "-all";
         }
     }
 }
