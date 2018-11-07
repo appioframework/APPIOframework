@@ -19,6 +19,23 @@ namespace Oppo.ObjectModel.Tests
             };
         }
 
+        private static string[][] InvalidInputsPublishApplication()
+        {
+            return new[]
+            {
+                new[] {"-n", ""},
+                new[] {"-a", "hugo"},
+                new[] {"-a", ""},
+                new[] {"--name", ""},
+                new[] {"--any", "hugo"},
+                new[] {"--any", ""},
+                new[] {"-n"},
+                new[] {"-x"},
+                new[] {"--name"},
+                new[] {"--exit"},
+            };
+        }
+
         [Test]
         public void PublishStrategy_ShouldImplement_ICommandStrategy()
         {
@@ -59,10 +76,25 @@ namespace Oppo.ObjectModel.Tests
         }
 
         [Test]
+        public void PublishStrategy_ShouldIgnore_MissingOrInvalidArguments([ValueSource(nameof(InvalidInputsPublishApplication))] string[] inputParams)
+        {
+            // Arrange
+            var fileSystemMock = new Mock<IFileSystem>();
+            var objectUnderTest = new PublishStrategy(fileSystemMock.Object);
+
+            // Act
+            var result = objectUnderTest.Execute(inputParams);
+
+            // Assert
+            Assert.AreEqual(Constants.CommandResults.Failure, result);
+        }
+
+        [Test]
         public void ShouldReturnEmptyHelpText()
         {
             // Arrange
-            var publishStrategy = new PublishStrategy();
+            var fileSystemMock = new Mock<IFileSystem>();
+            var publishStrategy = new PublishStrategy(fileSystemMock.Object);
 
             // Act
             var helpText = publishStrategy.GetHelpText();
