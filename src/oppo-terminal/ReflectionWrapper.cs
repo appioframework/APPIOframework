@@ -12,7 +12,7 @@ namespace Oppo.Terminal
         public AssemblyInfo[] GetOppoAssemblyInfos()
         {
             var oppoTerminalAssembly = typeof(OppoTerminal).Assembly;
-            var oppoObjectModelAssembly = typeof(ReflectionWrapper).Assembly;
+            var oppoObjectModelAssembly = typeof(ObjectModel.ObjectModel).Assembly;
             var oppoResourcesAssembly = typeof(Resources.Resources).Assembly;
 
             return new[]
