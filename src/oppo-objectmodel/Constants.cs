@@ -75,6 +75,8 @@ namespace Oppo.ObjectModel
 
         public static class PublishCommandArguments
         {
+            public const string Name = "-n";
+            public const string VerboseName = "--name";
         }
     }
 }

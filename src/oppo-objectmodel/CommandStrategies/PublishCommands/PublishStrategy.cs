@@ -17,7 +17,18 @@ namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
         public string Execute(IEnumerable<string> inputsParams)
         {
             var inputParamsArray = inputsParams.ToArray();
-            var projectName = inputParamsArray.ElementAt(1);
+            var nameFlag = inputParamsArray.ElementAtOrDefault(0);
+            var projectName = inputParamsArray.ElementAtOrDefault(1);
+
+            if (nameFlag != Constants.PublishCommandArguments.Name && nameFlag != Constants.PublishCommandArguments.VerboseName)
+            {
+                return Constants.CommandResults.Failure;
+            }
+
+            if (string.IsNullOrEmpty(projectName))
+            {
+                return Constants.CommandResults.Failure;
+            }
 
             var projectBuildDirectory = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.MesonBuild);
             var applicationFileBuildLocation = _fileSystem.CombinePaths(projectBuildDirectory, Constants.ExecutableName.App);
