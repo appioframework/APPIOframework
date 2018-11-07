@@ -18,11 +18,7 @@ namespace Oppo.ObjectModel.CommandStrategies
             _commands.Add(Constants.CommandName.New, new NewStrategy(new NewCommandStrategyFactory(new FileSystemWrapper())));
             _commands.Add(Constants.CommandName.Build, new BuildStrategy(new FileSystemWrapper()));
             _commands.Add(Constants.CommandName.Publish, new PublishStrategy());
-
-            //var allCommandsWithoutHelp = _commands.
-            //    Where(d => d.Key != Constants.CommandName.Help && d.Key != Constants.CommandName.ShortHelp).
-            //        Select(d => d.Value).ToList();
-
+                       
             // help command must be added as last one, because it hold a reference to all others commands for help messages
             var helpStrategy = new HelpStrategy(writer, _commands.Values.ToList());
             _commands.Add(Constants.CommandName.Help, helpStrategy);
