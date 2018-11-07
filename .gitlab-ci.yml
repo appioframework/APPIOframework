@@ -159,8 +159,7 @@ run-integration-test--build-help-verbose--success:
   extends: prepare-integration-test
   stage: 'integration-test--execution--12'
   script:
-    - /bin/bash bash-gitlab-ci/integration-tests/run-build-help--success.sh verbose
-    
+    - /bin/bash bash-gitlab-ci/integration-tests/run-build-help--success.sh verbose    
     
 run-integration-test--version--success:
   extends: prepare-integration-test
