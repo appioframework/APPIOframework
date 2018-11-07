@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Oppo.ObjectModel.CommandStrategies.HelpCommands
 {
@@ -13,6 +14,7 @@ namespace Oppo.ObjectModel.CommandStrategies.HelpCommands
             _availableCommands = availableCommands;
         }
 
+        [ExcludeFromCodeCoverage]
         public string Name => Constants.CommandName.Help;
 
         public string Execute(IEnumerable<string> inputsParams)

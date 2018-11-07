@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Oppo.ObjectModel.CommandStrategies.NewCommands;
 
@@ -13,6 +14,7 @@ namespace Oppo.ObjectModel.CommandStrategies
             _factory = factory;
         }
 
+        [ExcludeFromCodeCoverage]
         public string Name => Constants.CommandName.New;
 
         public string Execute(IEnumerable<string> inputsParams)
