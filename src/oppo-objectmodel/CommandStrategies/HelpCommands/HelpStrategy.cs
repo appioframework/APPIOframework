@@ -13,23 +13,27 @@ namespace Oppo.ObjectModel.CommandStrategies.HelpCommands
             _availableCommands = availableCommands;
         }
 
+        public string Name => Constants.CommandName.Help;
+
         public string Execute(IEnumerable<string> inputsParams)
         {
-            var helpOutput = new List<string>();
-            helpOutput.Add(Resources.text.help.HelpText.HelpStartCommand);
+            var helpOutput = new Dictionary<string, string>();
+            _writer.WriteLine(Resources.text.help.HelpTextValues.HelpStartCommand);
+            
+            helpOutput.Add(Name, GetHelpText());
             foreach (var command in _availableCommands)
             {                
-                helpOutput.Add(command.GetHelpText());
+                helpOutput.Add(command.Name, command.GetHelpText());
             }
-
-            helpOutput.Add(Resources.text.help.HelpText.HelpEndCommand); 
+            
             _writer.WriteLines(helpOutput);
+            _writer.WriteLine(Resources.text.help.HelpTextValues.HelpEndCommand);
             return Constants.CommandResults.Success;            
         }
 
         public string GetHelpText()
         {
-            return string.Empty;
+            return Resources.text.help.HelpTextValues.HelpCommand;
         }
     }
 }

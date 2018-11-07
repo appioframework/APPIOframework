@@ -19,5 +19,29 @@ namespace Oppo.Terminal
                 System.Console.WriteLine(msg);
             }
         }
+
+        public void WriteLines(Dictionary<string, string> messagesToWrite)
+        {
+            int longestKey = GetLongestKey(messagesToWrite);
+
+            foreach (var key in messagesToWrite.Keys)
+            {
+                System.Console.WriteLine(string.Format("  {0}{1}", key.PadRight(longestKey + 3, ' '), messagesToWrite[key]));
+            }
+        }
+
+        private static int GetLongestKey(Dictionary<string, string> messagesToWrite)
+        {
+            var longestKey = 0;
+            foreach (var key in messagesToWrite.Keys)
+            {
+                if (key.Length > longestKey)
+                {
+                    longestKey = key.Length;
+                }
+            }
+
+            return longestKey;
+        }
     }
 }

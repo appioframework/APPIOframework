@@ -14,8 +14,7 @@ namespace Oppo.ObjectModel.Tests
         {
         }
 
-        [TestCase(null)]
-        [TestCase("")]
+
         [TestCase("iioh4ohf")]
         [TestCase("abc")]
         [TestCase("5zh")]
@@ -107,6 +106,20 @@ namespace Oppo.ObjectModel.Tests
 
             // Act
             var strategy = factory.GetStrategy(commandName);
+
+            // Assert
+            Assert.IsInstanceOf<HelpStrategy>(strategy);
+        }
+
+        [Test]
+        public void CommandStrategyFactory_ShouldReturn_HelpStrategy_PassingNull()
+        {
+            // Arrange
+            var writerMock = new Mock<IWriter>();
+            var factory = new CommandStrategyFactory(writerMock.Object);
+
+            // Act
+            var strategy = factory.GetStrategy(null as string);
 
             // Assert
             Assert.IsInstanceOf<HelpStrategy>(strategy);

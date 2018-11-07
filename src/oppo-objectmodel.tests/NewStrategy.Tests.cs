@@ -73,7 +73,7 @@ namespace Oppo.ObjectModel.Tests
             var helpText = newStrategy.GetHelpText();
 
             // Assert
-            Assert.AreEqual(helpText, Resources.text.help.HelpText.NewCommand);
+            Assert.AreEqual(helpText, Resources.text.help.HelpTextValues.NewCommand);
         }
     }
 }

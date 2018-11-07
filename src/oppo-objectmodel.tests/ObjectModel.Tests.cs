@@ -14,9 +14,10 @@ namespace Oppo.ObjectModel.Tests
         {
             return new[]
             {
-                new []{ "sln", "new", "-n", "anyName" },
-                new []{ "sln", "new", "-n", "ABC" },
-                new []{ "sln", "new", "--name", "ABC" }
+                new []{ "new", "sln", "-n", "anyName" },
+                new []{ "new", "opcuaapp", "-n", "ABC" },
+                new []{ "new", "sln", "--name", "ABC" },
+                new string[]{ }
             };
         }
 

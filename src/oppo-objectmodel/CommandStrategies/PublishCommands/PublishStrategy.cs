@@ -5,6 +5,8 @@ namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
 {
     public class PublishStrategy : ICommandStrategy
     {
+        public string Name => Constants.CommandName.Publish;
+
         public string Execute(IEnumerable<string> inputsParams)
         {
             var firstInputParam = inputsParams.FirstOrDefault();
@@ -21,7 +23,7 @@ namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
 
         public string GetHelpText()
         {
-            return Resources.text.help.HelpText.PublishCommand;
+            return Resources.text.help.HelpTextValues.PublishCommand;
         }
     }
 }

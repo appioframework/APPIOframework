@@ -12,6 +12,8 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
             _fileSystem = fileSystem;
         }
 
+        public string Name => Constants.CommandName.Build;
+
         public string Execute(IEnumerable<string> inputsParams)
         {
             var inputParamsArray = inputsParams.ToArray();
@@ -45,7 +47,7 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 
         public string GetHelpText()
         {
-            return Resources.text.help.HelpText.BuildCommand;
+            return Resources.text.help.HelpTextValues.BuildCommand;
         }
     }
 }

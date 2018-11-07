@@ -12,6 +12,8 @@ namespace Oppo.ObjectModel.CommandStrategies
             _writer = writer;
         }
 
+        public string Name => Constants.CommandName.Hello;
+
         public string Execute(IEnumerable<string> inputsParams)
         {
             _writer.WriteLine(Constants.HelloString);
@@ -20,7 +22,7 @@ namespace Oppo.ObjectModel.CommandStrategies
 
         public string GetHelpText()
         {
-            return string.Empty;
+            return Resources.text.help.HelpTextValues.HelloCommand;
         }
     }
 }

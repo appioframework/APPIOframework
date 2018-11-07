@@ -37,7 +37,7 @@ namespace Oppo.ObjectModel.Tests
 
 
         [Test]
-        public void ShouldReturnEmptyHelpText()
+        public void ShouldReturnHelpText()
         {
             // Arrange
             var writerMock = new Mock<IWriter>();
@@ -47,7 +47,7 @@ namespace Oppo.ObjectModel.Tests
             var helpText = helloStrategy.GetHelpText();
 
             // Assert
-            Assert.AreEqual(helpText, string.Empty);
+            Assert.AreEqual(helpText, Resources.text.help.HelpTextValues.HelloCommand);
         }
     }
 }

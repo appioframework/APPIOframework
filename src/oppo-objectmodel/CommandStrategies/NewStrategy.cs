@@ -13,6 +13,8 @@ namespace Oppo.ObjectModel.CommandStrategies
             _factory = factory;
         }
 
+        public string Name => Constants.CommandName.New;
+
         public string Execute(IEnumerable<string> inputsParams)
         {
             var inputsParamsArray = inputsParams.ToArray();
@@ -27,7 +29,7 @@ namespace Oppo.ObjectModel.CommandStrategies
 
         public string GetHelpText()
         {
-            return Resources.text.help.HelpText.NewCommand;
+            return Resources.text.help.HelpTextValues.NewCommand;
         }
     }
 }

@@ -19,7 +19,8 @@ namespace Oppo.ObjectModel.Tests
             // Arrange
             var writerMock = new Mock<IWriter>();
             var mockCommand = new Mock<ICommandStrategy>();
-            mockCommand.Setup(x => x.GetHelpText()).Returns(Resources.text.help.HelpText.BuildCommand);
+            mockCommand.Setup(x => x.Name).Returns(Constants.CommandName.Build);
+            mockCommand.Setup(x => x.GetHelpText()).Returns(Resources.text.help.HelpTextValues.BuildCommand);
             var commands = new List<ICommandStrategy>();
             commands.Add(mockCommand.Object);
             var helpStrategy = new HelpStrategy(writerMock.Object, commands);
@@ -29,13 +30,13 @@ namespace Oppo.ObjectModel.Tests
             
             // Assert
             Assert.AreEqual(strategyResult, Constants.CommandResults.Success);
-            writerMock.Verify(x => x.WriteLines(It.Is<List<string>>(l => l.Contains(Resources.text.help.HelpText.HelpStartCommand))), Times.Once);
-            writerMock.Verify(x => x.WriteLines(It.Is<List<string>>(l=>l.Contains(Resources.text.help.HelpText.BuildCommand))), Times.Once);
-            writerMock.Verify(x => x.WriteLines(It.Is<List<string>>(l => l.Contains(Resources.text.help.HelpText.HelpEndCommand))), Times.Once);
+            writerMock.Verify(x => x.WriteLines(It.Is<Dictionary<string, string>>(d => d.ContainsValue(Resources.text.help.HelpTextValues.BuildCommand))), Times.Once);
+            writerMock.Verify(x => x.WriteLine(It.Is<string>(l=>l.Equals(Resources.text.help.HelpTextValues.HelpStartCommand))), Times.Once);
+            writerMock.Verify(x => x.WriteLine(It.Is<string>(l => l.Equals(Resources.text.help.HelpTextValues.HelpEndCommand))), Times.Once);
         }
 
         [Test]
-        public void ShouldReturnEmptyHelpText()
+        public void ShouldReturnHelpText()
         {
             // Arrange
             var writerMock = new Mock<IWriter>();            
@@ -46,7 +47,7 @@ namespace Oppo.ObjectModel.Tests
             var helpText = helpStrategy.GetHelpText();
 
             // Assert
-            Assert.AreEqual(helpText, string.Empty);
+            Assert.AreEqual(helpText, Resources.text.help.HelpTextValues.HelpCommand);
         }
     }
 }

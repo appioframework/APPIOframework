@@ -14,12 +14,7 @@ namespace Oppo.Terminal
             var objectModel = new ObjectModel.ObjectModel(commandFactory);
             var terminal = new OppoTerminal(objectModel);
 
-            var result = Constants.CommandResults.Success;
-            if (args?.Length > 0)
-            {
-                result = terminal.Execute(args);
-            }
-
+            var result = terminal.Execute(args);
             return result == Constants.CommandResults.Success ? 0 : 1;
         }
     }

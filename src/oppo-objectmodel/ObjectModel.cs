@@ -20,7 +20,7 @@ namespace Oppo.ObjectModel
             }
 
             var inputParamsArray = inputParams.ToArray();
-            var strategy = _commandStrategyFactory.GetStrategy(inputParamsArray.First());
+            var strategy = _commandStrategyFactory.GetStrategy(inputParamsArray.FirstOrDefault());
             return strategy.Execute(inputParamsArray.Skip(1));
         }
     }
