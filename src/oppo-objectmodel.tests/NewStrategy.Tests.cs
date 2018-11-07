@@ -61,7 +61,6 @@ namespace Oppo.ObjectModel.Tests
             Assert.AreEqual(data.Result, result);
         }
 
-
         [Test]
         public void ShouldReturnEmptyHelpText()
         {
@@ -74,6 +73,20 @@ namespace Oppo.ObjectModel.Tests
 
             // Assert
             Assert.AreEqual(helpText, Resources.text.help.HelpTextValues.NewCommand);
+        }
+
+        [Test]
+        public void ShouldReturnCommandName()
+        {
+            // Arrange
+            var commandFactoryMock = new Mock<INewCommandStrategyFactory>();
+            var newStrategy = new NewStrategy(commandFactoryMock.Object);
+
+            // Act
+            var commandName = newStrategy.Name;
+
+            // Assert
+            Assert.AreEqual(commandName, Constants.CommandName.New);
         }
     }
 }

@@ -35,7 +35,6 @@ namespace Oppo.ObjectModel.Tests
             writerMock.Verify(x => x.WriteLine(It.IsAny<string>()), Times.AtLeastOnce);
         }
 
-
         [Test]
         public void ShouldReturnHelpText()
         {
@@ -48,6 +47,20 @@ namespace Oppo.ObjectModel.Tests
 
             // Assert
             Assert.AreEqual(helpText, Resources.text.help.HelpTextValues.HelloCommand);
+        }
+
+        [Test]
+        public void ShouldReturnCommandName()
+        {
+            // Arrange
+            var writerMock = new Mock<IWriter>();
+            var helloStrategy = new HelloStrategy(writerMock.Object);
+
+            // Act
+            var commandName = helloStrategy.Name;
+
+            // Assert
+            Assert.AreEqual(commandName, Constants.CommandName.Hello);
         }
     }
 }

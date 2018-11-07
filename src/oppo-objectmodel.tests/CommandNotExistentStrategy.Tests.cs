@@ -36,6 +36,18 @@ namespace Oppo.ObjectModel.Tests
 
             // Assert
             Assert.Throws<NotSupportedException>(() => strategy.GetHelpText());
-        }       
+        }
+
+        [Test]
+        public void ShouldThrowNotSupportedExceptionOnNameProperty()
+        {
+            // Arrange
+            var strategy = new CommandNotExistentStrategy();
+
+            // Act            
+
+            // Assert
+            Assert.Throws<NotSupportedException>(() => strategy.Name.ToString());
+        }
     }
 }

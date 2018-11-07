@@ -49,5 +49,20 @@ namespace Oppo.ObjectModel.Tests
             // Assert
             Assert.AreEqual(helpText, Resources.text.help.HelpTextValues.HelpCommand);
         }
+
+        [Test]
+        public void ShouldReturnCommandName()
+        {
+            // Arrange
+            var writerMock = new Mock<IWriter>();
+            var commands = new List<ICommandStrategy>();
+            var helpStrategy = new HelpStrategy(writerMock.Object, commands);
+
+            // Act
+            var commandName = helpStrategy.Name;
+
+            // Assert
+            Assert.AreEqual(commandName, Constants.CommandName.Help);
+        }
     }
 }
