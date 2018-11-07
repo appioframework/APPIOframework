@@ -1,5 +1,4 @@
-using System.IO;
-using System.Linq;
+using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies.BuildCommands;
@@ -25,12 +24,21 @@ namespace Oppo.ObjectModel.Tests
             };
         }
 
-        private static string[][] ValidInputs()
+        private static string[][] ValidBuildNameInputs()
         {
             return new[]
             {
                 new []{"-n", "hugo"},
-                new []{"--name", "talsen"},
+                new []{"--name", "talsen"}
+            };
+        }
+
+        private static string[][] ValidBuildHelpInputs()
+        {
+            return new[]
+            {
+                new []{"--help"},
+                new []{"-h"}
             };
         }
 
@@ -50,67 +58,69 @@ namespace Oppo.ObjectModel.Tests
         }
 
         [Test]
-        public void BuildStrategy_Should_SucceedOnBuildableProject([ValueSource(nameof(ValidInputs))] string[] inputParams)
+        public void BuildStrategy_Should_Execute_HelpCommand_Success([ValueSource(nameof(ValidBuildHelpInputs))] string[] inputParams)
         {
             // Arrange
-            var projectDirectoryName = inputParams.ElementAt(1);
-            var projectBuildDirectory = Path.Combine(projectDirectoryName, Constants.DirectoryName.MesonBuild);
+            var mockBuildStrategy = new Mock<IBuildStrategy>();
+            mockBuildStrategy.Setup(x => x.Execute(new string[] { })).Returns(Constants.CommandResults.Success);
+            var mockBuildFactory = new Mock<IBuildCommandStrategyFactory>();
+            mockBuildFactory.Setup(f => f.GetStrategy(Constants.BuildCommandArguments.Help)).Returns(mockBuildStrategy.Object);
+            mockBuildFactory.Setup(f => f.GetStrategy(Constants.BuildCommandArguments.VerboseHelp)).Returns(mockBuildStrategy.Object);
 
-            var fileSystemMock = new Mock<IFileSystem>();
-            fileSystemMock.Setup(x => x.CombinePaths(It.IsAny<string>(), It.IsAny<string>())).Returns(projectBuildDirectory);
-            fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.Meson, projectDirectoryName, Constants.DirectoryName.MesonBuild)).Returns(true);
-            fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.Ninja, projectBuildDirectory, string.Empty)).Returns(true);
-            var buildStrategy = new BuildStrategy(fileSystemMock.Object);
+            var buildStrategy = new BuildStrategy(mockBuildFactory.Object);
 
             // Act
             var strategyResult = buildStrategy.Execute(inputParams);
 
             // Assert
             Assert.AreEqual(strategyResult, Constants.CommandResults.Success);
-            fileSystemMock.VerifyAll();
+        }
+
+        [Test]
+        public void BuildStrategy_Should_SucceedOnBuildableProject([ValueSource(nameof(ValidBuildNameInputs))] string[] inputParams)
+        {
+            // Arrange
+            var mockBuildStrategy = new Mock<IBuildStrategy>();
+            mockBuildStrategy.Setup(x => x.Execute(new string[] { inputParams[1] })).Returns(Constants.CommandResults.Success);
+
+            var mockBuildFactory = new Mock<IBuildCommandStrategyFactory>();
+            mockBuildFactory.Setup(f => f.GetStrategy(Constants.BuildCommandArguments.Name)).Returns(mockBuildStrategy.Object);
+            mockBuildFactory.Setup(f => f.GetStrategy(Constants.BuildCommandArguments.VerboseName)).Returns(mockBuildStrategy.Object);
+
+            var buildStrategy = new BuildStrategy(mockBuildFactory.Object);
+
+            // Act
+            var strategyResult = buildStrategy.Execute(inputParams);
+
+            // Assert
+            Assert.AreEqual(strategyResult, Constants.CommandResults.Success);
         }
 
         [Test]
         public void ShouldExecuteStrategy_Fail_MissingParameter([ValueSource(nameof(InvalidInputs))] string[] inputParams)
         {
             // Arrange
-            var fileSystemMock = new Mock<IFileSystem>();
+            var mockBuildStrategy = new Mock<IBuildStrategy>();
+            mockBuildStrategy.Setup(x => x.Execute(It.IsAny<IEnumerable<string>>())).Returns(Constants.CommandResults.Failure);
+            
+            var mockBuildFactory = new Mock<IBuildCommandStrategyFactory>();
+            mockBuildFactory.Setup(f => f.GetStrategy(It.IsAny<string>())).Returns(mockBuildStrategy.Object);
 
-            var buildStrategy = new BuildStrategy(fileSystemMock.Object);
+            var buildStrategy = new BuildStrategy(mockBuildFactory.Object);
 
             // Act
             var strategyResult = buildStrategy.Execute(inputParams);
 
             // Assert
             Assert.AreEqual(strategyResult, Constants.CommandResults.Failure);
-        }
-
-        [Test]
-        public void BuildStrategy_ShouldFail_DueToFailingExecutableCalls([ValueSource(nameof(FailingExecutableStates))] bool[] executableStates)
-        {
-            // Arrange
-            var mesonState = executableStates.ElementAt(0);
-            var ninjaState = executableStates.ElementAt(1);
-
-            var fileSystemMock = new Mock<IFileSystem>();
-            fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.Meson, It.IsAny<string>(), It.IsAny<string>())).Returns(mesonState);
-            fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.Ninja, It.IsAny<string>(), It.IsAny<string>())).Returns(ninjaState);
-
-            var buildStrategy = new BuildStrategy(fileSystemMock.Object);
-
-            // Act
-            var strategyResult = buildStrategy.Execute(new[] {"-n", "hugo"});
-
-            // Assert
-            Assert.AreEqual(Constants.CommandResults.Failure, strategyResult);
-        }
+        }      
 
         [Test]
         public void ShouldReturnEmptyHelpText()
         {
             // Arrange
-            var fileSystemMock = new Mock<IFileSystem>();
-            var buildStrategy = new BuildStrategy(fileSystemMock.Object);
+            var mockBuildFactory = new Mock<IBuildCommandStrategyFactory>();
+            var buildStrategy = new BuildStrategy(mockBuildFactory.Object);            
 
             // Act
             var helpText = buildStrategy.GetHelpText();
@@ -123,8 +133,8 @@ namespace Oppo.ObjectModel.Tests
         public void ShouldReturnCommandName()
         {
             // Arrange
-            var fileSystemMock = new Mock<IFileSystem>();
-            var buildStrategy = new BuildStrategy(fileSystemMock.Object);
+            var mockBuildFactory = new Mock<IBuildCommandStrategyFactory>();
+            var buildStrategy = new BuildStrategy(mockBuildFactory.Object);
 
             // Act
             var commandName = buildStrategy.Name;

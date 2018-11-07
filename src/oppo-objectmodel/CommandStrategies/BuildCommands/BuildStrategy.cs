@@ -5,11 +5,11 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 {
     public class BuildStrategy : ICommandStrategy
     {
-        private readonly IFileSystem _fileSystem;
+        private readonly IBuildCommandStrategyFactory _factory;
 
-        public BuildStrategy(IFileSystem fileSystem)
+        public BuildStrategy(IBuildCommandStrategyFactory factory)
         {
-            _fileSystem = fileSystem;
+            _factory = factory;
         }
 
         public string Name => Constants.CommandName.Build;
@@ -17,32 +17,9 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
         public string Execute(IEnumerable<string> inputsParams)
         {
             var inputParamsArray = inputsParams.ToArray();
-            var nameFlag = inputParamsArray.ElementAtOrDefault(0);
-            var projectName = inputParamsArray.ElementAtOrDefault(1);
 
-            if (nameFlag != Constants.BuildCommandArguments.Name && nameFlag != Constants.BuildCommandArguments.VerboseName)
-            {
-                return Constants.CommandResults.Failure;
-            }
-
-            if (string.IsNullOrEmpty(projectName))
-            {
-                return Constants.CommandResults.Failure;
-            }
-
-            var buildDirectory = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.MesonBuild);
-            var mesonResult = _fileSystem.CallExecutable(Constants.ExecutableName.Meson, projectName, Constants.DirectoryName.MesonBuild);
-            if (!mesonResult)
-            {
-                return Constants.CommandResults.Failure;
-            }
-            var ninjaResult = _fileSystem.CallExecutable(Constants.ExecutableName.Ninja, buildDirectory, string.Empty);
-            if (!ninjaResult)
-            {
-                return Constants.CommandResults.Failure;
-            }
-
-            return Constants.CommandResults.Success;
+            var buildStrategy = _factory.GetStrategy(inputParamsArray.ElementAtOrDefault(0));
+            return buildStrategy.Execute(inputParamsArray.Skip(1));          
         }
 
         public string GetHelpText()
