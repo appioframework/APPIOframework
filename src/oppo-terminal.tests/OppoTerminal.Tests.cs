@@ -35,7 +35,7 @@ namespace Oppo.Terminal.Tests
         }
 
         [Test]
-        public void OppoTerminal_Should_WriteMessage()
+        public void OppoTerminal_Should_Construct()
         {
             // Arrange
             var objectModelMock = new Mock<IObjectModel>();
