@@ -14,6 +14,8 @@ stages:
   - integration-test--execution--9
   - integration-test--execution--10
   - integration-test--execution--11
+  - integration-test--execution--12
+  - integration-test--execution--13
   - delivery 
 
 before_script:
@@ -146,10 +148,23 @@ run-integration-test--publish-opcuaapp-verbose--success:
   stage: 'integration-test--execution--10'
   script:
     - /bin/bash bash-gitlab-ci/integration-tests/run-publish-opcuaapp--success.sh verbose
+
+run-integration-test--build-help--success:
+  extends: prepare-integration-test
+  stage: 'integration-test--execution--11'
+  script:
+    - /bin/bash bash-gitlab-ci/integration-tests/run-build-help--success.sh -
+
+run-integration-test--build-help-verbose--success:
+  extends: prepare-integration-test
+  stage: 'integration-test--execution--12'
+  script:
+    - /bin/bash bash-gitlab-ci/integration-tests/run-build-help--success.sh verbose
+    
     
 run-integration-test--version--success:
   extends: prepare-integration-test
-  stage: 'integration-test--execution--11'
+  stage: 'integration-test--execution--13'
   script:
     - /bin/bash bash-gitlab-ci/integration-tests/run-version--success.sh -
     
