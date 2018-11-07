@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Oppo.ObjectModel.CommandStrategies.NewCommands;
 
-namespace Oppo.ObjectModel.CommandStrategies
+namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 {
     public class NewStrategy : ICommandStrategy
     {

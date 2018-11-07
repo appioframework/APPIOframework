@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Oppo.ObjectModel.CommandStrategies
+namespace Oppo.ObjectModel.CommandStrategies.HelloCommands
 {
     public class HelloStrategy : ICommandStrategy
     {

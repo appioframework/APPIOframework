@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Oppo.ObjectModel.CommandStrategies
+namespace Oppo.ObjectModel.CommandStrategies.CommandNotExistent
 {
     public class CommandNotExistentStrategy
         : ICommandStrategy

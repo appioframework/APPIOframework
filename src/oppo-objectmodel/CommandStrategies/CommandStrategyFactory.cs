@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Oppo.ObjectModel.CommandStrategies.BuildCommands;
+using Oppo.ObjectModel.CommandStrategies.CommandNotExistent;
+using Oppo.ObjectModel.CommandStrategies.HelloCommands;
 using Oppo.ObjectModel.CommandStrategies.HelpCommands;
 using Oppo.ObjectModel.CommandStrategies.NewCommands;
 using Oppo.ObjectModel.CommandStrategies.PublishCommands;

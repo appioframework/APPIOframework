@@ -2,6 +2,7 @@ using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies;
 using System;
 using System.Collections.Generic;
+using Oppo.ObjectModel.CommandStrategies.CommandNotExistent;
 
 
 namespace Oppo.ObjectModel.Tests

@@ -2,8 +2,11 @@ using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies;
 using Oppo.ObjectModel.CommandStrategies.BuildCommands;
+using Oppo.ObjectModel.CommandStrategies.CommandNotExistent;
+using Oppo.ObjectModel.CommandStrategies.HelloCommands;
 using Oppo.ObjectModel.CommandStrategies.PublishCommands;
 using Oppo.ObjectModel.CommandStrategies.HelpCommands;
+using Oppo.ObjectModel.CommandStrategies.NewCommands;
 
 namespace Oppo.ObjectModel.Tests
 {

@@ -1,6 +1,7 @@
 ﻿using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies;
+using Oppo.ObjectModel.CommandStrategies.HelloCommands;
 
 namespace Oppo.ObjectModel.Tests
 {
