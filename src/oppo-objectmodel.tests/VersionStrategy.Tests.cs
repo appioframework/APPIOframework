@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies;
@@ -72,7 +73,7 @@ namespace Oppo.ObjectModel.Tests
 
             // Assert
             Assert.AreEqual(Constants.CommandResults.Success, result);
-            writerMock.Verify(x => x.WriteLine(It.IsAny<string>()), Times.AtLeastOnce);
+            writerMock.Verify(x => x.WriteLines(It.IsAny<Dictionary<string, string>>()), Times.AtLeastOnce);
         }
 
         [Test]

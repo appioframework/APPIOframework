@@ -17,10 +17,13 @@ namespace Oppo.ObjectModel.CommandStrategies.VersionCommands
 
         public string Execute(IEnumerable<string> inputsParams)
         {
+            var printableInfos = new Dictionary<string, string>();
             foreach (var assemblyInfo in _reflection.GetOppoAssemblyInfos())
             {
-                _writer.WriteLine($"  {assemblyInfo.AssemblyName}: {assemblyInfo.AssemblyVersion}, file {assemblyInfo.AssemblyFileVersion}");
+                printableInfos.Add(assemblyInfo.AssemblyName, string.Format(Resources.text.version.VersionText.AssemblyVersionInfo, assemblyInfo.AssemblyVersion, assemblyInfo.AssemblyFileVersion));
             }
+
+            _writer.WriteLines(printableInfos);
 
             return Constants.CommandResults.Success;
         }

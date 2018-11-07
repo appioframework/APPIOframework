@@ -44,8 +44,9 @@
 !src/oppo-resources/templates/
 !src/oppo-resources/templates/*
 !src/oppo-resources/text/
+!src/oppo-resources/text/**/*.cs
 !src/oppo-resources/text/help/
-!src/oppo-resources/text/help/*.cs
+!src/oppo-resources/text/version/
 
 !src/oppo-terminal/
 !src/oppo-terminal/oppo-terminal.csproj
