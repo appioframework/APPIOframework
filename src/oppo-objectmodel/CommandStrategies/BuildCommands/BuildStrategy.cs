@@ -42,5 +42,10 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 
             return Constants.CommandResults.Success;
         }
+
+        public string GetHelpText()
+        {
+            return Resources.text.help.HelpText.BuildCommand;
+        }
     }
 }

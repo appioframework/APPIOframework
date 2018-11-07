@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Oppo.ObjectModel.CommandStrategies
 {
@@ -15,6 +16,11 @@ namespace Oppo.ObjectModel.CommandStrategies
         {
             _writer.WriteLine(Constants.HelloString);
             return Constants.CommandResults.Success;
+        }
+
+        public string GetHelpText()
+        {
+            return string.Empty;
         }
     }
 }

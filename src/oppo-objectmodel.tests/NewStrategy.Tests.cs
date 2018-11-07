@@ -60,5 +60,20 @@ namespace Oppo.ObjectModel.Tests
             // Assert
             Assert.AreEqual(data.Result, result);
         }
+
+
+        [Test]
+        public void ShouldReturnEmptyHelpText()
+        {
+            // Arrange
+            var commandFactoryMock = new Mock<INewCommandStrategyFactory>();
+            var newStrategy = new NewStrategy(commandFactoryMock.Object);
+
+            // Act
+            var helpText = newStrategy.GetHelpText();
+
+            // Assert
+            Assert.AreEqual(helpText, Resources.text.help.HelpText.NewCommand);
+        }
     }
 }

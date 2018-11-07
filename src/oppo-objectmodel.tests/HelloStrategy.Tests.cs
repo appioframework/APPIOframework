@@ -34,5 +34,20 @@ namespace Oppo.ObjectModel.Tests
             Assert.AreEqual(Constants.CommandResults.Success, result);
             writerMock.Verify(x => x.WriteLine(It.IsAny<string>()), Times.AtLeastOnce);
         }
+
+
+        [Test]
+        public void ShouldReturnEmptyHelpText()
+        {
+            // Arrange
+            var writerMock = new Mock<IWriter>();
+            var helloStrategy = new HelloStrategy(writerMock.Object);
+
+            // Act
+            var helpText = helloStrategy.GetHelpText();
+
+            // Assert
+            Assert.AreEqual(helpText, string.Empty);
+        }
     }
 }

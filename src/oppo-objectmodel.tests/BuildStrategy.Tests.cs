@@ -104,5 +104,19 @@ namespace Oppo.ObjectModel.Tests
             // Assert
             Assert.AreEqual(Constants.CommandResults.Failure, strategyResult);
         }
+
+        [Test]
+        public void ShouldReturnEmptyHelpText()
+        {
+            // Arrange
+            var fileSystemMock = new Mock<IFileSystem>();
+            var buildStrategy = new BuildStrategy(fileSystemMock.Object);
+
+            // Act
+            var helpText = buildStrategy.GetHelpText();
+
+            // Assert
+            Assert.AreEqual(helpText, Resources.text.help.HelpText.BuildCommand);
+        }
     }
 }

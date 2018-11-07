@@ -63,5 +63,18 @@ namespace Oppo.ObjectModel.Tests
             // Assert
             Assert.AreEqual(strategyResult, Constants.CommandResults.Failure);
         }
+
+        [Test]
+        public void ShouldReturnEmptyHelpText()
+        {
+            // Arrange
+            var publishStrategy = new PublishStrategy();
+
+            // Act
+            var helpText = publishStrategy.GetHelpText();
+
+            // Assert
+            Assert.AreEqual(helpText, Resources.text.help.HelpText.PublishCommand);
+        }
     }
 }

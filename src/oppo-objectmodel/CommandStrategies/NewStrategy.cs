@@ -24,5 +24,10 @@ namespace Oppo.ObjectModel.CommandStrategies
 
             return result;
         }
+
+        public string GetHelpText()
+        {
+            return Resources.text.help.HelpText.NewCommand;
+        }
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Oppo.ObjectModel.CommandStrategies.BuildCommands;
 using Oppo.ObjectModel.CommandStrategies.HelpCommands;
 using Oppo.ObjectModel.CommandStrategies.NewCommands;
@@ -18,7 +19,9 @@ namespace Oppo.ObjectModel.CommandStrategies
             _commands.Add(Constants.CommandName.Build, new BuildStrategy(new FileSystemWrapper()));
             _commands.Add(Constants.CommandName.Publish, new PublishStrategy());
 
-            var helpStrategy = new HelpStrategy();
+            var allCommandsWithoutHelp = _commands.Values.ToList();
+            // help command must be added as last one, because it hold a reference to all others commands for help messages
+            var helpStrategy = new HelpStrategy(writer, allCommandsWithoutHelp);
             _commands.Add(Constants.CommandName.Help, helpStrategy);
             _commands.Add(Constants.CommandName.ShortHelp, helpStrategy);
         }
