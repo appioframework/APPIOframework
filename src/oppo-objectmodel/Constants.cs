@@ -29,6 +29,8 @@ namespace Oppo.ObjectModel
 
         public static class NewCommandName
         {
+            public const string Help = "-h";
+            public const string VerboseHelp = "--help";
             public const string Sln = "sln";
             public const string OpcuaApp = "opcuaapp";
         }

@@ -21,8 +21,8 @@ namespace Oppo.ObjectModel.CommandStrategies
 
             _commands.Add(Constants.CommandName.Hello, new HelloStrategy(writer));
 
-            var newStrategies = new ICommand<NewStrategy>[] { new NewSlnCommandStrategy(fileSystem), new NewOpcuaAppCommandStrategy(fileSystem), };
-            var newStrategiesCommandFactory = new CommandFactory<NewStrategy>(newStrategies, Constants.NewCommandName.Sln);
+            var newStrategies = new ICommand<NewStrategy>[] { new NewSlnCommandStrategy(fileSystem), new NewOpcuaAppCommandStrategy(fileSystem), new NewHelpCommandStrategy(writer), new NewVerboseHelpCommandStrategy(writer), };
+            var newStrategiesCommandFactory = new CommandFactory<NewStrategy>(newStrategies, Constants.NewCommandName.Help);
             _commands.Add(Constants.CommandName.New, new NewStrategy(newStrategiesCommandFactory));
 
             _commands.Add(Constants.CommandName.Build, new BuildStrategy(new BuildCommandStrategyFactory(writer, new FileSystemWrapper())));
