@@ -23,8 +23,8 @@ namespace Oppo.ObjectModel.CommandStrategies
             _commands.Add(Constants.CommandName.New, new NewStrategy(new NewCommandStrategyFactory(new FileSystemWrapper())));
             _commands.Add(Constants.CommandName.Build, new BuildStrategy(new BuildCommandStrategyFactory(writer, new FileSystemWrapper())));
 
-            var publishStrategies = new ICommand<PublishStrategy>[] { new PublishNameStrategy(fileSystem), new PublishVerboseNameStrategy(fileSystem), };
-            var publishStrategyCommandFactory = new CommandFactory<PublishStrategy>(publishStrategies, Constants.PublishCommandArguments.Name);
+            var publishStrategies = new ICommand<PublishStrategy>[] { new PublishNameStrategy(fileSystem), new PublishVerboseNameStrategy(fileSystem), new PublishHelpStrategy(writer), new PublishVerboseHelpStrategy(writer), };
+            var publishStrategyCommandFactory = new CommandFactory<PublishStrategy>(publishStrategies, Constants.PublishCommandArguments.Help);
             _commands.Add(Constants.CommandName.Publish, new PublishStrategy(publishStrategyCommandFactory));
 
             _commands.Add(Constants.CommandName.Version, new VersionStrategy(reflection, writer));
