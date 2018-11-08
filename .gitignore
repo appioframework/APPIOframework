@@ -23,6 +23,7 @@
 !src/oppo-objectmodel/oppo-objectmodel.csproj
 !src/oppo-objectmodel/*.cs
 !src/oppo-objectmodel/CommandStrategies/
+!src/oppo-objectmodel/Exceptions/
 !src/oppo-objectmodel/Extensions/
 !src/oppo-objectmodel/**/*.cs
 !src/oppo-objectmodel/CommandStrategies/BuildCommands/
