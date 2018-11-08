@@ -32,27 +32,27 @@ namespace Oppo.ObjectModel.Tests
         }
         
         [Test]
-        public void NewStrategy_ShouldImplement_ICommandStrategy()
+        public void NewStrategy_Should_ImplementICommandStrategy()
         {
             // Arrange
-            var commandFactoryMock = new Mock<INewCommandStrategyFactory>();
+            var factoryMock = new Mock<ICommandFactory<NewStrategy>>();
 
             // Act
-            var objectUnderTest = new NewStrategy(commandFactoryMock.Object);
+            var objectUnderTest = new NewStrategy(factoryMock.Object);
 
             // Assert
             Assert.IsInstanceOf<ICommandStrategy>(objectUnderTest);
         }
 
         [Test]
-        public void NewStrategy_ShouldCall_ChildCommand([ValueSource(nameof(Data))] NewStrategyFixture data)
+        public void NewStrategy_Should_ExecuteChildCommand([ValueSource(nameof(Data))] NewStrategyFixture data)
         {
             // Arrange
-            var commandFactoryMock = new Mock<INewCommandStrategyFactory>();
-            var newSlnCommandMock = new Mock<INewCommandStrategy>();
-            var objectUnderTest = new NewStrategy(commandFactoryMock.Object);
-            commandFactoryMock.Setup(x => x.GetStrategy(data.Input.First())).Returns(newSlnCommandMock.Object);
-            newSlnCommandMock.Setup(x => x.Execute(It.IsAny<IEnumerable<string>>())).Returns(data.Result);
+            var commandMock = new Mock<ICommand<NewStrategy>>();
+            commandMock.Setup(x => x.Execute(It.IsAny<IEnumerable<string>>())).Returns(data.Result);
+            var factoryMock = new Mock<ICommandFactory<NewStrategy>>();
+            factoryMock.Setup(x => x.GetCommand(data.Input.First())).Returns(commandMock.Object);
+            var objectUnderTest = new NewStrategy(factoryMock.Object);
 
             // Act
             var result = objectUnderTest.Execute(data.Input);
@@ -65,8 +65,8 @@ namespace Oppo.ObjectModel.Tests
         public void ShouldReturnEmptyHelpText()
         {
             // Arrange
-            var commandFactoryMock = new Mock<INewCommandStrategyFactory>();
-            var newStrategy = new NewStrategy(commandFactoryMock.Object);
+            var factoryMock = new Mock<ICommandFactory<NewStrategy>>();
+            var newStrategy = new NewStrategy(factoryMock.Object);
 
             // Act
             var helpText = newStrategy.GetHelpText();
@@ -79,8 +79,8 @@ namespace Oppo.ObjectModel.Tests
         public void ShouldReturnCommandName()
         {
             // Arrange
-            var commandFactoryMock = new Mock<INewCommandStrategyFactory>();
-            var newStrategy = new NewStrategy(commandFactoryMock.Object);
+            var factoryMock = new Mock<ICommandFactory<NewStrategy>>();
+            var newStrategy = new NewStrategy(factoryMock.Object);
 
             // Act
             var commandName = newStrategy.Name;

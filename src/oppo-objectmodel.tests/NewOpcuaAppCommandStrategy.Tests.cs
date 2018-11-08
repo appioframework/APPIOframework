@@ -34,7 +34,7 @@ namespace Oppo.ObjectModel.Tests
         }
 
         [Test]
-        public void NewSlnCommandStrategy_ShouldImplement_INewCommandStrategy()
+        public void NewOpcuaAppCommandStrategy_Should_ImplementICommandOfNewStrategy()
         {
             // Arrange
             var fileSystemMock = new Mock<IFileSystem>();
@@ -43,11 +43,11 @@ namespace Oppo.ObjectModel.Tests
             var objectUnderTest = new NewOpcuaAppCommandStrategy(fileSystemMock.Object);
 
             // Assert
-            Assert.IsInstanceOf<INewCommandStrategy>(objectUnderTest);
+            Assert.IsInstanceOf<ICommand<NewStrategy>>(objectUnderTest);
         }
 
         [Test]
-        public void NewOpcuaAppCommandStrategy_ShouldCreate_SlnAndProjectRelevantFiles([ValueSource(nameof(ValidInputs))]string[] inputParams)
+        public void NewOpcuaAppCommandStrategy_Should_CreateSlnAndProjectRelevantFiles([ValueSource(nameof(ValidInputs))]string[] inputParams)
         {
             // Arrange
             var projectDirectoryName = $"{inputParams.ElementAt(1)}";
@@ -88,7 +88,7 @@ namespace Oppo.ObjectModel.Tests
         }
 
         [Test]
-        public void NewOpcuaAppCommandStrategy_ShouldIgnore_Input([ValueSource(nameof(InvalidInputs))] string[] inputParams)
+        public void NewOpcuaAppCommandStrategy_Should_IgnoreInput([ValueSource(nameof(InvalidInputs))] string[] inputParams)
         {
             // Arrange
             var invalidNameCharsMock = new[] { '/' };
@@ -106,6 +106,34 @@ namespace Oppo.ObjectModel.Tests
             fileSystemMock.Verify(x => x.CreateDirectory(It.IsAny<string>()), Times.Never);
             fileSystemMock.Verify(x => x.CreateFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName), Times.Never);
+        }
+
+        [Test]
+        public void NewOpcuaAppCommandStrategy_Should_HaveCorrectCommandName()
+        {
+            // Arrange
+            var fileSystemMock = new Mock<IFileSystem>();
+            var objectUnderTest = new NewOpcuaAppCommandStrategy(fileSystemMock.Object);
+
+            // Act
+            var commandName = objectUnderTest.Name;
+
+            // Assert
+            Assert.AreEqual(Constants.NewCommandName.OpcuaApp, commandName);
+        }
+
+        [Test]
+        public void NewOpcuaAppCommandStrategy_Should_ProvideEmptyHelpText()
+        {
+            // Arrange
+            var fileSystemMock = new Mock<IFileSystem>();
+            var objectUnderTest = new NewOpcuaAppCommandStrategy(fileSystemMock.Object);
+
+            // Act
+            var helpText = objectUnderTest.GetHelpText();
+
+            // Assert
+            Assert.AreEqual(string.Empty, helpText);
         }
     }
 }

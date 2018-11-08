@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 {
-    public class NewSlnCommandStrategy : INewCommandStrategy
+    public class NewSlnCommandStrategy : ICommand<NewStrategy>
     {
         private readonly IFileSystem _fileSystem;
 
@@ -11,6 +11,8 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
         {
             _fileSystem = fileSystem;
         }
+
+        public string Name => Constants.NewCommandName.Sln;
 
         public string Execute(IEnumerable<string> inputParams)
         {
@@ -35,6 +37,11 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 
             _fileSystem.CreateFile($"{solutionName}{Constants.FileExtension.OppoSln}", _fileSystem.LoadTemplateFile(Resources.Resources.OppoSlnTemplateFileName));
             return Constants.CommandResults.Success;
+        }
+
+        public string GetHelpText()
+        {
+            return string.Empty;
         }
     }
 }

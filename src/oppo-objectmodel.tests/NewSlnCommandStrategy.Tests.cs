@@ -33,7 +33,7 @@ namespace Oppo.ObjectModel.Tests
         }
 
         [Test]
-        public void NewSlnCommandStrategy_ShouldImplement_INewCommandStrategy()
+        public void NewSlnCommandStrategy_Should_ImplementICommandOfNewStrategy()
         {
             // Arrange
             var fileSystemMock = new Mock<IFileSystem>();
@@ -42,11 +42,11 @@ namespace Oppo.ObjectModel.Tests
             var objectUnderTest = new NewSlnCommandStrategy(fileSystemMock.Object);
 
             // Assert
-            Assert.IsInstanceOf<INewCommandStrategy>(objectUnderTest);
+            Assert.IsInstanceOf<ICommand<NewStrategy>>(objectUnderTest);
         }
 
         [Test]
-        public void NewSlnCommandStrategy_ShouldCreate_SlnAndProjectRelevantFiles([ValueSource(nameof(ValidInputs))]string[] inputParams)
+        public void NewSlnCommandStrategy_Should_CreateSlnAndProjectRelevantFiles([ValueSource(nameof(ValidInputs))]string[] inputParams)
         {
             // Arrange
             var slnFileName = $"{inputParams.Skip(1).First()}{Constants.FileExtension.OppoSln}";
@@ -64,7 +64,7 @@ namespace Oppo.ObjectModel.Tests
         }
 
         [Test]
-        public void NewSlnCommandStrategy_ShouldIgnore_Input([ValueSource(nameof(InvalidInputs))] string[] inputParams)
+        public void NewSlnCommandStrategy_Should_IgnoreInput([ValueSource(nameof(InvalidInputs))] string[] inputParams)
         {
             // Arrange
             var invalidCharsMock = new[] { '/', '\\' };
@@ -79,6 +79,34 @@ namespace Oppo.ObjectModel.Tests
             Assert.AreEqual(Constants.CommandResults.Failure, result);
             fileSystemMock.Verify(x => x.CreateFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoSlnTemplateFileName), Times.Never);
+        }
+
+        [Test]
+        public void NewSlnCommandStrategy_Should_HaveCorrectCommandName()
+        {
+            // Arrange
+            var fileSystemMock = new Mock<IFileSystem>();
+            var objectUnderTest = new NewSlnCommandStrategy(fileSystemMock.Object);
+
+            // Act
+            var commandName = objectUnderTest.Name;
+
+            // Assert
+            Assert.AreEqual(Constants.NewCommandName.Sln, commandName);
+        }
+
+        [Test]
+        public void NewSlnCommandStrategy_Should_ProvideEmptyHelpText()
+        {
+            // Arrange
+            var fileSystemMock = new Mock<IFileSystem>();
+            var objectUnderTest = new NewSlnCommandStrategy(fileSystemMock.Object);
+
+            // Act
+            var helpText = objectUnderTest.GetHelpText();
+
+            // Assert
+            Assert.AreEqual(string.Empty, helpText);
         }
     }
 }

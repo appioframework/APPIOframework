@@ -6,9 +6,9 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 {
     public class NewStrategy : ICommandStrategy
     {
-        private readonly INewCommandStrategyFactory _factory;
+        private readonly ICommandFactory<NewStrategy> _factory;
 
-        public NewStrategy(INewCommandStrategyFactory factory)
+        public NewStrategy(ICommandFactory<NewStrategy> factory)
         {
             _factory = factory;
         }
@@ -21,8 +21,7 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
             var inputsParamsArray = inputsParams.ToArray();
             var commandName = inputsParamsArray.First();
             var commandParams = inputsParamsArray.Skip(1).ToArray();
-
-            var strategy = _factory.GetStrategy(commandName);
+            var strategy = _factory.GetCommand(commandName);
             var result = strategy.Execute(commandParams);
 
             return result;

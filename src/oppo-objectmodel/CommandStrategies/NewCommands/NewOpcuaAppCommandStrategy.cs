@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 {
-    public class NewOpcuaAppCommandStrategy : INewCommandStrategy
+    public class NewOpcuaAppCommandStrategy : ICommand<NewStrategy>
     {
         private readonly IFileSystem _fileSystem;
 
@@ -11,6 +11,8 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
         {
             _fileSystem = fileSystem;
         }
+
+        public string Name => Constants.NewCommandName.OpcuaApp;
 
         public string Execute(IEnumerable<string> inputParams)
         {
@@ -42,6 +44,11 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
             DeployTemplateOpcuaSourceFiles(opcuaAppName);
 
             return Constants.CommandResults.Success;
+        }
+
+        public string GetHelpText()
+        {
+            return string.Empty;
         }
 
         private void DeployTemplateOpcuaApp(string opcuaAppName)
