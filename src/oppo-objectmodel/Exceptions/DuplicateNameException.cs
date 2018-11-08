@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 namespace Oppo.ObjectModel.Exceptions
 {
     [ExcludeFromCodeCoverage]
+    [Serializable]
     public class DuplicateNameException : ArgumentException
     {
         public DuplicateNameException(string duplicatedName)
