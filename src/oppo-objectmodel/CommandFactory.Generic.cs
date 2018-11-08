@@ -34,6 +34,8 @@ namespace Oppo.ObjectModel
             }
         }
 
+        public IEnumerable<ICommand<TDependance>> Commands => _commands.Values;
+
         public ICommand<TDependance> GetCommand(string commandName)
         {
             if (string.IsNullOrEmpty(commandName))

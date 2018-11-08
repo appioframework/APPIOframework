@@ -95,6 +95,34 @@ namespace Oppo.ObjectModel.Tests
         }
 
         [Test]
+        public void CommandFactory_Should_AlwaysProvideValidSequenceOfCommands([ValueSource(nameof(CommandSelectionSuccessful))] CommandFactoryFixture data)
+        {
+            // Arrange
+            var commandMockArray = new Mock<ICommand<object>>[data.CommandNames.Length];
+
+            for (var i = 0; i < data.CommandNames.Length; ++i)
+            {
+                var name = data.CommandNames[i];
+
+                commandMockArray[i] = new Mock<ICommand<object>>();
+                commandMockArray[i].Setup(x => x.Name).Returns(name);
+            }
+
+            var commandArrayMock = commandMockArray.Select(x => x.Object).ToArray();
+
+            var objectUnderTest = new CommandFactory<object>(commandArrayMock, data.NameOfDefaultCommand);
+
+            // Act
+            var commands = objectUnderTest.Commands;
+
+            // Assert
+            foreach (var command in commandArrayMock)
+            {
+                Assert.IsTrue(commands.Any(x => x == command));
+            }
+        }
+
+        [Test]
         public void CommandFactoryFallbackCommand_Should_ThrowNotSupportedExceptionOnAllInteractions()
         {
             // Arrange
