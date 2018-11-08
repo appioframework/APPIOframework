@@ -2,7 +2,6 @@
 using System.Linq;
 using Moq;
 using NUnit.Framework;
-using Oppo.ObjectModel.CommandStrategies;
 using Oppo.ObjectModel.CommandStrategies.PublishCommands;
 
 namespace Oppo.ObjectModel.Tests
@@ -10,7 +9,7 @@ namespace Oppo.ObjectModel.Tests
     public class PublishStrategyTests
     {
         [Test]
-        public void PublishStrategy_Should_ImplementICommandStrategy()
+        public void PublishStrategy_Should_ImplementICommandOfObjectModel()
         {
             // Arrange
             var commandFactoryMock = new Mock<ICommandFactory<PublishStrategy>>();
@@ -19,7 +18,7 @@ namespace Oppo.ObjectModel.Tests
             var objectUnderTest = new PublishStrategy(commandFactoryMock.Object);
 
             // Assert
-            Assert.IsInstanceOf<ICommandStrategy>(objectUnderTest);
+            Assert.IsInstanceOf<ICommand<ObjectModel>>(objectUnderTest);
         }
 
         [Test]

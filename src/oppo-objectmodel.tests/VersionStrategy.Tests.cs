@@ -48,7 +48,7 @@ namespace Oppo.ObjectModel.Tests
         }
 
         [Test]
-        public void VersionStrategy_Should_ImplementICommandStrategy()
+        public void VersionStrategy_Should_ImplementICommandOfObjectModel()
         {
             // Arrange
             var writerMock = new Mock<IWriter>();
@@ -58,7 +58,7 @@ namespace Oppo.ObjectModel.Tests
             var objectUnderTest = new VersionStrategy(reflectionMock.Object, writerMock.Object);
 
             // Assert
-            Assert.IsInstanceOf<ICommandStrategy>(objectUnderTest);
+            Assert.IsInstanceOf<ICommand<ObjectModel>>(objectUnderTest);
         }
 
         [Test]

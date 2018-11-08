@@ -36,7 +36,7 @@ namespace Oppo.ObjectModel.CommandStrategies
             _commands.Add(Constants.CommandName.Version, new VersionStrategy(reflection, writer));
 
             // help command must be added as last one, because it hold a reference to all others commands for help messages
-            var helpStrategy = new HelpStrategy(writer, _commands.Values.ToList());
+            var helpStrategy = new HelpStrategy(writer);
             _commands.Add(Constants.CommandName.Help, helpStrategy);
             _commands.Add(Constants.CommandName.ShortHelp, helpStrategy);            
         }

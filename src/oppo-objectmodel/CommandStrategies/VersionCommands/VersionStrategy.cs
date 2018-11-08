@@ -3,7 +3,7 @@ using Oppo.ObjectModel.Extensions;
 
 namespace Oppo.ObjectModel.CommandStrategies.VersionCommands
 {
-    public class VersionStrategy : ICommandStrategy
+    public class VersionStrategy : ICommandStrategy, ICommand<ObjectModel>
     {
         private readonly IReflection _reflection;
         private readonly IWriter _writer;

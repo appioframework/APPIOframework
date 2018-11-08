@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 {
-    public class BuildStrategy : ICommandStrategy
+    public class BuildStrategy : ICommandStrategy, ICommand<ObjectModel>
     {
         private readonly ICommandFactory<BuildStrategy> _factory;
 

@@ -1,6 +1,5 @@
 ﻿using Moq;
 using NUnit.Framework;
-using Oppo.ObjectModel.CommandStrategies;
 using Oppo.ObjectModel.CommandStrategies.HelloCommands;
 
 namespace Oppo.ObjectModel.Tests
@@ -8,7 +7,7 @@ namespace Oppo.ObjectModel.Tests
     public class HelloStrategyTests
     {
         [Test]
-        public void HelloStrategy_Should_ImplementICommandStrategy()
+        public void HelloStrategy_Should_ImplementICommandOfObjectModel()
         {
             // Arrange
             var writerMock = new Mock<IWriter>();
@@ -17,7 +16,7 @@ namespace Oppo.ObjectModel.Tests
             var objectUnderTest = new HelloStrategy(writerMock.Object);
 
             // Assert
-            Assert.IsInstanceOf<ICommandStrategy>(objectUnderTest);
+            Assert.IsInstanceOf<ICommand<ObjectModel>>(objectUnderTest);
         }
 
         [Test]

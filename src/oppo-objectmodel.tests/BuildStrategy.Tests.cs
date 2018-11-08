@@ -41,7 +41,20 @@ namespace Oppo.ObjectModel.Tests
                 new []{"-h"}
             };
         }
-        
+
+        [Test]
+        public void BuildStrategy_Should_ImplementICommandOfObjectModel()
+        {
+            // Arrange
+            var mockBuildFactory = new Mock<ICommandFactory<BuildStrategy>>();
+
+            // Act
+            var objectUnderTest = new BuildStrategy(mockBuildFactory.Object);
+
+            // Assert
+            Assert.IsInstanceOf<ICommand<ObjectModel>>(objectUnderTest);
+        }
+
         [Test]
         public void BuildStrategy_Should_Execute_HelpCommand_Success([ValueSource(nameof(ValidBuildHelpInputs))] string[] inputParams)
         {

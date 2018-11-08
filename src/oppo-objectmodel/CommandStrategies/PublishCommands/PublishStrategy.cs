@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
 {
-    public class PublishStrategy : ICommandStrategy
+    public class PublishStrategy : ICommandStrategy, ICommand<ObjectModel>
     {
         private readonly ICommandFactory<PublishStrategy> _factory;
 

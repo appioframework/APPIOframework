@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 {
-    public class NewStrategy : ICommandStrategy
+    public class NewStrategy : ICommandStrategy, ICommand<ObjectModel>
     {
         private readonly ICommandFactory<NewStrategy> _factory;
 

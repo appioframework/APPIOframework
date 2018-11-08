@@ -32,7 +32,7 @@ namespace Oppo.ObjectModel.Tests
         }
         
         [Test]
-        public void NewStrategy_Should_ImplementICommandStrategy()
+        public void NewStrategy_Should_ImplementICommandOfObjectModel()
         {
             // Arrange
             var factoryMock = new Mock<ICommandFactory<NewStrategy>>();
@@ -41,7 +41,7 @@ namespace Oppo.ObjectModel.Tests
             var objectUnderTest = new NewStrategy(factoryMock.Object);
 
             // Assert
-            Assert.IsInstanceOf<ICommandStrategy>(objectUnderTest);
+            Assert.IsInstanceOf<ICommand<ObjectModel>>(objectUnderTest);
         }
 
         [Test]
