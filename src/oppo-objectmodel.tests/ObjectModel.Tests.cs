@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using Oppo.ObjectModel.CommandStrategies;
 using Moq;
 using System.Collections.Generic;
 using System;
@@ -21,22 +20,17 @@ namespace Oppo.ObjectModel.Tests
             };
         }
 
-        [SetUp]
-        public void Setup()
-        {
-        }
-
         [Test]
         public void ShouldGetValidInputParams([ValueSource(nameof(ValidInputs))] string[] inputParams)
         {
             // Arrange
-            var strategyMock = new Mock<ICommandStrategy>();           
-            var mockCommandStrategyFactory = new Mock<ICommandStrategyFactory>();
+            var commandMock = new Mock<ICommand<ObjectModel>>();           
+            var factoryMock = new Mock<ICommandFactory<ObjectModel>>();
 
             var slnInputParams = inputParams.Skip(1);
-            var objectModel = new ObjectModel(mockCommandStrategyFactory.Object);
-            mockCommandStrategyFactory.Setup(factory => factory.GetStrategy(inputParams.FirstOrDefault())).Returns(strategyMock.Object);
-            strategyMock.Setup(s=>s.Execute(slnInputParams)).Returns(Constants.CommandResults.Success);
+            var objectModel = new ObjectModel(factoryMock.Object);
+            factoryMock.Setup(factory => factory.GetCommand(inputParams.FirstOrDefault())).Returns(commandMock.Object);
+            commandMock.Setup(s=>s.Execute(slnInputParams)).Returns(Constants.CommandResults.Success);
             
             // Act
             var executionResult = objectModel.ExecuteCommand(inputParams);
@@ -49,10 +43,10 @@ namespace Oppo.ObjectModel.Tests
         public void ShouldGetInvalidInputParams()
         {
             // Arrange
-            var mockCommandStrategyFactory = new Mock<ICommandStrategyFactory>();
+            var factoryMock = new Mock<ICommandFactory<ObjectModel>>();
             List<string> inputParams = null;
 
-            var objectModel = new ObjectModel(mockCommandStrategyFactory.Object);
+            var objectModel = new ObjectModel(factoryMock.Object);
 
             // Act
                                     

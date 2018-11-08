@@ -5,8 +5,11 @@ using System.Collections.Generic;
 
 namespace Oppo.ObjectModel.Tests
 {
-    public class HelpStrategyTests
+    public abstract class HelpStrategyTestsBase
     {
+        protected abstract HelpStrategy InstantiateObjectUnderTest(IWriter writer);
+        protected abstract string GetExpectedCommandName();
+
         [Test]
         public void HelpStrategy_Should_ImplementICommandOfObjectModel()
         {
@@ -14,7 +17,7 @@ namespace Oppo.ObjectModel.Tests
             var writerMock = new Mock<IWriter>();
 
             // Act
-            var objectUnderTest = new HelpStrategy(writerMock.Object);
+            var objectUnderTest = InstantiateObjectUnderTest(writerMock.Object);
 
             // Assert
             Assert.IsInstanceOf<ICommand<ObjectModel>>(objectUnderTest);
@@ -35,10 +38,8 @@ namespace Oppo.ObjectModel.Tests
             var factoryMock = new Mock<ICommandFactory<ObjectModel>>();
             factoryMock.Setup(x => x.Commands).Returns(new[] {commandMock.Object});
 
-            var helpStrategy = new HelpStrategy(writerMock.Object)
-            {
-                CommandFactory = factoryMock.Object,
-            };
+            var helpStrategy = InstantiateObjectUnderTest(writerMock.Object);
+            helpStrategy.CommandFactory = factoryMock.Object;
 
             // Act
             var strategyResult = helpStrategy.Execute(new string[] { });
@@ -55,7 +56,7 @@ namespace Oppo.ObjectModel.Tests
         {
             // Arrange
             var writerMock = new Mock<IWriter>();
-            var helpStrategy = new HelpStrategy(writerMock.Object);
+            var helpStrategy = InstantiateObjectUnderTest(writerMock.Object);
 
             // Act
             var strategyResult = helpStrategy.Execute(new string[] { });
@@ -71,7 +72,7 @@ namespace Oppo.ObjectModel.Tests
         {
             // Arrange
             var writerMock = new Mock<IWriter>();            
-            var helpStrategy = new HelpStrategy(writerMock.Object);
+            var helpStrategy = InstantiateObjectUnderTest(writerMock.Object);
 
             // Act
             var helpText = helpStrategy.GetHelpText();
@@ -85,13 +86,39 @@ namespace Oppo.ObjectModel.Tests
         {
             // Arrange
             var writerMock = new Mock<IWriter>();
-            var helpStrategy = new HelpStrategy(writerMock.Object);
+            var helpStrategy = InstantiateObjectUnderTest(writerMock.Object);
 
             // Act
             var commandName = helpStrategy.Name;
 
             // Assert
-            Assert.AreEqual(commandName, Constants.CommandName.Help);
+            Assert.AreEqual(GetExpectedCommandName(), commandName);
+        }
+    }
+
+    public class HelpStrategyTests : HelpStrategyTestsBase
+    {
+        protected override HelpStrategy InstantiateObjectUnderTest(IWriter writer)
+        {
+            return new HelpStrategy(writer);
+        }
+
+        protected override string GetExpectedCommandName()
+        {
+            return Constants.CommandName.Help;
+        }
+    }
+
+    public class ShortHelpStrategyTests : HelpStrategyTestsBase
+    {
+        protected override HelpStrategy InstantiateObjectUnderTest(IWriter writer)
+        {
+            return new ShortHelpStrategy(writer);
+        }
+
+        protected override string GetExpectedCommandName()
+        {
+            return Constants.CommandName.ShortHelp;
         }
     }
 }

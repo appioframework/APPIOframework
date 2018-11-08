@@ -2,7 +2,7 @@
 
 namespace Oppo.ObjectModel.CommandStrategies.HelloCommands
 {
-    public class HelloStrategy : ICommandStrategy, ICommand<ObjectModel>
+    public class HelloStrategy : ICommand<ObjectModel>
     {
         private readonly IWriter _writer;
 

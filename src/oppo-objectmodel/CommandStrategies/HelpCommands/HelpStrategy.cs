@@ -2,7 +2,7 @@
 
 namespace Oppo.ObjectModel.CommandStrategies.HelpCommands
 {
-    public class HelpStrategy : ICommandStrategy, ICommand<ObjectModel>
+    public class HelpStrategy : ICommand<ObjectModel>
     {
         private readonly IWriter _writer;
 
@@ -13,14 +13,13 @@ namespace Oppo.ObjectModel.CommandStrategies.HelpCommands
 
         public ICommandFactory<ObjectModel> CommandFactory { get; set; }
 
-        public string Name => Constants.CommandName.Help;
+        public virtual string Name => Constants.CommandName.Help;
 
         public string Execute(IEnumerable<string> inputsParams)
         {
             var helpOutput = new Dictionary<string, string>();
             _writer.WriteLine(Resources.text.help.HelpTextValues.HelpStartCommand);
             
-            helpOutput.Add(Name, GetHelpText());
             foreach (var command in CommandFactory?.Commands ?? new ICommand<ObjectModel>[0])
             {                
                 helpOutput.Add(command.Name, command.GetHelpText());

@@ -6,8 +6,8 @@ namespace Oppo.ObjectModel
 {
     public class ObjectModel : IObjectModel
     {
-        private readonly ICommandStrategyFactory _commandStrategyFactory;
-        public ObjectModel(ICommandStrategyFactory commandStrategyFactory)
+        private readonly ICommandFactory<ObjectModel> _commandStrategyFactory;
+        public ObjectModel(ICommandFactory<ObjectModel> commandStrategyFactory)
         {
             _commandStrategyFactory = commandStrategyFactory;
         }
@@ -20,7 +20,7 @@ namespace Oppo.ObjectModel
             }
 
             var inputParamsArray = inputParams.ToArray();
-            var strategy = _commandStrategyFactory.GetStrategy(inputParamsArray.FirstOrDefault());
+            var strategy = _commandStrategyFactory.GetCommand(inputParamsArray.FirstOrDefault());
             return strategy.Execute(inputParamsArray.Skip(1));
         }
     }
