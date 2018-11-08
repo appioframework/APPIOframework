@@ -11,6 +11,7 @@ namespace Oppo.ObjectModel.Tests
         {
         }
 
+        [TestCase(null)]
         [TestCase("iioh4ohf")]
         [TestCase("abc")]
         [TestCase("5zh")]
@@ -65,6 +66,22 @@ namespace Oppo.ObjectModel.Tests
 
             // Assert
             Assert.IsInstanceOf<BuildHelpStrategy>(strategy);
+        }
+
+        [TestCase(Constants.BuildCommandArguments.Name)]
+        [TestCase(Constants.BuildCommandArguments.VerboseName)]
+        public void CommandStrategyFactory_Should_ReturnBuildByNameStrategy(string commandName)
+        {
+            // Arrange
+            var writerMock = new Mock<IWriter>();
+            var mockFileSystem = new Mock<IFileSystem>();
+            var factory = new BuildCommandStrategyFactory(writerMock.Object, mockFileSystem.Object);
+
+            // Act
+            var strategy = factory.GetStrategy(commandName);
+
+            // Assert
+            Assert.IsInstanceOf<BuildNameStrategy>(strategy);
         }
     }
 }
