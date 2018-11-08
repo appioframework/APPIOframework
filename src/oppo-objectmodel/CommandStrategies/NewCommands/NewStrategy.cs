@@ -23,7 +23,6 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
             var commandParams = inputsParamsArray.Skip(1).ToArray();
             var strategy = _factory.GetCommand(commandName);
             var result = strategy.Execute(commandParams);
-
             return result;
         }
 
