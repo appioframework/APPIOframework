@@ -9,9 +9,9 @@ namespace Oppo.Terminal
     {
         public AssemblyInfo[] GetOppoAssemblyInfos()
         {
-            var oppoTerminalAssembly = typeof(OppoTerminal).Assembly;
-            var oppoObjectModelAssembly = typeof(ObjectModel.ObjectModel).Assembly;
-            var oppoResourcesAssembly = typeof(Resources.Resources).Assembly;
+            var oppoTerminalAssembly = typeof(global::Oppo.Terminal.Program).Assembly;
+            var oppoObjectModelAssembly = typeof(global::Oppo.ObjectModel.ObjectModel).Assembly;
+            var oppoResourcesAssembly = typeof(global::Oppo.Resources.Resources).Assembly;
 
             return new[]
             {
