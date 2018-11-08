@@ -53,7 +53,7 @@ namespace Oppo.ObjectModel
         {
             public string Name => throw new NotSupportedException();
 
-            public string Execute(IEnumerable<string> inputsParams)
+            public string Execute(IEnumerable<string> inputParams)
             {
                 throw new NotSupportedException();
             }

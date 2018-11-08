@@ -4,7 +4,6 @@ using System.Linq;
 namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
 {
     public class PublishNameStrategy : ICommand<PublishStrategy>
-/*IPublishStrategy*/
     {
         private readonly IFileSystem _fileSystem;
 
@@ -14,7 +13,6 @@ namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
         }
 
         public virtual string Name => Constants.PublishCommandArguments.Name;
-        //public string VerboseName => Constants.PublishCommandArguments.VerboseName;
 
         public string Execute(IEnumerable<string> inputParams)
         {
@@ -39,7 +37,7 @@ namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
 
         public string GetHelpText()
         {
-            throw new System.NotSupportedException();
+            return string.Empty;
         }
     }
 }

@@ -38,6 +38,20 @@ namespace Oppo.ObjectModel.Tests
         }
 
         [Test]
+        public void PublishNameStrategy_Should_ProvideEmptyHelpText()
+        {
+            // Arrange
+            var fileSystemMock = new Mock<IFileSystem>();
+            var objectUnderTest = InstantiateObjectUnderTest(fileSystemMock.Object);
+
+            // Act
+            var helpText = objectUnderTest.GetHelpText();
+
+            // Assert
+            Assert.AreEqual(string.Empty, helpText);
+        }
+
+        [Test]
         public void PublishNameStrategy_Should_CreatePublishDirectoryContainingApplicationFiles()
         {
             // Arrange
