@@ -15,7 +15,7 @@ namespace Oppo.ObjectModel.CommandStrategies.HelpCommands
 
         public virtual string Name => Constants.CommandName.Help;
 
-        public string Execute(IEnumerable<string> inputsParams)
+        public string Execute(IEnumerable<string> inputParams)
         {
             var helpOutput = new Dictionary<string, string>();
             _writer.WriteLine(Resources.text.help.HelpTextValues.HelpStartCommand);

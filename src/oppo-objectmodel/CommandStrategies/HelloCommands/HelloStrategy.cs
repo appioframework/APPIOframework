@@ -13,7 +13,7 @@ namespace Oppo.ObjectModel.CommandStrategies.HelloCommands
 
         public string Name => Constants.CommandName.Hello;
 
-        public string Execute(IEnumerable<string> inputsParams)
+        public string Execute(IEnumerable<string> inputParams)
         {
             _writer.WriteLine(Constants.HelloString);
             return Constants.CommandResults.Success;

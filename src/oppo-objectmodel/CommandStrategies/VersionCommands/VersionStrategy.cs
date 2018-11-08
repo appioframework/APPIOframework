@@ -16,7 +16,7 @@ namespace Oppo.ObjectModel.CommandStrategies.VersionCommands
 
         public string Name => Constants.CommandName.Version;
 
-        public string Execute(IEnumerable<string> inputsParams)
+        public string Execute(IEnumerable<string> inputParams)
         {
             var printableInfos = new Dictionary<string, string>();
             foreach (var info in _reflection.GetOppoAssemblyInfos())
