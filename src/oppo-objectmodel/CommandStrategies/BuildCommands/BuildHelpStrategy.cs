@@ -13,7 +13,7 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 
         public virtual string Name => Constants.BuildCommandArguments.Help;
 
-        public string Execute(IEnumerable<string> inputsParams)
+        public string Execute(IEnumerable<string> inputParams)
         {
             var buildHelpOutput = new Dictionary<string, string>();
             

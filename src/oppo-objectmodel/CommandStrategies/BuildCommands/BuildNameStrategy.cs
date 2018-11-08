@@ -14,9 +14,9 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 
         public virtual string Name => Constants.BuildCommandArguments.Name;
 
-        public string Execute(IEnumerable<string> inputsParams)
+        public string Execute(IEnumerable<string> inputParams)
         {
-            var inputParamsArray = inputsParams.ToArray();
+            var inputParamsArray = inputParams.ToArray();
             var projectName = inputParamsArray.ElementAtOrDefault(0);
 
             if (string.IsNullOrEmpty(projectName))
