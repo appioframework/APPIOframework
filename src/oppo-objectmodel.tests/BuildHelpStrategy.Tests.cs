@@ -4,28 +4,12 @@ using Oppo.ObjectModel.CommandStrategies.BuildCommands;
 
 namespace Oppo.ObjectModel.Tests
 {
-    public class BuildHelpStrategyTests
+    public abstract class BuildHelpStrategyTestsBase
     {
-        private static string[][] InvalidInputs()
-        {
-            return new[]
-            {
-                new []{"-g"},
-                new []{"-H"},
-                new []{"--Help"},
-                new []{"-y"},
-                new []{"-n"},
-                new []{"-n", ""},
-                new []{"--something"},
-                new []{"--different"},
-                new []{"--name"},
-                new []{"--name", ""},
-                new []{""},
-                new string[0],
-            };
-        }
+        protected abstract BuildHelpStrategy InstantiateObjectUnderTest(IWriter writer);
+        protected abstract string GetExpectedCommandName();
 
-        private static string[][] ValidInputs()
+        protected static string[][] ValidInputs()
         {
             return new[]
             {
@@ -33,18 +17,54 @@ namespace Oppo.ObjectModel.Tests
                 new []{"--help"},
             };
         }
-
-        [SetUp]
-        public void Setup()
-        {
-        }
-
+        
         [Test]
-        public void BuildHelpStrategy_Should_Excecute_Seccess([ValueSource(nameof(ValidInputs))] string[] inputParams)
+        public void BuildHelpStrategy_Should_ImplementICommandOfObjectModel()
         {
             // Arrange
             var mockWriter = new Mock<IWriter>();
-            var strategy = new BuildHelpStrategy(mockWriter.Object);
+
+            // Act
+            var objectUnderTest = InstantiateObjectUnderTest(mockWriter.Object);
+
+            // Assert
+            Assert.IsInstanceOf<ICommand<BuildStrategy>>(objectUnderTest);
+        }
+
+        [Test]
+        public void BuildHelpStrategy_Should_HaveCorrectCommandName()
+        {
+            // Arrange
+            var mockWriter = new Mock<IWriter>();
+            var objectUnderTest = InstantiateObjectUnderTest(mockWriter.Object);
+
+            // Act
+            var commandName = objectUnderTest.Name;
+
+            // Assert
+            Assert.AreEqual(GetExpectedCommandName(), commandName);
+        }
+
+        [Test]
+        public void BuildHelpStrategy_Should_ProvideEmptyHelpText()
+        {
+            // Arrange
+            var mockWriter = new Mock<IWriter>();
+            var objectUnderTest = InstantiateObjectUnderTest(mockWriter.Object);
+
+            // Act
+            var helpText = objectUnderTest.GetHelpText();
+
+            // Assert
+            Assert.AreEqual(string.Empty, helpText);
+        }
+
+        [Test]
+        public void BuildHelpStrategy_Should_ExecuteSuccess([ValueSource(nameof(ValidInputs))] string[] inputParams)
+        {
+            // Arrange
+            var mockWriter = new Mock<IWriter>();
+            var strategy = InstantiateObjectUnderTest(mockWriter.Object);
 
             // Act
             var strategyResult = strategy.Execute(new string[] {});
@@ -52,6 +72,32 @@ namespace Oppo.ObjectModel.Tests
             // Assert
             Assert.AreEqual(strategyResult, Constants.CommandResults.Success);
             mockWriter.Verify(x=>x.WriteLine(It.IsAny<string>()));
+        }
+    }
+
+    public class BuildHelpStrategyTests : BuildHelpStrategyTestsBase
+    {
+        protected override BuildHelpStrategy InstantiateObjectUnderTest(IWriter writer)
+        {
+            return new BuildHelpStrategy(writer);
+        }
+
+        protected override string GetExpectedCommandName()
+        {
+            return Constants.BuildCommandArguments.Help;
+        }
+    }
+
+    public class BuildVerboseHelpStrategyTests : BuildHelpStrategyTestsBase
+    {
+        protected override BuildHelpStrategy InstantiateObjectUnderTest(IWriter writer)
+        {
+            return new BuildVerboseHelpStrategy(writer);
+        }
+
+        protected override string GetExpectedCommandName()
+        {
+            return Constants.BuildCommandArguments.VerboseHelp;
         }
     }
 }

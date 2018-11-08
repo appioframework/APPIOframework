@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 {
-    public class BuildNameStrategy : IBuildStrategy
+    public class BuildNameStrategy : ICommand<BuildStrategy>
     {
         private readonly IFileSystem _fileSystem;
 
@@ -11,6 +11,8 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
         {
             _fileSystem = fileSystem;
         }
+
+        public virtual string Name => Constants.BuildCommandArguments.Name;
 
         public string Execute(IEnumerable<string> inputsParams)
         {
@@ -35,6 +37,11 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
             }
 
             return Constants.CommandResults.Success;
+        }
+
+        public string GetHelpText()
+        {
+            return string.Empty;
         }
     }
 }

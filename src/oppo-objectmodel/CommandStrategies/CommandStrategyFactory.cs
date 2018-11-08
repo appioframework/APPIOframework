@@ -22,10 +22,12 @@ namespace Oppo.ObjectModel.CommandStrategies
             _commands.Add(Constants.CommandName.Hello, new HelloStrategy(writer));
 
             var newStrategies = new ICommand<NewStrategy>[] { new NewSlnCommandStrategy(fileSystem), new NewOpcuaAppCommandStrategy(fileSystem), new NewHelpCommandStrategy(writer), new NewVerboseHelpCommandStrategy(writer), };
-            var newStrategiesCommandFactory = new CommandFactory<NewStrategy>(newStrategies, Constants.NewCommandName.Help);
-            _commands.Add(Constants.CommandName.New, new NewStrategy(newStrategiesCommandFactory));
+            var newStrategyCommandFactory = new CommandFactory<NewStrategy>(newStrategies, Constants.NewCommandName.Help);
+            _commands.Add(Constants.CommandName.New, new NewStrategy(newStrategyCommandFactory));
 
-            _commands.Add(Constants.CommandName.Build, new BuildStrategy(new BuildCommandStrategyFactory(writer, new FileSystemWrapper())));
+            var buildStrategies = new ICommand<BuildStrategy>[] { new BuildNameStrategy(fileSystem), new BuildVerboseNameStrategy(fileSystem), new BuildHelpStrategy(writer), new BuildVerboseHelpStrategy(writer), };
+            var buildStrategyCommandFactory = new CommandFactory<BuildStrategy>(buildStrategies, Constants.BuildCommandArguments.Help);
+            _commands.Add(Constants.CommandName.Build, new BuildStrategy(buildStrategyCommandFactory));
 
             var publishStrategies = new ICommand<PublishStrategy>[] { new PublishNameStrategy(fileSystem), new PublishVerboseNameStrategy(fileSystem), new PublishHelpStrategy(writer), new PublishVerboseHelpStrategy(writer), };
             var publishStrategyCommandFactory = new CommandFactory<PublishStrategy>(publishStrategies, Constants.PublishCommandArguments.Help);

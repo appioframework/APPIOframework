@@ -41,31 +41,16 @@ namespace Oppo.ObjectModel.Tests
                 new []{"-h"}
             };
         }
-
-        private static bool[][] FailingExecutableStates()
-        {
-            return new[]
-            {
-                new[] {false, false},
-                new[] {true, false},
-                new[] {false, true},
-            };
-        }
-
-        [SetUp]
-        public void Setup()
-        {
-        }
-
+        
         [Test]
         public void BuildStrategy_Should_Execute_HelpCommand_Success([ValueSource(nameof(ValidBuildHelpInputs))] string[] inputParams)
         {
             // Arrange
-            var mockBuildStrategy = new Mock<IBuildStrategy>();
+            var mockBuildStrategy = new Mock<ICommand<BuildStrategy>>();
             mockBuildStrategy.Setup(x => x.Execute(new string[] { })).Returns(Constants.CommandResults.Success);
-            var mockBuildFactory = new Mock<IBuildCommandStrategyFactory>();
-            mockBuildFactory.Setup(f => f.GetStrategy(Constants.BuildCommandArguments.Help)).Returns(mockBuildStrategy.Object);
-            mockBuildFactory.Setup(f => f.GetStrategy(Constants.BuildCommandArguments.VerboseHelp)).Returns(mockBuildStrategy.Object);
+            var mockBuildFactory = new Mock<ICommandFactory<BuildStrategy>>();
+            mockBuildFactory.Setup(f => f.GetCommand(Constants.BuildCommandArguments.Help)).Returns(mockBuildStrategy.Object);
+            mockBuildFactory.Setup(f => f.GetCommand(Constants.BuildCommandArguments.VerboseHelp)).Returns(mockBuildStrategy.Object);
 
             var buildStrategy = new BuildStrategy(mockBuildFactory.Object);
 
@@ -80,12 +65,12 @@ namespace Oppo.ObjectModel.Tests
         public void BuildStrategy_Should_SucceedOnBuildableProject([ValueSource(nameof(ValidBuildNameInputs))] string[] inputParams)
         {
             // Arrange
-            var mockBuildStrategy = new Mock<IBuildStrategy>();
+            var mockBuildStrategy = new Mock<ICommand<BuildStrategy>>();
             mockBuildStrategy.Setup(x => x.Execute(new string[] { inputParams[1] })).Returns(Constants.CommandResults.Success);
 
-            var mockBuildFactory = new Mock<IBuildCommandStrategyFactory>();
-            mockBuildFactory.Setup(f => f.GetStrategy(Constants.BuildCommandArguments.Name)).Returns(mockBuildStrategy.Object);
-            mockBuildFactory.Setup(f => f.GetStrategy(Constants.BuildCommandArguments.VerboseName)).Returns(mockBuildStrategy.Object);
+            var mockBuildFactory = new Mock<ICommandFactory<BuildStrategy>>();
+            mockBuildFactory.Setup(f => f.GetCommand(Constants.BuildCommandArguments.Name)).Returns(mockBuildStrategy.Object);
+            mockBuildFactory.Setup(f => f.GetCommand(Constants.BuildCommandArguments.VerboseName)).Returns(mockBuildStrategy.Object);
 
             var buildStrategy = new BuildStrategy(mockBuildFactory.Object);
 
@@ -100,11 +85,11 @@ namespace Oppo.ObjectModel.Tests
         public void ShouldExecuteStrategy_Fail_MissingParameter([ValueSource(nameof(InvalidInputs))] string[] inputParams)
         {
             // Arrange
-            var mockBuildStrategy = new Mock<IBuildStrategy>();
+            var mockBuildStrategy = new Mock<ICommand<BuildStrategy>>();
             mockBuildStrategy.Setup(x => x.Execute(It.IsAny<IEnumerable<string>>())).Returns(Constants.CommandResults.Failure);
             
-            var mockBuildFactory = new Mock<IBuildCommandStrategyFactory>();
-            mockBuildFactory.Setup(f => f.GetStrategy(It.IsAny<string>())).Returns(mockBuildStrategy.Object);
+            var mockBuildFactory = new Mock<ICommandFactory<BuildStrategy>>();
+            mockBuildFactory.Setup(f => f.GetCommand(It.IsAny<string>())).Returns(mockBuildStrategy.Object);
 
             var buildStrategy = new BuildStrategy(mockBuildFactory.Object);
 
@@ -119,7 +104,7 @@ namespace Oppo.ObjectModel.Tests
         public void ShouldReturnEmptyHelpText()
         {
             // Arrange
-            var mockBuildFactory = new Mock<IBuildCommandStrategyFactory>();
+            var mockBuildFactory = new Mock<ICommandFactory<BuildStrategy>>();
             var buildStrategy = new BuildStrategy(mockBuildFactory.Object);            
 
             // Act
@@ -133,7 +118,7 @@ namespace Oppo.ObjectModel.Tests
         public void ShouldReturnCommandName()
         {
             // Arrange
-            var mockBuildFactory = new Mock<IBuildCommandStrategyFactory>();
+            var mockBuildFactory = new Mock<ICommandFactory<BuildStrategy>>();
             var buildStrategy = new BuildStrategy(mockBuildFactory.Object);
 
             // Act

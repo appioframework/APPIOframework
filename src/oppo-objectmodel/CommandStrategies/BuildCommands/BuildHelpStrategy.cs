@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 {
-    public class BuildHelpStrategy : IBuildStrategy
+    public class BuildHelpStrategy : ICommand<BuildStrategy>
     {
         private readonly IWriter _writer;
 
         public BuildHelpStrategy(IWriter writer)
         {
             _writer = writer;
-        }        
+        }
+
+        public virtual string Name => Constants.BuildCommandArguments.Help;
 
         public string Execute(IEnumerable<string> inputsParams)
         {
@@ -28,6 +29,11 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 
             _writer.WriteLines(buildHelpOutput);
             return Constants.CommandResults.Success;
+        }
+
+        public string GetHelpText()
+        {
+            return string.Empty;
         }
     }
 }

@@ -5,9 +5,9 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 {
     public class BuildStrategy : ICommandStrategy
     {
-        private readonly IBuildCommandStrategyFactory _factory;
+        private readonly ICommandFactory<BuildStrategy> _factory;
 
-        public BuildStrategy(IBuildCommandStrategyFactory factory)
+        public BuildStrategy(ICommandFactory<BuildStrategy> factory)
         {
             _factory = factory;
         }
@@ -18,7 +18,7 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
         {
             var inputParamsArray = inputsParams.ToArray();
 
-            var buildStrategy = _factory.GetStrategy(inputParamsArray.ElementAtOrDefault(0));
+            var buildStrategy = _factory.GetCommand(inputParamsArray.ElementAtOrDefault(0));
             return buildStrategy.Execute(inputParamsArray.Skip(1));          
         }
 

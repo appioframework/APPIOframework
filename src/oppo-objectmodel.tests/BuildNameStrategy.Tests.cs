@@ -6,9 +6,12 @@ using Oppo.ObjectModel.CommandStrategies.BuildCommands;
 
 namespace Oppo.ObjectModel.Tests
 {
-    public class BuildNameStrategyTests
+    public abstract class BuildNameStrategyTestsBase
     {
-        private static string[][] InvalidInputs()
+        protected abstract BuildNameStrategy InstantiateObjectUnderTest(IFileSystem fileSystem);
+        protected abstract string GetExpectedCommandName();
+
+        protected static string[][] InvalidInputs()
         {
             return new[]
             {
@@ -17,15 +20,15 @@ namespace Oppo.ObjectModel.Tests
             };
         }
 
-        private static string[][] ValidInputs()
+        protected static string[][] ValidInputs()
         {
             return new[]
             {
                 new []{"hugo"}
             };
-        }      
+        }
 
-        private static bool[][] FailingExecutableStates()
+        protected static bool[][] FailingExecutableStates()
         {
             return new[]
             {
@@ -35,11 +38,46 @@ namespace Oppo.ObjectModel.Tests
             };
         }
 
-        [SetUp]
-        public void Setup()
+        [Test]
+        public void BuildNameStrategy_Should_ImplementICommandOfBuildStrategy()
         {
+            // Arrange
+            var fileSystemMock = new Mock<IFileSystem>();
+
+            // Act
+            var objectUnderTest = InstantiateObjectUnderTest(fileSystemMock.Object);
+
+            // Assert
+            Assert.IsInstanceOf<ICommand<BuildStrategy>>(objectUnderTest);
         }
-        
+
+        [Test]
+        public void BuildNameStrategy_Should_HaveCorrectCommandName()
+        {
+            // Arrange
+            var fileSystemMock = new Mock<IFileSystem>();
+            var objectUnderTest = InstantiateObjectUnderTest(fileSystemMock.Object);
+
+            // Act
+            var commandName = objectUnderTest.Name;
+
+            // Assert
+            Assert.AreEqual(GetExpectedCommandName(), commandName);
+        }
+
+        [Test]
+        public void BuildNameStrategy_Should_ProvideEmptyHelpText()
+        {
+            // Arrange
+            var fileSystemMock = new Mock<IFileSystem>();
+            var objectUnderTest = InstantiateObjectUnderTest(fileSystemMock.Object);
+
+            // Act
+            var helpText = objectUnderTest.GetHelpText();
+
+            // Assert
+            Assert.AreEqual(string.Empty, helpText);
+        }
 
         [Test]
         public void BuildStrategy_Should_SucceedOnBuildableProject([ValueSource(nameof(ValidInputs))] string[] inputParams)
@@ -52,7 +90,7 @@ namespace Oppo.ObjectModel.Tests
             fileSystemMock.Setup(x => x.CombinePaths(It.IsAny<string>(), It.IsAny<string>())).Returns(projectBuildDirectory);
             fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.Meson, projectDirectoryName, Constants.DirectoryName.MesonBuild)).Returns(true);
             fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.Ninja, projectBuildDirectory, string.Empty)).Returns(true);
-            var buildStrategy = new BuildNameStrategy(fileSystemMock.Object);
+            var buildStrategy = InstantiateObjectUnderTest(fileSystemMock.Object);
 
             // Act
             var strategyResult = buildStrategy.Execute(inputParams);
@@ -68,7 +106,7 @@ namespace Oppo.ObjectModel.Tests
             // Arrange
             var fileSystemMock = new Mock<IFileSystem>();
 
-            var buildStrategy = new BuildNameStrategy(fileSystemMock.Object);
+            var buildStrategy = InstantiateObjectUnderTest(fileSystemMock.Object);
 
             // Act
             var strategyResult = buildStrategy.Execute(inputParams);
@@ -88,13 +126,39 @@ namespace Oppo.ObjectModel.Tests
             fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.Meson, It.IsAny<string>(), It.IsAny<string>())).Returns(mesonState);
             fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.Ninja, It.IsAny<string>(), It.IsAny<string>())).Returns(ninjaState);
 
-            var buildStrategy = new BuildNameStrategy(fileSystemMock.Object);
+            var buildStrategy = InstantiateObjectUnderTest(fileSystemMock.Object);
 
             // Act
             var strategyResult = buildStrategy.Execute(new[] {"hugo"});
 
             // Assert
             Assert.AreEqual(Constants.CommandResults.Failure, strategyResult);
+        }
+    }
+
+    public class BuildNameStrategyTests : BuildNameStrategyTestsBase
+    {
+        protected override BuildNameStrategy InstantiateObjectUnderTest(IFileSystem fileSystem)
+        {
+            return new BuildNameStrategy(fileSystem);
+        }
+
+        protected override string GetExpectedCommandName()
+        {
+            return Constants.BuildCommandArguments.Name;
+        }
+    }
+
+    public class BuildVerboseNameStrategyTests : BuildNameStrategyTestsBase
+    {
+        protected override BuildNameStrategy InstantiateObjectUnderTest(IFileSystem fileSystem)
+        {
+            return new BuildVerboseNameStrategy(fileSystem);
+        }
+
+        protected override string GetExpectedCommandName()
+        {
+            return Constants.BuildCommandArguments.VerboseName;
         }
     }
 }
