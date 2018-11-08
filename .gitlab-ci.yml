@@ -18,6 +18,8 @@ stages:
   - integration-test--execution--13
   - integration-test--execution--14
   - integration-test--execution--15
+  - integration-test--execution--16
+  - integration-test--execution--17
   - delivery 
 
 before_script:
@@ -180,6 +182,18 @@ run-integration-test--publish-help-verbose--success:
   stage: 'integration-test--execution--15'
   script:
     - /bin/bash bash-gitlab-ci/integration-tests/run-publish-help--success.sh verbose    
+    
+run-integration-test--new-help--success:
+  extends: prepare-integration-test
+  stage: 'integration-test--execution--16'
+  script:
+    - /bin/bash bash-gitlab-ci/integration-tests/run-new-help--success.sh -
+
+run-integration-test--new-help-verbose--success:
+  extends: prepare-integration-test
+  stage: 'integration-test--execution--17'
+  script:
+    - /bin/bash bash-gitlab-ci/integration-tests/run-new-help--success.sh verbose    
     
 mark-repository-as-deliverable:
   stage: 'delivery'
