@@ -36,7 +36,7 @@ namespace Oppo.ObjectModel.CommandStrategies
                 return _commands[Constants.CommandName.Help];
             }
 
-            if (_commands.ContainsKey(commandName ?? string.Empty))
+            if (_commands.ContainsKey(commandName))
             {
                 return _commands[commandName];
             }
