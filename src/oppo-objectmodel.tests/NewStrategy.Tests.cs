@@ -9,9 +9,9 @@ namespace Oppo.ObjectModel.Tests
 {
     public class NewStrategyTests
     {
-        public struct NewStrategyTestsFixture
+        public struct NewStrategyFixture
         {
-            public NewStrategyTestsFixture(string[] input, string result)
+            public NewStrategyFixture(string[] input, string result)
             {
                 Input = input;
                 Result = result;
@@ -21,13 +21,13 @@ namespace Oppo.ObjectModel.Tests
             public string Result;
         }
 
-        private static NewStrategyTestsFixture[] Data()
+        private static NewStrategyFixture[] Data()
         {
             return new[]
             {
-                new NewStrategyTestsFixture(new[]{ "sln", "-n", "anyName" }, Constants.CommandResults.Success),
-                new NewStrategyTestsFixture(new[]{ "abc", "-n", "my-value" }, Constants.CommandResults.Failure),
-                new NewStrategyTestsFixture(new[]{ "sln", "--name", "anyName" }, Constants.CommandResults.Success),
+                new NewStrategyFixture(new[]{ "sln", "-n", "anyName" }, Constants.CommandResults.Success),
+                new NewStrategyFixture(new[]{ "abc", "-n", "my-value" }, Constants.CommandResults.Failure),
+                new NewStrategyFixture(new[]{ "sln", "--name", "anyName" }, Constants.CommandResults.Success),
             };
         }
         
@@ -45,7 +45,7 @@ namespace Oppo.ObjectModel.Tests
         }
 
         [Test]
-        public void NewStrategy_ShouldCall_ChildCommand([ValueSource(nameof(Data))] NewStrategyTestsFixture data)
+        public void NewStrategy_ShouldCall_ChildCommand([ValueSource(nameof(Data))] NewStrategyFixture data)
         {
             // Arrange
             var commandFactoryMock = new Mock<INewCommandStrategyFactory>();
