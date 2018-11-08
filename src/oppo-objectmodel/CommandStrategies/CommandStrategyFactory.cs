@@ -17,10 +17,16 @@ namespace Oppo.ObjectModel.CommandStrategies
 
         public CommandStrategyFactory(IReflection reflection, IWriter writer)
         {
+            var fileSystem = new FileSystemWrapper();
+
             _commands.Add(Constants.CommandName.Hello, new HelloStrategy(writer));
             _commands.Add(Constants.CommandName.New, new NewStrategy(new NewCommandStrategyFactory(new FileSystemWrapper())));
             _commands.Add(Constants.CommandName.Build, new BuildStrategy(new BuildCommandStrategyFactory(writer, new FileSystemWrapper())));
-            _commands.Add(Constants.CommandName.Publish, new PublishStrategy(new FileSystemWrapper()));
+
+            var publishStrategies = new ICommand<PublishStrategy>[] { new PublishNameStrategy(fileSystem), new PublishVerboseNameStrategy(fileSystem), };
+            var publishStrategyCommandFactory = new CommandFactory<PublishStrategy>(publishStrategies, Constants.PublishCommandArguments.Name);
+            _commands.Add(Constants.CommandName.Publish, new PublishStrategy(publishStrategyCommandFactory));
+
             _commands.Add(Constants.CommandName.Version, new VersionStrategy(reflection, writer));
 
             // help command must be added as last one, because it hold a reference to all others commands for help messages

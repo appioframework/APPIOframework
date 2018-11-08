@@ -1,3 +1,4 @@
+﻿using System.Collections.Generic;
 using System.Linq;
 using Moq;
 using NUnit.Framework;
@@ -8,113 +9,67 @@ namespace Oppo.ObjectModel.Tests
 {
     public class PublishStrategyTests
     {
-        private static string[][] ValidInputsPublishApplication()
-        {
-            return new[]
-            {
-                new[] {"-n", "hugo"},
-                new[] {"--name", "hugo"},
-                new[] {"-n", "another"},
-                new[] {"--name", "app-name"},
-            };
-        }
-
-        private static string[][] InvalidInputsPublishApplication()
-        {
-            return new[]
-            {
-                new[] {"-n", ""},
-                new[] {"-a", "hugo"},
-                new[] {"-a", ""},
-                new[] {"--name", ""},
-                new[] {"--any", "hugo"},
-                new[] {"--any", ""},
-                new[] {"-n"},
-                new[] {"-x"},
-                new[] {"--name"},
-                new[] {"--exit"},
-            };
-        }
-
         [Test]
-        public void PublishStrategy_ShouldImplement_ICommandStrategy()
+        public void PublishStrategy_Should_ImplementICommandStrategy()
         {
             // Arrange
-            var fileSystemMock = new Mock<IFileSystem>();
+            var commandFactoryMock = new Mock<ICommandFactory<PublishStrategy>>();
 
             // Act
-            var objectUnderTest = new PublishStrategy(fileSystemMock.Object);
+            var objectUnderTest = new PublishStrategy(commandFactoryMock.Object);
 
             // Assert
             Assert.IsInstanceOf<ICommandStrategy>(objectUnderTest);
         }
 
         [Test]
-        public void PublishStrategy_ShouldCreate_PublishDirectoryContainingApplicationFiles([ValueSource(nameof(ValidInputsPublishApplication))] string[] inputParams)
+        public void PublishStrategy_Should_HaveCorrectCommandName()
         {
             // Arrange
-            var applicationName = inputParams.ElementAt(1);
-            const string buildDirectory = "build";
-            const string publishDirectory = "publish";
-            const string applicationSourcePath = "source";
-            const string applicationTargetPath = "target";
-            
-            var fileSystemMock = new Mock<IFileSystem>();
-            fileSystemMock.Setup(x => x.CombinePaths(applicationName, Constants.DirectoryName.Publish)).Returns(publishDirectory);
-            fileSystemMock.Setup(x => x.CombinePaths(applicationName, Constants.DirectoryName.MesonBuild)).Returns(buildDirectory);
-            fileSystemMock.Setup(x => x.CombinePaths(buildDirectory, Constants.ExecutableName.App)).Returns(applicationSourcePath);
-            fileSystemMock.Setup(x => x.CombinePaths(publishDirectory, Constants.ExecutableName.App)).Returns(applicationTargetPath);
-            var objectUnderTest = new PublishStrategy(fileSystemMock.Object);
-            
+            var commandFactoryMock = new Mock<ICommandFactory<PublishStrategy>>();
+            var objectUnderTest = new PublishStrategy(commandFactoryMock.Object);
+
             // Act
-            var result = objectUnderTest.Execute(inputParams);
+            var commandName = objectUnderTest.Name;
 
             // Assert
-            Assert.AreEqual(Constants.CommandResults.Success, result);
-            fileSystemMock.Verify(x => x.CreateDirectory(publishDirectory), Times.Once);
-            fileSystemMock.Verify(x => x.CopyFile(applicationSourcePath, applicationTargetPath), Times.Once);
+            Assert.AreEqual(Constants.CommandName.Publish, commandName);
         }
 
         [Test]
-        public void PublishStrategy_ShouldIgnore_MissingOrInvalidArguments([ValueSource(nameof(InvalidInputsPublishApplication))] string[] inputParams)
+        public void PublishStrategy_Should_ProvideSomeHelpText()
         {
             // Arrange
-            var fileSystemMock = new Mock<IFileSystem>();
-            var objectUnderTest = new PublishStrategy(fileSystemMock.Object);
+            var commandFactoryMock = new Mock<ICommandFactory<PublishStrategy>>();
+            var objectUnderTest = new PublishStrategy(commandFactoryMock.Object);
 
             // Act
-            var result = objectUnderTest.Execute(inputParams);
+            var helpText = objectUnderTest.GetHelpText();
 
             // Assert
-            Assert.AreEqual(Constants.CommandResults.Failure, result);
+            Assert.IsNotEmpty(helpText);
         }
 
         [Test]
-        public void ShouldReturnEmptyHelpText()
+        public void PublishStrategy_Should_ExecuteCorrectSubCommandByName()
         {
             // Arrange
-            var fileSystemMock = new Mock<IFileSystem>();
-            var publishStrategy = new PublishStrategy(fileSystemMock.Object);
+            const string commandName = "--any-name";
+            const string expectedCommandResult = "any-result";
+            var commandInputParamsMock = new[] {commandName, "any", "sub", "parameters"};
+            var subCommandInputParamsMock = new[] {"any", "sub", "parameters"};
+
+            var commandMock = new Mock<ICommand<PublishStrategy>>();
+            commandMock.Setup(x => x.Execute(It.Is<IEnumerable<string>>(p => p.SequenceEqual(subCommandInputParamsMock)))).Returns(expectedCommandResult);
+            var commandFactoryMock = new Mock<ICommandFactory<PublishStrategy>>();
+            commandFactoryMock.Setup(x => x.GetCommand(commandName)).Returns(commandMock.Object);
+            var objectUnderTest = new PublishStrategy(commandFactoryMock.Object);
 
             // Act
-            var helpText = publishStrategy.GetHelpText();
+            var result = objectUnderTest.Execute(commandInputParamsMock);
 
             // Assert
-            Assert.AreEqual(helpText, Resources.text.help.HelpTextValues.PublishCommand);
-        }
-
-        [Test]
-        public void ShouldReturnCommandName()
-        {
-            // Arrange
-            var fileSystemMock = new Mock<IFileSystem>();
-            var publishStrategy = new PublishStrategy(fileSystemMock.Object);
-
-            // Act
-            var commandName = publishStrategy.Name;
-
-            // Assert
-            Assert.AreEqual(commandName, Constants.CommandName.Publish);
+            Assert.AreEqual(expectedCommandResult, result);
         }
     }
 }
