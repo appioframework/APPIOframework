@@ -48,7 +48,6 @@ namespace Oppo.ObjectModel.Tests
         {
             return new[]
             {
-                new CommandFactoryFixture(new string[0], "invalid", "hello"),
                 new CommandFactoryFixture(new []{"hello", "exit"}, "invalid", "hello"),
                 new CommandFactoryFixture(new []{"hello", "exit", "build", "wipe"}, "wipe-2", "hello"),
                 new CommandFactoryFixture(new []{"hello", "exit", "build", "wipe", "thrash", "smile"}, "smil", "hello"),
