@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Moq;
 using NUnit.Framework;
-using Oppo.ObjectModel.CommandStrategies;
 using Oppo.ObjectModel.CommandStrategies.VersionCommands;
 
 namespace Oppo.ObjectModel.Tests

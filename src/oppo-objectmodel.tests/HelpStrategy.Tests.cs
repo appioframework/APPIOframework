@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Oppo.ObjectModel.Tests
 {
-    public class HelpStrategyTestsBase
+    public class HelpStrategyTests
     {     
         [Test]
         public void HelpStrategy_Should_ImplementICommandOfObjectModel()

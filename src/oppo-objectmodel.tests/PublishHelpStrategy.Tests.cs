@@ -5,7 +5,7 @@ using Oppo.ObjectModel.CommandStrategies.PublishCommands;
 
 namespace Oppo.ObjectModel.Tests
 {
-    public class PublishHelpStrategyTestsBase
+    public class PublishHelpStrategyTests
     {      
         [Test]
         public void PublishHelpStrategy_Should_ImplementICommandOfPublishStrategy()

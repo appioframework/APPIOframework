@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Oppo.ObjectModel.Tests
 {
-    public class BuildHelpStrategyTestsBase
+    public class BuildHelpStrategyTests
     {
         protected static string[][] ValidInputs()
         {

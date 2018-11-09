@@ -5,7 +5,7 @@ using Oppo.ObjectModel.CommandStrategies.NewCommands;
 
 namespace Oppo.ObjectModel.Tests
 {
-    public class NewHelpCommandStrategyTestsBase
+    public class NewHelpCommandStrategyTests
     {     
         [Test]
         public void NewHelpCommandStrategy_Should_ImplementICommandOfNewStrategy()
