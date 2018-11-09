@@ -16,16 +16,15 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 
         public string Name { get; private set; }
 
+        public ICommandFactory<BuildStrategy> CommandFactory { get; set; }
+
         public string Execute(IEnumerable<string> inputParams)
         {
             var buildHelpOutput = new Dictionary<string, string>(_helpText);
-
-            buildHelpOutput.Add("-n", "Project name");
-            buildHelpOutput.Add("--name", "Project name");
-            buildHelpOutput.Add("-h", "Build help");
-            buildHelpOutput.Add("--help", "Build help");
-
-            _writer.WriteLine("Arguments:");
+            foreach (var command in CommandFactory.Commands)
+            {
+                buildHelpOutput.Add(command.Name, command.GetHelpText());
+            }
 
             _writer.WriteLines(buildHelpOutput);
             return Constants.CommandResults.Success;

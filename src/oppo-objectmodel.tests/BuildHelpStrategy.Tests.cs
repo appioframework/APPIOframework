@@ -62,14 +62,17 @@ namespace Oppo.ObjectModel.Tests
         {
             // Arrange
             var mockWriter = new Mock<IWriter>();
+            var mockBuildCommandFactory = new Mock<ICommandFactory<BuildStrategy>>();
+            mockBuildCommandFactory.Setup(x => x.Commands).Returns(new ICommand<BuildStrategy>[0]);
             var strategy = new BuildHelpStrategy(string.Empty, mockWriter.Object, new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
+            strategy.CommandFactory = mockBuildCommandFactory.Object;
 
             // Act
             var strategyResult = strategy.Execute(new string[] {});
 
             // Assert
             Assert.AreEqual(strategyResult, Constants.CommandResults.Success);
-            mockWriter.Verify(x=>x.WriteLine(It.IsAny<string>()));
+            mockWriter.Verify(x=>x.WriteLines(It.IsAny<Dictionary<string, string>>()));
         }
     }
 }

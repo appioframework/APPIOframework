@@ -31,22 +31,28 @@ namespace Oppo.Terminal
 
             var buildHelpStrategyHelpText = new[]
             {
+                new KeyValuePair<string, string>("Arguments:", ""),
                 new KeyValuePair<string, string>("<Project>", "The project directory to use"),
                 new KeyValuePair<string, string>(string.Empty, string.Empty),
-                new KeyValuePair<string, string>("Options:", "")
+                new KeyValuePair<string, string>("Options:", "")       
             };
+
+            var buildHelpStrategy = new BuildHelpStrategy(Constants.BuildCommandArguments.Help, writer, buildHelpStrategyHelpText);
+            var buildHelpVerboseStrategy = new BuildHelpStrategy(Constants.BuildCommandArguments.VerboseHelp, writer, buildHelpStrategyHelpText);
 
             var buildStrategies = new ICommand<BuildStrategy>[]
             {
                 new BuildNameStrategy(Constants.BuildCommandArguments.Name, fileSystem),
                 new BuildNameStrategy(Constants.BuildCommandArguments.VerboseName, fileSystem),
-                new BuildHelpStrategy(Constants.BuildCommandArguments.Help, writer, buildHelpStrategyHelpText),
-                new BuildHelpStrategy(Constants.BuildCommandArguments.VerboseHelp, writer, buildHelpStrategyHelpText)
+                buildHelpStrategy,
+                buildHelpVerboseStrategy
             };
 
             var buildStrategyCommandFactory = new CommandFactory<BuildStrategy>(buildStrategies, Constants.BuildCommandArguments.Help);
-            commands.Add(new BuildStrategy(buildStrategyCommandFactory));
+            buildHelpStrategy.CommandFactory = buildStrategyCommandFactory;
+            buildHelpVerboseStrategy.CommandFactory = buildStrategyCommandFactory;
 
+            commands.Add(new BuildStrategy(buildStrategyCommandFactory));
             commands.Add(new HelloStrategy(writer));
 
             var helpStrategy = new HelpStrategy(Constants.CommandName.Help, writer);
@@ -82,7 +88,7 @@ namespace Oppo.Terminal
             var factory = new CommandFactory<ObjectModel.ObjectModel>(commands, Constants.CommandName.Help);
 
             helpStrategy.CommandFactory = factory;
-            shortHelpStrategy.CommandFactory = factory;
+            shortHelpStrategy.CommandFactory = factory;            
 
             return factory;
         }

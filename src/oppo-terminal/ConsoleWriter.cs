@@ -26,7 +26,7 @@ namespace Oppo.Terminal
 
             foreach (var key in messagesToWrite.Keys)
             {
-                System.Console.WriteLine(string.Format("  {0}{1}", key.PadRight(longestKey + 3, ' '), messagesToWrite[key]));
+                System.Console.WriteLine(string.Format("{0}{1}", key.PadRight(longestKey + 3, ' '), messagesToWrite[key]));
             }
         }
 
