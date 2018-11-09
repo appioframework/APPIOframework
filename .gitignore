@@ -38,6 +38,7 @@
 !src/oppo-objectmodel.tests/oppo-objectmodel.tests.csproj
 !src/oppo-objectmodel.tests/*.cs
 !src/oppo-objectmodel.tests/CommandStrategies/
+!src/oppo-objectmodel.tests/CommandStrategies/*.cs
 
 !src/oppo-resources/
 !src/oppo-resources/open62541/
