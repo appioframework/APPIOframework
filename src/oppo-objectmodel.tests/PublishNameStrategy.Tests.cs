@@ -4,8 +4,7 @@ using Oppo.ObjectModel.CommandStrategies.PublishCommands;
 
 namespace Oppo.ObjectModel.Tests
 {
-    public class PublishNameStrategyTestsBase<TPublishNameStrategy>
-        where TPublishNameStrategy : PublishNameStrategy
+    public class PublishNameStrategyTests
     {
         [Test]
         public void PublishNameStrategy_Should_ImplementICommandOfPublishStrategy()
