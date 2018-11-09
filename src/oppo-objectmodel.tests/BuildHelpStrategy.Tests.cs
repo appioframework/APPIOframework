@@ -62,8 +62,11 @@ namespace Oppo.ObjectModel.Tests
         {
             // Arrange
             var mockWriter = new Mock<IWriter>();
+            var mockCommand = new Mock<ICommand<BuildStrategy>>();
+            mockCommand.Setup(x => x.Name).Returns("buildCommandName");
+            mockCommand.Setup(x => x.GetHelpText()).Returns("buildCommandHelp");
             var mockBuildCommandFactory = new Mock<ICommandFactory<BuildStrategy>>();
-            mockBuildCommandFactory.Setup(x => x.Commands).Returns(new ICommand<BuildStrategy>[0]);
+            mockBuildCommandFactory.Setup(x => x.Commands).Returns(new ICommand<BuildStrategy>[] { mockCommand.Object});
             var strategy = new BuildHelpStrategy(string.Empty, mockWriter.Object, new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
             strategy.CommandFactory = mockBuildCommandFactory.Object;
 
