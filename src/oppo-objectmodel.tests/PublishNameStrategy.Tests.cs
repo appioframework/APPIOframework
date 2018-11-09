@@ -4,12 +4,9 @@ using Oppo.ObjectModel.CommandStrategies.PublishCommands;
 
 namespace Oppo.ObjectModel.Tests
 {
-    public abstract class PublishNameStrategyTestsBase<TPublishNameStrategy>
+    public class PublishNameStrategyTestsBase<TPublishNameStrategy>
         where TPublishNameStrategy : PublishNameStrategy
     {
-        protected abstract PublishNameStrategy InstantiateObjectUnderTest(IFileSystem fileSystem);
-        protected abstract string GetExpectedCommandName();
-
         [Test]
         public void PublishNameStrategy_Should_ImplementICommandOfPublishStrategy()
         {
@@ -17,7 +14,7 @@ namespace Oppo.ObjectModel.Tests
             var fileSystemMock = new Mock<IFileSystem>();
 
             // Act
-            var objectUnderTest = InstantiateObjectUnderTest(fileSystemMock.Object);
+            var objectUnderTest = new PublishNameStrategy(string.Empty, fileSystemMock.Object);
 
             // Assert
             Assert.IsInstanceOf<ICommand<PublishStrategy>>(objectUnderTest);
@@ -28,13 +25,13 @@ namespace Oppo.ObjectModel.Tests
         {
             // Arrange
             var fileSystemMock = new Mock<IFileSystem>();
-            var objectUnderTest = InstantiateObjectUnderTest(fileSystemMock.Object);
+            var objectUnderTest = new PublishNameStrategy(string.Empty, fileSystemMock.Object);
 
             // Act
             var commandName = objectUnderTest.Name;
 
             // Assert
-            Assert.AreEqual(GetExpectedCommandName(), commandName);
+            Assert.AreEqual(string.Empty, commandName);
         }
 
         [Test]
@@ -42,7 +39,7 @@ namespace Oppo.ObjectModel.Tests
         {
             // Arrange
             var fileSystemMock = new Mock<IFileSystem>();
-            var objectUnderTest = InstantiateObjectUnderTest(fileSystemMock.Object);
+            var objectUnderTest = new PublishNameStrategy(string.Empty, fileSystemMock.Object);
 
             // Act
             var helpText = objectUnderTest.GetHelpText();
@@ -66,7 +63,7 @@ namespace Oppo.ObjectModel.Tests
             fileSystemMock.Setup(x => x.CombinePaths(applicationName, Constants.DirectoryName.MesonBuild)).Returns(buildDirectory);
             fileSystemMock.Setup(x => x.CombinePaths(buildDirectory, Constants.ExecutableName.App)).Returns(applicationSourcePath);
             fileSystemMock.Setup(x => x.CombinePaths(publishDirectory, Constants.ExecutableName.App)).Returns(applicationTargetPath);
-            var objectUnderTest = InstantiateObjectUnderTest(fileSystemMock.Object);
+            var objectUnderTest = new PublishNameStrategy(string.Empty, fileSystemMock.Object);
 
             // Act
             var result = objectUnderTest.Execute(new[] {applicationName});
@@ -83,39 +80,13 @@ namespace Oppo.ObjectModel.Tests
         {
             // Arrange
             var fileSystemMock = new Mock<IFileSystem>();
-            var objectUnderTest = InstantiateObjectUnderTest(fileSystemMock.Object);
+            var objectUnderTest = new PublishNameStrategy(string.Empty, fileSystemMock.Object);
 
             // Act
             var result = objectUnderTest.Execute(new[] {applicationName});
 
             // Assert
             Assert.AreEqual(Constants.CommandResults.Failure, result);
-        }
-    }
-
-    public class PublishNameStrategyTests : PublishNameStrategyTestsBase<PublishNameStrategy>
-    {
-        protected override PublishNameStrategy InstantiateObjectUnderTest(IFileSystem fileSystem)
-        {
-            return new PublishNameStrategy(fileSystem);
-        }
-
-        protected override string GetExpectedCommandName()
-        {
-            return Constants.PublishCommandArguments.Name;
-        }
-    }
-
-    public class PublishVerboseNameStrategyTests : PublishNameStrategyTestsBase<PublishVerboseNameStrategy>
-    {
-        protected override PublishNameStrategy InstantiateObjectUnderTest(IFileSystem fileSystem)
-        {
-            return new PublishVerboseNameStrategy(fileSystem);
-        }
-
-        protected override string GetExpectedCommandName()
-        {
-            return Constants.PublishCommandArguments.VerboseName;
         }
     }
 }

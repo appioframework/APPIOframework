@@ -7,12 +7,13 @@ namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
     {
         private readonly IFileSystem _fileSystem;
 
-        public PublishNameStrategy(IFileSystem fileSystem)
+        public PublishNameStrategy(string publishNameCommandName, IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
+            Name = publishNameCommandName;
         }
 
-        public virtual string Name => Constants.PublishCommandArguments.Name;
+        public string Name { get; private set; }
 
         public string Execute(IEnumerable<string> inputParams)
         {

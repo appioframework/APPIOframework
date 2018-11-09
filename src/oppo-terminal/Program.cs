@@ -52,7 +52,14 @@ namespace Oppo.Terminal
             var newStrategyCommandFactory = new CommandFactory<NewStrategy>(newStrategies, Constants.NewCommandName.Help);
             commands.Add(new NewStrategy(newStrategyCommandFactory));
 
-            var publishStrategies = new ICommand<PublishStrategy>[] { new PublishNameStrategy(fileSystem), new PublishVerboseNameStrategy(fileSystem), new PublishHelpStrategy(writer), new PublishVerboseHelpStrategy(writer), };
+            var publishStrategies = new ICommand<PublishStrategy>[] 
+            {
+                new PublishNameStrategy(Constants.PublishCommandArguments.Name, fileSystem),
+                new PublishNameStrategy(Constants.PublishCommandArguments.VerboseName, fileSystem),
+                new PublishHelpStrategy(Constants.PublishCommandArguments.Help, writer),
+                new PublishHelpStrategy(Constants.PublishCommandArguments.VerboseHelp, writer)
+            };
+
             var publishStrategyCommandFactory = new CommandFactory<PublishStrategy>(publishStrategies, Constants.PublishCommandArguments.Help);
             commands.Add(new PublishStrategy(publishStrategyCommandFactory));
 

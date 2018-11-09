@@ -6,12 +6,13 @@ namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
     {
         private readonly IWriter _writer;
 
-        public PublishHelpStrategy(IWriter writer)
+        public PublishHelpStrategy(string publishHelpCommandName, IWriter writer)
         {
             _writer = writer;
+            Name = publishHelpCommandName;
         }
 
-        public virtual string Name => Constants.PublishCommandArguments.Help;
+        public string Name { get; private set; }
 
         public string Execute(IEnumerable<string> inputParams)
         {

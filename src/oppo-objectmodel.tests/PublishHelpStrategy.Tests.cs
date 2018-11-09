@@ -5,11 +5,8 @@ using Oppo.ObjectModel.CommandStrategies.PublishCommands;
 
 namespace Oppo.ObjectModel.Tests
 {
-    public abstract class PublishHelpStrategyTestsBase
-    {
-        protected abstract PublishHelpStrategy InstantiateObjectUnderTest(IWriter writer);
-        protected abstract string GetExpectedCommandName();
-
+    public class PublishHelpStrategyTestsBase
+    {      
         [Test]
         public void PublishHelpStrategy_Should_ImplementICommandOfPublishStrategy()
         {
@@ -17,7 +14,7 @@ namespace Oppo.ObjectModel.Tests
             var writerMock = new Mock<IWriter>();
 
             // Act
-            var objectUnderTest = InstantiateObjectUnderTest(writerMock.Object);
+            var objectUnderTest = new PublishHelpStrategy(string.Empty, writerMock.Object);
 
             // Assert
             Assert.IsInstanceOf<ICommand<PublishStrategy>>(objectUnderTest);
@@ -28,13 +25,13 @@ namespace Oppo.ObjectModel.Tests
         {
             // Arrange
             var writerMock = new Mock<IWriter>();
-            var objectUnderTest = InstantiateObjectUnderTest(writerMock.Object);
+            var objectUnderTest = new PublishHelpStrategy(string.Empty, writerMock.Object);
 
             // Act
             var commandName = objectUnderTest.Name;
 
             // Assert
-            Assert.AreEqual(GetExpectedCommandName(), commandName);
+            Assert.AreEqual(string.Empty, commandName);
         }
 
         [Test]
@@ -42,7 +39,7 @@ namespace Oppo.ObjectModel.Tests
         {
             // Arrange
             var writerMock = new Mock<IWriter>();
-            var objectUnderTest = InstantiateObjectUnderTest(writerMock.Object);
+            var objectUnderTest = new PublishHelpStrategy(string.Empty, writerMock.Object);
 
             // Act
             var helpText = objectUnderTest.GetHelpText();
@@ -56,7 +53,7 @@ namespace Oppo.ObjectModel.Tests
         {
             // Arrange
             var writerMock = new Mock<IWriter>();
-            var objectUnderTest = InstantiateObjectUnderTest(writerMock.Object);
+            var objectUnderTest = new PublishHelpStrategy(string.Empty, writerMock.Object);
 
             // Act
             var result = objectUnderTest.Execute(new string[0]);
@@ -66,31 +63,5 @@ namespace Oppo.ObjectModel.Tests
             writerMock.Verify(x=>x.WriteLine(It.IsAny<string>()));
             writerMock.Verify(x=>x.WriteLines(It.IsAny<Dictionary<string, string>>()));
         }
-    }
-
-    public class PublishHelpStrategyTests : PublishHelpStrategyTestsBase
-    {
-        protected override PublishHelpStrategy InstantiateObjectUnderTest(IWriter writer)
-        {
-            return new PublishHelpStrategy(writer);
-        }
-
-        protected override string GetExpectedCommandName()
-        {
-            return Constants.PublishCommandArguments.Help;
-        }
-    }
-
-    public class PublishVerboseHelpStrategyTests : PublishHelpStrategyTestsBase
-    {
-        protected override PublishHelpStrategy InstantiateObjectUnderTest(IWriter writer)
-        {
-            return new PublishVerboseHelpStrategy(writer);
-        }
-
-        protected override string GetExpectedCommandName()
-        {
-            return Constants.PublishCommandArguments.VerboseHelp;
-        }
-    }
+    }   
 }

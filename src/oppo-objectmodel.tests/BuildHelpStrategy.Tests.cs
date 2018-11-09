@@ -4,7 +4,7 @@ using Oppo.ObjectModel.CommandStrategies.BuildCommands;
 
 namespace Oppo.ObjectModel.Tests
 {
-    public abstract class BuildHelpStrategyTestsBase
+    public class BuildHelpStrategyTestsBase
     {
         protected static string[][] ValidInputs()
         {

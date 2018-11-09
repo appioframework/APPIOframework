@@ -6,7 +6,7 @@ using Oppo.ObjectModel.CommandStrategies.BuildCommands;
 
 namespace Oppo.ObjectModel.Tests
 {
-    public abstract class BuildNameStrategyTestsBase
+    public class BuildNameStrategyTestsBase
     {   
         protected static string[][] InvalidInputs()
         {
