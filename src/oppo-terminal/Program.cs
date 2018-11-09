@@ -35,8 +35,11 @@ namespace Oppo.Terminal
 
             commands.Add(new HelloStrategy(writer));
 
-            var helpStrategy = new HelpStrategy(writer);
+            var helpStrategy = new HelpStrategy(Constants.CommandName.Help, writer);
             commands.Add(helpStrategy);
+
+            var shortHelpStrategy = new HelpStrategy(Constants.CommandName.ShortHelp, writer);
+            commands.Add(shortHelpStrategy);
 
             var newStrategies = new ICommand<NewStrategy>[] { new NewSlnCommandStrategy(fileSystem), new NewOpcuaAppCommandStrategy(fileSystem), new NewHelpCommandStrategy(writer), new NewVerboseHelpCommandStrategy(writer), };
             var newStrategyCommandFactory = new CommandFactory<NewStrategy>(newStrategies, Constants.NewCommandName.Help);
@@ -46,10 +49,7 @@ namespace Oppo.Terminal
             var publishStrategyCommandFactory = new CommandFactory<PublishStrategy>(publishStrategies, Constants.PublishCommandArguments.Help);
             commands.Add(new PublishStrategy(publishStrategyCommandFactory));
 
-            commands.Add(new VersionStrategy(reflection, writer));
-
-            var shortHelpStrategy = new ShortHelpStrategy(writer);
-            commands.Add(shortHelpStrategy);
+            commands.Add(new VersionStrategy(reflection, writer));            
 
             var factory = new CommandFactory<ObjectModel.ObjectModel>(commands, Constants.CommandName.Help);
 
