@@ -5,11 +5,8 @@ using Oppo.ObjectModel.CommandStrategies.NewCommands;
 
 namespace Oppo.ObjectModel.Tests
 {
-    public abstract class NewHelpCommandStrategyTestsBase
-    {
-        protected abstract NewHelpCommandStrategy InstantiateObjectUnderTest(IWriter writer);
-        protected abstract string GetExpectedCommandName();
-
+    public class NewHelpCommandStrategyTestsBase
+    {     
         [Test]
         public void NewHelpCommandStrategy_Should_ImplementICommandOfNewStrategy()
         {
@@ -17,7 +14,7 @@ namespace Oppo.ObjectModel.Tests
             var writerMock = new Mock<IWriter>();
 
             // Act
-            var objectUnderTest = InstantiateObjectUnderTest(writerMock.Object);
+            var objectUnderTest = new NewHelpCommandStrategy(string.Empty, writerMock.Object);
 
             // Assert
             Assert.IsInstanceOf<ICommand<NewStrategy>>(objectUnderTest);
@@ -28,13 +25,13 @@ namespace Oppo.ObjectModel.Tests
         {
             // Arrange
             var writerMock = new Mock<IWriter>();
-            var objectUnderTest = InstantiateObjectUnderTest(writerMock.Object);
+            var objectUnderTest = new NewHelpCommandStrategy(string.Empty, writerMock.Object);
 
             // Act
             var commandName = objectUnderTest.Name;
 
             // Assert
-            Assert.AreEqual(GetExpectedCommandName(), commandName);
+            Assert.AreEqual(string.Empty, commandName);
         }
 
         [Test]
@@ -42,7 +39,7 @@ namespace Oppo.ObjectModel.Tests
         {
             // Arrange
             var writerMock = new Mock<IWriter>();
-            var objectUnderTest = InstantiateObjectUnderTest(writerMock.Object);
+            var objectUnderTest = new NewHelpCommandStrategy(string.Empty, writerMock.Object);
 
             // Act
             var helpText = objectUnderTest.GetHelpText();
@@ -57,7 +54,7 @@ namespace Oppo.ObjectModel.Tests
             // Arrange
             var inputParamsMock = new string[0];
             var writerMock = new Mock<IWriter>();
-            var objectUnderTest = InstantiateObjectUnderTest(writerMock.Object);
+            var objectUnderTest = new NewHelpCommandStrategy(string.Empty, writerMock.Object);
 
             // Act
             var result = objectUnderTest.Execute(inputParamsMock);
@@ -66,32 +63,6 @@ namespace Oppo.ObjectModel.Tests
             Assert.AreEqual(Constants.CommandResults.Success, result);
             writerMock.Verify(x => x.WriteLine(It.IsAny<string>()));
             writerMock.Verify(x => x.WriteLines(It.IsAny<Dictionary<string, string>>()));
-        }
-    }
-
-    public class NewHelpCommandStrategyTests : NewHelpCommandStrategyTestsBase
-    {
-        protected override NewHelpCommandStrategy InstantiateObjectUnderTest(IWriter writer)
-        {
-            return new NewHelpCommandStrategy(writer);
-        }
-
-        protected override string GetExpectedCommandName()
-        {
-            return Constants.NewCommandName.Help;
-        }
-    }
-
-    public class NewVerboseHelpCommandStrategyTests : NewHelpCommandStrategyTestsBase
-    {
-        protected override NewHelpCommandStrategy InstantiateObjectUnderTest(IWriter writer)
-        {
-            return new NewVerboseHelpCommandStrategy(writer);
-        }
-
-        protected override string GetExpectedCommandName()
-        {
-            return Constants.NewCommandName.VerboseHelp;
         }
     }
 }

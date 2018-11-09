@@ -48,7 +48,14 @@ namespace Oppo.Terminal
             var shortHelpStrategy = new HelpStrategy(Constants.CommandName.ShortHelp, writer);
             commands.Add(shortHelpStrategy);
 
-            var newStrategies = new ICommand<NewStrategy>[] { new NewSlnCommandStrategy(fileSystem), new NewOpcuaAppCommandStrategy(fileSystem), new NewHelpCommandStrategy(writer), new NewVerboseHelpCommandStrategy(writer), };
+            var newStrategies = new ICommand<NewStrategy>[] 
+            {
+                new NewSlnCommandStrategy(fileSystem),
+                new NewOpcuaAppCommandStrategy(fileSystem),
+                new NewHelpCommandStrategy(Constants.NewCommandName.Help, writer),
+                new NewHelpCommandStrategy(Constants.NewCommandName.VerboseHelp,writer)
+            };
+
             var newStrategyCommandFactory = new CommandFactory<NewStrategy>(newStrategies, Constants.NewCommandName.Help);
             commands.Add(new NewStrategy(newStrategyCommandFactory));
 
