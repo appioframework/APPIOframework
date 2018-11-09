@@ -53,16 +53,16 @@ namespace Oppo.ObjectModel
 
         private class FallbackCommand : ICommand<TDependance>
         {
-            public string Name => throw new NotSupportedException();
+            public string Name => string.Empty;
 
             public string Execute(IEnumerable<string> inputParams)
             {
-                throw new NotSupportedException();
+                return Constants.CommandResults.Failure;
             }
 
             public string GetHelpText()
             {
-                throw new NotSupportedException();
+                return string.Empty;
             }
         }
     }

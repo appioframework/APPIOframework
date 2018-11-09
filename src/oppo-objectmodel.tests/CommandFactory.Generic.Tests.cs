@@ -123,7 +123,7 @@ namespace Oppo.ObjectModel.Tests
         }
 
         [Test]
-        public void CommandFactoryFallbackCommand_Should_ThrowNotSupportedExceptionOnAllInteractions()
+        public void CommandFactoryFallbackCommand_Should_ReturnFailure()
         {
             // Arrange
             var commandArrayMock = new ICommand<object>[0];
@@ -131,12 +131,27 @@ namespace Oppo.ObjectModel.Tests
             var command = objectUnderTest.GetCommand("any-name");
 
             // Act
-            Assert.Throws<NotSupportedException>(() => command.Name.ToString());
-            Assert.Throws<NotSupportedException>(() => command.Execute(null));
-            Assert.Throws<NotSupportedException>(() => command.GetHelpText());
+            var commandResult = command.Execute(new string[0]);
+            
+            // Assert
+            Assert.AreEqual(Constants.CommandResults.Failure, commandResult);
+        }
+
+        [Test]
+        public void CommandFactoryFallbackCommand_Should_ReturnDefaultValues()
+        {
+            // Arrange
+            var commandArrayMock = new ICommand<object>[0];
+            var objectUnderTest = new CommandFactory<object>(commandArrayMock, string.Empty);
+            var command = objectUnderTest.GetCommand("any-name");
+
+            // Act
+            var commandName = command.Name;
+            var commandHelpText = command.GetHelpText();
 
             // Assert
-
+            Assert.AreEqual(string.Empty, commandName);
+            Assert.AreEqual(string.Empty, commandHelpText);
         }
 
         [Test]
