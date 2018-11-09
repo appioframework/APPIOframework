@@ -1,6 +1,7 @@
 using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies.BuildCommands;
+using System.Collections.Generic;
 
 namespace Oppo.ObjectModel.Tests
 {
@@ -20,9 +21,9 @@ namespace Oppo.ObjectModel.Tests
         {
             // Arrange
             var mockWriter = new Mock<IWriter>();
-
+            
             // Act
-            var objectUnderTest = new BuildHelpStrategy(string.Empty, mockWriter.Object);
+            var objectUnderTest = new BuildHelpStrategy(string.Empty, mockWriter.Object, new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
 
             // Assert
             Assert.IsInstanceOf<ICommand<BuildStrategy>>(objectUnderTest);
@@ -33,7 +34,7 @@ namespace Oppo.ObjectModel.Tests
         {
             // Arrange
             var mockWriter = new Mock<IWriter>();
-            var objectUnderTest = new BuildHelpStrategy(string.Empty, mockWriter.Object);
+            var objectUnderTest = new BuildHelpStrategy(string.Empty, mockWriter.Object, new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
 
             // Act
             var commandName = objectUnderTest.Name;
@@ -43,17 +44,17 @@ namespace Oppo.ObjectModel.Tests
         }
 
         [Test]
-        public void BuildHelpStrategy_Should_ProvideEmptyHelpText()
+        public void BuildHelpStrategy_Should_ProvideExactHelpText()
         {
             // Arrange
             var mockWriter = new Mock<IWriter>();
-            var objectUnderTest = new BuildHelpStrategy(string.Empty, mockWriter.Object);
+            var objectUnderTest = new BuildHelpStrategy(string.Empty, mockWriter.Object, new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
 
             // Act
             var helpText = objectUnderTest.GetHelpText();
 
             // Assert
-            Assert.AreEqual(string.Empty, helpText);
+            Assert.AreEqual(Resources.text.help.HelpTextValues.BuildHelpArgumentCommandDescription, helpText);
         }
 
         [Test]
@@ -61,7 +62,7 @@ namespace Oppo.ObjectModel.Tests
         {
             // Arrange
             var mockWriter = new Mock<IWriter>();
-            var strategy = new BuildHelpStrategy(string.Empty, mockWriter.Object);
+            var strategy = new BuildHelpStrategy(string.Empty, mockWriter.Object, new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
 
             // Act
             var strategyResult = strategy.Execute(new string[] {});

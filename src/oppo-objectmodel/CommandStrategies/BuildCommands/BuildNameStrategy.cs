@@ -42,7 +42,7 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 
         public string GetHelpText()
         {
-            return string.Empty;
+            return Resources.text.help.HelpTextValues.BuildNameArgumentCommandDescription;
         }
     }
 }

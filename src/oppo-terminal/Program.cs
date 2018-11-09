@@ -29,12 +29,19 @@ namespace Oppo.Terminal
 
             var commands = new List<ICommand<ObjectModel.ObjectModel>>();
 
-            var buildStrategies = new ICommand<BuildStrategy>[] 
+            var buildHelpStrategyHelpText = new[]
+            {
+                new KeyValuePair<string, string>("<Project>", "The project directory to use"),
+                new KeyValuePair<string, string>(string.Empty, string.Empty),
+                new KeyValuePair<string, string>("Options:", "")
+            };
+
+            var buildStrategies = new ICommand<BuildStrategy>[]
             {
                 new BuildNameStrategy(Constants.BuildCommandArguments.Name, fileSystem),
                 new BuildNameStrategy(Constants.BuildCommandArguments.VerboseName, fileSystem),
-                new BuildHelpStrategy(Constants.BuildCommandArguments.Help, writer),
-                new BuildHelpStrategy(Constants.BuildCommandArguments.VerboseHelp, writer)
+                new BuildHelpStrategy(Constants.BuildCommandArguments.Help, writer, buildHelpStrategyHelpText),
+                new BuildHelpStrategy(Constants.BuildCommandArguments.VerboseHelp, writer, buildHelpStrategyHelpText)
             };
 
             var buildStrategyCommandFactory = new CommandFactory<BuildStrategy>(buildStrategies, Constants.BuildCommandArguments.Help);

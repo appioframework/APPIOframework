@@ -63,7 +63,7 @@ namespace Oppo.ObjectModel.Tests
         }
 
         [Test]
-        public void BuildNameStrategy_Should_ProvideEmptyHelpText()
+        public void BuildNameStrategy_Should_ProvideExactHelpText()
         {
             // Arrange
             var fileSystemMock = new Mock<IFileSystem>();
@@ -73,7 +73,7 @@ namespace Oppo.ObjectModel.Tests
             var helpText = objectUnderTest.GetHelpText();
 
             // Assert
-            Assert.AreEqual(string.Empty, helpText);
+            Assert.AreEqual(Resources.text.help.HelpTextValues.BuildNameArgumentCommandDescription, helpText);
         }
 
         [Test]
