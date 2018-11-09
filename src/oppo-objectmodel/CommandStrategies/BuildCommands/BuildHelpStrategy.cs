@@ -6,12 +6,13 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
     {
         private readonly IWriter _writer;
 
-        public BuildHelpStrategy(IWriter writer)
+        public BuildHelpStrategy(string buildHelpCommandName, IWriter writer)
         {
             _writer = writer;
+            Name = buildHelpCommandName;
         }
 
-        public virtual string Name => Constants.BuildCommandArguments.Help;
+        public string Name { get; private set; }
 
         public string Execute(IEnumerable<string> inputParams)
         {

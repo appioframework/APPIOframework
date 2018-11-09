@@ -7,12 +7,13 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
     {
         private readonly IFileSystem _fileSystem;
 
-        public BuildNameStrategy(IFileSystem fileSystem)
+        public BuildNameStrategy(string buildCommandName, IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
+            Name = buildCommandName;
         }
 
-        public virtual string Name => Constants.BuildCommandArguments.Name;
+        public string Name { get; private set; }
 
         public string Execute(IEnumerable<string> inputParams)
         {

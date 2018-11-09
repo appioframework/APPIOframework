@@ -6,9 +6,6 @@ namespace Oppo.ObjectModel.Tests
 {
     public abstract class BuildHelpStrategyTestsBase
     {
-        protected abstract BuildHelpStrategy InstantiateObjectUnderTest(IWriter writer);
-        protected abstract string GetExpectedCommandName();
-
         protected static string[][] ValidInputs()
         {
             return new[]
@@ -25,7 +22,7 @@ namespace Oppo.ObjectModel.Tests
             var mockWriter = new Mock<IWriter>();
 
             // Act
-            var objectUnderTest = InstantiateObjectUnderTest(mockWriter.Object);
+            var objectUnderTest = new BuildHelpStrategy(string.Empty, mockWriter.Object);
 
             // Assert
             Assert.IsInstanceOf<ICommand<BuildStrategy>>(objectUnderTest);
@@ -36,13 +33,13 @@ namespace Oppo.ObjectModel.Tests
         {
             // Arrange
             var mockWriter = new Mock<IWriter>();
-            var objectUnderTest = InstantiateObjectUnderTest(mockWriter.Object);
+            var objectUnderTest = new BuildHelpStrategy(string.Empty, mockWriter.Object);
 
             // Act
             var commandName = objectUnderTest.Name;
 
             // Assert
-            Assert.AreEqual(GetExpectedCommandName(), commandName);
+            Assert.AreEqual(string.Empty, commandName);
         }
 
         [Test]
@@ -50,7 +47,7 @@ namespace Oppo.ObjectModel.Tests
         {
             // Arrange
             var mockWriter = new Mock<IWriter>();
-            var objectUnderTest = InstantiateObjectUnderTest(mockWriter.Object);
+            var objectUnderTest = new BuildHelpStrategy(string.Empty, mockWriter.Object);
 
             // Act
             var helpText = objectUnderTest.GetHelpText();
@@ -64,7 +61,7 @@ namespace Oppo.ObjectModel.Tests
         {
             // Arrange
             var mockWriter = new Mock<IWriter>();
-            var strategy = InstantiateObjectUnderTest(mockWriter.Object);
+            var strategy = new BuildHelpStrategy(string.Empty, mockWriter.Object);
 
             // Act
             var strategyResult = strategy.Execute(new string[] {});
@@ -72,32 +69,6 @@ namespace Oppo.ObjectModel.Tests
             // Assert
             Assert.AreEqual(strategyResult, Constants.CommandResults.Success);
             mockWriter.Verify(x=>x.WriteLine(It.IsAny<string>()));
-        }
-    }
-
-    public class BuildHelpStrategyTests : BuildHelpStrategyTestsBase
-    {
-        protected override BuildHelpStrategy InstantiateObjectUnderTest(IWriter writer)
-        {
-            return new BuildHelpStrategy(writer);
-        }
-
-        protected override string GetExpectedCommandName()
-        {
-            return Constants.BuildCommandArguments.Help;
-        }
-    }
-
-    public class BuildVerboseHelpStrategyTests : BuildHelpStrategyTestsBase
-    {
-        protected override BuildHelpStrategy InstantiateObjectUnderTest(IWriter writer)
-        {
-            return new BuildVerboseHelpStrategy(writer);
-        }
-
-        protected override string GetExpectedCommandName()
-        {
-            return Constants.BuildCommandArguments.VerboseHelp;
         }
     }
 }

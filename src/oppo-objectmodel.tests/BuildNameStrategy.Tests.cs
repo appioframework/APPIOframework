@@ -7,10 +7,7 @@ using Oppo.ObjectModel.CommandStrategies.BuildCommands;
 namespace Oppo.ObjectModel.Tests
 {
     public abstract class BuildNameStrategyTestsBase
-    {
-        protected abstract BuildNameStrategy InstantiateObjectUnderTest(IFileSystem fileSystem);
-        protected abstract string GetExpectedCommandName();
-
+    {   
         protected static string[][] InvalidInputs()
         {
             return new[]
@@ -45,7 +42,7 @@ namespace Oppo.ObjectModel.Tests
             var fileSystemMock = new Mock<IFileSystem>();
 
             // Act
-            var objectUnderTest = InstantiateObjectUnderTest(fileSystemMock.Object);
+            var objectUnderTest = new BuildNameStrategy(string.Empty, fileSystemMock.Object);
 
             // Assert
             Assert.IsInstanceOf<ICommand<BuildStrategy>>(objectUnderTest);
@@ -56,13 +53,13 @@ namespace Oppo.ObjectModel.Tests
         {
             // Arrange
             var fileSystemMock = new Mock<IFileSystem>();
-            var objectUnderTest = InstantiateObjectUnderTest(fileSystemMock.Object);
+            var objectUnderTest = new BuildNameStrategy(string.Empty, fileSystemMock.Object);
 
             // Act
             var commandName = objectUnderTest.Name;
 
             // Assert
-            Assert.AreEqual(GetExpectedCommandName(), commandName);
+            Assert.AreEqual(string.Empty, commandName);
         }
 
         [Test]
@@ -70,7 +67,7 @@ namespace Oppo.ObjectModel.Tests
         {
             // Arrange
             var fileSystemMock = new Mock<IFileSystem>();
-            var objectUnderTest = InstantiateObjectUnderTest(fileSystemMock.Object);
+            var objectUnderTest = new BuildNameStrategy(string.Empty, fileSystemMock.Object);
 
             // Act
             var helpText = objectUnderTest.GetHelpText();
@@ -90,7 +87,7 @@ namespace Oppo.ObjectModel.Tests
             fileSystemMock.Setup(x => x.CombinePaths(It.IsAny<string>(), It.IsAny<string>())).Returns(projectBuildDirectory);
             fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.Meson, projectDirectoryName, Constants.DirectoryName.MesonBuild)).Returns(true);
             fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.Ninja, projectBuildDirectory, string.Empty)).Returns(true);
-            var buildStrategy = InstantiateObjectUnderTest(fileSystemMock.Object);
+            var buildStrategy = new BuildNameStrategy(string.Empty, fileSystemMock.Object);
 
             // Act
             var strategyResult = buildStrategy.Execute(inputParams);
@@ -106,7 +103,7 @@ namespace Oppo.ObjectModel.Tests
             // Arrange
             var fileSystemMock = new Mock<IFileSystem>();
 
-            var buildStrategy = InstantiateObjectUnderTest(fileSystemMock.Object);
+            var buildStrategy = new BuildNameStrategy(string.Empty, fileSystemMock.Object);
 
             // Act
             var strategyResult = buildStrategy.Execute(inputParams);
@@ -126,39 +123,13 @@ namespace Oppo.ObjectModel.Tests
             fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.Meson, It.IsAny<string>(), It.IsAny<string>())).Returns(mesonState);
             fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.Ninja, It.IsAny<string>(), It.IsAny<string>())).Returns(ninjaState);
 
-            var buildStrategy = InstantiateObjectUnderTest(fileSystemMock.Object);
+            var buildStrategy = new BuildNameStrategy(string.Empty, fileSystemMock.Object);
 
             // Act
             var strategyResult = buildStrategy.Execute(new[] {"hugo"});
 
             // Assert
             Assert.AreEqual(Constants.CommandResults.Failure, strategyResult);
-        }
-    }
-
-    public class BuildNameStrategyTests : BuildNameStrategyTestsBase
-    {
-        protected override BuildNameStrategy InstantiateObjectUnderTest(IFileSystem fileSystem)
-        {
-            return new BuildNameStrategy(fileSystem);
-        }
-
-        protected override string GetExpectedCommandName()
-        {
-            return Constants.BuildCommandArguments.Name;
-        }
-    }
-
-    public class BuildVerboseNameStrategyTests : BuildNameStrategyTestsBase
-    {
-        protected override BuildNameStrategy InstantiateObjectUnderTest(IFileSystem fileSystem)
-        {
-            return new BuildVerboseNameStrategy(fileSystem);
-        }
-
-        protected override string GetExpectedCommandName()
-        {
-            return Constants.BuildCommandArguments.VerboseName;
         }
     }
 }
