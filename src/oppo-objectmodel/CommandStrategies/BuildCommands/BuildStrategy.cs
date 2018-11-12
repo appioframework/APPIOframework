@@ -14,9 +14,9 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 
         public string Name => Constants.CommandName.Build;
 
-        public string Execute(IEnumerable<string> inputParams)
+        public string Execute(IEnumerable<string> inputsParams)
         {
-            var inputParamsArray = inputParams.ToArray();
+            var inputParamsArray = inputsParams.ToArray();
 
             var buildStrategy = _factory.GetCommand(inputParamsArray.ElementAtOrDefault(0));
             return buildStrategy.Execute(inputParamsArray.Skip(1));          
