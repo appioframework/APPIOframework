@@ -5,18 +5,29 @@ using System.Linq;
 namespace Oppo.ObjectModel
 {
     public class ObjectModel : IObjectModel
-    {
+    {      
         private readonly ICommandFactory<ObjectModel> _commandStrategyFactory;
-        public ObjectModel(ICommandFactory<ObjectModel> commandStrategyFactory)
+        private readonly ILogger _logger;
+
+        public ObjectModel(ICommandFactory<ObjectModel> commandStrategyFactory, ILogger logger)
         {
             _commandStrategyFactory = commandStrategyFactory;
+            _logger = logger;
         }
 
         public string ExecuteCommand(IEnumerable<string> inputParams)
         {
             if (inputParams == null)
             {
-                throw new ArgumentNullException(nameof(inputParams));
+                try
+                {
+                    throw new ArgumentNullException(nameof(inputParams));                    
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(Resources.text.logging.LoggingText.NullInputParams_Msg, ex);
+                    throw;
+                }                
             }
 
             var inputParamsArray = inputParams.ToArray();

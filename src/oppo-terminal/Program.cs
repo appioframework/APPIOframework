@@ -16,7 +16,7 @@ namespace Oppo.Terminal
         internal static int Main(string[] args)
         {
             var commandFactory = CreateCommandFactory();
-            var objectModel = new ObjectModel.ObjectModel(commandFactory);
+            var objectModel = new ObjectModel.ObjectModel(commandFactory, new LoggerWrapper());
             var result = objectModel.ExecuteCommand(args);
             return result == Constants.CommandResults.Success ? 0 : 1;
         }
