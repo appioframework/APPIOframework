@@ -18,5 +18,11 @@ then
   exit 1
 fi
 
+if [ ! -f "oppo.log" ];
+then
+  echo "no log entry was created ..."
+  exit 1
+fi
+
 cd ..
 rm -rf new-sln--success
