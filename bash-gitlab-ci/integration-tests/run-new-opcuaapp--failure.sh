@@ -2,12 +2,12 @@
 
 set -uo pipefail
 
-VAR_COMMANDS[0]="oppo new opcuaapp --name \"my/\-app"\"
-VAR_COMMANDS[1]="oppo new opcuaapp -n     \"my/\-app"\"
-VAR_COMMANDS[4]="oppo new opcuaapp --name"
-VAR_COMMANDS[5]="oppo new opcuaapp -n"
-VAR_COMMANDS[2]="oppo new opcuaapp --exit"
-VAR_COMMANDS[3]="oppo new opcuaapp -x"
+VAR_COMMANDS[0]="oppo new opcuaapp --name \"my/\-app\""
+VAR_COMMANDS[1]="oppo new opcuaapp -n     \"my/\-app\""
+VAR_COMMANDS[2]="oppo new opcuaapp --name"
+VAR_COMMANDS[3]="oppo new opcuaapp -n"
+VAR_COMMANDS[4]="oppo new opcuaapp --exit"
+VAR_COMMANDS[5]="oppo new opcuaapp -x"
 
 for INDEX in "${!VAR_COMMANDS[@]}";
 do

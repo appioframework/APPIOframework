@@ -2,12 +2,12 @@
 
 set -uo pipefail
 
-VAR_COMMANDS[0]="oppo new sln --name \"my/\-app"\"
-VAR_COMMANDS[1]="oppo new sln -n     \"my/\-app"\"
-VAR_COMMANDS[4]="oppo new sln --name"
-VAR_COMMANDS[5]="oppo new sln -n"
-VAR_COMMANDS[2]="oppo new sln --exit"
-VAR_COMMANDS[3]="oppo new sln -x"
+VAR_COMMANDS[0]="oppo new sln --name \"my/\-app\""
+VAR_COMMANDS[1]="oppo new sln -n     \"my/\-app\""
+VAR_COMMANDS[2]="oppo new sln --name"
+VAR_COMMANDS[3]="oppo new sln -n"
+VAR_COMMANDS[4]="oppo new sln --exit"
+VAR_COMMANDS[5]="oppo new sln -x"
 
 for INDEX in "${!VAR_COMMANDS[@]}";
 do
