@@ -65,7 +65,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.AreEqual(Constants.CommandResults.Success, result);
             fileSystemMock.Verify(x => x.CreateFile(slnFileName, It.IsAny<string>()), Times.Once);
             fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoSlnTemplateFileName), Times.Once);
-            CleanupOppoLogger();
+            RemoveLoggerListener(loggerListenerMock.Object);
         }
 
         [Test]
@@ -90,7 +90,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.AreEqual(Constants.CommandResults.Failure, result);
             fileSystemMock.Verify(x => x.CreateFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoSlnTemplateFileName), Times.Never);
-            CleanupOppoLogger();
+            RemoveLoggerListener(loggerListenerMock.Object);
         }
 
         [Test]
@@ -126,10 +126,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             OppoLogger.RegisterListener(loggerListener);
         }
 
-        private static void CleanupOppoLogger()
+        private static void RemoveLoggerListener(ILoggerListener loggerListener)
         {
-            OppoLogger.RemoveAllListeners();
-            Assert.AreEqual(OppoLogger.LoggerListeners.Count(), 0);
+            OppoLogger.RemoveListener(loggerListener);
         }
     }
 }

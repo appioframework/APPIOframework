@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Concurrent;
 
 namespace Oppo.ObjectModel
 {
@@ -9,8 +10,10 @@ namespace Oppo.ObjectModel
         /// <summary>
         ///  As listeners.
         /// </summary>
-        private static readonly Collection<ILoggerListener> _listeners = new Collection<ILoggerListener>();
+        //private static readonly BlockingCollection<ILoggerListener> _listeners = new BlockingCollection<ILoggerListener>();
 
+        private static readonly ConcurrentBag<ILoggerListener> _listeners = new ConcurrentBag<ILoggerListener>();
+        
         /// <summary>
         /// Gets all LoggerListeners.
         /// </summary>
@@ -37,7 +40,7 @@ namespace Oppo.ObjectModel
         /// <param name="loggerListener">The logger listener.</param>
         public static void RemoveListener(ILoggerListener loggerListener)
         {
-            _listeners.Remove(loggerListener);
+            _listeners.TryTake(out loggerListener);
         }
 
         /// <summary>

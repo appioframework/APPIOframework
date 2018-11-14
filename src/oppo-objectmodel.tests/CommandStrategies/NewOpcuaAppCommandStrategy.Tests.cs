@@ -91,7 +91,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_meson_build), Times.Once);
             fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_open62541_c), Times.Once);
             fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_open62541_h), Times.Once);
-            CleanupOppoLogger();
+            RemoveLoggerListener(loggerListenerMock.Object);
         }
 
         [Test]
@@ -119,7 +119,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             fileSystemMock.Verify(x => x.CreateDirectory(It.IsAny<string>()), Times.Never);
             fileSystemMock.Verify(x => x.CreateFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName), Times.Never);
-            CleanupOppoLogger();
+            RemoveLoggerListener(loggerListenerMock.Object);
         }
 
         [Test]
@@ -154,11 +154,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             OppoLogger.RegisterListener(loggerListener);
         }
-
-        private static void CleanupOppoLogger()
+        
+        private static void RemoveLoggerListener(ILoggerListener loggerListener)
         {
-            OppoLogger.RemoveAllListeners();
-            Assert.AreEqual(OppoLogger.LoggerListeners.Count(), 0);
+            OppoLogger.RemoveListener(loggerListener);
         }
     }
 }
