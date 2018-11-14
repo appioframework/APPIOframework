@@ -20,6 +20,7 @@ stages:
   - integration-test--execution--15
   - integration-test--execution--16
   - integration-test--execution--17
+  - integration-test--execution--18
   - delivery 
 
 before_script:
@@ -194,6 +195,12 @@ run-integration-test--new-help-verbose--success:
   stage: 'integration-test--execution--17'
   script:
     - /bin/bash bash-gitlab-ci/integration-tests/run-new-help--success.sh verbose    
+    
+run-integration-test--new-opcuaapp--failure:
+  extends: prepare-integration-test
+  stage: 'integration-test--execution--18'
+  script:
+    - /bin/bash bash-gitlab-ci/integration-tests/run-new-opcuaapp--failure.sh
     
 mark-repository-as-deliverable:
   stage: 'delivery'
