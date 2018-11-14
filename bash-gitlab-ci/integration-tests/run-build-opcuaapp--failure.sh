@@ -21,10 +21,10 @@ do
   cd    build-opcuaapp--failure
 
   oppo new opcuaapp --name "my-app"
-  ls -Al
+  # ls -Al
   rm --force "oppo.log"
-  rm --force "my-app/meson.build"
-  ls -Al
+  # rm --force "my-app/meson.build"
+  # ls -Al
 
   ${VAR_COMMAND}
 
