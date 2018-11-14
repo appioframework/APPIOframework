@@ -2,7 +2,7 @@
 
 namespace Oppo.ObjectModel
 {
-    public interface ILogger
+    public interface ILoggerListener
     {
         void Error(string message, Exception exception);
     }

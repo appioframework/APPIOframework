@@ -7,13 +7,11 @@ namespace Oppo.ObjectModel
     public class ObjectModel : IObjectModel
     {      
         private readonly ICommandFactory<ObjectModel> _commandStrategyFactory;
-        private readonly ILogger _logger;
 
-        public ObjectModel(ICommandFactory<ObjectModel> commandStrategyFactory, ILogger logger)
+        public ObjectModel(ICommandFactory<ObjectModel> commandStrategyFactory)
         {
             _commandStrategyFactory = commandStrategyFactory;
-            _logger = logger;
-        }
+        }              
 
         public string ExecuteCommand(IEnumerable<string> inputParams)
         {
@@ -25,7 +23,7 @@ namespace Oppo.ObjectModel
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error(Resources.text.logging.LoggingText.NullInputParams_Msg, ex);
+                    OppoLogger.Error(Resources.text.logging.LoggingText.NullInputParams_Msg, ex);
                     throw;
                 }                
             }

@@ -16,9 +16,16 @@ namespace Oppo.Terminal
         internal static int Main(string[] args)
         {
             var commandFactory = CreateCommandFactory();
-            var objectModel = new ObjectModel.ObjectModel(commandFactory, new LoggerWrapper());
+            SetupOppoLogger();
+            var objectModel = new ObjectModel.ObjectModel(commandFactory);
             var result = objectModel.ExecuteCommand(args);
             return result == Constants.CommandResults.Success ? 0 : 1;
+        }
+
+        private static void SetupOppoLogger()
+        {
+            // setups the logger
+            OppoLogger.RegisterListener(new LoggerListenerWrapper());
         }
 
         private static ICommandFactory<ObjectModel.ObjectModel> CreateCommandFactory()

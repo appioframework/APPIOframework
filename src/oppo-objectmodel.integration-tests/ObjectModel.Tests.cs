@@ -18,8 +18,9 @@ namespace Oppo.ObjectModel.IntegrationTests
 
             // Arrange
             var commandFactoryMock = new Mock<ICommandFactory<ObjectModel>>();
-            var logger = new LoggerWrapper();
-            var objectUnderTest = new ObjectModel(commandFactoryMock.Object, logger);
+            var objectUnderTest = new ObjectModel(commandFactoryMock.Object);
+
+            OppoLogger.RegisterListener(new LoggerListenerWrapper());
 
             // Act
             Assert.Throws<ArgumentNullException>(() => objectUnderTest.ExecuteCommand(null));

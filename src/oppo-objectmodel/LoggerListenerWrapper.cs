@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Oppo.ObjectModel
 {
     [ExcludeFromCodeCoverage]
-    public class LoggerWrapper : ILogger
+    public class LoggerListenerWrapper : ILoggerListener
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
