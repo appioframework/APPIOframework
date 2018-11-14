@@ -21,6 +21,7 @@ stages:
   - integration-test--execution--16
   - integration-test--execution--17
   - integration-test--execution--18
+  - integration-test--execution--19
   - delivery 
 
 before_script:
@@ -195,6 +196,12 @@ run-integration-test--new-opcuaapp--failure:
   stage: 'integration-test--execution--18'
   script:
     - /bin/bash bash-gitlab-ci/integration-tests/run-new-opcuaapp--failure.sh
+    
+run-integration-test--new-sln--failure:
+  extends: prepare-integration-test
+  stage: 'integration-test--execution--19'
+  script:
+    - /bin/bash bash-gitlab-ci/integration-tests/run-new-sln--failure.sh
     
 mark-repository-as-deliverable:
   stage: 'delivery'
