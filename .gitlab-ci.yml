@@ -71,13 +71,7 @@ build-debian-installer:
     refs:
       - deliverable
   script:    
-    - cd installer/oppo-terminal
-    - chmod -R 0775 DEBIAN
-    - mkdir -p usr/bin
-    - cp ../../publish/* usr/bin
-    - rm -f usr/bin/*.pdb
-    - cd ..
-    - dpkg --build oppo-terminal
+    - /bin/bash bash-gitlab-ci/run-build-installer.sh
 
 prepare-integration-test:
   dependencies: 
