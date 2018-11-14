@@ -2,7 +2,7 @@
 
 set -uo pipefail
 
-VAR_COMMANDS[0]="oppo build \"my/\-app\""
+VAR_COMMANDS[0]="oppo build \"\""
 VAR_COMMANDS[1]="oppo build \"my-app\""
 
 for INDEX in "${!VAR_COMMANDS[@]}";
