@@ -20,7 +20,7 @@
 
 !src/
 !src/oppo-objectmodel/
-!src/oppo-objectmodel/log4net.config
+!src/oppo-objectmodel/oppo.log4net.config
 !src/oppo-objectmodel/oppo-objectmodel.csproj
 !src/oppo-objectmodel/*.cs
 !src/oppo-objectmodel/CommandStrategies/
