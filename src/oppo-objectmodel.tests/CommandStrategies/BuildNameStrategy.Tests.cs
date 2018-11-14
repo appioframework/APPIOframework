@@ -88,6 +88,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.Meson, projectDirectoryName, Constants.DirectoryName.MesonBuild)).Returns(true);
             fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.Ninja, projectBuildDirectory, string.Empty)).Returns(true);
             var buildStrategy = new BuildNameStrategy(string.Empty, fileSystemMock.Object);
+            var loggerListenerMock = new Mock<ILoggerListener>();
+            loggerListenerMock.Setup(y => y.Info(It.IsAny<string>()));
+            OppoLogger.RegisterListener(loggerListenerMock.Object);
+
 
             // Act
             var strategyResult = buildStrategy.Execute(inputParams);
@@ -95,6 +99,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             Assert.AreEqual(strategyResult, Constants.CommandResults.Success);
             fileSystemMock.VerifyAll();
+            loggerListenerMock.Verify(y => y.Info(It.IsAny<string>()), Times.Once);
+            OppoLogger.RemoveListener(loggerListenerMock.Object);
+
         }
 
         [Test]
@@ -102,7 +109,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             // Arrange
             var fileSystemMock = new Mock<IFileSystem>();
-
+            var loggerListenerMock = new Mock<ILoggerListener>();
+            loggerListenerMock.Setup(y => y.Warn(It.IsAny<string>()));
+            OppoLogger.RegisterListener(loggerListenerMock.Object);
             var buildStrategy = new BuildNameStrategy(string.Empty, fileSystemMock.Object);
 
             // Act
@@ -110,6 +119,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             // Assert
             Assert.AreEqual(strategyResult, Constants.CommandResults.Failure);
+            loggerListenerMock.Verify(y => y.Warn(It.IsAny<string>()),Times.Once);
+            OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
 
         [Test]
@@ -124,12 +135,18 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.Ninja, It.IsAny<string>(), It.IsAny<string>())).Returns(ninjaState);
 
             var buildStrategy = new BuildNameStrategy(string.Empty, fileSystemMock.Object);
+            var loggerListenerMock=new Mock<ILoggerListener>();
+            loggerListenerMock.Setup(B => B.Warn(It.IsAny<string>()));
+            OppoLogger.RegisterListener(loggerListenerMock.Object);
 
             // Act
             var strategyResult = buildStrategy.Execute(new[] {"hugo"});
 
             // Assert
             Assert.AreEqual(Constants.CommandResults.Failure, strategyResult);
+
+            loggerListenerMock.Verify(y => y.Warn(It.IsAny<string>()), Times.Once);
+            OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
     }
 }

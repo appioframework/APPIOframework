@@ -13,6 +13,13 @@ namespace Oppo.Resources.text.logging
         public const string NewOpcuaappCommandSuccess = "opcuaapp with name {0} was successfully created";
         public const string EmptyOpcuaappName = "Empty opcuaapp name!";
         public const string InvalidOpcuaappName = "Invalid opcuaapp name!";
+        public const string MesonExecutableFails = "Meson Failed!";
+        public const string NinjaExecutableFails = "Ninja Failed!";
+        public const string BuildSuccess = "Build Success!";
+
+
+
+
 
     }
 }

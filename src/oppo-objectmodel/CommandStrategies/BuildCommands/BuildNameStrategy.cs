@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Oppo.Resources.text.logging;
 
 namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 {
@@ -21,7 +22,9 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
             var projectName = inputParamsArray.ElementAtOrDefault(0);
 
             if (string.IsNullOrEmpty(projectName))
+
             {
+                OppoLogger.Warn( LoggingText.InvalidOpcuaappName);
                 return Constants.CommandResults.Failure;
             }
 
@@ -29,14 +32,17 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
             var mesonResult = _fileSystem.CallExecutable(Constants.ExecutableName.Meson, projectName, Constants.DirectoryName.MesonBuild);
             if (!mesonResult)
             {
+                OppoLogger.Warn(LoggingText.MesonExecutableFails);
                 return Constants.CommandResults.Failure;
             }
             var ninjaResult = _fileSystem.CallExecutable(Constants.ExecutableName.Ninja, buildDirectory, string.Empty);
             if (!ninjaResult)
+
             {
+                OppoLogger.Warn(LoggingText.NinjaExecutableFails);
                 return Constants.CommandResults.Failure;
             }
-
+            OppoLogger.Info(LoggingText.BuildSuccess);
             return Constants.CommandResults.Success;
         }
 
