@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: log4net.Config.XmlConfigurator(ConfigFile = "oppo.log4net.config")]
+[assembly: log4net.Config.XmlConfigurator(ConfigFile = "/usr/bin/oppo.log4net.config")]
 
 namespace Oppo.ObjectModel
 {
