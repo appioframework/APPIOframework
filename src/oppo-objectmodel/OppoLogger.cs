@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Concurrent;
 
 namespace Oppo.ObjectModel
@@ -10,8 +9,6 @@ namespace Oppo.ObjectModel
         /// <summary>
         ///  As listeners.
         /// </summary>
-        //private static readonly BlockingCollection<ILoggerListener> _listeners = new BlockingCollection<ILoggerListener>();
-
         private static readonly ConcurrentBag<ILoggerListener> _listeners = new ConcurrentBag<ILoggerListener>();
         
         /// <summary>
