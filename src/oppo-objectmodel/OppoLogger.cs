@@ -41,6 +41,30 @@ namespace Oppo.ObjectModel
         }
 
         /// <summary>
+        /// Logs info message using LoggerListener.
+        /// </summary>
+        /// <param name="message">Info message</param>
+        public static void Info(string message)
+        {
+            foreach (var loggerListener in _listeners)
+            {
+                loggerListener.Info(message);
+            }
+        }
+
+        /// <summary>
+        /// Logs warn message using LoggerListener.
+        /// </summary>
+        /// <param name="message">Error message.</param>
+        public static void Warn(string message)
+        {
+            foreach (var loggerListener in _listeners)
+            {
+                loggerListener.Warn(message);
+            }
+        }
+
+        /// <summary>
         /// Removes all listeners.
         /// </summary>
         public static void RemoveAllListeners()
@@ -59,6 +83,6 @@ namespace Oppo.ObjectModel
             {
                 loggerListener.Error(message, exception);
             }
-        }
+        }       
     }
 }

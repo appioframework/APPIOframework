@@ -7,21 +7,6 @@ namespace Oppo.ObjectModel.Tests
 {
     public class OppoLoggerTests
     {
-        /// <summary>
-        /// Registers one LoggerListener.
-        /// </summary>
-        [Test]
-        public void Should_Get_Any_LoggerListener()
-        {
-            // Follow the AAA pattern
-            // Arrange: Set up data for the test.
-            
-            // Act: Perform the action of the test.
-            var loggerListenerMock = new Mock<ILoggerListener>();
-
-            // Assert: Verify the result of the test.
-            Assert.AreEqual(OppoLogger.LoggerListeners.Count(), 0);            
-        }
 
         /// <summary>
         /// Registers one LoggerListener.
@@ -110,6 +95,54 @@ namespace Oppo.ObjectModel.Tests
 
             // Assert: Verify the result of the test.            
             Assert.IsTrue(errorWrittenOut);
+
+            CleanupOppoLogger();
+        }
+
+        /// <summary>
+        /// Logs warn message using LoggerListener
+        /// </summary>
+        [Test]
+        public void Should_LogWarnMessage()
+        {
+            // Follow the AAA pattern
+            // Arrange: Set up data for the test.
+            var warnWrittenOut = false;
+            var warnMessage = "warnMsg";
+
+            var loggerListenerMock = new Mock<ILoggerListener>();
+            loggerListenerMock.Setup(loggerListener => loggerListener.Warn(warnMessage)).Callback(delegate {warnWrittenOut = true; });
+            OppoLogger.RegisterListener(loggerListenerMock.Object);
+
+            // Act: Perform the action of the test.
+            OppoLogger.Warn(warnMessage);
+
+            // Assert: Verify the result of the test.            
+            Assert.IsTrue(warnWrittenOut);
+
+            CleanupOppoLogger();
+        }
+
+        /// <summary>
+        /// Logs info message using LoggerListener
+        /// </summary>
+        [Test]
+        public void Should_logInfoMessage()
+        {
+            // Follow the AAA pattern
+            // Arrange: Set up data for the test.
+            var infoWrittenOut = false;
+            var infoMessage = "infoMsg";
+
+            var loggerListenerMock = new Mock<ILoggerListener>();
+            loggerListenerMock.Setup(loggerListener => loggerListener.Info(infoMessage)).Callback(delegate { infoWrittenOut = true; });
+            OppoLogger.RegisterListener(loggerListenerMock.Object);
+
+            // Act: Perform the action of the test.
+            OppoLogger.Info(infoMessage);
+
+            // Assert: Verify the result of the test.            
+            Assert.IsTrue(infoWrittenOut);
 
             CleanupOppoLogger();
         }

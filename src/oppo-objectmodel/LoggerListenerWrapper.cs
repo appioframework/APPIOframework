@@ -14,5 +14,15 @@ namespace Oppo.ObjectModel
         {
             log.Error(message, exception);
         }
+
+        public void Info(string message)
+        {
+            log.Info(message);
+        }
+
+        public void Warn(string message)
+        {
+            log.Warn(message);
+        }
     }
 }

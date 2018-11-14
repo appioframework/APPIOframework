@@ -50,7 +50,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             // Arrange
             var slnFileName = $"{inputParams.Skip(1).First()}{Constants.FileExtension.OppoSln}";
-
+            var infoWrittenOut = false;
+            var loggerListenerMock = new Mock<ILoggerListener>();            
+            loggerListenerMock.Setup(listener => listener.Info(It.IsAny<string>())).Callback(delegate { infoWrittenOut = true; });
+            SetupOppoLogger(loggerListenerMock.Object);
             var fileSystemMock = new Mock<IFileSystem>();
             var objectUnderTest = new NewSlnCommandStrategy(fileSystemMock.Object);
 
@@ -58,9 +61,11 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var result = objectUnderTest.Execute(inputParams);
 
             // Assert
+            Assert.IsTrue(infoWrittenOut);
             Assert.AreEqual(Constants.CommandResults.Success, result);
             fileSystemMock.Verify(x => x.CreateFile(slnFileName, It.IsAny<string>()), Times.Once);
             fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoSlnTemplateFileName), Times.Once);
+            CleanupOppoLogger();
         }
 
         [Test]
@@ -68,6 +73,11 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             // Arrange
             var invalidCharsMock = new[] { '/', '\\' };
+            var loggerListenerMock = new Mock<ILoggerListener>();
+            var warnWrittenOut = false;
+            loggerListenerMock.Setup(listener => listener.Warn(It.IsAny<string>())).Callback(delegate { warnWrittenOut = true; });
+            SetupOppoLogger(loggerListenerMock.Object);
+
             var fileSystemMock = new Mock<IFileSystem>();
             fileSystemMock.Setup(x => x.GetInvalidFileNameChars()).Returns(invalidCharsMock);
             var objectUnderTest = new NewSlnCommandStrategy(fileSystemMock.Object);
@@ -76,9 +86,11 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var result = objectUnderTest.Execute(inputParams);
 
             // Assert
+            Assert.IsTrue(warnWrittenOut);
             Assert.AreEqual(Constants.CommandResults.Failure, result);
             fileSystemMock.Verify(x => x.CreateFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoSlnTemplateFileName), Times.Never);
+            CleanupOppoLogger();
         }
 
         [Test]
@@ -107,6 +119,17 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             // Assert
             Assert.AreEqual(string.Empty, helpText);
+        }
+
+        private static void SetupOppoLogger(ILoggerListener loggerListener)
+        {
+            OppoLogger.RegisterListener(loggerListener);
+        }
+
+        private static void CleanupOppoLogger()
+        {
+            OppoLogger.RemoveAllListeners();
+            Assert.AreEqual(OppoLogger.LoggerListeners.Count(), 0);
         }
     }
 }

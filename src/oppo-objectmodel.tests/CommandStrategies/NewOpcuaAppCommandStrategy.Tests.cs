@@ -50,6 +50,11 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void NewOpcuaAppCommandStrategy_Should_CreateSlnAndProjectRelevantFiles([ValueSource(nameof(ValidInputs))]string[] inputParams)
         {
             // Arrange
+            var infoWrittenOut = false;
+            var loggerListenerMock = new Mock<ILoggerListener>();
+            loggerListenerMock.Setup(listener => listener.Info(It.IsAny<string>())).Callback(delegate { infoWrittenOut = true; });
+            SetupOppoLogger(loggerListenerMock.Object);
+
             var projectDirectoryName = $"{inputParams.ElementAt(1)}";
             var opcuaSourceCode = Path.Combine(projectDirectoryName, Constants.DirectoryName.SourceCode);
             var projectFileName = $"{inputParams.ElementAt(1)}{Constants.FileExtension.OppoProject}";
@@ -74,6 +79,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var result = objectUnderTest.Execute(inputParams);
 
             // Assert
+            Assert.IsTrue(infoWrittenOut);
             Assert.AreEqual(Constants.CommandResults.Success, result);
             fileSystemMock.Verify(x => x.CreateDirectory(projectDirectoryName), Times.Once);
             fileSystemMock.Verify(x => x.CreateDirectory(opcuaSourceCode), Times.Once);
@@ -85,12 +91,18 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_meson_build), Times.Once);
             fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_open62541_c), Times.Once);
             fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_open62541_h), Times.Once);
+            CleanupOppoLogger();
         }
 
         [Test]
         public void NewOpcuaAppCommandStrategy_Should_IgnoreInput([ValueSource(nameof(InvalidInputs))] string[] inputParams)
         {
             // Arrange
+            var loggerListenerMock = new Mock<ILoggerListener>();
+            var warnWrittenOut = false;
+            loggerListenerMock.Setup(listener => listener.Warn(It.IsAny<string>())).Callback(delegate { warnWrittenOut = true; });
+            SetupOppoLogger(loggerListenerMock.Object);
+
             var invalidNameCharsMock = new[] { '/' };
             var invalidPathCharsMock = new[] { '\\' };
             var fileSystemMock = new Mock<IFileSystem>();
@@ -102,10 +114,12 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var result = objectUnderTest.Execute(inputParams);
 
             // Assert
+            Assert.IsTrue(warnWrittenOut);
             Assert.AreEqual(Constants.CommandResults.Failure, result);
             fileSystemMock.Verify(x => x.CreateDirectory(It.IsAny<string>()), Times.Never);
             fileSystemMock.Verify(x => x.CreateFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName), Times.Never);
+            CleanupOppoLogger();
         }
 
         [Test]
@@ -134,6 +148,17 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             // Assert
             Assert.AreEqual(string.Empty, helpText);
+        }
+
+        private static void SetupOppoLogger(ILoggerListener loggerListener)
+        {
+            OppoLogger.RegisterListener(loggerListener);
+        }
+
+        private static void CleanupOppoLogger()
+        {
+            OppoLogger.RemoveAllListeners();
+            Assert.AreEqual(OppoLogger.LoggerListeners.Count(), 0);
         }
     }
 }

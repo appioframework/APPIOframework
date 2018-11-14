@@ -22,27 +22,32 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 
             if (nameFlag != Constants.NewOpcuaAppCommandArguments.Name && nameFlag != Constants.NewOpcuaAppCommandArguments.VerboseName)
             {
+                OppoLogger.Warn(Resources.text.logging.LoggingText.UnknownNewOpcuaappCommandParam);
                 return Constants.CommandResults.Failure;
             }
 
             if (string.IsNullOrEmpty(opcuaAppName))
             {
+                OppoLogger.Warn(Resources.text.logging.LoggingText.EmptyOpcuaappName);
                 return Constants.CommandResults.Failure;
             }
 
             if (_fileSystem.GetInvalidFileNameChars().Any(opcuaAppName.Contains))
             {
+                OppoLogger.Warn(Resources.text.logging.LoggingText.InvalidOpcuaappName);
                 return Constants.CommandResults.Failure;
             }
 
             if (_fileSystem.GetInvalidPathChars().Any(opcuaAppName.Contains))
             {
+                OppoLogger.Warn(Resources.text.logging.LoggingText.InvalidOpcuaappName);
                 return Constants.CommandResults.Failure;
             }
 
             DeployTemplateOpcuaApp(opcuaAppName);
             DeployTemplateOpcuaSourceFiles(opcuaAppName);
 
+            OppoLogger.Info(string.Format(Resources.text.logging.LoggingText.NewOpcuaappCommandSuccess, opcuaAppName));
             return Constants.CommandResults.Success;
         }
 

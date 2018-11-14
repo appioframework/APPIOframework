@@ -22,20 +22,25 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 
             if (nameFlag != Constants.NewSlnCommandArguments.Name && nameFlag != Constants.NewSlnCommandArguments.VerboseName)
             {
+                OppoLogger.Warn(Resources.text.logging.LoggingText.UnknownNewSlnCommandParam);
                 return Constants.CommandResults.Failure;
             }
 
             if (string.IsNullOrEmpty(solutionName))
             {
+                OppoLogger.Warn(Resources.text.logging.LoggingText.EmptySolutionName);
                 return Constants.CommandResults.Failure;
             }
 
             if (_fileSystem.GetInvalidFileNameChars().Any(solutionName.Contains))
             {
+                OppoLogger.Warn(Resources.text.logging.LoggingText.InvalidSolutionName);
                 return Constants.CommandResults.Failure;
             }
 
-            _fileSystem.CreateFile($"{solutionName}{Constants.FileExtension.OppoSln}", _fileSystem.LoadTemplateFile(Resources.Resources.OppoSlnTemplateFileName));
+            var solutionFilePath = $"{solutionName}{Constants.FileExtension.OppoSln}";
+            _fileSystem.CreateFile(solutionFilePath, _fileSystem.LoadTemplateFile(Resources.Resources.OppoSlnTemplateFileName));
+            OppoLogger.Info(string.Format(Resources.text.logging.LoggingText.NewSlnCommandSuccess, solutionFilePath));            
             return Constants.CommandResults.Success;
         }
 
