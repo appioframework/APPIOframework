@@ -33,17 +33,25 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             };
         }
 
+        private Mock<IFileSystem> _fileSystemMock;
+        private NewOpcuaAppCommandStrategy _objectUnderTest;
+
+        [SetUp]
+        public void SetupObjectUnderTest()
+        {
+            _fileSystemMock = new Mock<IFileSystem>();
+            _objectUnderTest = new NewOpcuaAppCommandStrategy(_fileSystemMock.Object);
+        }
+
         [Test]
         public void NewOpcuaAppCommandStrategy_Should_ImplementICommandOfNewStrategy()
         {
             // Arrange
-            var fileSystemMock = new Mock<IFileSystem>();
 
             // Act
-            var objectUnderTest = new NewOpcuaAppCommandStrategy(fileSystemMock.Object);
 
             // Assert
-            Assert.IsInstanceOf<ICommand<NewStrategy>>(objectUnderTest);
+            Assert.IsInstanceOf<ICommand<NewStrategy>>(_objectUnderTest);
         }
 
         [Test]
@@ -64,33 +72,30 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var open62541cFile = Path.Combine(opcuaSourceCode, Resources.Resources.OppoOpcuaAppTemplateFileName_open62541_c);
             var open62541hFile = Path.Combine(opcuaSourceCode, Resources.Resources.OppoOpcuaAppTemplateFileName_open62541_h);
 
-            var fileSystemMock = new Mock<IFileSystem>();
-            fileSystemMock.Setup(f => f.CombinePaths(projectDirectoryName, projectFileName)).Returns(projectFilePath);
-            fileSystemMock.Setup(f => f.CombinePaths(projectDirectoryName, Constants.DirectoryName.SourceCode)).Returns(opcuaSourceCode);
-            fileSystemMock.Setup(f => f.CombinePaths(projectDirectoryName, Constants.FileName.SourceCode_meson_build)).Returns(mesonBuildFilePath);
-            fileSystemMock.Setup(f => f.CombinePaths(opcuaSourceCode, Constants.FileName.SourceCode_main_c)).Returns(maincFile);
-            fileSystemMock.Setup(f => f.CombinePaths(opcuaSourceCode, Constants.FileName.SourceCode_open62541_c)).Returns(open62541cFile);
-            fileSystemMock.Setup(f => f.CombinePaths(opcuaSourceCode, Constants.FileName.SourceCode_open62541_h)).Returns(open62541hFile);
+            _fileSystemMock.Setup(f => f.CombinePaths(projectDirectoryName, projectFileName)).Returns(projectFilePath);
+            _fileSystemMock.Setup(f => f.CombinePaths(projectDirectoryName, Constants.DirectoryName.SourceCode)).Returns(opcuaSourceCode);
+            _fileSystemMock.Setup(f => f.CombinePaths(projectDirectoryName, Constants.FileName.SourceCode_meson_build)).Returns(mesonBuildFilePath);
+            _fileSystemMock.Setup(f => f.CombinePaths(opcuaSourceCode, Constants.FileName.SourceCode_main_c)).Returns(maincFile);
+            _fileSystemMock.Setup(f => f.CombinePaths(opcuaSourceCode, Constants.FileName.SourceCode_open62541_c)).Returns(open62541cFile);
+            _fileSystemMock.Setup(f => f.CombinePaths(opcuaSourceCode, Constants.FileName.SourceCode_open62541_h)).Returns(open62541hFile);
             
 
-            var objectUnderTest = new NewOpcuaAppCommandStrategy(fileSystemMock.Object);
-
             // Act
-            var result = objectUnderTest.Execute(inputParams);
+            var result = _objectUnderTest.Execute(inputParams);
 
             // Assert
             Assert.IsTrue(infoWrittenOut);
             Assert.AreEqual(Constants.CommandResults.Success, result);
-            fileSystemMock.Verify(x => x.CreateDirectory(projectDirectoryName), Times.Once);
-            fileSystemMock.Verify(x => x.CreateDirectory(opcuaSourceCode), Times.Once);
-            fileSystemMock.Verify(x => x.CreateFile(It.Is<string>(s=>s.StartsWith(opcuaSourceCode)), It.IsAny<string>()), Times.Exactly(3));
-            fileSystemMock.Verify(x => x.CreateFile(projectFilePath, It.IsAny<string>()), Times.Once);
-            fileSystemMock.Verify(x => x.CreateFile(mesonBuildFilePath, It.IsAny<string>()), Times.Once);
-            fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName), Times.Once);
-            fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_main_c), Times.Once);
-            fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_meson_build), Times.Once);
-            fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_open62541_c), Times.Once);
-            fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_open62541_h), Times.Once);
+            _fileSystemMock.Verify(x => x.CreateDirectory(projectDirectoryName), Times.Once);
+            _fileSystemMock.Verify(x => x.CreateDirectory(opcuaSourceCode), Times.Once);
+            _fileSystemMock.Verify(x => x.CreateFile(It.Is<string>(s=>s.StartsWith(opcuaSourceCode)), It.IsAny<string>()), Times.Exactly(3));
+            _fileSystemMock.Verify(x => x.CreateFile(projectFilePath, It.IsAny<string>()), Times.Once);
+            _fileSystemMock.Verify(x => x.CreateFile(mesonBuildFilePath, It.IsAny<string>()), Times.Once);
+            _fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName), Times.Once);
+            _fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_main_c), Times.Once);
+            _fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_meson_build), Times.Once);
+            _fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_open62541_c), Times.Once);
+            _fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_open62541_h), Times.Once);
             RemoveLoggerListener(loggerListenerMock.Object);
         }
 
@@ -105,20 +110,18 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             var invalidNameCharsMock = new[] { '/' };
             var invalidPathCharsMock = new[] { '\\' };
-            var fileSystemMock = new Mock<IFileSystem>();
-            fileSystemMock.Setup(x => x.GetInvalidFileNameChars()).Returns(invalidNameCharsMock);
-            fileSystemMock.Setup(x => x.GetInvalidPathChars()).Returns(invalidPathCharsMock);
-            var objectUnderTest = new NewOpcuaAppCommandStrategy(fileSystemMock.Object);
+            _fileSystemMock.Setup(x => x.GetInvalidFileNameChars()).Returns(invalidNameCharsMock);
+            _fileSystemMock.Setup(x => x.GetInvalidPathChars()).Returns(invalidPathCharsMock);
 
             // Act
-            var result = objectUnderTest.Execute(inputParams);
+            var result = _objectUnderTest.Execute(inputParams);
 
             // Assert
             Assert.IsTrue(warnWrittenOut);
             Assert.AreEqual(Constants.CommandResults.Failure, result);
-            fileSystemMock.Verify(x => x.CreateDirectory(It.IsAny<string>()), Times.Never);
-            fileSystemMock.Verify(x => x.CreateFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
-            fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName), Times.Never);
+            _fileSystemMock.Verify(x => x.CreateDirectory(It.IsAny<string>()), Times.Never);
+            _fileSystemMock.Verify(x => x.CreateFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName), Times.Never);
             RemoveLoggerListener(loggerListenerMock.Object);
         }
 
@@ -126,11 +129,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void NewOpcuaAppCommandStrategy_Should_HaveCorrectCommandName()
         {
             // Arrange
-            var fileSystemMock = new Mock<IFileSystem>();
-            var objectUnderTest = new NewOpcuaAppCommandStrategy(fileSystemMock.Object);
 
             // Act
-            var commandName = objectUnderTest.Name;
+            var commandName = _objectUnderTest.Name;
 
             // Assert
             Assert.AreEqual(Constants.NewCommandName.OpcuaApp, commandName);
@@ -140,11 +141,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void NewOpcuaAppCommandStrategy_Should_ProvideEmptyHelpText()
         {
             // Arrange
-            var fileSystemMock = new Mock<IFileSystem>();
-            var objectUnderTest = new NewOpcuaAppCommandStrategy(fileSystemMock.Object);
 
             // Act
-            var helpText = objectUnderTest.GetHelpText();
+            var helpText = _objectUnderTest.GetHelpText();
 
             // Assert
             Assert.AreEqual(string.Empty, helpText);
