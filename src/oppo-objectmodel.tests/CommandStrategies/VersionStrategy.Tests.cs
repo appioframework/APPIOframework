@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies.VersionCommands;
+using Oppo.Resources.text.logging;
 
 namespace Oppo.ObjectModel.Tests.CommandStrategies
 {
@@ -68,6 +69,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var reflectionMock = new Mock<IReflection>();
             reflectionMock.Setup(x => x.GetOppoAssemblyInfos()).Returns(assemblyInfos);
             var objectUnderTest = new VersionStrategy(reflectionMock.Object, writerMock.Object);
+            var loggerListenerMock = new Mock<ILoggerListener>();
+            loggerListenerMock.Setup(x => x.Info(LoggingText.VersionCommandCalled));
+            OppoLogger.RegisterListener(loggerListenerMock.Object);
 
             // Act
             var result = objectUnderTest.Execute(inputParams);
@@ -76,6 +80,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var versionRegex = new Regex(@"^\d+.\d+.\d+$");
             Assert.AreEqual(Constants.CommandResults.Success, result);
             writerMock.Verify(x => x.WriteLines(It.Is<Dictionary<string, string>>(d => d.Values.All(v => versionRegex.IsMatch(v)))), Times.AtLeastOnce);
+            loggerListenerMock.Verify(x => x.Info(LoggingText.VersionCommandCalled), Times.Once);
+            OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
 
         [Test]

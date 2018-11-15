@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Oppo.ObjectModel.Extensions;
+using Oppo.Resources.text.logging;
 
 namespace Oppo.ObjectModel.CommandStrategies.VersionCommands
 {
@@ -25,7 +26,7 @@ namespace Oppo.ObjectModel.CommandStrategies.VersionCommands
             }
 
             _writer.WriteLines(printableInfos);
-
+            OppoLogger.Info(LoggingText.VersionCommandCalled);
             return Constants.CommandResults.Success;
         }
 
