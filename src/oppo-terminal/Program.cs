@@ -24,7 +24,7 @@ namespace Oppo.Terminal
             var commandResult = objectModel.ExecuteCommand(args);
             writer.WriteLine(commandResult.Message);
             var commandResultSucces = commandResult.Sucsess;
-            return commandResultSucces ==  true ? 0 : 1;
+            return commandResultSucces ? 0 : 1;
         }
 
         private static void SetupOppoLogger()
