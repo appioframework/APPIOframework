@@ -31,7 +31,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var result = objectUnderTest.Execute(inputArgsMock);
 
             // Assert
-            Assert.AreEqual(Constants.CommandResults.Success, result);
+            Assert.IsTrue(result.Sucsess);
+            Assert.AreEqual(string.Empty, result.Message);
             writerMock.Verify(x => x.WriteLine(It.IsAny<string>()), Times.AtLeastOnce);
         }
 

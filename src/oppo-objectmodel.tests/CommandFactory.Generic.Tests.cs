@@ -136,9 +136,10 @@ namespace Oppo.ObjectModel.Tests
 
             // Act
             var commandResult = command.Execute(new string[0]);
-            
+
             // Assert
-            Assert.AreEqual(Constants.CommandResults.Failure, commandResult);
+            Assert.IsFalse(commandResult.Sucsess);
+            Assert.AreEqual(Constants.CommandResults.Failure, commandResult.Message);
             loggerListenerMock.Verify(x => x.Warn(LoggingText.UnknownCommandCalled), Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }

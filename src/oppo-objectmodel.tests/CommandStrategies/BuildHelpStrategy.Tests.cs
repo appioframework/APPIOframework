@@ -79,7 +79,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var strategyResult = strategy.Execute(new string[] {});
 
             // Assert
-            Assert.AreEqual(strategyResult, Constants.CommandResults.Success);
+            Assert.IsTrue(strategyResult.Sucsess);
+            Assert.AreEqual(string.Empty, strategyResult.Message);
             mockWriter.Verify(x=>x.WriteLines(It.IsAny<Dictionary<string, string>>()));
             loggerListenerMock.Verify(x => x.Info(LoggingText.OppoHelpForBuildCommandCalled), Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);

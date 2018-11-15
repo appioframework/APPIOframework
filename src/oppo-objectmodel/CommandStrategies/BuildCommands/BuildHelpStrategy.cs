@@ -19,7 +19,7 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 
         public ICommandFactory<BuildStrategy> CommandFactory { get; set; }
 
-        public string Execute(IEnumerable<string> inputParams)
+        public CommandResult Execute(IEnumerable<string> inputParams)
         {
             var buildHelpOutput = new Dictionary<string, string>(_helpText);
             foreach (var command in CommandFactory.Commands)
@@ -29,7 +29,7 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 
             _writer.WriteLines(buildHelpOutput);
             OppoLogger.Info(LoggingText.OppoHelpForBuildCommandCalled);
-            return Constants.CommandResults.Success;
+            return new CommandResult(true, string.Empty);
         }
 
         public string GetHelpText()

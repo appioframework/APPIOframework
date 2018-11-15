@@ -2,6 +2,7 @@
 using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies.NewCommands;
+using Oppo.Resources.text.output;
 
 namespace Oppo.ObjectModel.Tests.CommandStrategies
 {
@@ -17,18 +18,33 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             };
         }
 
-        private static string[][] InvalidInputs()
+        private static string[][] InvalidInputsFirstPart()
         {
             return new[]
             {
                 new[] {"-n", ""},
-                new[] {"-n", "ab/yx"},
-                new[] {"-n", "ab\\yx"},
+                //new[] {"-n", "ab/yx"},
+                //new[] {"-n", "ab\\yx"},
                 new[] {"-N", "ab/yx"},
                 new[] {"", ""},
                 new[] {""},
                 new[] {"-n"},
                 new string[] { }
+            };
+        }
+
+        private static string[][] InvalidInputsSeccondPart()
+        {
+            return new[]
+            {
+                //new[] {"-n", ""},
+                new[] {"-n", "ab/yx"},
+                new[] {"-n", "ab\\yx"},
+                //new[] {"-N", "ab/yx"},
+                //new[] {"", ""},
+                //new[] {""},
+                //new[] {"-n"},
+                //new string[] { }
             };
         }
 
@@ -49,7 +65,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void NewSlnCommandStrategy_Should_CreateSlnAndProjectRelevantFiles([ValueSource(nameof(ValidInputs))]string[] inputParams)
         {
             // Arrange
-            var slnFileName = $"{inputParams.Skip(1).First()}{Constants.FileExtension.OppoSln}";
+            var slnName = inputParams.Skip(1).First();
+            var slnFileName = $"{slnName}{Constants.FileExtension.OppoSln}";
             var infoWrittenOut = false;
             var loggerListenerMock = new Mock<ILoggerListener>();            
             loggerListenerMock.Setup(listener => listener.Info(It.IsAny<string>())).Callback(delegate { infoWrittenOut = true; });
@@ -62,14 +79,15 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             // Assert
             Assert.IsTrue(infoWrittenOut);
-            Assert.AreEqual(Constants.CommandResults.Success, result);
+            Assert.IsTrue(result.Sucsess);
+            Assert.AreEqual(string.Format(OutputText.NewSlnCommandSuccess, slnName), result.Message);
             fileSystemMock.Verify(x => x.CreateFile(slnFileName, It.IsAny<string>()), Times.Once);
             fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoSlnTemplateFileName), Times.Once);
             RemoveLoggerListener(loggerListenerMock.Object);
         }
 
         [Test]
-        public void NewSlnCommandStrategy_Should_IgnoreInput([ValueSource(nameof(InvalidInputs))] string[] inputParams)
+        public void NewSlnCommandStrategy_Should_IgnoreInputFirstPart([ValueSource(nameof(InvalidInputsFirstPart))] string[] inputParams)
         {
             // Arrange
             var invalidCharsMock = new[] { '/', '\\' };
@@ -87,7 +105,35 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             // Assert
             Assert.IsTrue(warnWrittenOut);
-            Assert.AreEqual(Constants.CommandResults.Failure, result);
+            Assert.IsFalse(result.Sucsess);
+            Assert.AreEqual(OutputText.NewSlnCommandFailureUnknownParam, result.Message);
+            fileSystemMock.Verify(x => x.CreateFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoSlnTemplateFileName), Times.Never);
+            RemoveLoggerListener(loggerListenerMock.Object);
+        }
+
+        [Test]
+        public void NewSlnCommandStrategy_Should_IgnoreInput([ValueSource(nameof(InvalidInputsSeccondPart))] string[] inputParams)
+        {
+            // Arrange
+            var slnName = inputParams.ElementAt(1);
+            var invalidCharsMock = new[] { '/', '\\' };
+            var loggerListenerMock = new Mock<ILoggerListener>();
+            var warnWrittenOut = false;
+            loggerListenerMock.Setup(listener => listener.Warn(It.IsAny<string>())).Callback(delegate { warnWrittenOut = true; });
+            SetupOppoLogger(loggerListenerMock.Object);
+
+            var fileSystemMock = new Mock<IFileSystem>();
+            fileSystemMock.Setup(x => x.GetInvalidFileNameChars()).Returns(invalidCharsMock);
+            var objectUnderTest = new NewSlnCommandStrategy(fileSystemMock.Object);
+
+            // Act
+            var result = objectUnderTest.Execute(inputParams);
+
+            // Assert
+            Assert.IsTrue(warnWrittenOut);
+            Assert.IsFalse(result.Sucsess);
+            Assert.AreEqual(string.Format(OutputText.NewSlnCommandFailure, slnName), result.Message);
             fileSystemMock.Verify(x => x.CreateFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoSlnTemplateFileName), Times.Never);
             RemoveLoggerListener(loggerListenerMock.Object);

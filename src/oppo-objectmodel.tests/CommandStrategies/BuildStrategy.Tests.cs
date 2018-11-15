@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies.BuildCommands;
+using Oppo.Resources.text.output;
 
 namespace Oppo.ObjectModel.Tests.CommandStrategies
 {
@@ -60,7 +61,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             // Arrange
             var mockBuildStrategy = new Mock<ICommand<BuildStrategy>>();
-            mockBuildStrategy.Setup(x => x.Execute(new string[] { })).Returns(Constants.CommandResults.Success);
+            mockBuildStrategy.Setup(x => x.Execute(new string[] { })).Returns(new CommandResult(true, string.Empty));
             var mockBuildFactory = new Mock<ICommandFactory<BuildStrategy>>();
             mockBuildFactory.Setup(f => f.GetCommand(Constants.BuildCommandArguments.Help)).Returns(mockBuildStrategy.Object);
             mockBuildFactory.Setup(f => f.GetCommand(Constants.BuildCommandArguments.VerboseHelp)).Returns(mockBuildStrategy.Object);
@@ -71,7 +72,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var strategyResult = buildStrategy.Execute(inputParams);
 
             // Assert
-            Assert.AreEqual(strategyResult, Constants.CommandResults.Success);
+            Assert.IsTrue(strategyResult.Sucsess);
+            Assert.AreEqual(string.Empty, strategyResult.Message);
         }
 
         [Test]
@@ -79,7 +81,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             // Arrange
             var mockBuildStrategy = new Mock<ICommand<BuildStrategy>>();
-            mockBuildStrategy.Setup(x => x.Execute(new string[] { inputParams[1] })).Returns(Constants.CommandResults.Success);
+            mockBuildStrategy.Setup(x => x.Execute(new string[] { inputParams[1] })).Returns(new CommandResult(true, OutputText.OpcuaappBuildSuccess));
 
             var mockBuildFactory = new Mock<ICommandFactory<BuildStrategy>>();
             mockBuildFactory.Setup(f => f.GetCommand(Constants.BuildCommandArguments.Name)).Returns(mockBuildStrategy.Object);
@@ -91,7 +93,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var strategyResult = buildStrategy.Execute(inputParams);
 
             // Assert
-            Assert.AreEqual(strategyResult, Constants.CommandResults.Success);
+            Assert.IsTrue(strategyResult.Sucsess);
+            Assert.AreEqual(OutputText.OpcuaappBuildSuccess, strategyResult.Message);
         }
 
         [Test]
@@ -99,7 +102,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             // Arrange
             var mockBuildStrategy = new Mock<ICommand<BuildStrategy>>();
-            mockBuildStrategy.Setup(x => x.Execute(It.IsAny<IEnumerable<string>>())).Returns(Constants.CommandResults.Failure);
+            mockBuildStrategy.Setup(x => x.Execute(It.IsAny<IEnumerable<string>>())).Returns(new CommandResult(false, OutputText.OpcuaappBuildFailure));
             
             var mockBuildFactory = new Mock<ICommandFactory<BuildStrategy>>();
             mockBuildFactory.Setup(f => f.GetCommand(It.IsAny<string>())).Returns(mockBuildStrategy.Object);
@@ -110,8 +113,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var strategyResult = buildStrategy.Execute(inputParams);
 
             // Assert
-            Assert.AreEqual(strategyResult, Constants.CommandResults.Failure);
-        }      
+            Assert.IsFalse(strategyResult.Sucsess);
+            Assert.AreEqual(OutputText.OpcuaappBuildFailure, strategyResult.Message);
+        } 
 
         [Test]
         public void ShouldReturnEmptyHelpText()

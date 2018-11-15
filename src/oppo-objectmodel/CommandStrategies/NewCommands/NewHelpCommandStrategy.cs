@@ -15,7 +15,7 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 
         public string Name {get; private set;}
 
-        public string Execute(IEnumerable<string> inputParams)
+        public CommandResult Execute(IEnumerable<string> inputParams)
         {
             var buildHelpOutput = new Dictionary<string, string>();
 
@@ -33,7 +33,7 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 
             _writer.WriteLines(buildHelpOutput);
             OppoLogger.Info(LoggingText.OppoHelpForNewCommandCalled);
-            return Constants.CommandResults.Success;
+            return new CommandResult(true, string.Empty);
         }
 
         public string GetHelpText()

@@ -18,8 +18,13 @@ namespace Oppo.Terminal
             var commandFactory = CreateCommandFactory();
             SetupOppoLogger();
             var objectModel = new ObjectModel.ObjectModel(commandFactory);
-            var result = objectModel.ExecuteCommand(args);
-            return result == Constants.CommandResults.Success ? 0 : 1;
+
+            var writer = new ConsoleWriter();
+
+            var commandResult = objectModel.ExecuteCommand(args);
+            writer.WriteLine(commandResult.Message);
+            var commandResultSucces = commandResult.Sucsess;
+            return commandResultSucces ==  true ? 0 : 1;
         }
 
         private static void SetupOppoLogger()

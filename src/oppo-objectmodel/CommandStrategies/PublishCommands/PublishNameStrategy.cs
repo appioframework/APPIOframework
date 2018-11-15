@@ -1,4 +1,5 @@
-﻿using Oppo.Resources.text.logging;
+﻿using Oppo.Resources.text.output;
+using Oppo.Resources.text.logging;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,14 +17,14 @@ namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
 
         public string Name { get; private set; }
 
-        public string Execute(IEnumerable<string> inputParams)
+        public CommandResult Execute(IEnumerable<string> inputParams)
         {
             var projectName = inputParams.ElementAt(0);
 
             if (string.IsNullOrEmpty(projectName))
             {
                 OppoLogger.Warn(LoggingText.EmptyOpcuaappName);
-                return Constants.CommandResults.Failure;
+                return new CommandResult(false, OutputText.OpcuaappPublishFailure);
             }
 
             var projectBuildDirectory = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.MesonBuild);
@@ -36,7 +37,7 @@ namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
             _fileSystem.CopyFile(applicationFileBuildLocation, applicationFilePublishLocation);
 
             OppoLogger.Info(LoggingText.OpcuaappPublishedSuccess);
-            return Constants.CommandResults.Success;
+            return new CommandResult(true, string.Format(OutputText.OpcuaappPublishSuccess, projectName));
         }
 
         public string GetHelpText()

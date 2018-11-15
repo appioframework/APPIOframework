@@ -58,6 +58,7 @@
 !src/oppo-resources/text/help/
 !src/oppo-resources/text/version/
 !src/oppo-resources/text/logging/
+!src/oppo-resources/text/output/
 
 !src/oppo-terminal/
 !src/oppo-terminal/oppo-terminal.csproj

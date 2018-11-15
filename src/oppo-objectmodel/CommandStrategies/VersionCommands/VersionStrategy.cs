@@ -17,7 +17,7 @@ namespace Oppo.ObjectModel.CommandStrategies.VersionCommands
 
         public string Name => Constants.CommandName.Version;
 
-        public string Execute(IEnumerable<string> inputParams)
+        public CommandResult Execute(IEnumerable<string> inputParams)
         {
             var printableInfos = new Dictionary<string, string>();
             foreach (var info in _reflection.GetOppoAssemblyInfos())
@@ -27,7 +27,7 @@ namespace Oppo.ObjectModel.CommandStrategies.VersionCommands
 
             _writer.WriteLines(printableInfos);
             OppoLogger.Info(LoggingText.VersionCommandCalled);
-            return Constants.CommandResults.Success;
+            return new CommandResult(true, string.Empty);
         }
 
         public string GetHelpText()

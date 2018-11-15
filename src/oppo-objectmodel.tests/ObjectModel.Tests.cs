@@ -3,6 +3,7 @@ using Moq;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using Oppo.Resources.text.logging;
 
 namespace Oppo.ObjectModel.Tests
 {
@@ -29,13 +30,14 @@ namespace Oppo.ObjectModel.Tests
             var slnInputParams = inputParams.Skip(1);
             var objectModel = new ObjectModel(factoryMock.Object);
             factoryMock.Setup(factory => factory.GetCommand(inputParams.FirstOrDefault())).Returns(commandMock.Object);
-            commandMock.Setup(s=>s.Execute(slnInputParams)).Returns(Constants.CommandResults.Success);
+            commandMock.Setup(s=>s.Execute(slnInputParams)).Returns(new CommandResult(true, "anyMsg"));
             
             // Act
             var executionResult = objectModel.ExecuteCommand(inputParams);
-                        
+
             // Assert
-            Assert.AreEqual(executionResult, Constants.CommandResults.Success);
+            Assert.IsTrue(executionResult.Sucsess);
+            Assert.AreEqual("anyMsg", executionResult.Message);
         }
 
         [Test]
@@ -48,7 +50,7 @@ namespace Oppo.ObjectModel.Tests
             var objectModel = new ObjectModel(factoryMock.Object);
             var errorWrittenOut = false;
             var loggerListener = new Mock<ILoggerListener>();            
-            loggerListener.Setup(logger => logger.Error(Resources.text.logging.LoggingText.NullInputParams_Msg, It.IsAny<ArgumentNullException>())).Callback(delegate { errorWrittenOut = true; });
+            loggerListener.Setup(logger => logger.Error(LoggingText.NullInputParams_Msg, It.IsAny<ArgumentNullException>())).Callback(delegate { errorWrittenOut = true; });
 
             OppoLogger.RegisterListener(loggerListener.Object);
 

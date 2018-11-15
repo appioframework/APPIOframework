@@ -17,7 +17,7 @@ namespace Oppo.ObjectModel.CommandStrategies.HelpCommands
 
         public string Name { get; private set; }
 
-        public string Execute(IEnumerable<string> inputParams)
+        public CommandResult Execute(IEnumerable<string> inputParams)
         {
             var helpOutput = new Dictionary<string, string>();
             _writer.WriteLine(Resources.text.help.HelpTextValues.HelpStartCommand);
@@ -30,7 +30,7 @@ namespace Oppo.ObjectModel.CommandStrategies.HelpCommands
             _writer.WriteLines(helpOutput);
             _writer.WriteLine(Resources.text.help.HelpTextValues.HelpEndCommand);
             OppoLogger.Info(LoggingText.OppoHelpCalled);
-            return Constants.CommandResults.Success;            
+            return new CommandResult(true, string.Empty);            
         }
 
         public string GetHelpText()

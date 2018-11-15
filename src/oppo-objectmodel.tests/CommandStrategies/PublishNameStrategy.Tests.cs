@@ -1,6 +1,7 @@
 ﻿using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies.PublishCommands;
+using Oppo.Resources.text.output;
 using Oppo.Resources.text.logging;
 
 namespace Oppo.ObjectModel.Tests.CommandStrategies
@@ -73,7 +74,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var result = objectUnderTest.Execute(new[] {applicationName});
 
             // Assert
-            Assert.AreEqual(Constants.CommandResults.Success, result);
+            Assert.IsTrue(result.Sucsess);
+            Assert.AreEqual(string.Format(OutputText.OpcuaappPublishSuccess, applicationName), result.Message);
             fileSystemMock.Verify(x => x.CreateDirectory(publishDirectory), Times.Once);
             fileSystemMock.Verify(x => x.CopyFile(applicationSourcePath, applicationTargetPath), Times.Once);
             loggerListenerMock.Verify(x => x.Info(LoggingText.OpcuaappPublishedSuccess), Times.Once);
@@ -95,7 +97,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var result = objectUnderTest.Execute(new[] {applicationName});
 
             // Assert
-            Assert.AreEqual(Constants.CommandResults.Failure, result);
+            Assert.IsFalse(result.Sucsess);
+            Assert.AreEqual(OutputText.OpcuaappPublishFailure, result.Message);
             loggerListenerMock.Verify(x => x.Warn(LoggingText.EmptyOpcuaappName), Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }

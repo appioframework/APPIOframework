@@ -3,6 +3,7 @@ using System.Linq;
 using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies.BuildCommands;
+using Oppo.Resources.text.output;
 
 namespace Oppo.ObjectModel.Tests.CommandStrategies
 {
@@ -91,17 +92,16 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var loggerListenerMock = new Mock<ILoggerListener>();
             loggerListenerMock.Setup(y => y.Info(It.IsAny<string>()));
             OppoLogger.RegisterListener(loggerListenerMock.Object);
-
-
+            
             // Act
             var strategyResult = buildStrategy.Execute(inputParams);
 
             // Assert
-            Assert.AreEqual(strategyResult, Constants.CommandResults.Success);
+            Assert.IsTrue(strategyResult.Sucsess);
+            Assert.AreEqual(string.Format(OutputText.OpcuaappBuildSuccess, projectDirectoryName), strategyResult.Message);
             fileSystemMock.VerifyAll();
             loggerListenerMock.Verify(y => y.Info(It.IsAny<string>()), Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
-
         }
 
         [Test]
@@ -118,7 +118,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var strategyResult = buildStrategy.Execute(inputParams);
 
             // Assert
-            Assert.AreEqual(strategyResult, Constants.CommandResults.Failure);
+            Assert.IsFalse(strategyResult.Sucsess);
+            Assert.AreEqual(OutputText.OpcuaappBuildFailure, strategyResult.Message);
             loggerListenerMock.Verify(y => y.Warn(It.IsAny<string>()),Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
@@ -143,7 +144,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var strategyResult = buildStrategy.Execute(new[] {"hugo"});
 
             // Assert
-            Assert.AreEqual(Constants.CommandResults.Failure, strategyResult);
+            Assert.IsFalse(strategyResult.Sucsess);
+            Assert.AreEqual(OutputText.OpcuaappBuildFailure, strategyResult.Message);
 
             loggerListenerMock.Verify(y => y.Warn(It.IsAny<string>()), Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);

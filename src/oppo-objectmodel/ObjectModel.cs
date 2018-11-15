@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using Oppo.Resources.text.logging;
 
 namespace Oppo.ObjectModel
 {
@@ -13,7 +14,7 @@ namespace Oppo.ObjectModel
             _commandStrategyFactory = commandStrategyFactory;
         }              
 
-        public string ExecuteCommand(IEnumerable<string> inputParams)
+        public CommandResult ExecuteCommand(IEnumerable<string> inputParams)
         {
             if (inputParams == null)
             {
@@ -23,7 +24,7 @@ namespace Oppo.ObjectModel
                 }
                 catch (Exception ex)
                 {
-                    OppoLogger.Error(Resources.text.logging.LoggingText.NullInputParams_Msg, ex);
+                    OppoLogger.Error(LoggingText.NullInputParams_Msg, ex);
                     throw;
                 }                
             }

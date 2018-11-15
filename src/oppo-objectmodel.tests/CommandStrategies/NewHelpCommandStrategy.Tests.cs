@@ -64,7 +64,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var result = objectUnderTest.Execute(inputParamsMock);
 
             // Assert
-            Assert.AreEqual(Constants.CommandResults.Success, result);
+            Assert.IsTrue(result.Sucsess);
+            Assert.AreEqual(string.Empty, result.Message);
             writerMock.Verify(x => x.WriteLine(It.IsAny<string>()));
             writerMock.Verify(x => x.WriteLines(It.IsAny<Dictionary<string, string>>()));
             loggerListenerMock.Verify(x => x.Info(LoggingText.OppoHelpForNewCommandCalled), Times.Once);

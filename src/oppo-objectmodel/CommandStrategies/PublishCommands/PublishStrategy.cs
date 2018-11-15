@@ -14,7 +14,7 @@ namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
 
         public string Name => Constants.CommandName.Publish;
 
-        public string Execute(IEnumerable<string> inputParams)
+        public CommandResult Execute(IEnumerable<string> inputParams)
         {
             var inputParamsArray = inputParams.ToArray();
             var commandName = inputParamsArray.ElementAt(0);

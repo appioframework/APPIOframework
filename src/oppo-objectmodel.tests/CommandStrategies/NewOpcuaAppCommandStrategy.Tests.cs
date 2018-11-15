@@ -3,6 +3,7 @@ using System.Linq;
 using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies.NewCommands;
+using Oppo.Resources.text.output;
 
 namespace Oppo.ObjectModel.Tests.CommandStrategies
 {
@@ -18,13 +19,20 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             };
         }
 
-        private static string[][] InvalidInputs()
+        private static string[][] InvalidInputsSeccondParam()
+        {
+            return new[]
+            {
+                new[] {"-n", "ab/yx"},
+                new[] {"-n", "ab\\yx"}                
+            };
+        }
+
+        private static string[][] InvalidInputsFistParam()
         {
             return new[]
             {
                 new[] {"-n", ""},
-                new[] {"-n", "ab/yx"},
-                new[] {"-n", "ab\\yx"},
                 new[] {"-N", "ab/yx"},
                 new[] {"", ""},
                 new[] {""},
@@ -77,15 +85,15 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _fileSystemMock.Setup(f => f.CombinePaths(projectDirectoryName, Constants.FileName.SourceCode_meson_build)).Returns(mesonBuildFilePath);
             _fileSystemMock.Setup(f => f.CombinePaths(opcuaSourceCode, Constants.FileName.SourceCode_main_c)).Returns(maincFile);
             _fileSystemMock.Setup(f => f.CombinePaths(opcuaSourceCode, Constants.FileName.SourceCode_open62541_c)).Returns(open62541cFile);
-            _fileSystemMock.Setup(f => f.CombinePaths(opcuaSourceCode, Constants.FileName.SourceCode_open62541_h)).Returns(open62541hFile);
-            
+            _fileSystemMock.Setup(f => f.CombinePaths(opcuaSourceCode, Constants.FileName.SourceCode_open62541_h)).Returns(open62541hFile);            
 
             // Act
             var result = _objectUnderTest.Execute(inputParams);
 
             // Assert
             Assert.IsTrue(infoWrittenOut);
-            Assert.AreEqual(Constants.CommandResults.Success, result);
+            Assert.IsTrue(result.Sucsess);
+            Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandSuccess, inputParams.ElementAt(1)), result.Message);
             _fileSystemMock.Verify(x => x.CreateDirectory(projectDirectoryName), Times.Once);
             _fileSystemMock.Verify(x => x.CreateDirectory(opcuaSourceCode), Times.Once);
             _fileSystemMock.Verify(x => x.CreateFile(It.Is<string>(s=>s.StartsWith(opcuaSourceCode)), It.IsAny<string>()), Times.Exactly(3));
@@ -100,7 +108,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         }
 
         [Test]
-        public void NewOpcuaAppCommandStrategy_Should_IgnoreInput([ValueSource(nameof(InvalidInputs))] string[] inputParams)
+        public void NewOpcuaAppCommandStrategy_Should_IgnoreInput([ValueSource(nameof(InvalidInputsSeccondParam))] string[] inputParams)
         {
             // Arrange
             var loggerListenerMock = new Mock<ILoggerListener>();
@@ -118,7 +126,35 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             // Assert
             Assert.IsTrue(warnWrittenOut);
-            Assert.AreEqual(Constants.CommandResults.Failure, result);
+            Assert.IsFalse(result.Sucsess);
+            Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandFailure, inputParams.ElementAt(1)), result.Message);
+            _fileSystemMock.Verify(x => x.CreateDirectory(It.IsAny<string>()), Times.Never);
+            _fileSystemMock.Verify(x => x.CreateFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName), Times.Never);
+            RemoveLoggerListener(loggerListenerMock.Object);
+        }
+
+        [Test]
+        public void NewOpcuaAppCommandStrategy_Should_IgnoreInput_UnknownParms([ValueSource(nameof(InvalidInputsFistParam))] string[] inputParams)
+        {
+            // Arrange
+            var loggerListenerMock = new Mock<ILoggerListener>();
+            var warnWrittenOut = false;
+            loggerListenerMock.Setup(listener => listener.Warn(It.IsAny<string>())).Callback(delegate { warnWrittenOut = true; });
+            SetupOppoLogger(loggerListenerMock.Object);
+
+            var invalidNameCharsMock = new[] { '/' };
+            var invalidPathCharsMock = new[] { '\\' };
+            _fileSystemMock.Setup(x => x.GetInvalidFileNameChars()).Returns(invalidNameCharsMock);
+            _fileSystemMock.Setup(x => x.GetInvalidPathChars()).Returns(invalidPathCharsMock);
+
+            // Act
+            var result = _objectUnderTest.Execute(inputParams);
+
+            // Assert
+            Assert.IsTrue(warnWrittenOut);
+            Assert.IsFalse(result.Sucsess);
+            Assert.AreEqual(OutputText.NewOpcuaappCommandFailureUnknownParam, result.Message);
             _fileSystemMock.Verify(x => x.CreateDirectory(It.IsAny<string>()), Times.Never);
             _fileSystemMock.Verify(x => x.CreateFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             _fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName), Times.Never);

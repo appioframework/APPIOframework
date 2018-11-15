@@ -16,7 +16,7 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
         [ExcludeFromCodeCoverage]
         public string Name => Constants.CommandName.New;
 
-        public string Execute(IEnumerable<string> inputParams)
+        public CommandResult Execute(IEnumerable<string> inputParams)
         {
             var inputsParamsArray = inputParams.ToArray();
             var commandName = inputsParamsArray.First();

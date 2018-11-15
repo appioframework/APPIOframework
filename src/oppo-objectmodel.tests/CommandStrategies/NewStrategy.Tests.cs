@@ -49,7 +49,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             // Arrange
             var commandMock = new Mock<ICommand<NewStrategy>>();
-            commandMock.Setup(x => x.Execute(It.IsAny<IEnumerable<string>>())).Returns(data.Result);
+            commandMock.Setup(x => x.Execute(It.IsAny<IEnumerable<string>>())).Returns(new CommandResult(true, data.Result));
             var factoryMock = new Mock<ICommandFactory<NewStrategy>>();
             factoryMock.Setup(x => x.GetCommand(data.Input.First())).Returns(commandMock.Object);
             var objectUnderTest = new NewStrategy(factoryMock.Object);
@@ -58,7 +58,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var result = objectUnderTest.Execute(data.Input);
 
             // Assert
-            Assert.AreEqual(data.Result, result);
+            Assert.IsTrue(result.Sucsess);
+            Assert.AreEqual(data.Result, result.Message);
         }
 
         [Test]

@@ -56,10 +56,10 @@ namespace Oppo.ObjectModel
         {
             public string Name => string.Empty;
 
-            public string Execute(IEnumerable<string> inputParams)
+            public CommandResult Execute(IEnumerable<string> inputParams)
             {
                 OppoLogger.Warn(LoggingText.UnknownCommandCalled);
-                return Constants.CommandResults.Failure;
+                return new CommandResult(false, Constants.CommandResults.Failure);
             }
 
             public string GetHelpText()

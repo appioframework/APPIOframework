@@ -4,6 +4,6 @@ namespace Oppo.ObjectModel
 {
     public interface IObjectModel
     {
-        string ExecuteCommand(IEnumerable<string> inputParams);
+        CommandResult ExecuteCommand(IEnumerable<string> inputParams);
     }
 }

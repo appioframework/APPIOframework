@@ -47,7 +47,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var strategyResult = helpStrategy.Execute(new string[] { });
 
             // Assert
-            Assert.AreEqual(strategyResult, Constants.CommandResults.Success);
+            Assert.IsTrue(strategyResult.Sucsess);
+            Assert.AreEqual(string.Empty, strategyResult.Message);
             writerMock.Verify(x => x.WriteLines(It.Is<Dictionary<string, string>>(d => d.ContainsValue(commandHelpText))), Times.Once);
             writerMock.Verify(x => x.WriteLine(It.Is<string>(l => l.Equals(Resources.text.help.HelpTextValues.HelpStartCommand))), Times.Once);
             writerMock.Verify(x => x.WriteLine(It.Is<string>(l => l.Equals(Resources.text.help.HelpTextValues.HelpEndCommand))), Times.Once);
@@ -66,7 +67,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var strategyResult = helpStrategy.Execute(new string[] { });
 
             // Assert
-            Assert.AreEqual(strategyResult, Constants.CommandResults.Success);
+            Assert.IsTrue(strategyResult.Sucsess);
+            Assert.AreEqual(string.Empty, strategyResult.Message);
             writerMock.Verify(x => x.WriteLine(It.Is<string>(l => l.Equals(Resources.text.help.HelpTextValues.HelpStartCommand))), Times.Once);
             writerMock.Verify(x => x.WriteLine(It.Is<string>(l => l.Equals(Resources.text.help.HelpTextValues.HelpEndCommand))), Times.Once);
         }

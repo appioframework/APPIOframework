@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Oppo.Resources.text.logging;
+using Oppo.Resources.text.output;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Oppo.ObjectModel.CommandStrategies.NewCommands
@@ -14,7 +16,7 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 
         public string Name => Constants.NewCommandName.OpcuaApp;
 
-        public string Execute(IEnumerable<string> inputParams)
+        public CommandResult Execute(IEnumerable<string> inputParams)
         {
             var inputParamsArray = inputParams.ToArray();
             var nameFlag = inputParamsArray.ElementAtOrDefault(0);
@@ -22,33 +24,33 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 
             if (nameFlag != Constants.NewOpcuaAppCommandArguments.Name && nameFlag != Constants.NewOpcuaAppCommandArguments.VerboseName)
             {
-                OppoLogger.Warn(Resources.text.logging.LoggingText.UnknownNewOpcuaappCommandParam);
-                return Constants.CommandResults.Failure;
+                OppoLogger.Warn(LoggingText.UnknownNewOpcuaappCommandParam);
+                return new CommandResult(false, OutputText.NewOpcuaappCommandFailureUnknownParam);
             }
 
             if (string.IsNullOrEmpty(opcuaAppName))
             {
-                OppoLogger.Warn(Resources.text.logging.LoggingText.EmptyOpcuaappName);
-                return Constants.CommandResults.Failure;
+                OppoLogger.Warn(LoggingText.EmptyOpcuaappName);
+                return new CommandResult(false, OutputText.NewOpcuaappCommandFailureUnknownParam);
             }
 
             if (_fileSystem.GetInvalidFileNameChars().Any(opcuaAppName.Contains))
             {
-                OppoLogger.Warn(Resources.text.logging.LoggingText.InvalidOpcuaappName);
-                return Constants.CommandResults.Failure;
+                OppoLogger.Warn(LoggingText.InvalidOpcuaappName);
+                return new CommandResult(false, string.Format(OutputText.NewOpcuaappCommandFailure, opcuaAppName));
             }
 
             if (_fileSystem.GetInvalidPathChars().Any(opcuaAppName.Contains))
             {
-                OppoLogger.Warn(Resources.text.logging.LoggingText.InvalidOpcuaappName);
-                return Constants.CommandResults.Failure;
+                OppoLogger.Warn(LoggingText.InvalidOpcuaappName);
+                return new CommandResult(false, string.Format(OutputText.NewOpcuaappCommandFailure, opcuaAppName));
             }
 
             DeployTemplateOpcuaApp(opcuaAppName);
             DeployTemplateOpcuaSourceFiles(opcuaAppName);
 
-            OppoLogger.Info(string.Format(Resources.text.logging.LoggingText.NewOpcuaappCommandSuccess, opcuaAppName));
-            return Constants.CommandResults.Success;
+            OppoLogger.Info(string.Format(LoggingText.NewOpcuaappCommandSuccess, opcuaAppName));
+            return new CommandResult(true, string.Format(OutputText.NewOpcuaappCommandSuccess, opcuaAppName));
         }
 
         public string GetHelpText()
