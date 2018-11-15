@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Oppo.Resources.text.logging;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
@@ -21,6 +22,7 @@ namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
 
             if (string.IsNullOrEmpty(projectName))
             {
+                OppoLogger.Warn(LoggingText.EmptyOpcuaappName);
                 return Constants.CommandResults.Failure;
             }
 
@@ -33,6 +35,7 @@ namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
             _fileSystem.CreateDirectory(projectPublishDirectory);
             _fileSystem.CopyFile(applicationFileBuildLocation, applicationFilePublishLocation);
 
+            OppoLogger.Info(LoggingText.OpcuaappPublishedSuccess);
             return Constants.CommandResults.Success;
         }
 

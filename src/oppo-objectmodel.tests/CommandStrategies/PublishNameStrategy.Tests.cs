@@ -1,6 +1,7 @@
 ﻿using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies.PublishCommands;
+using Oppo.Resources.text.logging;
 
 namespace Oppo.ObjectModel.Tests.CommandStrategies
 {
@@ -57,6 +58,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             const string applicationSourcePath = "source";
             const string applicationTargetPath = "target";
 
+            var loggerListenerMock = new Mock<ILoggerListener>();
+            loggerListenerMock.Setup(x => x.Info(LoggingText.OpcuaappPublishedSuccess));
+            OppoLogger.RegisterListener(loggerListenerMock.Object);
+
             var fileSystemMock = new Mock<IFileSystem>();
             fileSystemMock.Setup(x => x.CombinePaths(applicationName, Constants.DirectoryName.Publish)).Returns(publishDirectory);
             fileSystemMock.Setup(x => x.CombinePaths(applicationName, Constants.DirectoryName.MesonBuild)).Returns(buildDirectory);
@@ -71,6 +76,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.AreEqual(Constants.CommandResults.Success, result);
             fileSystemMock.Verify(x => x.CreateDirectory(publishDirectory), Times.Once);
             fileSystemMock.Verify(x => x.CopyFile(applicationSourcePath, applicationTargetPath), Times.Once);
+            loggerListenerMock.Verify(x => x.Info(LoggingText.OpcuaappPublishedSuccess), Times.Once);
+            OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
 
         [TestCase(null)]
@@ -80,12 +87,17 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Arrange
             var fileSystemMock = new Mock<IFileSystem>();
             var objectUnderTest = new PublishNameStrategy(string.Empty, fileSystemMock.Object);
+            var loggerListenerMock = new Mock<ILoggerListener>();
+            loggerListenerMock.Setup(x => x.Warn(LoggingText.EmptyOpcuaappName));
+            OppoLogger.RegisterListener(loggerListenerMock.Object);
 
             // Act
             var result = objectUnderTest.Execute(new[] {applicationName});
 
             // Assert
             Assert.AreEqual(Constants.CommandResults.Failure, result);
+            loggerListenerMock.Verify(x => x.Warn(LoggingText.EmptyOpcuaappName), Times.Once);
+            OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
     }
 }

@@ -2,6 +2,7 @@
 using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies.PublishCommands;
+using Oppo.Resources.text.logging;
 
 namespace Oppo.ObjectModel.Tests.CommandStrategies
 {
@@ -55,6 +56,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var writerMock = new Mock<IWriter>();
             var objectUnderTest = new PublishHelpStrategy(string.Empty, writerMock.Object);
 
+            var loggerListenerMock = new Mock<ILoggerListener>();
+            loggerListenerMock.Setup(x => x.Info(LoggingText.OpcuaappPublishHelpCalled));
+            OppoLogger.RegisterListener(loggerListenerMock.Object);
+
             // Act
             var result = objectUnderTest.Execute(new string[0]);
 
@@ -62,6 +67,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.AreEqual(Constants.CommandResults.Success, result);
             writerMock.Verify(x=>x.WriteLine(It.IsAny<string>()));
             writerMock.Verify(x=>x.WriteLines(It.IsAny<Dictionary<string, string>>()));
+            loggerListenerMock.Verify(x => x.Info(LoggingText.OpcuaappPublishHelpCalled), Times.Once);
+            OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
     }   
 }

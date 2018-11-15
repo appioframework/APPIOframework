@@ -16,10 +16,7 @@ namespace Oppo.Resources.text.logging
         public const string MesonExecutableFails = "Meson Failed!";
         public const string NinjaExecutableFails = "Ninja Failed!";
         public const string BuildSuccess = "Build Success!";
-
-
-
-
-
+        public const string OpcuaappPublishedSuccess = "Publish Success!";
+        public const string OpcuaappPublishHelpCalled = "Publish <command> --help called";        
     }
 }
