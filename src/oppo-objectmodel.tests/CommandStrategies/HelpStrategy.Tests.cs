@@ -1,6 +1,7 @@
 using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies.HelpCommands;
+using Oppo.Resources.text.logging;
 using System.Collections.Generic;
 
 namespace Oppo.ObjectModel.Tests.CommandStrategies
@@ -27,6 +28,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             const string commandName = "any-name";
             const string commandHelpText = "any help text \r\n maybe with multiple lines ...";
 
+            var loggerListenerMock = new Mock<ILoggerListener>();
+            loggerListenerMock.Setup(x => x.Info(LoggingText.OppoHelpCalled));
+            OppoLogger.RegisterListener(loggerListenerMock.Object);
+
             var writerMock = new Mock<IWriter>();
             var commandMock = new Mock<ICommand<ObjectModel>>();
             commandMock.Setup(x => x.Name).Returns(commandName);
@@ -46,6 +51,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             writerMock.Verify(x => x.WriteLines(It.Is<Dictionary<string, string>>(d => d.ContainsValue(commandHelpText))), Times.Once);
             writerMock.Verify(x => x.WriteLine(It.Is<string>(l => l.Equals(Resources.text.help.HelpTextValues.HelpStartCommand))), Times.Once);
             writerMock.Verify(x => x.WriteLine(It.Is<string>(l => l.Equals(Resources.text.help.HelpTextValues.HelpEndCommand))), Times.Once);
+            loggerListenerMock.Verify(x => x.Info(LoggingText.OppoHelpCalled), Times.Once);
+            OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
 
         [Test]

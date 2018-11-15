@@ -1,6 +1,7 @@
 using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies.BuildCommands;
+using Oppo.Resources.text.logging;
 using System.Collections.Generic;
 
 namespace Oppo.ObjectModel.Tests.CommandStrategies
@@ -70,12 +71,18 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var strategy = new BuildHelpStrategy(string.Empty, mockWriter.Object, new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
             strategy.CommandFactory = mockBuildCommandFactory.Object;
 
+            var loggerListenerMock = new Mock<ILoggerListener>();
+            loggerListenerMock.Setup(x => x.Info(LoggingText.OppoHelpForBuildCommandCalled));
+            OppoLogger.RegisterListener(loggerListenerMock.Object);
+
             // Act
             var strategyResult = strategy.Execute(new string[] {});
 
             // Assert
             Assert.AreEqual(strategyResult, Constants.CommandResults.Success);
             mockWriter.Verify(x=>x.WriteLines(It.IsAny<Dictionary<string, string>>()));
+            loggerListenerMock.Verify(x => x.Info(LoggingText.OppoHelpForBuildCommandCalled), Times.Once);
+            OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
     }
 }

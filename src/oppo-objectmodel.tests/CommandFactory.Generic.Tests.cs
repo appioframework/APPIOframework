@@ -3,6 +3,7 @@ using System.Linq;
 using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.Exceptions;
+using Oppo.Resources.text.logging;
 
 namespace Oppo.ObjectModel.Tests
 {
@@ -129,12 +130,17 @@ namespace Oppo.ObjectModel.Tests
             var commandArrayMock = new ICommand<object>[0];
             var objectUnderTest = new CommandFactory<object>(commandArrayMock, string.Empty);
             var command = objectUnderTest.GetCommand("any-name");
+            var loggerListenerMock = new Mock<ILoggerListener>();
+            loggerListenerMock.Setup(x => x.Warn(LoggingText.UnknownCommandCalled));
+            OppoLogger.RegisterListener(loggerListenerMock.Object);
 
             // Act
             var commandResult = command.Execute(new string[0]);
             
             // Assert
             Assert.AreEqual(Constants.CommandResults.Failure, commandResult);
+            loggerListenerMock.Verify(x => x.Warn(LoggingText.UnknownCommandCalled), Times.Once);
+            OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
 
         [Test]

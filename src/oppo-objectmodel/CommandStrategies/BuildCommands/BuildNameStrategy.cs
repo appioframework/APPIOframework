@@ -22,7 +22,6 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
             var projectName = inputParamsArray.ElementAtOrDefault(0);
 
             if (string.IsNullOrEmpty(projectName))
-
             {
                 OppoLogger.Warn( LoggingText.InvalidOpcuaappName);
                 return Constants.CommandResults.Failure;
@@ -37,11 +36,11 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
             }
             var ninjaResult = _fileSystem.CallExecutable(Constants.ExecutableName.Ninja, buildDirectory, string.Empty);
             if (!ninjaResult)
-
             {
                 OppoLogger.Warn(LoggingText.NinjaExecutableFails);
                 return Constants.CommandResults.Failure;
             }
+
             OppoLogger.Info(LoggingText.BuildSuccess);
             return Constants.CommandResults.Success;
         }

@@ -17,6 +17,12 @@ namespace Oppo.Resources.text.logging
         public const string NinjaExecutableFails = "Ninja Failed!";
         public const string BuildSuccess = "Build Success!";
         public const string OpcuaappPublishedSuccess = "Publish Success!";
-        public const string OpcuaappPublishHelpCalled = "Publish <command> --help called";        
+        public const string OpcuaappPublishHelpCalled = "Publish <command> --help called";
+        public const string OppoHelpCalled = "Help <command> called";
+        public const string OppoHelpForNewCommandCalled = "Help for new <command> called";
+        public const string OppoHelpForBuildCommandCalled = "Help for build <command> called";
+        public const string UnknownCommandCalled = "Unknown <command> called";       
+
+
     }
 }

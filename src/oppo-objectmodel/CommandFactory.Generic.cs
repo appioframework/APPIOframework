@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Oppo.ObjectModel.Exceptions;
+using Oppo.Resources.text.logging;
 
 namespace Oppo.ObjectModel
 {
@@ -57,6 +58,7 @@ namespace Oppo.ObjectModel
 
             public string Execute(IEnumerable<string> inputParams)
             {
+                OppoLogger.Warn(LoggingText.UnknownCommandCalled);
                 return Constants.CommandResults.Failure;
             }
 

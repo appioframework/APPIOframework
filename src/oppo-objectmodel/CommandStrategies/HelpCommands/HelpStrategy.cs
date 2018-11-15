@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Oppo.Resources.text.logging;
+using System.Collections.Generic;
 
 namespace Oppo.ObjectModel.CommandStrategies.HelpCommands
 {
@@ -28,6 +29,7 @@ namespace Oppo.ObjectModel.CommandStrategies.HelpCommands
             
             _writer.WriteLines(helpOutput);
             _writer.WriteLine(Resources.text.help.HelpTextValues.HelpEndCommand);
+            OppoLogger.Info(LoggingText.OppoHelpCalled);
             return Constants.CommandResults.Success;            
         }
 
