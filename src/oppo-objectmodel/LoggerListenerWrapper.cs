@@ -1,28 +1,41 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Diagnostics.CodeAnalysis;
-
-[assembly: log4net.Config.XmlConfigurator(ConfigFile = "/usr/bin/oppo.log4net.config")]
+using System.IO;
 
 namespace Oppo.ObjectModel
 {
     [ExcludeFromCodeCoverage]
     public class LoggerListenerWrapper : ILoggerListener
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly ILog _log;
+        private readonly string _loggerFileName = "oppo.log4net.config";
+        private readonly string _loggerRepositoryName = "Oppo";
+        private readonly string _loggerName = "log4netFileLogger";
 
+        public LoggerListenerWrapper()
+        {
+            var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            var log4netConfig = _loggerFileName;
+            var log4netInfo = new FileInfo(Path.Combine(baseDirectory, log4netConfig));
+            var loggerRepository = log4net.LogManager.CreateRepository(_loggerRepositoryName);
+            log4net.Config.XmlConfigurator.Configure(loggerRepository, log4netInfo);
+            _log = LogManager.GetLogger(_loggerRepositoryName, _loggerName);
+        }
+        
         public void Error(string message, Exception exception)
         {
-            log.Error(message, exception);
+            _log.Error(message, exception);
         }
 
         public void Info(string message)
         {
-            log.Info(message);
+            _log.Info(message);
         }
 
         public void Warn(string message)
         {
-            log.Warn(message);
+            _log.Warn(message);
         }
     }
 }
