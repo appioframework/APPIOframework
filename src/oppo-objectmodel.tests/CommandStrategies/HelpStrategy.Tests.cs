@@ -12,10 +12,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void HelpStrategy_Should_ImplementICommandOfObjectModel()
         {
             // Arrange
-            var writerMock = new Mock<IWriter>();
 
             // Act
-            var objectUnderTest = new HelpStrategy(string.Empty, writerMock.Object);
+            var objectUnderTest = new HelpStrategy(string.Empty);
 
             // Assert
             Assert.IsInstanceOf<ICommand<ObjectModel>>(objectUnderTest);
@@ -32,7 +31,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             loggerListenerMock.Setup(x => x.Info(LoggingText.OppoHelpCalled));
             OppoLogger.RegisterListener(loggerListenerMock.Object);
 
-            var writerMock = new Mock<IWriter>();
             var commandMock = new Mock<ICommand<ObjectModel>>();
             commandMock.Setup(x => x.Name).Returns(commandName);
             commandMock.Setup(x => x.GetHelpText()).Returns(commandHelpText);
@@ -40,7 +38,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var factoryMock = new Mock<ICommandFactory<ObjectModel>>();
             factoryMock.Setup(x => x.Commands).Returns(new[] {commandMock.Object});
 
-            var helpStrategy = new HelpStrategy(string.Empty, writerMock.Object);
+            var helpStrategy = new HelpStrategy(string.Empty);
             helpStrategy.CommandFactory = factoryMock.Object;
 
             // Act
@@ -49,9 +47,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             Assert.IsTrue(strategyResult.Sucsess);
             Assert.AreEqual(string.Empty, strategyResult.Message);
-            writerMock.Verify(x => x.WriteLines(It.Is<Dictionary<string, string>>(d => d.ContainsValue(commandHelpText))), Times.Once);
-            writerMock.Verify(x => x.WriteLine(It.Is<string>(l => l.Equals(Resources.text.help.HelpTextValues.HelpStartCommand))), Times.Once);
-            writerMock.Verify(x => x.WriteLine(It.Is<string>(l => l.Equals(Resources.text.help.HelpTextValues.HelpEndCommand))), Times.Once);
+            Assert.IsNotNull(strategyResult.OutputText);
+            Assert.IsTrue(strategyResult.OutputText.ContainsKey(Resources.text.help.HelpTextValues.HelpStartCommand));
+            Assert.IsTrue(strategyResult.OutputText.ContainsValue(commandHelpText));
+            Assert.IsTrue(strategyResult.OutputText.ContainsKey(Resources.text.help.HelpTextValues.HelpEndCommand));
             loggerListenerMock.Verify(x => x.Info(LoggingText.OppoHelpCalled), Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
@@ -60,8 +59,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void HelpStrategy_Should_WriteSparseHelpTextIfNoCommandFactoryIsProvided()
         {
             // Arrange
-            var writerMock = new Mock<IWriter>();
-            var helpStrategy = new HelpStrategy(string.Empty, writerMock.Object);
+            var helpStrategy = new HelpStrategy(string.Empty);
 
             // Act
             var strategyResult = helpStrategy.Execute(new string[] { });
@@ -69,16 +67,16 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             Assert.IsTrue(strategyResult.Sucsess);
             Assert.AreEqual(string.Empty, strategyResult.Message);
-            writerMock.Verify(x => x.WriteLine(It.Is<string>(l => l.Equals(Resources.text.help.HelpTextValues.HelpStartCommand))), Times.Once);
-            writerMock.Verify(x => x.WriteLine(It.Is<string>(l => l.Equals(Resources.text.help.HelpTextValues.HelpEndCommand))), Times.Once);
+            Assert.IsNotNull(strategyResult.OutputText);
+            Assert.IsTrue(strategyResult.OutputText.ContainsKey(Resources.text.help.HelpTextValues.HelpStartCommand));
+            Assert.IsTrue(strategyResult.OutputText.ContainsKey(Resources.text.help.HelpTextValues.HelpEndCommand));
         }
 
         [Test]
         public void ShouldReturnHelpText()
         {
             // Arrange
-            var writerMock = new Mock<IWriter>();            
-            var helpStrategy = new HelpStrategy(string.Empty, writerMock.Object);
+            var helpStrategy = new HelpStrategy(string.Empty);
 
             // Act
             var helpText = helpStrategy.GetHelpText();
@@ -91,8 +89,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void ShouldReturnCommandName()
         {
             // Arrange
-            var writerMock = new Mock<IWriter>();
-            var helpStrategy = new HelpStrategy(string.Empty, writerMock.Object);
+            var helpStrategy = new HelpStrategy(string.Empty);
 
             // Act
             var commandName = helpStrategy.Name;

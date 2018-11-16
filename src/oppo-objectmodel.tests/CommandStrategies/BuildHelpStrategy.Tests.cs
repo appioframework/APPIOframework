@@ -21,10 +21,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void BuildHelpStrategy_Should_ImplementICommandOfObjectModel()
         {
             // Arrange
-            var mockWriter = new Mock<IWriter>();
             
             // Act
-            var objectUnderTest = new BuildHelpStrategy(string.Empty, mockWriter.Object, new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
+            var objectUnderTest = new BuildHelpStrategy(string.Empty, new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
 
             // Assert
             Assert.IsInstanceOf<ICommand<BuildStrategy>>(objectUnderTest);
@@ -34,8 +33,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void BuildHelpStrategy_Should_HaveCorrectCommandName()
         {
             // Arrange
-            var mockWriter = new Mock<IWriter>();
-            var objectUnderTest = new BuildHelpStrategy(string.Empty, mockWriter.Object, new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
+            var objectUnderTest = new BuildHelpStrategy(string.Empty, new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
 
             // Act
             var commandName = objectUnderTest.Name;
@@ -48,8 +46,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void BuildHelpStrategy_Should_ProvideExactHelpText()
         {
             // Arrange
-            var mockWriter = new Mock<IWriter>();
-            var objectUnderTest = new BuildHelpStrategy(string.Empty, mockWriter.Object, new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
+            var objectUnderTest = new BuildHelpStrategy(string.Empty, new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
 
             // Act
             var helpText = objectUnderTest.GetHelpText();
@@ -62,13 +59,12 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void BuildHelpStrategy_Should_ExecuteSuccess([ValueSource(nameof(ValidInputs))] string[] inputParams)
         {
             // Arrange
-            var mockWriter = new Mock<IWriter>();
             var mockCommand = new Mock<ICommand<BuildStrategy>>();
             mockCommand.Setup(x => x.Name).Returns("buildCommandName");
             mockCommand.Setup(x => x.GetHelpText()).Returns("buildCommandHelp");
             var mockBuildCommandFactory = new Mock<ICommandFactory<BuildStrategy>>();
             mockBuildCommandFactory.Setup(x => x.Commands).Returns(new ICommand<BuildStrategy>[] { mockCommand.Object});
-            var strategy = new BuildHelpStrategy(string.Empty, mockWriter.Object, new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
+            var strategy = new BuildHelpStrategy(string.Empty, new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
             strategy.CommandFactory = mockBuildCommandFactory.Object;
 
             var loggerListenerMock = new Mock<ILoggerListener>();
@@ -81,7 +77,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             Assert.IsTrue(strategyResult.Sucsess);
             Assert.AreEqual(string.Empty, strategyResult.Message);
-            mockWriter.Verify(x=>x.WriteLines(It.IsAny<Dictionary<string, string>>()));
+            Assert.IsNotNull(strategyResult.OutputText);
             loggerListenerMock.Verify(x => x.Info(LoggingText.OppoHelpForBuildCommandCalled), Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }

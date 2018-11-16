@@ -7,12 +7,10 @@ namespace Oppo.ObjectModel.CommandStrategies.VersionCommands
     public class VersionStrategy : ICommand<ObjectModel>
     {
         private readonly IReflection _reflection;
-        private readonly IWriter _writer;
 
-        public VersionStrategy(IReflection reflection, IWriter writer)
+        public VersionStrategy(IReflection reflection)
         {
             _reflection = reflection;
-            _writer = writer;
         }
 
         public string Name => Constants.CommandName.Version;
@@ -25,9 +23,8 @@ namespace Oppo.ObjectModel.CommandStrategies.VersionCommands
                 printableInfos.Add(info.AssemblyName, string.Format(Resources.text.version.VersionText.AssemblyVersionInfo, info.AssemblyVersion.ToPrintableString()));
             }
 
-            _writer.WriteLines(printableInfos);
             OppoLogger.Info(LoggingText.VersionCommandCalled);
-            return new CommandResult(true, string.Empty);
+            return new CommandResult(true, string.Empty, printableInfos);
         }
 
         public string GetHelpText()

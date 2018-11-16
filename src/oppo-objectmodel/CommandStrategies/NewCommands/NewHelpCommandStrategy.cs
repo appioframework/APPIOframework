@@ -5,11 +5,8 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 {
     public class NewHelpCommandStrategy : ICommand<NewStrategy>
     {
-        private readonly IWriter _writer;
-
-        public NewHelpCommandStrategy(string newHelpCommandName, IWriter writer)
+        public NewHelpCommandStrategy(string newHelpCommandName)
         {
-            _writer = writer;
             Name = newHelpCommandName;
         }
 
@@ -19,21 +16,19 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
         {
             var buildHelpOutput = new Dictionary<string, string>();
 
+            buildHelpOutput.Add("Arguments:", string.Empty);
             buildHelpOutput.Add("<Object>", "The object to create, can either be:");
-            buildHelpOutput.Add("   ", "  sln");
-            buildHelpOutput.Add("  ", "  opcuaapp");
+            buildHelpOutput.Add("   ", "slnopcuaapp2");
+            buildHelpOutput.Add("  ", "opcuaapp");
             buildHelpOutput.Add(" ", "");
             buildHelpOutput.Add("Options:", "");
             buildHelpOutput.Add("-n", "Name of the object to create");
             buildHelpOutput.Add("--name", "Name of the object to create");
             buildHelpOutput.Add("-h", "New help");
             buildHelpOutput.Add("--help", "New help");
-
-            _writer.WriteLine("Arguments:");
-
-            _writer.WriteLines(buildHelpOutput);
+                        
             OppoLogger.Info(LoggingText.OppoHelpForNewCommandCalled);
-            return new CommandResult(true, string.Empty);
+            return new CommandResult(true, string.Empty, buildHelpOutput);
         }
 
         public string GetHelpText()

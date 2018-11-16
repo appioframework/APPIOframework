@@ -5,11 +5,8 @@ namespace Oppo.ObjectModel.CommandStrategies.HelpCommands
 {
     public class HelpStrategy : ICommand<ObjectModel>
     {
-        private readonly IWriter _writer;
-
-        public HelpStrategy(string helpCommandName, IWriter writer)
+        public HelpStrategy(string helpCommandName)
         {
-            _writer = writer;
             Name = helpCommandName;
         }
 
@@ -20,17 +17,17 @@ namespace Oppo.ObjectModel.CommandStrategies.HelpCommands
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
             var helpOutput = new Dictionary<string, string>();
-            _writer.WriteLine(Resources.text.help.HelpTextValues.HelpStartCommand);
             
+            helpOutput.Add(Resources.text.help.HelpTextValues.HelpStartCommand, string.Empty);
+
             foreach (var command in CommandFactory?.Commands ?? new ICommand<ObjectModel>[0])
             {                
                 helpOutput.Add(command.Name, command.GetHelpText());
             }
-            
-            _writer.WriteLines(helpOutput);
-            _writer.WriteLine(Resources.text.help.HelpTextValues.HelpEndCommand);
+
+            helpOutput.Add(Resources.text.help.HelpTextValues.HelpEndCommand, string.Empty);
             OppoLogger.Info(LoggingText.OppoHelpCalled);
-            return new CommandResult(true, string.Empty);            
+            return new CommandResult(true, string.Empty, helpOutput);            
         }
 
         public string GetHelpText()

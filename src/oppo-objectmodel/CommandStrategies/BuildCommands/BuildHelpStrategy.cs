@@ -5,12 +5,10 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 {
     public class BuildHelpStrategy : ICommand<BuildStrategy>
     {
-        private readonly IWriter _writer;
         private readonly IEnumerable<KeyValuePair<string, string>> _helpText;
 
-        public BuildHelpStrategy(string buildHelpCommandName, IWriter writer, IEnumerable<KeyValuePair<string, string>> helpText)
+        public BuildHelpStrategy(string buildHelpCommandName, IEnumerable<KeyValuePair<string, string>> helpText)
         {
-            _writer = writer;
             _helpText = helpText;
             Name = buildHelpCommandName;
         }
@@ -27,9 +25,8 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
                 buildHelpOutput.Add(command.Name, command.GetHelpText());
             }
 
-            _writer.WriteLines(buildHelpOutput);
             OppoLogger.Info(LoggingText.OppoHelpForBuildCommandCalled);
-            return new CommandResult(true, string.Empty);
+            return new CommandResult(true, string.Empty, buildHelpOutput);
         }
 
         public string GetHelpText()

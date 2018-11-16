@@ -23,6 +23,12 @@ namespace Oppo.Terminal
 
             var commandResult = objectModel.ExecuteCommand(args);
             writer.WriteLine(commandResult.Message);
+
+            if (commandResult.OutputText != null)
+            {
+                writer.WriteLines(commandResult.OutputText);
+            }
+
             var commandResultSucces = commandResult.Sucsess;
             return commandResultSucces ? 0 : 1;
         }
@@ -36,7 +42,6 @@ namespace Oppo.Terminal
         private static ICommandFactory<ObjectModel.ObjectModel> CreateCommandFactory()
         {
             var reflection = new ReflectionWrapper();
-            var writer = new ConsoleWriter();
             var fileSystem = new FileSystemWrapper();
 
             var commands = new List<ICommand<ObjectModel.ObjectModel>>();
@@ -49,8 +54,8 @@ namespace Oppo.Terminal
                 new KeyValuePair<string, string>("Options:", "")       
             };
 
-            var buildHelpStrategy = new BuildHelpStrategy(Constants.BuildCommandArguments.Help, writer, buildHelpStrategyHelpText);
-            var buildHelpVerboseStrategy = new BuildHelpStrategy(Constants.BuildCommandArguments.VerboseHelp, writer, buildHelpStrategyHelpText);
+            var buildHelpStrategy = new BuildHelpStrategy(Constants.BuildCommandArguments.Help, buildHelpStrategyHelpText);
+            var buildHelpVerboseStrategy = new BuildHelpStrategy(Constants.BuildCommandArguments.VerboseHelp, buildHelpStrategyHelpText);
 
             var buildStrategies = new ICommand<BuildStrategy>[]
             {
@@ -65,20 +70,20 @@ namespace Oppo.Terminal
             buildHelpVerboseStrategy.CommandFactory = buildStrategyCommandFactory;
 
             commands.Add(new BuildStrategy(buildStrategyCommandFactory));
-            commands.Add(new HelloStrategy(writer));
+            commands.Add(new HelloStrategy());
 
-            var helpStrategy = new HelpStrategy(Constants.CommandName.Help, writer);
+            var helpStrategy = new HelpStrategy(Constants.CommandName.Help);
             commands.Add(helpStrategy);
 
-            var shortHelpStrategy = new HelpStrategy(Constants.CommandName.ShortHelp, writer);
+            var shortHelpStrategy = new HelpStrategy(Constants.CommandName.ShortHelp);
             commands.Add(shortHelpStrategy);
 
             var newStrategies = new ICommand<NewStrategy>[] 
             {
                 new NewSlnCommandStrategy(fileSystem),
                 new NewOpcuaAppCommandStrategy(fileSystem),
-                new NewHelpCommandStrategy(Constants.NewCommandName.Help, writer),
-                new NewHelpCommandStrategy(Constants.NewCommandName.VerboseHelp,writer)
+                new NewHelpCommandStrategy(Constants.NewCommandName.Help),
+                new NewHelpCommandStrategy(Constants.NewCommandName.VerboseHelp)
             };
 
             var newStrategyCommandFactory = new CommandFactory<NewStrategy>(newStrategies, Constants.NewCommandName.Help);
@@ -88,14 +93,14 @@ namespace Oppo.Terminal
             {
                 new PublishNameStrategy(Constants.PublishCommandArguments.Name, fileSystem),
                 new PublishNameStrategy(Constants.PublishCommandArguments.VerboseName, fileSystem),
-                new PublishHelpStrategy(Constants.PublishCommandArguments.Help, writer),
-                new PublishHelpStrategy(Constants.PublishCommandArguments.VerboseHelp, writer)
+                new PublishHelpStrategy(Constants.PublishCommandArguments.Help),
+                new PublishHelpStrategy(Constants.PublishCommandArguments.VerboseHelp)
             };
 
             var publishStrategyCommandFactory = new CommandFactory<PublishStrategy>(publishStrategies, Constants.PublishCommandArguments.Help);
             commands.Add(new PublishStrategy(publishStrategyCommandFactory));
 
-            commands.Add(new VersionStrategy(reflection, writer));            
+            commands.Add(new VersionStrategy(reflection));            
 
             var factory = new CommandFactory<ObjectModel.ObjectModel>(commands, Constants.CommandName.Help);
 

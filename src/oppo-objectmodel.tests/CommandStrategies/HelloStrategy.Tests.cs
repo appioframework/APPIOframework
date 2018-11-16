@@ -10,10 +10,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void HelloStrategy_Should_ImplementICommandOfObjectModel()
         {
             // Arrange
-            var writerMock = new Mock<IWriter>();
 
             // Act
-            var objectUnderTest = new HelloStrategy(writerMock.Object);
+            var objectUnderTest = new HelloStrategy();
 
             // Assert
             Assert.IsInstanceOf<ICommand<ObjectModel>>(objectUnderTest);
@@ -23,8 +22,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void HelloStrategy_Should_WriteHelloMessage()
         {
             // Arrange
-            var writerMock = new Mock<IWriter>();
-            var objectUnderTest = new HelloStrategy(writerMock.Object);
+            var objectUnderTest = new HelloStrategy();
             var inputArgsMock = new string[0];
 
             // Act
@@ -33,15 +31,14 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             Assert.IsTrue(result.Sucsess);
             Assert.AreEqual(string.Empty, result.Message);
-            writerMock.Verify(x => x.WriteLine(It.IsAny<string>()), Times.AtLeastOnce);
+            Assert.IsNotNull(result.OutputText);
         }
 
         [Test]
         public void ShouldReturnHelpText()
         {
             // Arrange
-            var writerMock = new Mock<IWriter>();
-            var helloStrategy = new HelloStrategy(writerMock.Object);
+            var helloStrategy = new HelloStrategy();
 
             // Act
             var helpText = helloStrategy.GetHelpText();
@@ -54,8 +51,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void ShouldReturnCommandName()
         {
             // Arrange
-            var writerMock = new Mock<IWriter>();
-            var helloStrategy = new HelloStrategy(writerMock.Object);
+            var helloStrategy = new HelloStrategy();
 
             // Act
             var commandName = helloStrategy.Name;

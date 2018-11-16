@@ -51,11 +51,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void VersionStrategy_Should_ImplementICommandOfObjectModel()
         {
             // Arrange
-            var writerMock = new Mock<IWriter>();
             var reflectionMock = new Mock<IReflection>();
 
             // Act
-            var objectUnderTest = new VersionStrategy(reflectionMock.Object, writerMock.Object);
+            var objectUnderTest = new VersionStrategy(reflectionMock.Object);
 
             // Assert
             Assert.IsInstanceOf<ICommand<ObjectModel>>(objectUnderTest);
@@ -65,10 +64,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void VersionStrategy_Should_PrintVersionInformation([ValueSource(nameof(Inputs))] string[] inputParams, [ValueSource(nameof(AssemblyInfos))] AssemblyInfo[] assemblyInfos)
         {
             // Arrange
-            var writerMock = new Mock<IWriter>();
             var reflectionMock = new Mock<IReflection>();
             reflectionMock.Setup(x => x.GetOppoAssemblyInfos()).Returns(assemblyInfos);
-            var objectUnderTest = new VersionStrategy(reflectionMock.Object, writerMock.Object);
+            var objectUnderTest = new VersionStrategy(reflectionMock.Object);
             var loggerListenerMock = new Mock<ILoggerListener>();
             loggerListenerMock.Setup(x => x.Info(LoggingText.VersionCommandCalled));
             OppoLogger.RegisterListener(loggerListenerMock.Object);
@@ -80,7 +78,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var versionRegex = new Regex(@"^\d+.\d+.\d+$");
             Assert.IsTrue(result.Sucsess);
             Assert.AreEqual(string.Empty, result.Message);
-            writerMock.Verify(x => x.WriteLines(It.Is<Dictionary<string, string>>(d => d.Values.All(v => versionRegex.IsMatch(v)))), Times.AtLeastOnce);
+            Assert.IsNotNull(result.OutputText);
+            Assert.IsTrue(result.OutputText.Values.All(v => versionRegex.IsMatch(v)));
             loggerListenerMock.Verify(x => x.Info(LoggingText.VersionCommandCalled), Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
@@ -89,9 +88,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void VersionStrategy_Should_ReturnEmptyHelpText()
         {
             // Arrange
-            var writerMock = new Mock<IWriter>();
             var reflectionMock = new Mock<IReflection>();
-            var newStrategy = new VersionStrategy(reflectionMock.Object, writerMock.Object);
+            var newStrategy = new VersionStrategy(reflectionMock.Object);
 
             // Act
             var helpText = newStrategy.GetHelpText();
@@ -104,9 +102,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void VersionStrategy_Should_ReturnCommandName()
         {
             // Arrange
-            var writerMock = new Mock<IWriter>();
             var reflectionMock = new Mock<IReflection>();
-            var newStrategy = new VersionStrategy(reflectionMock.Object, writerMock.Object);
+            var newStrategy = new VersionStrategy(reflectionMock.Object);
 
             // Act
             var commandName = newStrategy.Name;

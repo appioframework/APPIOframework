@@ -2,7 +2,7 @@
 {
     public static class HelpTextValues
     {
-        public const string HelpStartCommand = "\noppo commands:\n";
+        public const string HelpStartCommand = "oppo commands:";
         public const string BuildCommand = "This will build a oppo opcuaapp";
         public const string PublishCommand = "This will publish a oppo opcuaapp";
         public const string NewCommand = "This will create a new oppo solution or opcuaapp";

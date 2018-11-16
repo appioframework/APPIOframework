@@ -12,10 +12,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void PublishHelpStrategy_Should_ImplementICommandOfPublishStrategy()
         {
             // Arrange
-            var writerMock = new Mock<IWriter>();
 
             // Act
-            var objectUnderTest = new PublishHelpStrategy(string.Empty, writerMock.Object);
+            var objectUnderTest = new PublishHelpStrategy(string.Empty);
 
             // Assert
             Assert.IsInstanceOf<ICommand<PublishStrategy>>(objectUnderTest);
@@ -25,8 +24,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void PublishHelpStrategy_Should_ProvideCorrectCommandName()
         {
             // Arrange
-            var writerMock = new Mock<IWriter>();
-            var objectUnderTest = new PublishHelpStrategy(string.Empty, writerMock.Object);
+            var objectUnderTest = new PublishHelpStrategy(string.Empty);
 
             // Act
             var commandName = objectUnderTest.Name;
@@ -39,8 +37,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void PublishHelpStrategy_Should_ProvideEmptyHelpText()
         {
             // Arrange
-            var writerMock = new Mock<IWriter>();
-            var objectUnderTest = new PublishHelpStrategy(string.Empty, writerMock.Object);
+            var objectUnderTest = new PublishHelpStrategy(string.Empty);
 
             // Act
             var helpText = objectUnderTest.GetHelpText();
@@ -53,8 +50,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void PublishHelpStrategy_Should_WriteHelpText()
         {
             // Arrange
-            var writerMock = new Mock<IWriter>();
-            var objectUnderTest = new PublishHelpStrategy(string.Empty, writerMock.Object);
+            var objectUnderTest = new PublishHelpStrategy(string.Empty);
 
             var loggerListenerMock = new Mock<ILoggerListener>();
             loggerListenerMock.Setup(x => x.Info(LoggingText.OpcuaappPublishHelpCalled));
@@ -66,8 +62,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             Assert.IsTrue(result.Sucsess);
             Assert.AreEqual(string.Empty, result.Message);
-            writerMock.Verify(x=>x.WriteLine(It.IsAny<string>()));
-            writerMock.Verify(x=>x.WriteLines(It.IsAny<Dictionary<string, string>>()));
+            Assert.IsNotNull(result.OutputText);
             loggerListenerMock.Verify(x => x.Info(LoggingText.OpcuaappPublishHelpCalled), Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }

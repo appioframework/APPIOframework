@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Oppo.Terminal
+namespace Oppo.ObjectModel
 {
     public interface IWriter
     {

@@ -4,19 +4,13 @@ namespace Oppo.ObjectModel.CommandStrategies.HelloCommands
 {
     public class HelloStrategy : ICommand<ObjectModel>
     {
-        private readonly IWriter _writer;
-
-        public HelloStrategy(IWriter writer)
-        {
-            _writer = writer;
-        }
-
         public string Name => Constants.CommandName.Hello;
 
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
-            _writer.WriteLine(Constants.HelloString);
-            return new CommandResult(true, string.Empty);
+            var outputMessage = new Dictionary<string, string>();
+            outputMessage.Add(Constants.HelloString, string.Empty);            
+            return new CommandResult(true, string.Empty, outputMessage);
         }
 
         public string GetHelpText()

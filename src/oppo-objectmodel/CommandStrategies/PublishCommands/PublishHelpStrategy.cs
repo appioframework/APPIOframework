@@ -5,11 +5,8 @@ namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
 {
     public class PublishHelpStrategy : ICommand<PublishStrategy>
     {
-        private readonly IWriter _writer;
-
-        public PublishHelpStrategy(string publishHelpCommandName, IWriter writer)
+        public PublishHelpStrategy(string publishHelpCommandName)
         {
-            _writer = writer;
             Name = publishHelpCommandName;
         }
 
@@ -19,6 +16,7 @@ namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
         {
             var buildHelpOutput = new Dictionary<string, string>();
 
+            buildHelpOutput.Add("Arguments:", string.Empty);
             buildHelpOutput.Add("<Project>", "The project directory to use");
             buildHelpOutput.Add(" ", "");
             buildHelpOutput.Add("Options:", "");
@@ -26,12 +24,9 @@ namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
             buildHelpOutput.Add("--name", "Project name");
             buildHelpOutput.Add("-h", "Publish help");
             buildHelpOutput.Add("--help", "Publish help");
-
-            _writer.WriteLine("Arguments:");
-
-            _writer.WriteLines(buildHelpOutput);
+            
             OppoLogger.Info(LoggingText.OpcuaappPublishHelpCalled);
-            return new CommandResult(true, string.Empty);
+            return new CommandResult(true, string.Empty, buildHelpOutput);
         }
 
         public string GetHelpText()
