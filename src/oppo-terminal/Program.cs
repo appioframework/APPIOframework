@@ -30,6 +30,12 @@ namespace Oppo.Terminal
                 writer.WriteLines(commandResult.OutputText);
             }
 
+            if (commandResult.Messages != null)
+            {
+                writer.Write(commandResult.Messages);
+            }
+
+
             var commandResultSucces = commandResult.Sucsess;
             return commandResultSucces ? 0 : 1;
         }

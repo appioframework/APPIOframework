@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
@@ -37,6 +38,29 @@ namespace Oppo.Terminal
                 if (key.Length > longestKey)
                 {
                     longestKey = key.Length;
+                }
+            }
+
+            return longestKey;
+        }
+
+        public void Write(IEnumerable<KeyValuePair<string, string>> messagesToWrite)
+        {
+            var longestKey = GetLongestKey(messagesToWrite);
+            foreach (var message in messagesToWrite)
+            {
+                System.Console.WriteLine(string.Format("{0}{1}", message.Key.PadRight(longestKey + 3, ' '), message.Value));
+            }
+        }
+
+        private static int GetLongestKey(IEnumerable<KeyValuePair<string, string>> messagesToWrite)
+        {
+            var longestKey = 0;
+            foreach (var message in messagesToWrite)
+            {
+                if (message.Key.Length > longestKey)
+                {
+                    longestKey = message.Key.Length;
                 }
             }
 

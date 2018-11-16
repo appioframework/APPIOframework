@@ -26,9 +26,21 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
             buildHelpOutput.Add("--name", "Name of the object to create");
             buildHelpOutput.Add("-h", "New help");
             buildHelpOutput.Add("--help", "New help");
-                        
+
+            var messages = new List<KeyValuePair<string, string>>();
+            messages.Add(new KeyValuePair<string, string>("Arguments:", string.Empty));
+            messages.Add(new KeyValuePair<string, string>("<Object>", "The object to create, can either be:"));
+            messages.Add(new KeyValuePair<string, string>(string.Empty, "sln"));
+            messages.Add(new KeyValuePair<string, string>(string.Empty, "opcuaapp"));
+            messages.Add(new KeyValuePair<string, string>(string.Empty, ""));
+            messages.Add(new KeyValuePair<string, string>("Options:", ""));
+            messages.Add(new KeyValuePair<string, string>("-n", "Name of the object to create"));
+            messages.Add(new KeyValuePair<string, string>("--name", "Name of the object to create"));
+            messages.Add(new KeyValuePair<string, string>("-h", "New help"));
+            messages.Add(new KeyValuePair<string, string>("--help", "New help"));
+
             OppoLogger.Info(LoggingText.OppoHelpForNewCommandCalled);
-            return new CommandResult(true, string.Empty, buildHelpOutput);
+            return new CommandResult(true, string.Empty, buildHelpOutput, messages);
         }
 
         public string GetHelpText()
