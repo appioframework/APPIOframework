@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Oppo.Resources.text.output
+﻿namespace Oppo.Resources.text.output
 {
     public static class OutputText
     {
@@ -19,5 +17,9 @@ namespace Oppo.Resources.text.output
         public const string NewSlnCommandSuccess = "solution with name '{0}' was successfully created";
         public const string NewSlnCommandFailure = "create solution with name '{0}' failed";
         public const string NewSlnCommandFailureUnknownParam = "create solution <command> failed";
+
+        // clean <command>
+        public const string OpcuaappCleanFailure = "Clean failure!";
+        public const string OpcuaappCleanSuccess = "Clean '{0}' Success!";
     }
 }

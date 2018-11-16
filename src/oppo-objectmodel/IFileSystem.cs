@@ -15,5 +15,7 @@ namespace Oppo.ObjectModel
         bool CallExecutable(string name, string workingDirectory, string args);
 
         void CopyFile(string source, string target);
+
+        void DeleteDirectory(string name);
     }    
 }

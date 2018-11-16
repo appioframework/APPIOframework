@@ -19,6 +19,7 @@ namespace Oppo.ObjectModel
             public const string Help = "help";
             public const string ShortHelp= "?";
             public const string Version= "version";
+            public const string Clean = "clean";
         }
 
         public static class CommandResults
@@ -82,6 +83,12 @@ namespace Oppo.ObjectModel
         {
             public const string Help = "-h";
             public const string VerboseHelp = "--help";
+            public const string Name = "-n";
+            public const string VerboseName = "--name";
+        }
+
+        public static class CleanCommandArguments
+        {
             public const string Name = "-n";
             public const string VerboseName = "--name";
         }

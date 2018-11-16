@@ -10,6 +10,7 @@
         public const string HelpCommand = "This prints the help";
         public const string HelloCommand = "This prints the hello oppo msg";
         public const string VersionCommand = "This prints the version information";
+        public const string CleanCommand = "This cleans a project (removes temporary files and folders)";
 
         public const string BuildHelpArgumentCommandDescription = "Build help";
         public const string BuildNameArgumentCommandDescription = "Project name";

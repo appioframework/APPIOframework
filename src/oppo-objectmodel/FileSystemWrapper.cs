@@ -30,6 +30,11 @@ namespace Oppo.ObjectModel
             File.Copy(source, target, true);
         }
 
+        public void DeleteDirectory(string name)
+        {
+            Directory.Delete(name, true);
+        }
+
         public void CreateDirectory(string directoryName)
         {
             Directory.CreateDirectory(directoryName);

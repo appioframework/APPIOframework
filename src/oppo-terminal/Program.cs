@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Oppo.ObjectModel;
 using Oppo.ObjectModel.CommandStrategies.BuildCommands;
+using Oppo.ObjectModel.CommandStrategies.CleanCommands;
 using Oppo.ObjectModel.CommandStrategies.HelloCommands;
 using Oppo.ObjectModel.CommandStrategies.HelpCommands;
 using Oppo.ObjectModel.CommandStrategies.NewCommands;
@@ -101,6 +102,8 @@ namespace Oppo.Terminal
             commands.Add(new PublishStrategy(publishStrategyCommandFactory));
 
             commands.Add(new VersionStrategy(reflection));            
+
+            commands.Add(new CleanStrategy(fileSystem));
 
             var factory = new CommandFactory<ObjectModel.ObjectModel>(commands, Constants.CommandName.Help);
 
