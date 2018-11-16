@@ -18,7 +18,7 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 
             buildHelpOutput.Add("Arguments:", string.Empty);
             buildHelpOutput.Add("<Object>", "The object to create, can either be:");
-            buildHelpOutput.Add("   ", "slnopcuaapp2");
+            buildHelpOutput.Add("   ", "sln");
             buildHelpOutput.Add("  ", "opcuaapp");
             buildHelpOutput.Add(" ", "");
             buildHelpOutput.Add("Options:", "");
