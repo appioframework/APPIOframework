@@ -14,5 +14,6 @@
 
         public const string BuildHelpArgumentCommandDescription = "Build help";
         public const string BuildNameArgumentCommandDescription = "Project name";
+        public const string CleanHelpArgumentCommandDescription = "Clean help";
     }
 }
