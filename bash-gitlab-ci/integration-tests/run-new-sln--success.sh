@@ -12,13 +12,13 @@ else
   oppo new sln -n "my-solution"
 fi
 
-if [ ! -f "my-solution.opposln" ];
+if [ ! -f "./my-solution.opposln" ];
 then
   echo "oppo solution file does not exist ..."
   exit 1
 fi
 
-if [ ! -f "oppo.log" ];
+if [ ! -f "./oppo.log" ];
 then
   echo "no log entry was created ..."
   exit 1

@@ -15,8 +15,8 @@ do
   
   echo "Testing command '${VAR_COMMAND}' ..."
 
-  mkdir new-opcuaapp--failure
-  cd    new-opcuaapp--failure
+  mkdir publish-opcuaapp--failure
+  cd    publish-opcuaapp--failure
 
   ${VAR_COMMAND}
 
@@ -26,14 +26,14 @@ do
     exit 1
   fi
 
-  if [ ! -f "oppo.log" ];
+  if [ ! -f "./oppo.log" ];
   then
     echo "no log entry was created ..."
     exit 1
   fi
 
   cd ..
-  rm -rf new-opcuaapp--failure
+  rm -rf publish-opcuaapp--failure
 
   echo "Testing command '${VAR_COMMAND}' ... done"
 done

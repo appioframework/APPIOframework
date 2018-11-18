@@ -15,13 +15,13 @@ else
   oppo publish -n "my-app"
 fi
 
-if [ ! -f "my-app/publish/app" ];
+if [ ! -f "./my-app/publish/app" ];
 then
   echo "published application file is missing ..."
   exit 1
 fi
 
-if [[ ! -x "my-app/publish/app" ]]
+if [[ ! -x "./my-app/publish/app" ]]
 then
   echo "published application file is not executable ..."
   exit 1
