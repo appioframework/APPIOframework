@@ -22,12 +22,15 @@ namespace Oppo.ObjectModel.CommandStrategies.CleanCommands
 
             if (string.IsNullOrEmpty(projectName))
             {
+                OppoLogger.Info(Resources.text.logging.LoggingText.CleanFailure);
                 return new CommandResult(false, Resources.text.output.OutputText.OpcuaappCleanFailure);
             }
 
             var buildDirectory = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.MesonBuild);
 
             _fileSystem.DeleteDirectory(buildDirectory);
+
+            OppoLogger.Info(Resources.text.logging.LoggingText.CleanSuccess);
 
             return new CommandResult(true, string.Format(Resources.text.output.OutputText.OpcuaappCleanSuccess, projectName));
         }

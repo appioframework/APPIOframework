@@ -93,10 +93,15 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _fileSystemMock.Setup(x => x.CombinePaths(projectName, Constants.DirectoryName.MesonBuild)).Returns(projectBuildDirectory);
             _fileSystemMock.Setup(x => x.DeleteDirectory(projectBuildDirectory));
 
+            var loggerListenerMock = new Mock<ILoggerListener>();
+            OppoLogger.RegisterListener(loggerListenerMock.Object);
+
             // Act
             var result = _objectUnderTest.Execute(inputParams);
 
             // Assert
+            OppoLogger.RemoveListener(loggerListenerMock.Object);
+            loggerListenerMock.Verify(x => x.Info(Resources.text.logging.LoggingText.CleanSuccess), Times.Once);
             Assert.IsTrue(result.Sucsess);
             Assert.AreEqual(resultMessage, result.Message);
         }
@@ -106,10 +111,15 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             // Arrange
 
+            var loggerListenerMock = new Mock<ILoggerListener>();
+            OppoLogger.RegisterListener(loggerListenerMock.Object);
+
             // Act
             var result = _objectUnderTest.Execute(inputParams);
 
             // Assert
+            OppoLogger.RemoveListener(loggerListenerMock.Object);
+            loggerListenerMock.Verify(x => x.Info(Resources.text.logging.LoggingText.CleanFailure), Times.Once);
             Assert.IsFalse(result.Sucsess);
             Assert.AreEqual(OutputText.OpcuaappCleanFailure, result.Message);
         }
