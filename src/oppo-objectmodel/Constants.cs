@@ -89,6 +89,8 @@ namespace Oppo.ObjectModel
 
         public static class CleanCommandArguments
         {
+            public const string Help = "-h";
+            public const string VerboseHelp = "--help";
             public const string Name = "-n";
             public const string VerboseName = "--name";
         }

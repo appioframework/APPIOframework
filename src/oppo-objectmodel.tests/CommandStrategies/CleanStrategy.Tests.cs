@@ -6,13 +6,13 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 {
     public class CleanStrategyTests
     {
-        private Mock<ICommandFactory<ObjectModel>> _factoryMock;
+        private Mock<ICommandFactory<CleanStrategy>> _factoryMock;
         private CleanStrategy _objectUnderTest;
 
         [SetUp]
         public void SetUp_ObjectUnderTest()
         {
-            _factoryMock = new Mock<ICommandFactory<ObjectModel>>();
+            _factoryMock = new Mock<ICommandFactory<CleanStrategy>>();
             _objectUnderTest = new CleanStrategy(_factoryMock.Object);
         }
 
@@ -58,7 +58,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var inputParams = new[] { "--any-param", "any-value" };
             var commandResultMock = new CommandResult(true, "any-message");
 
-            var commandMock = new Mock<ICommand<ObjectModel>>();
+            var commandMock = new Mock<ICommand<CleanStrategy>>();
             commandMock.Setup(x => x.Execute(It.IsAny<string[]>())).Returns(commandResultMock);
 
             _factoryMock.Setup(x => x.GetCommand("--any-param")).Returns(commandMock.Object);

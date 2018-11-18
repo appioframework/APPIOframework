@@ -5,22 +5,22 @@ namespace Oppo.ObjectModel.CommandStrategies.CleanCommands
 {
     public class CleanHelpStrategy : ICommand<CleanStrategy>
     {
-        private readonly ICommandFactory<CleanStrategy> _factory;
         private readonly KeyValuePair<string, string>[] _helpLines;
 
-        public CleanHelpStrategy(string name, ICommandFactory<CleanStrategy> factory, IEnumerable<KeyValuePair<string, string>> helpText)
+        public CleanHelpStrategy(string name, IEnumerable<KeyValuePair<string, string>> helpText)
         {
-            _factory = factory;
             _helpLines = helpText.ToArray();
             Name = name;
         }
+
+        public ICommandFactory<CleanStrategy> CommandFactory { get; set; }
 
         public string Name { get; }
 
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
             var outputText = new Dictionary<string, string>(_helpLines);
-            foreach (var command in _factory.Commands)
+            foreach (var command in CommandFactory.Commands)
             {
                 outputText.Add(command.Name, command.GetHelpText());
             }

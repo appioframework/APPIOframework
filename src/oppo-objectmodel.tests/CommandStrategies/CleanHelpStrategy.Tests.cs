@@ -14,15 +14,12 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             new KeyValuePair<string, string>("any-key", "any-value"),
         };
 
-        private Mock<ICommandFactory<CleanStrategy>> _factoryMock;
-
         private CleanHelpStrategy _objectUnderTest;
 
         [SetUp]
         public void SetUp_ObjectUnderTest()
         {
-            _factoryMock = new Mock<ICommandFactory<CleanStrategy>>();
-            _objectUnderTest = new CleanHelpStrategy(AnyCommandName, _factoryMock.Object, AnyHelpText);
+            _objectUnderTest = new CleanHelpStrategy(AnyCommandName, AnyHelpText);
         }
 
         [Test]
@@ -71,7 +68,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             commandMock.Setup(x => x.Name).Returns(commandName);
             commandMock.Setup(x => x.GetHelpText()).Returns(commandHelpText);
 
-            _factoryMock.Setup(x => x.Commands).Returns(new[] {commandMock.Object});
+            var factoryMock = new Mock<ICommandFactory<CleanStrategy>>();
+            factoryMock.Setup(x => x.Commands).Returns(new[] {commandMock.Object});
+
+            _objectUnderTest.CommandFactory = factoryMock.Object;
 
             // Act
             var result = _objectUnderTest.Execute(new string[0]);
@@ -81,7 +81,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsEmpty(result.Message);
             Assert.IsNotNull(result.OutputText);
 
-            _factoryMock.Verify(x => x.Commands, Times.AtLeastOnce);
+            factoryMock.Verify(x => x.Commands, Times.AtLeastOnce);
             commandMock.Verify(x => x.Name, Times.AtLeastOnce);
             commandMock.Verify(x => x.GetHelpText(), Times.AtLeastOnce);
         }

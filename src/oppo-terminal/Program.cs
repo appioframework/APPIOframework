@@ -101,9 +101,31 @@ namespace Oppo.Terminal
             var publishStrategyCommandFactory = new CommandFactory<PublishStrategy>(publishStrategies, Constants.PublishCommandArguments.Help);
             commands.Add(new PublishStrategy(publishStrategyCommandFactory));
 
-            commands.Add(new VersionStrategy(reflection));            
+            commands.Add(new VersionStrategy(reflection));
 
-            //commands.Add(new CleanStrategy(fileSystem));
+            var cleanHelpStrategyHelpText = new[]
+            {
+                new KeyValuePair<string, string>("Arguments:", ""),
+                new KeyValuePair<string, string>("<Project>", "The project directory to use"),
+                new KeyValuePair<string, string>(string.Empty, string.Empty),
+                new KeyValuePair<string, string>("Options:", "")
+            };
+
+            var cleanHelpStrategy = new CleanHelpStrategy(Constants.CleanCommandArguments.Help, cleanHelpStrategyHelpText);
+            var cleanHelpVerboseStrategy = new CleanHelpStrategy(Constants.CleanCommandArguments.VerboseHelp, cleanHelpStrategyHelpText);
+
+            var cleanStrategies = new ICommand<CleanStrategy>[]
+            {
+                new CleanNameStrategy(Constants.CleanCommandArguments.Name, fileSystem),
+                new CleanNameStrategy(Constants.CleanCommandArguments.VerboseName, fileSystem),
+                cleanHelpStrategy,
+                cleanHelpVerboseStrategy,
+            };
+            var cleanStrategyCommandFactory = new CommandFactory<CleanStrategy>(cleanStrategies, Constants.CleanCommandArguments.Help);
+            cleanHelpStrategy.CommandFactory = cleanStrategyCommandFactory;
+            cleanHelpVerboseStrategy.CommandFactory = cleanStrategyCommandFactory;
+
+            commands.Add(new CleanStrategy(cleanStrategyCommandFactory));
 
             var factory = new CommandFactory<ObjectModel.ObjectModel>(commands, Constants.CommandName.Help);
 

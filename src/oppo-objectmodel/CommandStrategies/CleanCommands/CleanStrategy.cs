@@ -5,9 +5,9 @@ namespace Oppo.ObjectModel.CommandStrategies.CleanCommands
 {
     public class CleanStrategy : ICommand<ObjectModel>
     {
-        private readonly ICommandFactory<ObjectModel> _factory;
+        private readonly ICommandFactory<CleanStrategy> _factory;
 
-        public CleanStrategy(ICommandFactory<ObjectModel> factory)
+        public CleanStrategy(ICommandFactory<CleanStrategy> factory)
         {
             _factory = factory;
         }
