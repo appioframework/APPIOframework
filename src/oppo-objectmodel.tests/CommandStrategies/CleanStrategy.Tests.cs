@@ -1,74 +1,19 @@
-﻿using System.Linq;
-using Moq;
+﻿using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies.CleanCommands;
-using Oppo.Resources.text.output;
 
 namespace Oppo.ObjectModel.Tests.CommandStrategies
 {
     public class CleanStrategyTests
     {
-        private static string[][] ValidInputs()
-        {
-            return new[]
-            {
-                new[]
-                {
-                    "-n",
-                    "any-name",
-                },
-                new[]
-                {
-                    "--name",
-                    "any-name",
-                },
-            };
-        }
-
-        private static string[][] InvalidInputs()
-        {
-            return new[]
-            {
-                new[]
-                {
-                    "-n",
-                },
-                new[]
-                {
-                    "-N",
-                    "any-name",
-                },
-                new[]
-                {
-                    "-n",
-                    "",
-                },
-                new[]
-                {
-                    "--name",
-                },
-                new[]
-                {
-                    "--Name",
-                    "any-name",
-                },
-                new[]
-                {
-                    "--Name",
-                    "",
-                },
-                new string[0], 
-            };
-        }
-
-        private Mock<IFileSystem> _fileSystemMock;
+        private Mock<ICommandFactory<ObjectModel>> _factoryMock;
         private CleanStrategy _objectUnderTest;
 
         [SetUp]
         public void SetUp_ObjectUnderTest()
         {
-            _fileSystemMock = new Mock<IFileSystem>();
-            _objectUnderTest = new CleanStrategy(_fileSystemMock.Object);
+            _factoryMock = new Mock<ICommandFactory<ObjectModel>>();
+            _objectUnderTest = new CleanStrategy(_factoryMock.Object);
         }
 
         [Test]
@@ -95,7 +40,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         }
 
         [Test]
-        public void CleanStrategy_Should_HaveCorrectHelpText()
+        public void CleanStrategy_Should_ProvideSomeHelpText()
         {
             // Arrange
 
@@ -107,35 +52,22 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         }
 
         [Test]
-        public void CleanStrategy_Should_CleanProjectOnValidProjectName([ValueSource(nameof(ValidInputs))] string[] inputParams)
+        public void CleanStrategy_Should_ExecuteCommand()
         {
             // Arrange
-            const string projectBuildDirectory = "build-dir";
-            var projectName = inputParams.ElementAt(1);
-            var resultMessage = string.Format(OutputText.OpcuaappCleanSuccess, projectName);
+            var inputParams = new[] { "--any-param", "any-value" };
+            var commandResultMock = new CommandResult(true, "any-message");
 
-            _fileSystemMock.Setup(x => x.CombinePaths(projectName, Constants.DirectoryName.MesonBuild)).Returns(projectBuildDirectory);
-            _fileSystemMock.Setup(x => x.DeleteDirectory(projectBuildDirectory));
+            var commandMock = new Mock<ICommand<ObjectModel>>();
+            commandMock.Setup(x => x.Execute(It.IsAny<string[]>())).Returns(commandResultMock);
+
+            _factoryMock.Setup(x => x.GetCommand("--any-param")).Returns(commandMock.Object);
 
             // Act
             var result = _objectUnderTest.Execute(inputParams);
 
             // Assert
-            Assert.IsTrue(result.Sucsess);
-            Assert.AreEqual(resultMessage, result.Message);
-        }
-
-        [Test]
-        public void CleanStrategy_Should_IgnoreMissingParameters([ValueSource(nameof(InvalidInputs))] string[] inputParams)
-        {
-            // Arrange
-
-            // Act
-            var result = _objectUnderTest.Execute(inputParams);
-
-            // Assert
-            Assert.IsFalse(result.Sucsess);
-            Assert.AreEqual(OutputText.OpcuaappCleanFailure, result.Message);
+            Assert.AreEqual(commandResultMock, result);
         }
     }
 }

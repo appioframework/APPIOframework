@@ -5,11 +5,11 @@ namespace Oppo.ObjectModel.CommandStrategies.CleanCommands
 {
     public class CleanStrategy : ICommand<ObjectModel>
     {
-        private readonly IFileSystem _fileSystem;
+        private readonly ICommandFactory<ObjectModel> _factory;
 
-        public CleanStrategy(IFileSystem fileSystem)
+        public CleanStrategy(ICommandFactory<ObjectModel> factory)
         {
-            _fileSystem = fileSystem;
+            _factory = factory;
         }
 
         public string Name => Constants.CommandName.Clean;
@@ -17,23 +17,10 @@ namespace Oppo.ObjectModel.CommandStrategies.CleanCommands
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
             var inputParamsArray = inputParams.ToArray();
-            var nameFlag = inputParamsArray.ElementAtOrDefault(0);
-            var projectName = inputParamsArray.ElementAtOrDefault(1);
-            if (nameFlag != Constants.CleanCommandArguments.Name && nameFlag != Constants.CleanCommandArguments.VerboseName)
-            {
-                return new CommandResult(false, Resources.text.output.OutputText.OpcuaappCleanFailure);
-            }
-
-            if (string.IsNullOrEmpty(projectName))
-            {
-                return new CommandResult(false, Resources.text.output.OutputText.OpcuaappCleanFailure);
-            }
-
-            var buildDirectory = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.MesonBuild);
-
-            _fileSystem.DeleteDirectory(buildDirectory);
-
-            return new CommandResult(true, string.Format(Resources.text.output.OutputText.OpcuaappCleanSuccess, projectName));
+            var commandName = inputParamsArray.ElementAt(0);
+            var commandParams = inputParamsArray.Skip(1).ToArray();
+            var command = _factory.GetCommand(commandName);
+            return command.Execute(commandParams);
         }
 
         public string GetHelpText()

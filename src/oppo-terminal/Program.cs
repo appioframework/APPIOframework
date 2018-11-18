@@ -103,7 +103,7 @@ namespace Oppo.Terminal
 
             commands.Add(new VersionStrategy(reflection));            
 
-            commands.Add(new CleanStrategy(fileSystem));
+            //commands.Add(new CleanStrategy(fileSystem));
 
             var factory = new CommandFactory<ObjectModel.ObjectModel>(commands, Constants.CommandName.Help);
 
