@@ -19,6 +19,7 @@ namespace Oppo.ObjectModel.CommandStrategies.CleanCommands
 
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
+            OppoLogger.Info(Resources.text.logging.LoggingText.OppoHelpForCleanCommandCalled);
             var outputText = new Dictionary<string, string>(_helpLines);
             foreach (var command in CommandFactory.Commands)
             {

@@ -21,6 +21,7 @@ namespace Oppo.Resources.text.logging
         public const string OppoHelpCalled = "Help <command> called";
         public const string OppoHelpForNewCommandCalled = "Help for new <command> called";
         public const string OppoHelpForBuildCommandCalled = "Help for build <command> called";
+        public const string OppoHelpForCleanCommandCalled = "Help for clean <command> called";
         public const string UnknownCommandCalled = "Unknown <command> called";
         public const string VersionCommandCalled = "version <command> called";
     }

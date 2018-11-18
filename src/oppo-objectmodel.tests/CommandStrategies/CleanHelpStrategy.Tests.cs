@@ -73,14 +73,20 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             _objectUnderTest.CommandFactory = factoryMock.Object;
 
+            var loggerListenerMock = new Mock<ILoggerListener>();
+            OppoLogger.RegisterListener(loggerListenerMock.Object);
+
             // Act
             var result = _objectUnderTest.Execute(new string[0]);
 
             // Assert
+            OppoLogger.RemoveListener(loggerListenerMock.Object);
+
             Assert.IsTrue(result.Sucsess);
             Assert.IsEmpty(result.Message);
             Assert.IsNotNull(result.OutputText);
 
+            loggerListenerMock.Verify(x => x.Info(Resources.text.logging.LoggingText.OppoHelpForCleanCommandCalled), Times.Once);
             factoryMock.Verify(x => x.Commands, Times.AtLeastOnce);
             commandMock.Verify(x => x.Name, Times.AtLeastOnce);
             commandMock.Verify(x => x.GetHelpText(), Times.AtLeastOnce);
