@@ -2,12 +2,12 @@
 
 set -uo pipefail
 
-VAR_COMMANDS[0]="oppo publish opcuaapp --name \"my/\-app\""
-VAR_COMMANDS[1]="oppo publish opcuaapp -n     \"my/\-app\""
-VAR_COMMANDS[2]="oppo publish opcuaapp --name"
-VAR_COMMANDS[3]="oppo publish opcuaapp -n"
-VAR_COMMANDS[4]="oppo publish opcuaapp --exit"
-VAR_COMMANDS[5]="oppo publish opcuaapp -x"
+VAR_COMMANDS[0]="oppo publish --name \"my/\-app\""
+VAR_COMMANDS[1]="oppo publish -n     \"my/\-app\""
+VAR_COMMANDS[2]="oppo publish --name"
+VAR_COMMANDS[3]="oppo publish -n"
+VAR_COMMANDS[4]="oppo publish --exit"
+VAR_COMMANDS[5]="oppo publish -x"
 
 for INDEX in "${!VAR_COMMANDS[@]}";
 do
