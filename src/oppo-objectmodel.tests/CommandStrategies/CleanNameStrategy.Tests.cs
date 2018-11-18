@@ -14,13 +14,11 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             {
                 new[]
                 {
-                    "-n",
                     "any-name",
                 },
                 new[]
                 {
-                    "--name",
-                    "any-name",
+                    "any-other-name",
                 },
             };
         }
@@ -31,30 +29,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             {
                 new[]
                 {
-                    "-n",
-                },
-                new[]
-                {
-                    "-N",
-                    "any-name",
-                },
-                new[]
-                {
-                    "-n",
-                    "",
-                },
-                new[]
-                {
-                    "--name",
-                },
-                new[]
-                {
-                    "--Name",
-                    "any-name",
-                },
-                new[]
-                {
-                    "--Name",
                     "",
                 },
                 new string[0], 
@@ -113,7 +87,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             // Arrange
             const string projectBuildDirectory = "build-dir";
-            var projectName = inputParams.ElementAt(1);
+            var projectName = inputParams.ElementAt(0);
             var resultMessage = string.Format(OutputText.OpcuaappCleanSuccess, projectName);
 
             _fileSystemMock.Setup(x => x.CombinePaths(projectName, Constants.DirectoryName.MesonBuild)).Returns(projectBuildDirectory);

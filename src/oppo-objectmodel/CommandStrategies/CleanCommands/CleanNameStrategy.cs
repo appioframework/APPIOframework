@@ -18,12 +18,7 @@ namespace Oppo.ObjectModel.CommandStrategies.CleanCommands
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
             var inputParamsArray = inputParams.ToArray();
-            var nameFlag = inputParamsArray.ElementAtOrDefault(0);
-            var projectName = inputParamsArray.ElementAtOrDefault(1);
-            if (nameFlag != Constants.CleanCommandArguments.Name && nameFlag != Constants.CleanCommandArguments.VerboseName)
-            {
-                return new CommandResult(false, Resources.text.output.OutputText.OpcuaappCleanFailure);
-            }
+            var projectName = inputParamsArray.ElementAtOrDefault(0);
 
             if (string.IsNullOrEmpty(projectName))
             {
