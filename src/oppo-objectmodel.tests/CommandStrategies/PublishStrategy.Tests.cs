@@ -8,28 +8,34 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 {
     public class PublishStrategyTests
     {
+        private Mock<ICommandFactory<PublishStrategy>> _factoryMock;
+        private PublishStrategy _objectUnderTest;
+
+        [SetUp]
+        public void SetUp_ObjectUnderTest()
+        {
+            _factoryMock = new Mock<ICommandFactory<PublishStrategy>>();
+            _objectUnderTest = new PublishStrategy(_factoryMock.Object);
+        }
+
         [Test]
-        public void PublishStrategy_Should_ImplementICommandOfObjectModel()
+        public void PublishStrategy_Should_ImplementICommandOfPublishStrategy()
         {
             // Arrange
-            var commandFactoryMock = new Mock<ICommandFactory<PublishStrategy>>();
 
             // Act
-            var objectUnderTest = new PublishStrategy(commandFactoryMock.Object);
 
             // Assert
-            Assert.IsInstanceOf<ICommand<ObjectModel>>(objectUnderTest);
+            Assert.IsInstanceOf<ICommand<ObjectModel>>(_objectUnderTest);
         }
 
         [Test]
         public void PublishStrategy_Should_HaveCorrectCommandName()
         {
             // Arrange
-            var commandFactoryMock = new Mock<ICommandFactory<PublishStrategy>>();
-            var objectUnderTest = new PublishStrategy(commandFactoryMock.Object);
 
             // Act
-            var commandName = objectUnderTest.Name;
+            var commandName = _objectUnderTest.Name;
 
             // Assert
             Assert.AreEqual(Constants.CommandName.Publish, commandName);
@@ -39,11 +45,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void PublishStrategy_Should_ProvideSomeHelpText()
         {
             // Arrange
-            var commandFactoryMock = new Mock<ICommandFactory<PublishStrategy>>();
-            var objectUnderTest = new PublishStrategy(commandFactoryMock.Object);
 
             // Act
-            var helpText = objectUnderTest.GetHelpText();
+            var helpText = _objectUnderTest.GetHelpText();
 
             // Assert
             Assert.IsNotEmpty(helpText);
@@ -62,12 +66,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             commandMock.Setup(x => x.Execute(It.Is<IEnumerable<string>>(p => p.SequenceEqual(subCommandInputParamsMock)))).
                 Returns(new CommandResult(true, new MessageLines() { { expectedCommandResult, string.Empty } }));
 
-            var commandFactoryMock = new Mock<ICommandFactory<PublishStrategy>>();
-            commandFactoryMock.Setup(x => x.GetCommand(commandName)).Returns(commandMock.Object);
-            var objectUnderTest = new PublishStrategy(commandFactoryMock.Object);
+            _factoryMock.Setup(x => x.GetCommand(commandName)).Returns(commandMock.Object);
 
             // Act
-            var result = objectUnderTest.Execute(commandInputParamsMock);
+            var result = _objectUnderTest.Execute(commandInputParamsMock);
 
             // Assert
             Assert.IsTrue(result.Sucsess);
