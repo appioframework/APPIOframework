@@ -9,138 +9,69 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 {
     public class BuildStrategyTests
     {
-        private static string[][] InvalidInputs()
-        {
-            return new[]
-            {
-                new []{"-g"},
-                new []{"-y"},
-                new []{"-n"},
-                new []{"-n", ""},
-                new []{"--something"},
-                new []{"--different"},
-                new []{"--name"},
-                new []{"--name", ""},
-                new []{""},
-                new string[0],
-            };
-        }
+        private Mock<ICommandFactory<BuildStrategy>> _factoryMock;
+        private BuildStrategy _objectUnderTest;
 
-        private static string[][] ValidBuildNameInputs()
+        [SetUp]
+        public void SetUp_ObjectUnderTest()
         {
-            return new[]
-            {
-                new []{"-n", "hugo"},
-                new []{"--name", "talsen"}
-            };
-        }
-
-        private static string[][] ValidBuildHelpInputs()
-        {
-            return new[]
-            {
-                new []{"--help"},
-                new []{"-h"}
-            };
+            _factoryMock = new Mock<ICommandFactory<BuildStrategy>>();
+            _objectUnderTest = new BuildStrategy(_factoryMock.Object);
         }
 
         [Test]
         public void BuildStrategy_Should_ImplementICommandOfObjectModel()
         {
             // Arrange
-            var mockBuildFactory = new Mock<ICommandFactory<BuildStrategy>>();
 
             // Act
-            var objectUnderTest = new BuildStrategy(mockBuildFactory.Object);
 
             // Assert
-            Assert.IsInstanceOf<ICommand<ObjectModel>>(objectUnderTest);
+            Assert.IsInstanceOf<ICommand<ObjectModel>>(_objectUnderTest);
         }
 
         [Test]
-        public void BuildStrategy_Should_Execute_HelpCommand_Success([ValueSource(nameof(ValidBuildHelpInputs))] string[] inputParams)
+        public void BuildStrategy_Should_ExecuteCommand()
         {
             // Arrange
-            var mockBuildStrategy = new Mock<ICommand<BuildStrategy>>();
-            mockBuildStrategy.Setup(x => x.Execute(new string[] { })).Returns(new CommandResult(true, new MessageLines() { { string.Empty, string.Empty } }));
-            var mockBuildFactory = new Mock<ICommandFactory<BuildStrategy>>();
-            mockBuildFactory.Setup(f => f.GetCommand(Constants.BuildCommandArguments.Help)).Returns(mockBuildStrategy.Object);
-            mockBuildFactory.Setup(f => f.GetCommand(Constants.BuildCommandArguments.VerboseHelp)).Returns(mockBuildStrategy.Object);
+            const string commandName = "any-name";
+            const string commandArgs = "any-args";
+            var inputParams = new[] { commandName, commandArgs };
 
-            var buildStrategy = new BuildStrategy(mockBuildFactory.Object);
+            var expectedResult = new CommandResult(true, new MessageLines());
+
+            var commandMock = new Mock<ICommand<BuildStrategy>>();
+            commandMock.Setup(x => x.Execute(It.IsAny<string[]>())).Returns(expectedResult);
+
+            _factoryMock.Setup(x => x.GetCommand(commandName)).Returns(commandMock.Object);
 
             // Act
-            var strategyResult = buildStrategy.Execute(inputParams);
+            var result = _objectUnderTest.Execute(inputParams);
 
             // Assert
-            Assert.IsTrue(strategyResult.Sucsess);
-            Assert.AreEqual(string.Empty, strategyResult.OutputMessages.First().Key);
+            commandMock.Verify(x => x.Execute(It.Is<string[]>(p => p.Length == 1 && p[0] == commandArgs)), Times.Once);
+            Assert.AreEqual(expectedResult, result);
+        }
+        
+        [Test]
+        public void BuildStrategy_Should_ReturnCorrectHelpText()
+        {
+            // Arrange
+
+            // Act
+            var helpText = _objectUnderTest.GetHelpText();
+
+            // Assert
+            Assert.AreEqual(Resources.text.help.HelpTextValues.BuildCommand, helpText);
         }
 
         [Test]
-        public void BuildStrategy_Should_SucceedOnBuildableProject([ValueSource(nameof(ValidBuildNameInputs))] string[] inputParams)
+        public void BuildStrategy_Should_CorrectCommandName()
         {
             // Arrange
-            var mockBuildStrategy = new Mock<ICommand<BuildStrategy>>();
-            mockBuildStrategy.Setup(x => x.Execute(new string[] { inputParams[1] })).Returns(new CommandResult(true, new MessageLines() { { OutputText.OpcuaappBuildSuccess, string.Empty }}));
-
-            var mockBuildFactory = new Mock<ICommandFactory<BuildStrategy>>();
-            mockBuildFactory.Setup(f => f.GetCommand(Constants.BuildCommandArguments.Name)).Returns(mockBuildStrategy.Object);
-            mockBuildFactory.Setup(f => f.GetCommand(Constants.BuildCommandArguments.VerboseName)).Returns(mockBuildStrategy.Object);
-
-            var buildStrategy = new BuildStrategy(mockBuildFactory.Object);
 
             // Act
-            var strategyResult = buildStrategy.Execute(inputParams);
-
-            // Assert
-            Assert.IsTrue(strategyResult.Sucsess);
-            Assert.AreEqual(OutputText.OpcuaappBuildSuccess, strategyResult.OutputMessages.First().Key);
-        }
-
-        [Test]
-        public void ShouldExecuteStrategy_Fail_MissingParameter([ValueSource(nameof(InvalidInputs))] string[] inputParams)
-        {
-            // Arrange
-            var mockBuildStrategy = new Mock<ICommand<BuildStrategy>>();
-            mockBuildStrategy.Setup(x => x.Execute(It.IsAny<IEnumerable<string>>())).Returns(new CommandResult(false, new MessageLines() { { OutputText.OpcuaappBuildFailure, string.Empty } }));
-            
-            var mockBuildFactory = new Mock<ICommandFactory<BuildStrategy>>();
-            mockBuildFactory.Setup(f => f.GetCommand(It.IsAny<string>())).Returns(mockBuildStrategy.Object);
-
-            var buildStrategy = new BuildStrategy(mockBuildFactory.Object);
-
-            // Act
-            var strategyResult = buildStrategy.Execute(inputParams);
-
-            // Assert
-            Assert.IsFalse(strategyResult.Sucsess);
-            Assert.AreEqual(OutputText.OpcuaappBuildFailure, strategyResult.OutputMessages.First().Key);
-        } 
-
-        [Test]
-        public void ShouldReturnEmptyHelpText()
-        {
-            // Arrange
-            var mockBuildFactory = new Mock<ICommandFactory<BuildStrategy>>();
-            var buildStrategy = new BuildStrategy(mockBuildFactory.Object);            
-
-            // Act
-            var helpText = buildStrategy.GetHelpText();
-
-            // Assert
-            Assert.AreEqual(helpText, Resources.text.help.HelpTextValues.BuildCommand);
-        }
-
-        [Test]
-        public void ShouldReturnCommandName()
-        {
-            // Arrange
-            var mockBuildFactory = new Mock<ICommandFactory<BuildStrategy>>();
-            var buildStrategy = new BuildStrategy(mockBuildFactory.Object);
-
-            // Act
-            var commandName = buildStrategy.Name;
+            var commandName = _objectUnderTest.Name;
 
             // Assert
             Assert.AreEqual(commandName, Constants.CommandName.Build);

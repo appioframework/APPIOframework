@@ -19,7 +19,7 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
             var inputParamsArray = inputParams.ToArray();
 
             var buildStrategy = _factory.GetCommand(inputParamsArray.ElementAtOrDefault(0));
-            return buildStrategy.Execute(inputParamsArray.Skip(1));          
+            return buildStrategy.Execute(inputParamsArray.Skip(1).ToArray());
         }
 
         public string GetHelpText()
