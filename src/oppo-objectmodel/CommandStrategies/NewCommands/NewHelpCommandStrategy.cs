@@ -5,9 +5,9 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 {
     public class NewHelpCommandStrategy : ICommand<NewStrategy>
     {
-        private readonly IEnumerable<KeyValuePair<string, string>> _helpText;
+        private readonly MessageLines _helpText;
 
-        public NewHelpCommandStrategy(string newHelpCommandName, IEnumerable<KeyValuePair<string, string>> helpText)
+        public NewHelpCommandStrategy(string newHelpCommandName, MessageLines helpText)
         {
             Name = newHelpCommandName;
             _helpText = helpText;
@@ -17,8 +17,8 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
-            var messages = new List<KeyValuePair<string, string>>(_helpText);
-
+            var messages = new MessageLines(_helpText);
+                        
             OppoLogger.Info(LoggingText.OppoHelpForNewCommandCalled);
             return new CommandResult(true, messages);
         }

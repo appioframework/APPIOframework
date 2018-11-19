@@ -16,15 +16,15 @@ namespace Oppo.ObjectModel.CommandStrategies.HelpCommands
 
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
-            var outputMessages = new List<KeyValuePair<string, string>>();
-            outputMessages.Add(new KeyValuePair<string, string>(Resources.text.help.HelpTextValues.HelpStartCommand, string.Empty));
+            var outputMessages = new MessageLines();
+            outputMessages.Add(Resources.text.help.HelpTextValues.HelpStartCommand, string.Empty);
             
             foreach (var command in CommandFactory?.Commands ?? new ICommand<ObjectModel>[0])
             {                
-                outputMessages.Add(new KeyValuePair<string, string>(command.Name, command.GetHelpText()));
+                outputMessages.Add(command.Name, command.GetHelpText());
             }
 
-            outputMessages.Add(new KeyValuePair<string, string>(string.Empty, Resources.text.help.HelpTextValues.HelpEndCommand));
+            outputMessages.Add(string.Empty, Resources.text.help.HelpTextValues.HelpEndCommand);
             
             OppoLogger.Info(LoggingText.OppoHelpCalled);
             return new CommandResult(true, outputMessages);            

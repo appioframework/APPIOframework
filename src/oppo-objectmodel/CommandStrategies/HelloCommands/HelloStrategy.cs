@@ -8,8 +8,8 @@ namespace Oppo.ObjectModel.CommandStrategies.HelloCommands
 
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
-            var outputMessages = new List<KeyValuePair<string, string>>();
-            outputMessages.Add(new KeyValuePair<string, string>(Constants.HelloString, string.Empty));            
+            var outputMessages = new MessageLines();
+            outputMessages.Add(Constants.HelloString, string.Empty);            
             return new CommandResult(true, outputMessages);
         }
 

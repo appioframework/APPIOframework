@@ -30,7 +30,7 @@ namespace Oppo.ObjectModel.Tests
             var slnInputParams = inputParams.Skip(1);
             var objectModel = new ObjectModel(factoryMock.Object);
             factoryMock.Setup(factory => factory.GetCommand(inputParams.FirstOrDefault())).Returns(commandMock.Object);
-            commandMock.Setup(s=>s.Execute(slnInputParams)).Returns(new CommandResult(true, new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>("anyMsg", string.Empty) }));
+            commandMock.Setup(s=>s.Execute(slnInputParams)).Returns(new CommandResult(true, new MessageLines(){ {"anyMsg", string.Empty } }));
 
             // Act
             var executionResult = objectModel.ExecuteCommand(inputParams);

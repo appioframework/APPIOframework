@@ -57,7 +57,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             // Arrange
             var inputParams = new[] { "--any-param", "any-value" };
-            var commandResultMock = new CommandResult(true, new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>("any-message", string.Empty) });
+            var commandResultMock = new CommandResult(true, new MessageLines() { { "any-message", string.Empty } });
 
             var commandMock = new Mock<ICommand<CleanStrategy>>();
             commandMock.Setup(x => x.Execute(It.IsAny<string[]>())).Returns(commandResultMock);

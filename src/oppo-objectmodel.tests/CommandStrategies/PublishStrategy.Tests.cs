@@ -60,10 +60,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             var commandMock = new Mock<ICommand<PublishStrategy>>();
             commandMock.Setup(x => x.Execute(It.Is<IEnumerable<string>>(p => p.SequenceEqual(subCommandInputParamsMock)))).
-                Returns(new CommandResult(true, new List<KeyValuePair<string, string>>()
-                {
-                    new KeyValuePair<string, string>(expectedCommandResult, string.Empty)
-                }));
+                Returns(new CommandResult(true, new MessageLines() { { expectedCommandResult, string.Empty } }));
 
             var commandFactoryMock = new Mock<ICommandFactory<PublishStrategy>>();
             commandFactoryMock.Setup(x => x.GetCommand(commandName)).Returns(commandMock.Object);

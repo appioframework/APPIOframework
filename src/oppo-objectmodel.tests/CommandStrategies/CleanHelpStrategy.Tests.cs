@@ -10,9 +10,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
     {
         private const string AnyCommandName = "any-name";
 
-        private static readonly IEnumerable<KeyValuePair<string, string>> AnyHelpText = new[]
+        private static readonly MessageLines AnyHelpText = new MessageLines()
         {
-            new KeyValuePair<string, string>("any-key", "any-value"),
+            {"any-key", "any-value" }
         };
 
         private CleanHelpStrategy _objectUnderTest;

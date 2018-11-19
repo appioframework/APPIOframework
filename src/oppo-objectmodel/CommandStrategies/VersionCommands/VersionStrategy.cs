@@ -17,11 +17,11 @@ namespace Oppo.ObjectModel.CommandStrategies.VersionCommands
 
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
-            var outputMessages = new List<KeyValuePair<string, string>>();
+            var outputMessages = new MessageLines();
 
             foreach (var info in _reflection.GetOppoAssemblyInfos())
             {
-                outputMessages.Add(new KeyValuePair<string, string>(info.AssemblyName, string.Format(Resources.text.version.VersionText.AssemblyVersionInfo, info.AssemblyVersion.ToPrintableString())));
+                outputMessages.Add(info.AssemblyName, string.Format(Resources.text.version.VersionText.AssemblyVersionInfo, info.AssemblyVersion.ToPrintableString()));
             }
 
             OppoLogger.Info(LoggingText.VersionCommandCalled);

@@ -5,9 +5,9 @@ namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
 {
     public class PublishHelpStrategy : ICommand<PublishStrategy>
     {
-        private readonly IEnumerable<KeyValuePair<string, string>> _helpText;
+        private readonly MessageLines _helpText;
 
-        public PublishHelpStrategy(string publishHelpCommandName, IEnumerable<KeyValuePair<string, string>> helpText)
+        public PublishHelpStrategy(string publishHelpCommandName, MessageLines helpText)
         {
             Name = publishHelpCommandName;
             _helpText = helpText;
@@ -17,7 +17,8 @@ namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
 
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
-            var outputMessages = new List<KeyValuePair<string, string>>(_helpText);                       
+            var outputMessages = new MessageLines(_helpText);
+                        
             OppoLogger.Info(LoggingText.OpcuaappPublishHelpCalled);
             return new CommandResult(true, outputMessages);
         }

@@ -21,12 +21,13 @@ namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
         {
             var projectName = inputParams.ElementAt(0);
 
+            var outputMessages = new MessageLines();
+
             if (string.IsNullOrEmpty(projectName))
             {
                 OppoLogger.Warn(LoggingText.EmptyOpcuaappName);
-                var outputMsg = new List<KeyValuePair<string, string>>();
-                outputMsg.Add(new KeyValuePair<string, string>(OutputText.OpcuaappPublishFailure, string.Empty));
-                return new CommandResult(false, outputMsg);
+                outputMessages.Add(OutputText.OpcuaappPublishFailure, string.Empty);
+                return new CommandResult(false, outputMessages);
             }
 
             var projectBuildDirectory = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.MesonBuild);
@@ -39,8 +40,8 @@ namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
             _fileSystem.CopyFile(applicationFileBuildLocation, applicationFilePublishLocation);
 
             OppoLogger.Info(LoggingText.OpcuaappPublishedSuccess);
-            var outputMessages = new List<KeyValuePair<string, string>>();
-            outputMessages.Add(new KeyValuePair<string, string>(string.Format(OutputText.OpcuaappPublishSuccess, projectName), string.Empty));
+            
+            outputMessages.Add(string.Format(OutputText.OpcuaappPublishSuccess, projectName), string.Empty);
 
             return new CommandResult(true, outputMessages);
         }

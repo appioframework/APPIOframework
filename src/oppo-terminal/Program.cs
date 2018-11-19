@@ -29,7 +29,6 @@ namespace Oppo.Terminal
                 writer.Write(commandResult.OutputMessages);
             }
 
-
             var commandResultSucces = commandResult.Sucsess;
             return commandResultSucces ? 0 : 1;
         }
@@ -47,12 +46,12 @@ namespace Oppo.Terminal
 
             var commands = new List<ICommand<ObjectModel.ObjectModel>>();
 
-            var buildHelpStrategyHelpText = new[]
+            var buildHelpStrategyHelpText = new MessageLines
             {
-                new KeyValuePair<string, string>("Arguments:", ""),
-                new KeyValuePair<string, string>("<Project>", "The project directory to use"),
-                new KeyValuePair<string, string>(string.Empty, string.Empty),
-                new KeyValuePair<string, string>("Options:", "")       
+                { "Arguments:", "" },
+                { "<Project>", "The project directory to use" },
+                { string.Empty, string.Empty },
+                { "Options:", "" }       
             };
 
             var buildHelpStrategy = new BuildHelpStrategy(Constants.BuildCommandArguments.Help, buildHelpStrategyHelpText);
@@ -79,18 +78,18 @@ namespace Oppo.Terminal
             var shortHelpStrategy = new HelpStrategy(Constants.CommandName.ShortHelp);
             commands.Add(shortHelpStrategy);
 
-            var newHelpStrategyHelpText = new[]
+            var newHelpStrategyHelpText = new MessageLines
             {                
-                new KeyValuePair<string, string>("Arguments:", string.Empty),
-                new KeyValuePair<string, string>("<Object>", "The object to create, can either be:"),
-                new KeyValuePair<string, string>(string.Empty, "sln"),
-                new KeyValuePair<string, string>(string.Empty, "opcuaapp"),
-                new KeyValuePair<string, string>(string.Empty, ""),
-                new KeyValuePair<string, string>("Options:", ""),
-                new KeyValuePair<string, string>("-n", "Name of the object to create"),
-                new KeyValuePair<string, string>("--name", "Name of the object to create"),
-                new KeyValuePair<string, string>("-h", "New help"),
-                new KeyValuePair<string, string>("--help", "New help")
+                {"Arguments:", string.Empty },
+                {"<Object>", "The object to create, can either be:" },
+                {string.Empty, "sln" },
+                {string.Empty, "opcuaapp" },
+                {string.Empty, "" },
+                {"Options:", "" },
+                { "-n", "Name of the object to create"},
+                {"--name", "Name of the object to create" },
+                {"-h", "New help" },
+                { "--help", "New help" }
             };
 
             var newStrategies = new ICommand<NewStrategy>[] 
@@ -104,16 +103,16 @@ namespace Oppo.Terminal
             var newStrategyCommandFactory = new CommandFactory<NewStrategy>(newStrategies, Constants.NewCommandName.Help);
             commands.Add(new NewStrategy(newStrategyCommandFactory));
 
-            var publishHelpStrategyHelpText = new[]
+            var publishHelpStrategyHelpText = new MessageLines
             {
-                new KeyValuePair<string, string>("Arguments:", string.Empty),
-                new KeyValuePair<string, string>("<Project>:", "The project directory to use"),
-                new KeyValuePair<string, string>(string.Empty, string.Empty),
-                new KeyValuePair<string, string>("Options:", string.Empty),
-                new KeyValuePair<string, string>("-n:", "Project name"),
-                new KeyValuePair<string, string>("--name:", "Project name"),
-                new KeyValuePair<string, string>("-h:", "Publish help"),
-                new KeyValuePair<string, string>("--help:", "Publish help")
+                {"Arguments:", string.Empty },
+                {"<Project>:", "The project directory to use" },
+                {string.Empty, string.Empty },
+                {"Options:", string.Empty },
+                {"-n:", "Project name" },
+                {"--name:", "Project name" },
+                {"-h:", "Publish help" },
+                { "--help:", "Publish help" }
             };
 
             var publishStrategies = new ICommand<PublishStrategy>[] 
@@ -129,12 +128,12 @@ namespace Oppo.Terminal
 
             commands.Add(new VersionStrategy(reflection));
 
-            var cleanHelpStrategyHelpText = new[]
+            var cleanHelpStrategyHelpText = new MessageLines
             {
-                new KeyValuePair<string, string>("Arguments:", ""),
-                new KeyValuePair<string, string>("<Project>", "The project directory to use"),
-                new KeyValuePair<string, string>(string.Empty, string.Empty),
-                new KeyValuePair<string, string>("Options:", "")
+                {"Arguments:", "" },
+                {"<Project>", "The project directory to use" },
+                {string.Empty, string.Empty },
+                { "Options:", "" }
             };
 
             var cleanHelpStrategy = new CleanHelpStrategy(Constants.CleanCommandArguments.Help, cleanHelpStrategyHelpText);

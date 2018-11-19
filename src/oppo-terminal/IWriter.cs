@@ -1,12 +1,9 @@
-using System.Collections.Generic;
+using Oppo.ObjectModel;
 
 namespace Oppo.Terminal
 {
     public interface IWriter
-    {
-        void WriteLine(string messageToWrite);
-        void WriteLines(List<string> messagesToWrite);
-        void WriteLines(Dictionary<string, string> messagesToWrite);
-        void Write(IEnumerable<KeyValuePair<string, string>> messagesToWrite);
+    {       
+        void Write(MessageLines messagesToWrite);
     }
 }

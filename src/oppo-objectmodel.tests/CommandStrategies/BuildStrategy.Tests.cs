@@ -62,7 +62,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             // Arrange
             var mockBuildStrategy = new Mock<ICommand<BuildStrategy>>();
-            mockBuildStrategy.Setup(x => x.Execute(new string[] { })).Returns(new CommandResult(true, new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>(string.Empty, string.Empty)}));
+            mockBuildStrategy.Setup(x => x.Execute(new string[] { })).Returns(new CommandResult(true, new MessageLines() { { string.Empty, string.Empty } }));
             var mockBuildFactory = new Mock<ICommandFactory<BuildStrategy>>();
             mockBuildFactory.Setup(f => f.GetCommand(Constants.BuildCommandArguments.Help)).Returns(mockBuildStrategy.Object);
             mockBuildFactory.Setup(f => f.GetCommand(Constants.BuildCommandArguments.VerboseHelp)).Returns(mockBuildStrategy.Object);
@@ -82,7 +82,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             // Arrange
             var mockBuildStrategy = new Mock<ICommand<BuildStrategy>>();
-            mockBuildStrategy.Setup(x => x.Execute(new string[] { inputParams[1] })).Returns(new CommandResult(true, new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>(OutputText.OpcuaappBuildSuccess, string.Empty) }));
+            mockBuildStrategy.Setup(x => x.Execute(new string[] { inputParams[1] })).Returns(new CommandResult(true, new MessageLines() { { OutputText.OpcuaappBuildSuccess, string.Empty }}));
 
             var mockBuildFactory = new Mock<ICommandFactory<BuildStrategy>>();
             mockBuildFactory.Setup(f => f.GetCommand(Constants.BuildCommandArguments.Name)).Returns(mockBuildStrategy.Object);
@@ -103,7 +103,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             // Arrange
             var mockBuildStrategy = new Mock<ICommand<BuildStrategy>>();
-            mockBuildStrategy.Setup(x => x.Execute(It.IsAny<IEnumerable<string>>())).Returns(new CommandResult(false, new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>(OutputText.OpcuaappBuildFailure, string.Empty) }));
+            mockBuildStrategy.Setup(x => x.Execute(It.IsAny<IEnumerable<string>>())).Returns(new CommandResult(false, new MessageLines() { { OutputText.OpcuaappBuildFailure, string.Empty } }));
             
             var mockBuildFactory = new Mock<ICommandFactory<BuildStrategy>>();
             mockBuildFactory.Setup(f => f.GetCommand(It.IsAny<string>())).Returns(mockBuildStrategy.Object);

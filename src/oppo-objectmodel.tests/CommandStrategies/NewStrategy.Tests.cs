@@ -49,7 +49,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             // Arrange
             var commandMock = new Mock<ICommand<NewStrategy>>();
-            commandMock.Setup(x => x.Execute(It.IsAny<IEnumerable<string>>())).Returns(new CommandResult(true, new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>(data.Result, string.Empty) }));
+            commandMock.Setup(x => x.Execute(It.IsAny<IEnumerable<string>>())).Returns(new CommandResult(true, new MessageLines(){ { data.Result, string.Empty } }));
             var factoryMock = new Mock<ICommandFactory<NewStrategy>>();
             factoryMock.Setup(x => x.GetCommand(data.Input.First())).Returns(commandMock.Object);
             var objectUnderTest = new NewStrategy(factoryMock.Object);

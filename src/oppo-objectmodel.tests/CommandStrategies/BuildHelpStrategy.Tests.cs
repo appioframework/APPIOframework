@@ -23,7 +23,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Arrange
             
             // Act
-            var objectUnderTest = new BuildHelpStrategy(string.Empty, new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
+            var objectUnderTest = new BuildHelpStrategy(string.Empty, new MessageLines() { { string.Empty, string.Empty } });
 
             // Assert
             Assert.IsInstanceOf<ICommand<BuildStrategy>>(objectUnderTest);
@@ -33,7 +33,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void BuildHelpStrategy_Should_HaveCorrectCommandName()
         {
             // Arrange
-            var objectUnderTest = new BuildHelpStrategy(string.Empty, new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
+            var objectUnderTest = new BuildHelpStrategy(string.Empty, new MessageLines() { { string.Empty, string.Empty } });
 
             // Act
             var commandName = objectUnderTest.Name;
@@ -46,7 +46,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void BuildHelpStrategy_Should_ProvideExactHelpText()
         {
             // Arrange
-            var objectUnderTest = new BuildHelpStrategy(string.Empty, new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
+            var objectUnderTest = new BuildHelpStrategy(string.Empty, new MessageLines() { { string.Empty, string.Empty } });
 
             // Act
             var helpText = objectUnderTest.GetHelpText();
@@ -64,7 +64,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             mockCommand.Setup(x => x.GetHelpText()).Returns("buildCommandHelp");
             var mockBuildCommandFactory = new Mock<ICommandFactory<BuildStrategy>>();
             mockBuildCommandFactory.Setup(x => x.Commands).Returns(new ICommand<BuildStrategy>[] { mockCommand.Object});
-            var strategy = new BuildHelpStrategy(string.Empty, new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
+            var strategy = new BuildHelpStrategy(string.Empty, new MessageLines() { { string.Empty, string.Empty } });
             strategy.CommandFactory = mockBuildCommandFactory.Object;
 
             var loggerListenerMock = new Mock<ILoggerListener>();
