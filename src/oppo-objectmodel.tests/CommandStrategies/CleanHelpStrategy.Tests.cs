@@ -85,7 +85,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             Assert.IsTrue(result.Sucsess);
             Assert.IsNotNull(result.OutputMessages);
-            Assert.AreEqual(commandName, result.OutputMessages.First().Key);            
+            Assert.AreEqual(commandName, result.OutputMessages.Last().Key);
+            Assert.AreEqual(commandHelpText, result.OutputMessages.Last().Value);
 
             loggerListenerMock.Verify(x => x.Info(Resources.text.logging.LoggingText.OppoHelpForCleanCommandCalled), Times.Once);
             factoryMock.Verify(x => x.Commands, Times.AtLeastOnce);
