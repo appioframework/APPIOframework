@@ -52,7 +52,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
            
             Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>(Resources.text.help.HelpTextValues.HelpStartCommand, string.Empty)));
             Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>(commandName, commandHelpText)));
-            Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>(Resources.text.help.HelpTextValues.HelpEndCommand, string.Empty)));
+            Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>(string.Empty, Resources.text.help.HelpTextValues.HelpEndCommand)));
             loggerListenerMock.Verify(x => x.Info(LoggingText.OppoHelpCalled), Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
@@ -71,7 +71,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsNotNull(strategyResult.OutputMessages);
             Assert.AreEqual(string.Empty, strategyResult.OutputMessages.First().Value);
             Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>(Resources.text.help.HelpTextValues.HelpStartCommand, string.Empty)));
-            Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>(Resources.text.help.HelpTextValues.HelpEndCommand, string.Empty)));
+            Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>(string.Empty, Resources.text.help.HelpTextValues.HelpEndCommand)));
         }
 
         [Test]

@@ -24,7 +24,7 @@ namespace Oppo.ObjectModel.CommandStrategies.HelpCommands
                 outputMessages.Add(new KeyValuePair<string, string>(command.Name, command.GetHelpText()));
             }
 
-            outputMessages.Add(new KeyValuePair<string, string>(Resources.text.help.HelpTextValues.HelpEndCommand, string.Empty));
+            outputMessages.Add(new KeyValuePair<string, string>(string.Empty, Resources.text.help.HelpTextValues.HelpEndCommand));
             
             OppoLogger.Info(LoggingText.OppoHelpCalled);
             return new CommandResult(true, outputMessages);            
