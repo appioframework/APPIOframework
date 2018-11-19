@@ -8,9 +8,9 @@ namespace Oppo.ObjectModel.CommandStrategies.HelloCommands
 
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
-            var outputMessage = new Dictionary<string, string>();
-            outputMessage.Add(Constants.HelloString, string.Empty);            
-            return new CommandResult(true, string.Empty, outputMessage);
+            var outputMessages = new List<KeyValuePair<string, string>>();
+            outputMessages.Add(new KeyValuePair<string, string>(Constants.HelloString, string.Empty));            
+            return new CommandResult(true, outputMessages);
         }
 
         public string GetHelpText()

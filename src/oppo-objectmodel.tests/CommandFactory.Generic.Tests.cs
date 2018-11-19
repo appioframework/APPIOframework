@@ -139,7 +139,7 @@ namespace Oppo.ObjectModel.Tests
 
             // Assert
             Assert.IsFalse(commandResult.Sucsess);
-            Assert.AreEqual(Constants.CommandResults.Failure, commandResult.Message);
+            Assert.AreEqual(Constants.CommandResults.Failure, commandResult.OutputMessages.First().Key);
             loggerListenerMock.Verify(x => x.Warn(LoggingText.UnknownCommandCalled), Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }

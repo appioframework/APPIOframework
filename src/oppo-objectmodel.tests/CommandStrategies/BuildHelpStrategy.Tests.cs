@@ -76,8 +76,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             // Assert
             Assert.IsTrue(strategyResult.Sucsess);
-            Assert.AreEqual(string.Empty, strategyResult.Message);
-            Assert.IsNotNull(strategyResult.OutputText);
+            Assert.IsNotNull(strategyResult.OutputMessages);
             loggerListenerMock.Verify(x => x.Info(LoggingText.OppoHelpForBuildCommandCalled), Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }

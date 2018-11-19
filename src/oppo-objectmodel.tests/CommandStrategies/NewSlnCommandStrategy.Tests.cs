@@ -80,7 +80,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             Assert.IsTrue(infoWrittenOut);
             Assert.IsTrue(result.Sucsess);
-            Assert.AreEqual(string.Format(OutputText.NewSlnCommandSuccess, slnName), result.Message);
+            Assert.AreEqual(string.Format(OutputText.NewSlnCommandSuccess, slnName), result.OutputMessages.First().Key);
             fileSystemMock.Verify(x => x.CreateFile(slnFileName, It.IsAny<string>()), Times.Once);
             fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoSlnTemplateFileName), Times.Once);
             RemoveLoggerListener(loggerListenerMock.Object);
@@ -106,7 +106,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             Assert.IsTrue(warnWrittenOut);
             Assert.IsFalse(result.Sucsess);
-            Assert.AreEqual(OutputText.NewSlnCommandFailureUnknownParam, result.Message);
+            Assert.AreEqual(OutputText.NewSlnCommandFailureUnknownParam, result.OutputMessages.First().Key);
             fileSystemMock.Verify(x => x.CreateFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoSlnTemplateFileName), Times.Never);
             RemoveLoggerListener(loggerListenerMock.Object);
@@ -133,7 +133,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             Assert.IsTrue(warnWrittenOut);
             Assert.IsFalse(result.Sucsess);
-            Assert.AreEqual(string.Format(OutputText.NewSlnCommandFailure, slnName), result.Message);
+            Assert.AreEqual(string.Format(OutputText.NewSlnCommandFailure, slnName), result.OutputMessages.First().Key);
             fileSystemMock.Verify(x => x.CreateFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoSlnTemplateFileName), Times.Never);
             RemoveLoggerListener(loggerListenerMock.Object);

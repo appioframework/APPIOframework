@@ -59,7 +59,12 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var subCommandInputParamsMock = new[] {"any", "sub", "parameters"};
 
             var commandMock = new Mock<ICommand<PublishStrategy>>();
-            commandMock.Setup(x => x.Execute(It.Is<IEnumerable<string>>(p => p.SequenceEqual(subCommandInputParamsMock)))).Returns(new CommandResult(true, expectedCommandResult));
+            commandMock.Setup(x => x.Execute(It.Is<IEnumerable<string>>(p => p.SequenceEqual(subCommandInputParamsMock)))).
+                Returns(new CommandResult(true, new List<KeyValuePair<string, string>>()
+                {
+                    new KeyValuePair<string, string>(expectedCommandResult, string.Empty)
+                }));
+
             var commandFactoryMock = new Mock<ICommandFactory<PublishStrategy>>();
             commandFactoryMock.Setup(x => x.GetCommand(commandName)).Returns(commandMock.Object);
             var objectUnderTest = new PublishStrategy(commandFactoryMock.Object);
@@ -69,7 +74,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             // Assert
             Assert.IsTrue(result.Sucsess);
-            Assert.AreEqual(expectedCommandResult, result.Message);
+            Assert.AreEqual(expectedCommandResult, result.OutputMessages.First().Key);
         }
     }
 }

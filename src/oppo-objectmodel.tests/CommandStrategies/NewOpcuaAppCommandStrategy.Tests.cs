@@ -93,7 +93,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             Assert.IsTrue(infoWrittenOut);
             Assert.IsTrue(result.Sucsess);
-            Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandSuccess, inputParams.ElementAt(1)), result.Message);
+            Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandSuccess, inputParams.ElementAt(1)), result.OutputMessages.First().Key);
             _fileSystemMock.Verify(x => x.CreateDirectory(projectDirectoryName), Times.Once);
             _fileSystemMock.Verify(x => x.CreateDirectory(opcuaSourceCode), Times.Once);
             _fileSystemMock.Verify(x => x.CreateFile(It.Is<string>(s=>s.StartsWith(opcuaSourceCode)), It.IsAny<string>()), Times.Exactly(3));
@@ -127,7 +127,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             Assert.IsTrue(warnWrittenOut);
             Assert.IsFalse(result.Sucsess);
-            Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandFailure, inputParams.ElementAt(1)), result.Message);
+            Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandFailure, inputParams.ElementAt(1)), result.OutputMessages.First().Key);
             _fileSystemMock.Verify(x => x.CreateDirectory(It.IsAny<string>()), Times.Never);
             _fileSystemMock.Verify(x => x.CreateFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             _fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName), Times.Never);
@@ -154,7 +154,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             Assert.IsTrue(warnWrittenOut);
             Assert.IsFalse(result.Sucsess);
-            Assert.AreEqual(OutputText.NewOpcuaappCommandFailureUnknownParam, result.Message);
+            Assert.AreEqual(OutputText.NewOpcuaappCommandFailureUnknownParam, result.OutputMessages.First().Key);
             _fileSystemMock.Verify(x => x.CreateDirectory(It.IsAny<string>()), Times.Never);
             _fileSystemMock.Verify(x => x.CreateFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             _fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName), Times.Never);

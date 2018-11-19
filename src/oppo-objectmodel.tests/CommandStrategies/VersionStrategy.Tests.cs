@@ -77,9 +77,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             var versionRegex = new Regex(@"^\d+.\d+.\d+$");
             Assert.IsTrue(result.Sucsess);
-            Assert.AreEqual(string.Empty, result.Message);
-            Assert.IsNotNull(result.OutputText);
-            Assert.IsTrue(result.OutputText.Values.All(v => versionRegex.IsMatch(v)));
+            Assert.IsNotNull(result.OutputMessages);
+            Assert.IsTrue(result.OutputMessages.All(v => versionRegex.IsMatch(v.Value)));
             loggerListenerMock.Verify(x => x.Info(LoggingText.VersionCommandCalled), Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }

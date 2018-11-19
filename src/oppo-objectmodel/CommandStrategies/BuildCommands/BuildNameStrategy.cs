@@ -21,11 +21,13 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
         {
             var inputParamsArray = inputParams.ToArray();
             var projectName = inputParamsArray.ElementAtOrDefault(0);
+            var outputMessages = new List<KeyValuePair<string, string>>();
 
             if (string.IsNullOrEmpty(projectName))
             {
-                OppoLogger.Warn( LoggingText.InvalidOpcuaappName);
-                return new CommandResult(false, OutputText.OpcuaappBuildFailure);
+                OppoLogger.Warn( LoggingText.InvalidOpcuaappName);              
+                outputMessages.Add(new KeyValuePair<string, string>(OutputText.OpcuaappBuildFailure, string.Empty));
+                return new CommandResult(false, outputMessages);
             }
 
             var buildDirectory = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.MesonBuild);
@@ -33,17 +35,20 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
             if (!mesonResult)
             {
                 OppoLogger.Warn(LoggingText.MesonExecutableFails);
-                return new CommandResult(false, OutputText.OpcuaappBuildFailure);
+                outputMessages.Add(new KeyValuePair<string, string>(OutputText.OpcuaappBuildFailure, string.Empty));
+                return new CommandResult(false, outputMessages);
             }
             var ninjaResult = _fileSystem.CallExecutable(Constants.ExecutableName.Ninja, buildDirectory, string.Empty);
             if (!ninjaResult)
             {
                 OppoLogger.Warn(LoggingText.NinjaExecutableFails);
-                return new CommandResult(false, OutputText.OpcuaappBuildFailure);
+                outputMessages.Add(new KeyValuePair<string, string>(OutputText.OpcuaappBuildFailure, string.Empty));
+                return new CommandResult(false, outputMessages);
             }
 
             OppoLogger.Info(LoggingText.BuildSuccess);
-            return new CommandResult(true, string.Format(OutputText.OpcuaappBuildSuccess, projectName));
+            outputMessages.Add(new KeyValuePair<string, string>(string.Format(OutputText.OpcuaappBuildSuccess, projectName), string.Empty));
+            return new CommandResult(true, outputMessages);
         }
 
         public string GetHelpText()

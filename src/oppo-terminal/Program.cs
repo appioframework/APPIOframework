@@ -23,16 +23,10 @@ namespace Oppo.Terminal
             var writer = new ConsoleWriter();
 
             var commandResult = objectModel.ExecuteCommand(args);
-            writer.WriteLine(commandResult.Message);
-
-            if (commandResult.OutputText != null)
+           
+            if (commandResult.OutputMessages != null)
             {
-                writer.WriteLines(commandResult.OutputText);
-            }
-
-            if (commandResult.Messages != null)
-            {
-                writer.Write(commandResult.Messages);
+                writer.Write(commandResult.OutputMessages);
             }
 
 
@@ -85,23 +79,49 @@ namespace Oppo.Terminal
             var shortHelpStrategy = new HelpStrategy(Constants.CommandName.ShortHelp);
             commands.Add(shortHelpStrategy);
 
+            var newHelpStrategyHelpText = new[]
+            {                
+                new KeyValuePair<string, string>("Arguments:", string.Empty),
+                new KeyValuePair<string, string>("<Object>", "The object to create, can either be:"),
+                new KeyValuePair<string, string>(string.Empty, "sln"),
+                new KeyValuePair<string, string>(string.Empty, "opcuaapp"),
+                new KeyValuePair<string, string>(string.Empty, ""),
+                new KeyValuePair<string, string>("Options:", ""),
+                new KeyValuePair<string, string>("-n", "Name of the object to create"),
+                new KeyValuePair<string, string>("--name", "Name of the object to create"),
+                new KeyValuePair<string, string>("-h", "New help"),
+                new KeyValuePair<string, string>("--help", "New help")
+            };
+
             var newStrategies = new ICommand<NewStrategy>[] 
             {
                 new NewSlnCommandStrategy(fileSystem),
                 new NewOpcuaAppCommandStrategy(fileSystem),
-                new NewHelpCommandStrategy(Constants.NewCommandName.Help),
-                new NewHelpCommandStrategy(Constants.NewCommandName.VerboseHelp)
+                new NewHelpCommandStrategy(Constants.NewCommandName.Help, newHelpStrategyHelpText),
+                new NewHelpCommandStrategy(Constants.NewCommandName.VerboseHelp, newHelpStrategyHelpText)
             };
 
             var newStrategyCommandFactory = new CommandFactory<NewStrategy>(newStrategies, Constants.NewCommandName.Help);
             commands.Add(new NewStrategy(newStrategyCommandFactory));
 
+            var publishHelpStrategyHelpText = new[]
+            {
+                new KeyValuePair<string, string>("Arguments:", string.Empty),
+                new KeyValuePair<string, string>("<Project>:", "The project directory to use"),
+                new KeyValuePair<string, string>(string.Empty, string.Empty),
+                new KeyValuePair<string, string>("Options:", string.Empty),
+                new KeyValuePair<string, string>("-n:", "Project name"),
+                new KeyValuePair<string, string>("--name:", "Project name"),
+                new KeyValuePair<string, string>("-h:", "Publish help"),
+                new KeyValuePair<string, string>("--help:", "Publish help")
+            };
+
             var publishStrategies = new ICommand<PublishStrategy>[] 
             {
                 new PublishNameStrategy(Constants.PublishCommandArguments.Name, fileSystem),
                 new PublishNameStrategy(Constants.PublishCommandArguments.VerboseName, fileSystem),
-                new PublishHelpStrategy(Constants.PublishCommandArguments.Help),
-                new PublishHelpStrategy(Constants.PublishCommandArguments.VerboseHelp)
+                new PublishHelpStrategy(Constants.PublishCommandArguments.Help, publishHelpStrategyHelpText),
+                new PublishHelpStrategy(Constants.PublishCommandArguments.VerboseHelp, publishHelpStrategyHelpText)
             };
 
             var publishStrategyCommandFactory = new CommandFactory<PublishStrategy>(publishStrategies, Constants.PublishCommandArguments.Help);

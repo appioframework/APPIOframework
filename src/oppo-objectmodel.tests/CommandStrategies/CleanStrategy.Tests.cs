@@ -1,6 +1,7 @@
 ﻿using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies.CleanCommands;
+using System.Collections.Generic;
 
 namespace Oppo.ObjectModel.Tests.CommandStrategies
 {
@@ -56,7 +57,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             // Arrange
             var inputParams = new[] { "--any-param", "any-value" };
-            var commandResultMock = new CommandResult(true, "any-message");
+            var commandResultMock = new CommandResult(true, new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>("any-message", string.Empty) });
 
             var commandMock = new Mock<ICommand<CleanStrategy>>();
             commandMock.Setup(x => x.Execute(It.IsAny<string[]>())).Returns(commandResultMock);

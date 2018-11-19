@@ -1,6 +1,7 @@
 ﻿using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies.HelloCommands;
+using System.Linq;
 
 namespace Oppo.ObjectModel.Tests.CommandStrategies
 {
@@ -30,8 +31,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             // Assert
             Assert.IsTrue(result.Sucsess);
-            Assert.AreEqual(string.Empty, result.Message);
-            Assert.IsNotNull(result.OutputText);
+            Assert.IsNotNull(result.OutputMessages);
+            Assert.AreEqual(Constants.HelloString, result.OutputMessages.First().Key);
+            Assert.AreEqual(string.Empty, result.OutputMessages.First().Value);
         }
 
         [Test]

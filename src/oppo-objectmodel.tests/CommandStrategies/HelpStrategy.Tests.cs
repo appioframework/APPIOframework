@@ -3,6 +3,7 @@ using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies.HelpCommands;
 using Oppo.Resources.text.logging;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Oppo.ObjectModel.Tests.CommandStrategies
 {
@@ -46,11 +47,12 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             // Assert
             Assert.IsTrue(strategyResult.Sucsess);
-            Assert.AreEqual(string.Empty, strategyResult.Message);
-            Assert.IsNotNull(strategyResult.OutputText);
-            Assert.IsTrue(strategyResult.OutputText.ContainsKey(Resources.text.help.HelpTextValues.HelpStartCommand));
-            Assert.IsTrue(strategyResult.OutputText.ContainsValue(commandHelpText));
-            Assert.IsTrue(strategyResult.OutputText.ContainsKey(Resources.text.help.HelpTextValues.HelpEndCommand));
+            Assert.IsNotNull(strategyResult.OutputMessages);
+            Assert.AreEqual(string.Empty, strategyResult.OutputMessages.First().Value);
+           
+            Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>(Resources.text.help.HelpTextValues.HelpStartCommand, string.Empty)));
+            Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>(commandName, commandHelpText)));
+            Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>(Resources.text.help.HelpTextValues.HelpEndCommand, string.Empty)));
             loggerListenerMock.Verify(x => x.Info(LoggingText.OppoHelpCalled), Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
@@ -66,10 +68,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             // Assert
             Assert.IsTrue(strategyResult.Sucsess);
-            Assert.AreEqual(string.Empty, strategyResult.Message);
-            Assert.IsNotNull(strategyResult.OutputText);
-            Assert.IsTrue(strategyResult.OutputText.ContainsKey(Resources.text.help.HelpTextValues.HelpStartCommand));
-            Assert.IsTrue(strategyResult.OutputText.ContainsKey(Resources.text.help.HelpTextValues.HelpEndCommand));
+            Assert.IsNotNull(strategyResult.OutputMessages);
+            Assert.AreEqual(string.Empty, strategyResult.OutputMessages.First().Value);
+            Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>(Resources.text.help.HelpTextValues.HelpStartCommand, string.Empty)));
+            Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>(Resources.text.help.HelpTextValues.HelpEndCommand, string.Empty)));
         }
 
         [Test]

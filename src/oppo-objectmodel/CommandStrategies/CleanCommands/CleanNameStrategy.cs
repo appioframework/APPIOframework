@@ -19,20 +19,20 @@ namespace Oppo.ObjectModel.CommandStrategies.CleanCommands
         {
             var inputParamsArray = inputParams.ToArray();
             var projectName = inputParamsArray.ElementAtOrDefault(0);
+            var outputMessages = new List<KeyValuePair<string, string>>();
 
             if (string.IsNullOrEmpty(projectName))
             {
                 OppoLogger.Info(Resources.text.logging.LoggingText.CleanFailure);
-                return new CommandResult(false, Resources.text.output.OutputText.OpcuaappCleanFailure);
+                outputMessages.Add(new KeyValuePair<string, string>(Resources.text.output.OutputText.OpcuaappCleanFailure, string.Empty));
+                return new CommandResult(false, outputMessages);
             }
 
             var buildDirectory = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.MesonBuild);
-
             _fileSystem.DeleteDirectory(buildDirectory);
-
-            OppoLogger.Info(Resources.text.logging.LoggingText.CleanSuccess);
-
-            return new CommandResult(true, string.Format(Resources.text.output.OutputText.OpcuaappCleanSuccess, projectName));
+            OppoLogger.Info(Resources.text.logging.LoggingText.CleanSuccess);                        
+            outputMessages.Add(new KeyValuePair<string, string>(string.Format(Resources.text.output.OutputText.OpcuaappCleanSuccess, projectName), string.Empty));
+            return new CommandResult(true, outputMessages);
         }
 
         public string GetHelpText()

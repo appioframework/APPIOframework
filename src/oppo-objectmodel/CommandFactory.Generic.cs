@@ -59,7 +59,9 @@ namespace Oppo.ObjectModel
             public CommandResult Execute(IEnumerable<string> inputParams)
             {
                 OppoLogger.Warn(LoggingText.UnknownCommandCalled);
-                return new CommandResult(false, Constants.CommandResults.Failure);
+                var outputMessages = new List<KeyValuePair<string, string>>();
+                outputMessages.Add(new KeyValuePair<string, string>(Constants.CommandResults.Failure, string.Empty));
+                return new CommandResult(false, outputMessages);
             }
 
             public string GetHelpText()

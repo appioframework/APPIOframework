@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies.NewCommands;
@@ -14,7 +15,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Arrange
 
             // Act
-            var objectUnderTest = new NewHelpCommandStrategy(string.Empty);
+            var objectUnderTest = new NewHelpCommandStrategy(string.Empty, new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
 
             // Assert
             Assert.IsInstanceOf<ICommand<NewStrategy>>(objectUnderTest);
@@ -24,7 +25,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void NewHelpCommandStrategy_Should_HaveCorrectCommandName()
         {
             // Arrange
-            var objectUnderTest = new NewHelpCommandStrategy(string.Empty);
+            var objectUnderTest = new NewHelpCommandStrategy(string.Empty, new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
 
             // Act
             var commandName = objectUnderTest.Name;
@@ -37,7 +38,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void NewHelpCommandStrategy_Should_ProvideEmptyHelpText()
         {
             // Arrange
-            var objectUnderTest = new NewHelpCommandStrategy(string.Empty);
+            var objectUnderTest = new NewHelpCommandStrategy(string.Empty, new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
 
             // Act
             var helpText = objectUnderTest.GetHelpText();
@@ -51,7 +52,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             // Arrange
             var inputParamsMock = new string[0];
-            var objectUnderTest = new NewHelpCommandStrategy(string.Empty);
+            var objectUnderTest = new NewHelpCommandStrategy(string.Empty, new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
             var loggerListenerMock = new Mock<ILoggerListener>();
             loggerListenerMock.Setup(x => x.Info(LoggingText.OppoHelpForNewCommandCalled));
             OppoLogger.RegisterListener(loggerListenerMock.Object);
@@ -61,8 +62,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             // Assert
             Assert.IsTrue(result.Sucsess);
-            Assert.AreEqual(string.Empty, result.Message);
-            Assert.IsNotNull(result.OutputText);
+            Assert.IsNotNull(result.OutputMessages);
             loggerListenerMock.Verify(x => x.Info(LoggingText.OppoHelpForNewCommandCalled), Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }

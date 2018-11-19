@@ -19,14 +19,14 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
-            var buildHelpOutput = new Dictionary<string, string>(_helpText);
+            var outputMessages = new List<KeyValuePair<string, string>>(_helpText);            
             foreach (var command in CommandFactory.Commands)
-            {
-                buildHelpOutput.Add(command.Name, command.GetHelpText());
+            {            
+                outputMessages.Add(new KeyValuePair<string, string>(command.Name, command.GetHelpText()));
             }
 
             OppoLogger.Info(LoggingText.OppoHelpForBuildCommandCalled);
-            return new CommandResult(true, string.Empty, buildHelpOutput);
+            return new CommandResult(true, outputMessages);
         }
 
         public string GetHelpText()

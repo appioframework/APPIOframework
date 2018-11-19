@@ -21,29 +21,34 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
             var inputParamsArray = inputParams.ToArray();
             var nameFlag = inputParamsArray.ElementAtOrDefault(0);
             var solutionName = inputParamsArray.ElementAtOrDefault(1);
+            var outputMessages = new List<KeyValuePair<string, string>>();
 
             if (nameFlag != Constants.NewSlnCommandArguments.Name && nameFlag != Constants.NewSlnCommandArguments.VerboseName)
             {
                 OppoLogger.Warn(LoggingText.UnknownNewSlnCommandParam);
-                return new CommandResult(false, OutputText.NewSlnCommandFailureUnknownParam);
+                outputMessages.Add(new KeyValuePair<string, string>(OutputText.NewSlnCommandFailureUnknownParam, string.Empty));
+                return new CommandResult(false, outputMessages);
             }
 
             if (string.IsNullOrEmpty(solutionName))
             {
                 OppoLogger.Warn(LoggingText.EmptySolutionName);
-                return new CommandResult(false, OutputText.NewSlnCommandFailureUnknownParam);
+                outputMessages.Add(new KeyValuePair<string, string>(OutputText.NewSlnCommandFailureUnknownParam, string.Empty));
+                return new CommandResult(false, outputMessages);
             }
 
             if (_fileSystem.GetInvalidFileNameChars().Any(solutionName.Contains))
             {
                 OppoLogger.Warn(LoggingText.InvalidSolutionName);
-                return new CommandResult(false, string.Format(OutputText.NewSlnCommandFailure, solutionName));
+                outputMessages.Add(new KeyValuePair<string, string>(string.Format(OutputText.NewSlnCommandFailure, solutionName), string.Empty));
+                return new CommandResult(false, outputMessages);
             }
 
             var solutionFilePath = $"{solutionName}{Constants.FileExtension.OppoSln}";
             _fileSystem.CreateFile(solutionFilePath, _fileSystem.LoadTemplateFile(Resources.Resources.OppoSlnTemplateFileName));
-            OppoLogger.Info(string.Format(LoggingText.NewSlnCommandSuccess, solutionFilePath));            
-            return new CommandResult(true, string.Format(OutputText.NewSlnCommandSuccess, solutionName));
+            OppoLogger.Info(string.Format(LoggingText.NewSlnCommandSuccess, solutionFilePath));
+            outputMessages.Add(new KeyValuePair<string, string>(string.Format(OutputText.NewSlnCommandSuccess, solutionName), string.Empty));
+            return new CommandResult(true, outputMessages);
         }
 
         public string GetHelpText()

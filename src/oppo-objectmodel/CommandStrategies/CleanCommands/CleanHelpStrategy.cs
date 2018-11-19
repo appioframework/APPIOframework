@@ -20,12 +20,12 @@ namespace Oppo.ObjectModel.CommandStrategies.CleanCommands
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
             OppoLogger.Info(Resources.text.logging.LoggingText.OppoHelpForCleanCommandCalled);
-            var outputText = new Dictionary<string, string>(_helpLines);
+            var outputMessages = new List<KeyValuePair<string, string>>();
             foreach (var command in CommandFactory.Commands)
             {
-                outputText.Add(command.Name, command.GetHelpText());
+                outputMessages.Add(new KeyValuePair<string, string>(command.Name, command.GetHelpText()));
             }
-            return new CommandResult(true, string.Empty, outputText);
+            return new CommandResult(true, outputMessages);
         }
 
         public string GetHelpText()

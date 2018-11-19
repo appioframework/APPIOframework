@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies.PublishCommands;
@@ -14,7 +15,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Arrange
 
             // Act
-            var objectUnderTest = new PublishHelpStrategy(string.Empty);
+            var objectUnderTest = new PublishHelpStrategy(string.Empty, new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
 
             // Assert
             Assert.IsInstanceOf<ICommand<PublishStrategy>>(objectUnderTest);
@@ -24,7 +25,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void PublishHelpStrategy_Should_ProvideCorrectCommandName()
         {
             // Arrange
-            var objectUnderTest = new PublishHelpStrategy(string.Empty);
+            var objectUnderTest = new PublishHelpStrategy(string.Empty, new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
 
             // Act
             var commandName = objectUnderTest.Name;
@@ -37,7 +38,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void PublishHelpStrategy_Should_ProvideEmptyHelpText()
         {
             // Arrange
-            var objectUnderTest = new PublishHelpStrategy(string.Empty);
+            var objectUnderTest = new PublishHelpStrategy(string.Empty, new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
 
             // Act
             var helpText = objectUnderTest.GetHelpText();
@@ -50,7 +51,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void PublishHelpStrategy_Should_WriteHelpText()
         {
             // Arrange
-            var objectUnderTest = new PublishHelpStrategy(string.Empty);
+            var objectUnderTest = new PublishHelpStrategy(string.Empty, new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
 
             var loggerListenerMock = new Mock<ILoggerListener>();
             loggerListenerMock.Setup(x => x.Info(LoggingText.OpcuaappPublishHelpCalled));
@@ -61,8 +62,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             // Assert
             Assert.IsTrue(result.Sucsess);
-            Assert.AreEqual(string.Empty, result.Message);
-            Assert.IsNotNull(result.OutputText);
+            Assert.IsNotNull(result.OutputMessages);
             loggerListenerMock.Verify(x => x.Info(LoggingText.OpcuaappPublishHelpCalled), Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies.CleanCommands;
@@ -83,8 +84,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             OppoLogger.RemoveListener(loggerListenerMock.Object);
 
             Assert.IsTrue(result.Sucsess);
-            Assert.IsEmpty(result.Message);
-            Assert.IsNotNull(result.OutputText);
+            Assert.IsNotNull(result.OutputMessages);
+            Assert.AreEqual(commandName, result.OutputMessages.First().Key);            
 
             loggerListenerMock.Verify(x => x.Info(Resources.text.logging.LoggingText.OppoHelpForCleanCommandCalled), Times.Once);
             factoryMock.Verify(x => x.Commands, Times.AtLeastOnce);

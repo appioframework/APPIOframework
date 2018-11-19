@@ -98,7 +98,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             // Assert
             Assert.IsTrue(strategyResult.Sucsess);
-            Assert.AreEqual(string.Format(OutputText.OpcuaappBuildSuccess, projectDirectoryName), strategyResult.Message);
+            Assert.AreEqual(string.Format(OutputText.OpcuaappBuildSuccess, projectDirectoryName), strategyResult.OutputMessages.First().Key);
             fileSystemMock.VerifyAll();
             loggerListenerMock.Verify(y => y.Info(It.IsAny<string>()), Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
@@ -119,7 +119,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             // Assert
             Assert.IsFalse(strategyResult.Sucsess);
-            Assert.AreEqual(OutputText.OpcuaappBuildFailure, strategyResult.Message);
+            Assert.AreEqual(OutputText.OpcuaappBuildFailure, strategyResult.OutputMessages.First().Key);
             loggerListenerMock.Verify(y => y.Warn(It.IsAny<string>()),Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
@@ -145,7 +145,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             // Assert
             Assert.IsFalse(strategyResult.Sucsess);
-            Assert.AreEqual(OutputText.OpcuaappBuildFailure, strategyResult.Message);
+            Assert.AreEqual(OutputText.OpcuaappBuildFailure, strategyResult.OutputMessages.First().Key);
 
             loggerListenerMock.Verify(y => y.Warn(It.IsAny<string>()), Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
