@@ -5,11 +5,11 @@ namespace Oppo.ObjectModel.CommandStrategies.CleanCommands
 {
     public class CleanHelpStrategy : ICommand<CleanStrategy>
     {
-        private readonly KeyValuePair<string, string>[] _helpLines;
+        private readonly IEnumerable<KeyValuePair<string, string>> _helpText;
 
         public CleanHelpStrategy(string name, IEnumerable<KeyValuePair<string, string>> helpText)
         {
-            _helpLines = helpText.ToArray();
+            _helpText = helpText;
             Name = name;
         }
 
@@ -20,7 +20,7 @@ namespace Oppo.ObjectModel.CommandStrategies.CleanCommands
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
             OppoLogger.Info(Resources.text.logging.LoggingText.OppoHelpForCleanCommandCalled);
-            var outputMessages = new List<KeyValuePair<string, string>>();
+            var outputMessages = new List<KeyValuePair<string, string>>(_helpText);
             foreach (var command in CommandFactory.Commands)
             {
                 outputMessages.Add(new KeyValuePair<string, string>(command.Name, command.GetHelpText()));
