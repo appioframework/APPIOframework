@@ -20,6 +20,7 @@ namespace Oppo.ObjectModel
             public const string ShortHelp= "?";
             public const string Version= "version";
             public const string Clean = "clean";
+            public const string Deploy = "deploy";
         }
 
         public static class CommandResults
