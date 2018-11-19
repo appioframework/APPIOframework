@@ -14,14 +14,14 @@ static void createTemperatureVariableNode(UA_Server* server) {
     UA_VariableAttributes attr      = UA_VariableAttributes_default;
     UA_Int32 temperatureValue       = 45;
 
-    attr.displayName                = UA_LOCALIZEDTEXT_ALLOC(nodeLocale, nodeName);
+    attr.displayName                = UA_LOCALIZEDTEXT(nodeLocale, nodeName);
 
     UA_Variant_setScalar(&attr.value, &temperatureValue, &UA_TYPES[UA_TYPES_INT32]);
 
-    UA_NodeId temperatureNodeId     = UA_NODEID_STRING_ALLOC(1, nodeName);
+    UA_NodeId temperatureNodeId     = UA_NODEID_STRING(1, nodeName);
     UA_NodeId parentNodeId          = UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER);
     UA_NodeId parentReferenceNodeId = UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES);
-    UA_QualifiedName browseName     = UA_QUALIFIEDNAME_ALLOC(1, nodeName);
+    UA_QualifiedName browseName     = UA_QUALIFIEDNAME(1, nodeName);
     UA_NodeId variableType          = UA_NODEID_NULL;
 
     UA_Server_addVariableNode(

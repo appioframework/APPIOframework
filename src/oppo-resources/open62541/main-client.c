@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
 		printf("could not connect to server!");
 		return -1;
 	}
-		
+
 	UA_Variant value;
 	UA_Variant_init(&value);
 
@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
 
 	if(readStatus == UA_STATUSCODE_GOOD && UA_Variant_hasScalarType(&value, &UA_TYPES[UA_TYPES_INT32]))
 	{           
-		printf("The value of node-id: %d and display-name: %s is: %d", stringNode.namespaceIndex, stringNode.identifier.string.data, *(UA_Int32*)value.data);
+		printf("The value of node-id: %d and display-name: %s is: %d\n", stringNode.namespaceIndex, stringNode.identifier.string.data, *(UA_Int32*)value.data);
 	}
 
 	UA_Client_delete(client);
