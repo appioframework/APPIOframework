@@ -6,7 +6,7 @@
 
         public const string OppoOpcuaAppTemplateFileName = "Oppo.Resources.templates.template.oppoproj";
 
-        public const string OppoOpcuaAppTemplateFileName_main_c = "Oppo.Resources.open62541.main.c";
+        public const string OppoOpcuaAppTemplateFileName_main_c = "Oppo.Resources.open62541.main-server.c";
 
         public const string OppoOpcuaAppTemplateFileName_meson_build = "Oppo.Resources.open62541.meson.build";
 
