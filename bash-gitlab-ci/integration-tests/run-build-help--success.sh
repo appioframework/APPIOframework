@@ -2,8 +2,12 @@
 
 set -euo pipefail
 
+source bash-gitlab-ci/util-integration-tests.sh
+
 mkdir build-help--success
 cd    build-help--success
+
+precondition_oppo_log_file_is_not_existent
 
 if [ "${1}" = "verbose" ];
 then
@@ -12,11 +16,7 @@ else
   oppo build -h
 fi
 
-if [ ! -f "./oppo.log" ];
-then
-  echo "no log entry was created ..."
-  exit 1
-fi
+check_for_exisiting_oppo_log_file
 
 cd ..
 rm -rf build-help--success
