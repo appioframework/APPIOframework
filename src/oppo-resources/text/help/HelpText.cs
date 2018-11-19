@@ -17,5 +17,6 @@
         public const string BuildNameArgumentCommandDescription = "Project name";
         public const string CleanHelpArgumentCommandDescription = "Clean help";
         public const string CleanNameArgumentCommandDescription = "Project name";
+        public const string DeployHelpArgumentCommandDescription = "Deploy help";        
     }
 }

@@ -2,7 +2,7 @@
 using System.Linq;
 using Moq;
 using NUnit.Framework;
-using Oppo.ObjectModel.CommandStrategies.PublishCommands;
+using Oppo.ObjectModel.CommandStrategies.DeployCommands;
 
 namespace Oppo.ObjectModel.Tests.CommandStrategies
 {

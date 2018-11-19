@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
+namespace Oppo.ObjectModel.CommandStrategies.DeployCommands
 {
     public class DeployStrategy : ICommand<ObjectModel>
     {

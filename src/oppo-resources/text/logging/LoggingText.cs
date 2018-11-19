@@ -26,6 +26,7 @@ namespace Oppo.Resources.text.logging
         public const string OppoHelpForCleanCommandCalled = "Help for clean <command> called";
         public const string UnknownCommandCalled = "Unknown <command> called";
         public const string VersionCommandCalled = "version <command> called";
+        public const string OppoHelpForDeployCommandCalled = "Help for deploy <command> called";        
 
         public const string DirectoryIOException = "Directory IOException detected!";
         public const string DirectoryNotFoundException = "Directory DirectoryNotFoundException detected!";
