@@ -6,11 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="open62541\main-client.c" />
     <None Remove="open62541\meson.build" />
     <None Remove="templates\template.opposln" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="open62541\main-client.c" />
     <EmbeddedResource Include="open62541\open62541.c" />
     <EmbeddedResource Include="open62541\open62541.h" />
     <EmbeddedResource Include="open62541\main-server.c" />

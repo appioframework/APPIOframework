@@ -57,8 +57,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             const string applicationName = "any-name";
             const string buildDirectory = "build";
             const string publishDirectory = "publish";
-            const string applicationSourcePath = "source";
-            const string applicationTargetPath = "target";
+            const string clientAppSourcePath = "client-source";
+            const string serverAppSourcePath = "server-source";
+            const string clientAppTargetPath = "client-target";
+            const string serverAppTargetPath = "client-target";
 
             var loggerListenerMock = new Mock<ILoggerListener>();
             loggerListenerMock.Setup(x => x.Info(LoggingText.OpcuaappPublishedSuccess));
@@ -67,8 +69,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var fileSystemMock = new Mock<IFileSystem>();
             fileSystemMock.Setup(x => x.CombinePaths(applicationName, Constants.DirectoryName.Publish)).Returns(publishDirectory);
             fileSystemMock.Setup(x => x.CombinePaths(applicationName, Constants.DirectoryName.MesonBuild)).Returns(buildDirectory);
-            fileSystemMock.Setup(x => x.CombinePaths(buildDirectory, Constants.ExecutableName.App)).Returns(applicationSourcePath);
-            fileSystemMock.Setup(x => x.CombinePaths(publishDirectory, Constants.ExecutableName.App)).Returns(applicationTargetPath);
+            fileSystemMock.Setup(x => x.CombinePaths(buildDirectory, Constants.ExecutableName.AppClient)).Returns(clientAppSourcePath);
+            fileSystemMock.Setup(x => x.CombinePaths(buildDirectory, Constants.ExecutableName.AppServer)).Returns(serverAppSourcePath);
+            fileSystemMock.Setup(x => x.CombinePaths(publishDirectory, Constants.ExecutableName.AppClient)).Returns(clientAppTargetPath);
+            fileSystemMock.Setup(x => x.CombinePaths(publishDirectory, Constants.ExecutableName.AppServer)).Returns(serverAppTargetPath);
             var objectUnderTest = new PublishNameStrategy(string.Empty, fileSystemMock.Object);
 
             // Act
@@ -79,7 +83,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsNotNull(result.OutputMessages);
             Assert.AreEqual(string.Format(OutputText.OpcuaappPublishSuccess, applicationName), result.OutputMessages.First().Key);
             fileSystemMock.Verify(x => x.CreateDirectory(publishDirectory), Times.Once);
-            fileSystemMock.Verify(x => x.CopyFile(applicationSourcePath, applicationTargetPath), Times.Once);
+            fileSystemMock.Verify(x => x.CopyFile(clientAppSourcePath, clientAppTargetPath), Times.Once);
+            fileSystemMock.Verify(x => x.CopyFile(serverAppSourcePath, serverAppTargetPath), Times.Once);
             loggerListenerMock.Verify(x => x.Info(LoggingText.OpcuaappPublishedSuccess), Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }

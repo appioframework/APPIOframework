@@ -18,9 +18,15 @@ then
   exit 1
 fi
 
-if [ ! -f "./my-app/src/main.c" ] && [ ! -f "./my-app/src/open62541.c" ] && [ ! -f "./my-app/src/open62541.h" ];
+if [ ! -f "./my-app/src/client/main.c" ] && [ ! -f "./my-app/src/client/open62541.c" ] && [ ! -f "./my-app/src/client/open62541.h" ];
 then
-  echo "any oppo project source file does not exist ..."
+  echo "any oppo project source file for the client application does not exist ..."
+  exit 1
+fi
+
+if [ ! -f "./my-app/src/server/main.c" ] && [ ! -f "./my-app/src/server/open62541.c" ] && [ ! -f "./my-app/src/server/open62541.h" ];
+then
+  echo "any oppo project source file for the server application does not exist ..."
   exit 1
 fi
 

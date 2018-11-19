@@ -39,6 +39,8 @@ namespace Oppo.ObjectModel
         public static class DirectoryName
         {
             public const string SourceCode = "src";
+            public const string ClientApp = "client";
+            public const string ServerApp = "server";
             public const string MesonBuild = "build";
             public const string Publish = "publish";
         }
@@ -47,7 +49,8 @@ namespace Oppo.ObjectModel
         {
             public const string Meson = "meson";
             public const string Ninja = "ninja";
-            public const string App = "app";
+            public const string AppClient = "client-app";
+            public const string AppServer = "server-app";
         }
 
         public static class FileName

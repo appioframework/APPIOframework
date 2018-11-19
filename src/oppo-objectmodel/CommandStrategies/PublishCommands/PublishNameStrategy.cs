@@ -15,7 +15,7 @@ namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
             Name = publishNameCommandName;
         }
 
-        public string Name { get; private set; }
+        public string Name { get; }
 
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
@@ -31,13 +31,16 @@ namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
             }
 
             var projectBuildDirectory = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.MesonBuild);
-            var applicationFileBuildLocation = _fileSystem.CombinePaths(projectBuildDirectory, Constants.ExecutableName.App);
+            var appClientBuildLocation = _fileSystem.CombinePaths(projectBuildDirectory, Constants.ExecutableName.AppClient);
+            var appServerBuildLocation = _fileSystem.CombinePaths(projectBuildDirectory, Constants.ExecutableName.AppServer);
 
             var projectPublishDirectory = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.Publish);
-            var applicationFilePublishLocation = _fileSystem.CombinePaths(projectPublishDirectory, Constants.ExecutableName.App);
+            var appClientPublishLocation = _fileSystem.CombinePaths(projectPublishDirectory, Constants.ExecutableName.AppClient);
+            var appServerPublishLocation = _fileSystem.CombinePaths(projectPublishDirectory, Constants.ExecutableName.AppServer);
 
             _fileSystem.CreateDirectory(projectPublishDirectory);
-            _fileSystem.CopyFile(applicationFileBuildLocation, applicationFilePublishLocation);
+            _fileSystem.CopyFile(appClientBuildLocation, appClientPublishLocation);
+            _fileSystem.CopyFile(appServerBuildLocation, appServerPublishLocation);
 
             OppoLogger.Info(LoggingText.OpcuaappPublishedSuccess);
             

@@ -15,15 +15,27 @@ else
   oppo build -n "my-app"
 fi
 
-if [ ! -f "./my-app/build/app" ];
+if [ ! -f "./my-app/build/client-app" ];
 then
-  echo "deployable application file does not exist ..."
+  echo "deployable client application file does not exist ..."
   exit 1
 fi
 
-if [[ ! -x "./my-app/build/app" ]]
+if [[ ! -x "./my-app/build/client-app" ]]
 then
-  echo "deployable application file is not executable ..."
+  echo "deployable client application file is not executable ..."
+  exit 1
+fi
+
+if [ ! -f "./my-app/build/server-app" ];
+then
+  echo "deployable server application file does not exist ..."
+  exit 1
+fi
+
+if [[ ! -x "./my-app/build/server-app" ]]
+then
+  echo "deployable server application file is not executable ..."
   exit 1
 fi
 
