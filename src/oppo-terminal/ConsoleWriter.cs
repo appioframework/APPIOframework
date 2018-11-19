@@ -1,26 +1,11 @@
 using Oppo.ObjectModel;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Oppo.Terminal
 {
     [ExcludeFromCodeCoverage]
     public class ConsoleWriter : IWriter
-    {       
-        private static int GetLongestKey(Dictionary<string, string> messagesToWrite)
-        {
-            var longestKey = 0;
-            foreach (var key in messagesToWrite.Keys)
-            {
-                if (key.Length > longestKey)
-                {
-                    longestKey = key.Length;
-                }
-            }
-
-            return longestKey;
-        }
-
+    {     
         public void Write(MessageLines messagesToWrite)
         {
             var longestKey = GetLongestKey(messagesToWrite);
