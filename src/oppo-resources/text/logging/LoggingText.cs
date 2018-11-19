@@ -26,5 +26,13 @@ namespace Oppo.Resources.text.logging
         public const string OppoHelpForCleanCommandCalled = "Help for clean <command> called";
         public const string UnknownCommandCalled = "Unknown <command> called";
         public const string VersionCommandCalled = "version <command> called";
+
+        public const string DirectoryIOException = "Directory IOException detected!";
+        public const string DirectoryNotFoundException = "Directory DirectoryNotFoundException detected!";
+        public const string PathTooLongException = "Directory PathTooLongException detected!";
+
+        public const string ExceptionOccured = "FileWrapper ExceptionOccured, Program termination!";
+        
+
     }
 }

@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Diagnostics.CodeAnalysis;
+using Oppo.Resources.text.logging;
 
 namespace Oppo.ObjectModel
 {
@@ -9,40 +10,98 @@ namespace Oppo.ObjectModel
     {
         public string CombinePaths(params string[] paths)
         {
-            return Path.Combine(paths);
+            try
+            {
+                return Path.Combine(paths);
+            }
+            catch (System.Exception ex)
+            {
+                OppoLogger.Error(LoggingText.ExceptionOccured, ex);
+                throw;
+            }
         }
 
         public bool CallExecutable(string name, string workingDirectory, string args)
         {
-            var info = new ProcessStartInfo(name, args)
+            try
             {
-                WorkingDirectory = workingDirectory,
-            };
+                var info = new ProcessStartInfo(name, args)
+                {
+                    WorkingDirectory = workingDirectory,
+                };
 
-            var process = Process.Start(info);
-            process?.WaitForExit();
+                var process = Process.Start(info);
+                process?.WaitForExit();
 
-            return process?.ExitCode == 0;
+                return process?.ExitCode == 0;
+            }
+            catch (System.Exception ex)
+            {
+                OppoLogger.Error(LoggingText.ExceptionOccured, ex);
+                throw;
+            }
         }
 
         public void CopyFile(string source, string target)
         {
-            File.Copy(source, target, true);
+            try
+            {
+                File.Copy(source, target, true);
+            }
+            catch (System.Exception ex)
+            {
+                OppoLogger.Error(LoggingText.ExceptionOccured, ex);
+                throw;
+            }            
         }
 
         public void DeleteDirectory(string name)
         {
-            Directory.Delete(name, true);
+            try
+            {
+                Directory.Delete(name, true);
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                OppoLogger.Error(LoggingText.DirectoryNotFoundException, ex);
+                throw;
+            }
+            catch (PathTooLongException ex)
+            {
+                OppoLogger.Error(LoggingText.PathTooLongException, ex);
+                throw;
+            }
+            catch (IOException ex)
+            {
+                OppoLogger.Error(LoggingText.DirectoryIOException, ex);
+                throw;
+            }
         }
 
         public void CreateDirectory(string directoryName)
         {
-            Directory.CreateDirectory(directoryName);
+            try
+            {
+                Directory.CreateDirectory(directoryName);
+            }
+            catch (System.Exception ex)
+            {
+                OppoLogger.Error(LoggingText.ExceptionOccured, ex);
+                throw;
+            }            
         }
 
         public void CreateFile(string filePath, string fileContent)
-        {
-           File.WriteAllText(filePath, fileContent);
+        {           
+            try
+            {
+                File.WriteAllText(filePath, fileContent);
+            }
+            catch (System.Exception ex)
+            {
+                OppoLogger.Error(LoggingText.ExceptionOccured, ex);
+                throw;
+            }
         }
 
         public char[] GetInvalidFileNameChars()
@@ -57,14 +116,22 @@ namespace Oppo.ObjectModel
 
         public string LoadTemplateFile(string fileName)
         {
-            var assembly = typeof(Oppo.Resources.Resources).Assembly;
-            var resourceName = fileName;
-
-            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-            using (StreamReader reader = new StreamReader(stream))
+            try
             {
-                return reader.ReadToEnd();
+                var assembly = typeof(Resources.Resources).Assembly;
+                var resourceName = fileName;
+
+                using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
             }
+            catch (System.Exception ex)
+            {
+                OppoLogger.Error(LoggingText.ExceptionOccured, ex);
+                throw;
+            }            
         }
     }
 }
