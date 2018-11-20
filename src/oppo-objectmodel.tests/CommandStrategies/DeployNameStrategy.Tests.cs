@@ -225,6 +225,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             fileSystemMock.Setup(x => x.CombinePaths(projectDirectoryName, Constants.DirectoryName.Deploy)).Returns(_deployDirectory);
             fileSystemMock.Setup(x => x.CombinePaths(_deployDirectory, Constants.ExecutableName.AppClient)).Returns(_appClientDeployLocation);
             fileSystemMock.Setup(x => x.CombinePaths(_deployDirectory, Constants.ExecutableName.AppServer)).Returns(_appServerDeployLocation);
+            fileSystemMock.Setup(x => x.FileExists(_appClientPublishLocation)).Returns(true);
+            fileSystemMock.Setup(x => x.FileExists(_appServerPublishLocation)).Returns(true);
 
             var buildStrategy = new DeployNameStrategy(string.Empty, fileSystemMock.Object);
             var loggerListenerMock = new Mock<ILoggerListener>();
@@ -238,7 +240,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsFalse(strategyResult.Sucsess);
             Assert.AreEqual(string.Format(OutputText.OpcuaappDeployWithNameFailure, projectDirectoryName), strategyResult.OutputMessages.First().Key);
 
-            loggerListenerMock.Verify(y => y.Warn(It.IsAny<string>()), Times.Once);
+            loggerListenerMock.Verify(y => y.Warn(LoggingText.CreateDebianInstallerFails), Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
     }
