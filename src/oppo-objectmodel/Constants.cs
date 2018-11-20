@@ -44,6 +44,7 @@ namespace Oppo.ObjectModel
             public const string ServerApp = "server";
             public const string MesonBuild = "build";
             public const string Publish = "publish";
+            public const string Deploy = "deploy";            
         }
 
         public static class ExecutableName
@@ -52,6 +53,7 @@ namespace Oppo.ObjectModel
             public const string Ninja = "ninja";
             public const string AppClient = "client-app";
             public const string AppServer = "server-app";
+            public const string CreateDebianInstaller = "";
         }
 
         public static class FileName
@@ -92,6 +94,14 @@ namespace Oppo.ObjectModel
         }
 
         public static class CleanCommandArguments
+        {
+            public const string Help = "-h";
+            public const string VerboseHelp = "--help";
+            public const string Name = "-n";
+            public const string VerboseName = "--name";
+        }
+
+        public static class DeployCommandArguments
         {
             public const string Help = "-h";
             public const string VerboseHelp = "--help";

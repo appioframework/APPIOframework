@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using Oppo.ObjectModel;
 using Oppo.ObjectModel.CommandStrategies.BuildCommands;
 using Oppo.ObjectModel.CommandStrategies.CleanCommands;
+using Oppo.ObjectModel.CommandStrategies.DeployCommands;
 using Oppo.ObjectModel.CommandStrategies.HelloCommands;
 using Oppo.ObjectModel.CommandStrategies.HelpCommands;
 using Oppo.ObjectModel.CommandStrategies.NewCommands;
@@ -125,6 +126,30 @@ namespace Oppo.Terminal
 
             var publishStrategyCommandFactory = new CommandFactory<PublishStrategy>(publishStrategies, Constants.PublishCommandArguments.Help);
             commands.Add(new PublishStrategy(publishStrategyCommandFactory));
+
+            var deployHelpStrategyHelpText = new MessageLines
+            {
+                {"Arguments:", string.Empty },
+                {"<Project>:", "The project directory to deploy" },
+                {string.Empty, string.Empty },
+                {"Options:", string.Empty },
+                {"-n:", "Project name" },
+                {"--name:", "Project name" },
+                {"-h:", "Deploy help" },
+                { "--help:", "Deploy help" }
+            };
+
+            var deployStrategies = new ICommand<DeployStrategy>[]
+            {
+                new DeployNameStrategy(Constants.DeployCommandArguments.Name, fileSystem),
+                new DeployNameStrategy(Constants.DeployCommandArguments.VerboseName, fileSystem),
+                new DeployHelpStrategy(Constants.DeployCommandArguments.Help, deployHelpStrategyHelpText),
+                new DeployHelpStrategy(Constants.DeployCommandArguments.VerboseHelp, deployHelpStrategyHelpText)
+            };
+
+            var deployStrategyCommandFactory = new CommandFactory<DeployStrategy>(deployStrategies, Constants.DeployCommandArguments.Help);
+
+            commands.Add(new DeployStrategy(deployStrategyCommandFactory));
 
             commands.Add(new VersionStrategy(reflection));
 

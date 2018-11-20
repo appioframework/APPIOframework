@@ -19,6 +19,7 @@ namespace Oppo.Resources.text.logging
         public const string CleanSuccess = "Clean Success!";
         public const string CleanFailure = "Clean Failure!";
         public const string OpcuaappPublishedSuccess = "Publish Success!";
+        public const string OpcuaappDeploySuccess = "Deploy Success!";        
         public const string OpcuaappPublishHelpCalled = "Publish <command> --help called";
         public const string OppoHelpCalled = "Help <command> called";
         public const string OppoHelpForNewCommandCalled = "Help for new <command> called";
@@ -33,7 +34,9 @@ namespace Oppo.Resources.text.logging
         public const string PathTooLongException = "Directory PathTooLongException detected!";
 
         public const string ExceptionOccured = "FileWrapper ExceptionOccured, Program termination!";
+        public const string CreateDebianInstallerFails = "Create Debian installer failed!";
         
+
 
     }
 }
