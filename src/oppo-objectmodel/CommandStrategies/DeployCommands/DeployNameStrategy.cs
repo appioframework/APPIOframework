@@ -37,6 +37,13 @@ namespace Oppo.ObjectModel.CommandStrategies.DeployCommands
             var projectDeployDirectory = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.Deploy);
             var appClientDeployLocation = _fileSystem.CombinePaths(projectDeployDirectory, Constants.ExecutableName.AppClient);
             var appServerDeployLocation = _fileSystem.CombinePaths(projectDeployDirectory, Constants.ExecutableName.AppServer);
+                        
+            if (!_fileSystem.FileExists(appClientPublishLocation) || !_fileSystem.FileExists(appServerPublishLocation))
+            {
+                OppoLogger.Warn(LoggingText.MissingPublishedOpcuaAppFiles);
+                outputMessages.Add(string.Format(OutputText.OpcuaappDeployWithNameFailure, projectName), string.Empty);
+                return new CommandResult(false, outputMessages);
+            }
 
             _fileSystem.CreateDirectory(projectDeployDirectory);
             _fileSystem.CopyFile(appClientPublishLocation, appClientDeployLocation);

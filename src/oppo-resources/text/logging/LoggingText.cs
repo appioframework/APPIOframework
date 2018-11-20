@@ -35,7 +35,9 @@ namespace Oppo.Resources.text.logging
 
         public const string ExceptionOccured = "FileWrapper ExceptionOccured, Program termination!";
         public const string CreateDebianInstallerFails = "Create Debian installer failed!";
-        
+        public const string MissingPublishedOpcuaAppFiles = "Missing published opcuappp files!";
+
+
 
 
     }

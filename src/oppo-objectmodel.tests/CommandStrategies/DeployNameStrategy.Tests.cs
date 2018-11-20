@@ -90,6 +90,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             fileSystemMock.Setup(x => x.CombinePaths(_deployDirectory, Constants.ExecutableName.AppServer)).Returns(_appServerDeployLocation);
 
             fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.CreateDebianInstaller, _deployDirectory, It.IsAny<string>())).Returns(true);
+            fileSystemMock.Setup(x => x.FileExists(_appClientPublishLocation)).Returns(true);
+            fileSystemMock.Setup(x => x.FileExists(_appServerPublishLocation)).Returns(true);
 
             var deployStrategy = new DeployNameStrategy(string.Empty, fileSystemMock.Object);
             var loggerListenerMock = new Mock<ILoggerListener>();
@@ -108,6 +110,82 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             fileSystemMock.Verify(x => x.CopyFile(_appServerPublishLocation, _appServerDeployLocation), Times.Once);
             loggerListenerMock.Verify(x => x.Info(LoggingText.OpcuaappDeploySuccess), Times.Once);
             loggerListenerMock.Verify(y => y.Info(It.IsAny<string>()), Times.Once);
+            OppoLogger.RemoveListener(loggerListenerMock.Object);
+        }
+
+        [Test]
+        public void DeployStrategy_Should_FailOnDeployProject_MissingPublishedClientFiles([ValueSource(nameof(ValidInputs))] string[] inputParams)
+        {
+            // Arrange
+            var projectDirectoryName = inputParams.ElementAt(0);
+            var projectPublishDirectory = Path.Combine(projectDirectoryName, Constants.DirectoryName.Publish);
+
+            var fileSystemMock = new Mock<IFileSystem>();
+            fileSystemMock.Setup(x => x.CombinePaths(projectDirectoryName, Constants.DirectoryName.Publish)).Returns(projectPublishDirectory);
+            fileSystemMock.Setup(x => x.CombinePaths(projectPublishDirectory, Constants.ExecutableName.AppClient)).Returns(_appClientPublishLocation);
+            fileSystemMock.Setup(x => x.CombinePaths(projectPublishDirectory, Constants.ExecutableName.AppServer)).Returns(_appServerPublishLocation);
+            fileSystemMock.Setup(x => x.CombinePaths(projectDirectoryName, Constants.DirectoryName.Deploy)).Returns(_deployDirectory);
+            fileSystemMock.Setup(x => x.CombinePaths(_deployDirectory, Constants.ExecutableName.AppClient)).Returns(_appClientDeployLocation);
+            fileSystemMock.Setup(x => x.CombinePaths(_deployDirectory, Constants.ExecutableName.AppServer)).Returns(_appServerDeployLocation);
+
+            fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.CreateDebianInstaller, _deployDirectory, It.IsAny<string>())).Returns(true);
+            fileSystemMock.Setup(x => x.FileExists(_appClientPublishLocation)).Returns(false);
+            fileSystemMock.Setup(x => x.FileExists(_appServerPublishLocation)).Returns(true);
+
+            var deployStrategy = new DeployNameStrategy(string.Empty, fileSystemMock.Object);
+            var loggerListenerMock = new Mock<ILoggerListener>();
+            loggerListenerMock.Setup(y => y.Info(It.IsAny<string>()));
+            OppoLogger.RegisterListener(loggerListenerMock.Object);
+
+            // Act
+            var strategyResult = deployStrategy.Execute(inputParams);
+
+            // Assert
+            Assert.IsFalse(strategyResult.Sucsess);
+            Assert.AreEqual(string.Format(OutputText.OpcuaappDeployWithNameFailure, projectDirectoryName), strategyResult.OutputMessages.First().Key);
+            Assert.AreEqual(string.Empty, strategyResult.OutputMessages.First().Value);
+            fileSystemMock.Verify(x => x.CreateDirectory(_deployDirectory), Times.Never);
+            fileSystemMock.Verify(x => x.CopyFile(_appClientPublishLocation, _appClientDeployLocation), Times.Never);
+            fileSystemMock.Verify(x => x.CopyFile(_appServerPublishLocation, _appServerDeployLocation), Times.Never);
+            loggerListenerMock.Verify(x => x.Warn(LoggingText.MissingPublishedOpcuaAppFiles), Times.Once);
+            OppoLogger.RemoveListener(loggerListenerMock.Object);
+        }
+
+        [Test]
+        public void DeployStrategy_Should_FailOnDeployProject_MissingPublishedServerFiles([ValueSource(nameof(ValidInputs))] string[] inputParams)
+        {
+            // Arrange
+            var projectDirectoryName = inputParams.ElementAt(0);
+            var projectPublishDirectory = Path.Combine(projectDirectoryName, Constants.DirectoryName.Publish);
+
+            var fileSystemMock = new Mock<IFileSystem>();
+            fileSystemMock.Setup(x => x.CombinePaths(projectDirectoryName, Constants.DirectoryName.Publish)).Returns(projectPublishDirectory);
+            fileSystemMock.Setup(x => x.CombinePaths(projectPublishDirectory, Constants.ExecutableName.AppClient)).Returns(_appClientPublishLocation);
+            fileSystemMock.Setup(x => x.CombinePaths(projectPublishDirectory, Constants.ExecutableName.AppServer)).Returns(_appServerPublishLocation);
+            fileSystemMock.Setup(x => x.CombinePaths(projectDirectoryName, Constants.DirectoryName.Deploy)).Returns(_deployDirectory);
+            fileSystemMock.Setup(x => x.CombinePaths(_deployDirectory, Constants.ExecutableName.AppClient)).Returns(_appClientDeployLocation);
+            fileSystemMock.Setup(x => x.CombinePaths(_deployDirectory, Constants.ExecutableName.AppServer)).Returns(_appServerDeployLocation);
+
+            fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.CreateDebianInstaller, _deployDirectory, It.IsAny<string>())).Returns(true);
+            fileSystemMock.Setup(x => x.FileExists(_appClientPublishLocation)).Returns(true);
+            fileSystemMock.Setup(x => x.FileExists(_appServerPublishLocation)).Returns(false);
+
+            var deployStrategy = new DeployNameStrategy(string.Empty, fileSystemMock.Object);
+            var loggerListenerMock = new Mock<ILoggerListener>();
+            loggerListenerMock.Setup(y => y.Info(It.IsAny<string>()));
+            OppoLogger.RegisterListener(loggerListenerMock.Object);
+
+            // Act
+            var strategyResult = deployStrategy.Execute(inputParams);
+
+            // Assert
+            Assert.IsFalse(strategyResult.Sucsess);
+            Assert.AreEqual(string.Format(OutputText.OpcuaappDeployWithNameFailure, projectDirectoryName), strategyResult.OutputMessages.First().Key);
+            Assert.AreEqual(string.Empty, strategyResult.OutputMessages.First().Value);
+            fileSystemMock.Verify(x => x.CreateDirectory(_deployDirectory), Times.Never);
+            fileSystemMock.Verify(x => x.CopyFile(_appClientPublishLocation, _appClientDeployLocation), Times.Never);
+            fileSystemMock.Verify(x => x.CopyFile(_appServerPublishLocation, _appServerDeployLocation), Times.Never);
+            loggerListenerMock.Verify(x => x.Warn(LoggingText.MissingPublishedOpcuaAppFiles), Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
 

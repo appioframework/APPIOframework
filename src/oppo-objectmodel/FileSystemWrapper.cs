@@ -133,5 +133,10 @@ namespace Oppo.ObjectModel
                 throw;
             }            
         }
+
+        public bool FileExists(string filePath)
+        {
+            return File.Exists(filePath);
+        }
     }
 }
