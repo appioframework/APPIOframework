@@ -139,16 +139,19 @@ namespace Oppo.Terminal
                 { "--help:", "Deploy help" }
             };
 
+            var deployHelpStrategy = new DeployHelpStrategy(Constants.DeployCommandArguments.Help, deployHelpStrategyHelpText);
+            var deployVerboseHelpStrategy = new DeployHelpStrategy(Constants.DeployCommandArguments.VerboseHelp, deployHelpStrategyHelpText);
             var deployStrategies = new ICommand<DeployStrategy>[]
             {
                 new DeployNameStrategy(Constants.DeployCommandArguments.Name, fileSystem),
                 new DeployNameStrategy(Constants.DeployCommandArguments.VerboseName, fileSystem),
-                new DeployHelpStrategy(Constants.DeployCommandArguments.Help, deployHelpStrategyHelpText),
-                new DeployHelpStrategy(Constants.DeployCommandArguments.VerboseHelp, deployHelpStrategyHelpText)
+                deployHelpStrategy,
+                deployVerboseHelpStrategy
             };
 
             var deployStrategyCommandFactory = new CommandFactory<DeployStrategy>(deployStrategies, Constants.DeployCommandArguments.Help);
-
+            deployHelpStrategy.CommandFactory = deployStrategyCommandFactory;
+            deployVerboseHelpStrategy.CommandFactory = deployStrategyCommandFactory;
             commands.Add(new DeployStrategy(deployStrategyCommandFactory));
 
             commands.Add(new VersionStrategy(reflection));
