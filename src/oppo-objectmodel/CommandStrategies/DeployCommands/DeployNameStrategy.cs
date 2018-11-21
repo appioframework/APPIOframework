@@ -71,8 +71,10 @@ namespace Oppo.ObjectModel.CommandStrategies.DeployCommands
             }
 
             // move installer to deploy dir
-            var createdInstallerPath = _fileSystem.CombinePaths(tempDirectory, Constants.DirectoryName.OpcuaappInstaller, Constants.FileExtension.DebianInstaller);
-            _fileSystem.CopyFile(createdInstallerPath, projectDeployDirectory);
+            var installerName = Constants.DirectoryName.OpcuaappInstaller + Constants.FileExtension.DebianInstaller;            
+            var createdInstallerPath = _fileSystem.CombinePaths(tempDirectory, installerName);
+            var installerTargetPath = _fileSystem.CombinePaths(projectDeployDirectory, installerName);
+            _fileSystem.CopyFile(createdInstallerPath, installerTargetPath);
 
             // remove temp dir
             _fileSystem.DeleteDirectory(tempDirectory);
