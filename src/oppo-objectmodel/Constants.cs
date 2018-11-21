@@ -59,7 +59,7 @@ namespace Oppo.ObjectModel
             public const string AppClient = "client-app";
             public const string AppServer = "server-app";
             public const string CreateDebianInstaller = "dpkg";
-            public const string CreateDebianInstallerArguments = "--build " + DirectoryName.OpcuaappInstaller;           
+            public static readonly string CreateDebianInstallerArguments = "--build " + DirectoryName.OpcuaappInstaller;           
         }
 
         public static class FileName
