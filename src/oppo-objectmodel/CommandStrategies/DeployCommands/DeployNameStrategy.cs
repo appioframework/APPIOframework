@@ -35,9 +35,7 @@ namespace Oppo.ObjectModel.CommandStrategies.DeployCommands
             var appServerPublishLocation = _fileSystem.CombinePaths(projectPublishDirectory, Constants.ExecutableName.AppServer);
 
             var projectDeployDirectory = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.Deploy);
-            var appClientDeployLocation = _fileSystem.CombinePaths(projectDeployDirectory, Constants.ExecutableName.AppClient);
-            var appServerDeployLocation = _fileSystem.CombinePaths(projectDeployDirectory, Constants.ExecutableName.AppServer);
-                        
+                     
             if (!_fileSystem.FileExists(appClientPublishLocation) || !_fileSystem.FileExists(appServerPublishLocation))
             {
                 OppoLogger.Warn(LoggingText.MissingPublishedOpcuaAppFiles);
@@ -64,7 +62,7 @@ namespace Oppo.ObjectModel.CommandStrategies.DeployCommands
             _fileSystem.CopyFile(appServerPublishLocation, appServerDeployTempLocation);
                         
             // create installer
-            var debianInstallerResult = _fileSystem.CallExecutable(Constants.ExecutableName.CreateDebianInstaller, tempDirectory, string.Empty);
+            var debianInstallerResult = _fileSystem.CallExecutable(Constants.ExecutableName.CreateDebianInstaller, tempDirectory, Constants.ExecutableName.CreateDebianInstallerArguments);
             if (!debianInstallerResult)
             {
                 OppoLogger.Warn(LoggingText.CreateDebianInstallerFails);

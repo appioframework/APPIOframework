@@ -24,10 +24,4 @@
     <EmbeddedResource Include="templates\template.oppoproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="installer\opcuaapp\oppo-opcuaapp.zip">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

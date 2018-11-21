@@ -54,7 +54,8 @@ namespace Oppo.ObjectModel
             public const string Ninja = "ninja";
             public const string AppClient = "client-app";
             public const string AppServer = "server-app";
-            public const string CreateDebianInstaller = "dpkg --build oppo-opcuaapp";
+            public const string CreateDebianInstaller = "dpkg ";
+            public const string CreateDebianInstallerArguments = "--build oppo-opcuaapp";
         }
 
         public static class FileName
