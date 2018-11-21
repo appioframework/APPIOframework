@@ -8,6 +8,7 @@ namespace Oppo.ObjectModel
         {
             public const string OppoSln = ".opposln";
             public const string OppoProject = ".oppoproj";
+            public const string DebianInstaller = ".deb";
         }
 
         public static class CommandName
@@ -46,6 +47,9 @@ namespace Oppo.ObjectModel
             public const string Publish = "publish";
             public const string Deploy = "deploy";
             public const string Temp = "temp";
+            public const string OpcuaappInstaller = "oppo-opcuaapp";
+            public const string Usr = "usr";
+            public const string Bin = "bin";
         }
 
         public static class ExecutableName
@@ -54,8 +58,8 @@ namespace Oppo.ObjectModel
             public const string Ninja = "ninja";
             public const string AppClient = "client-app";
             public const string AppServer = "server-app";
-            public const string CreateDebianInstaller = "dpkg ";
-            public const string CreateDebianInstallerArguments = "--build oppo-opcuaapp";
+            public const string CreateDebianInstaller = "dpkg";
+            public const string CreateDebianInstallerArguments = "--build " + DirectoryName.OpcuaappInstaller;           
         }
 
         public static class FileName

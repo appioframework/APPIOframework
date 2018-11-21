@@ -56,8 +56,8 @@ namespace Oppo.ObjectModel.CommandStrategies.DeployCommands
             _fileSystem.ExtractFromZip(zipSourceLocation, tempDirectory);
 
             // copy all needed files to temp dir installer source
-            var appClientDeployTempLocation = _fileSystem.CombinePaths(tempDirectory, "oppo-opcuaapp", "usr", "bin", Constants.ExecutableName.AppClient);
-            var appServerDeployTempLocation = _fileSystem.CombinePaths(tempDirectory, "oppo-opcuaapp", "usr", "bin", Constants.ExecutableName.AppServer);
+            var appClientDeployTempLocation = _fileSystem.CombinePaths(tempDirectory, Constants.DirectoryName.OpcuaappInstaller, Constants.DirectoryName.Usr, Constants.DirectoryName.Bin, Constants.ExecutableName.AppClient);
+            var appServerDeployTempLocation = _fileSystem.CombinePaths(tempDirectory, Constants.DirectoryName.OpcuaappInstaller, Constants.DirectoryName.Usr, Constants.DirectoryName.Bin, Constants.ExecutableName.AppServer);
             _fileSystem.CopyFile(appClientPublishLocation, appClientDeployTempLocation);
             _fileSystem.CopyFile(appServerPublishLocation, appServerDeployTempLocation);
                         
@@ -71,7 +71,8 @@ namespace Oppo.ObjectModel.CommandStrategies.DeployCommands
             }
 
             // move installer to deploy dir
-            
+            var createdInstallerPath = _fileSystem.CombinePaths(tempDirectory, Constants.DirectoryName.OpcuaappInstaller, Constants.FileExtension.DebianInstaller);
+            _fileSystem.CopyFile(createdInstallerPath, projectDeployDirectory);
 
             // remove temp dir
             _fileSystem.DeleteDirectory(tempDirectory);
