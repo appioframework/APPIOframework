@@ -6,12 +6,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="installer\opcuaapp\oppo-opcuaapp.zip" />
     <None Remove="open62541\main-client.c" />
     <None Remove="open62541\meson.build" />
     <None Remove="templates\template.opposln" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="installer\opcuaapp\oppo-opcuaapp.zip" />
     <EmbeddedResource Include="open62541\main-client.c" />
     <EmbeddedResource Include="open62541\open62541.c" />
     <EmbeddedResource Include="open62541\open62541.h" />
@@ -22,12 +24,6 @@
 
   <ItemGroup>
     <EmbeddedResource Include="templates\template.oppoproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="installer\opcuaapp\oppo-opcuaapp.zip">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using Oppo.Resources.text.logging;
 using System.IO.Compression;
 using System;
+using System.Reflection;
 
 namespace Oppo.ObjectModel
 {
@@ -40,7 +41,7 @@ namespace Oppo.ObjectModel
             catch (System.Exception ex)
             {
                 OppoLogger.Error(LoggingText.ExceptionOccured, ex);
-                throw;
+                return false;
             }
         }
 
@@ -141,23 +142,45 @@ namespace Oppo.ObjectModel
             return File.Exists(filePath);
         }
 
-        public void ExtractFromZip(string source, string target)
+        public void ExtractFromZip(string source, string target, string resourceDllName, string resourceFullName)
         {
             try
             {
-                ZipFile.ExtractToDirectory(source, target);
+                if (WriteResourceToFile(CombinePaths(AppDomainBaseDirectory(), resourceDllName), resourceFullName, source))
+                {
+                    ZipFile.ExtractToDirectory(source, target);
+                }                
             }
             catch (System.Exception ex)
             {
                 OppoLogger.Error(LoggingText.ExceptionOccured, ex);
                 throw;
-            }
-            
+            }            
         }
 
         public string AppDomainBaseDirectory()
         {
             return AppDomain.CurrentDomain.BaseDirectory;
+        }
+
+        private bool WriteResourceToFile(string assemblyPath, string resourceName, string fileName)
+        {
+            try
+            {
+                using (var resource = Assembly.LoadFile(assemblyPath).GetManifestResourceStream(resourceName))
+                {
+                    using (var file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+                    {
+                        resource.CopyTo(file);
+                        return true;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+                throw;
+            }           
         }
     }
 }

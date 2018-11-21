@@ -91,12 +91,11 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             fileSystemMock.Setup(x => x.CombinePaths(projectDirectoryName, Constants.DirectoryName.Deploy)).Returns(_deployDirectory);
             fileSystemMock.Setup(x => x.CombinePaths(_deployDirectory, Constants.ExecutableName.AppClient)).Returns(_appClientDeployLocation);
             fileSystemMock.Setup(x => x.CombinePaths(_deployDirectory, Constants.ExecutableName.AppServer)).Returns(_appServerDeployLocation);
-
             
             fileSystemMock.Setup(x => x.CombinePaths(projectDirectoryName, Constants.DirectoryName.Deploy)).Returns(_deployDirectory);
             fileSystemMock.Setup(x => x.CombinePaths(_deployDirectory, Constants.DirectoryName.Temp)).Returns(_deployTempDirectory);
-            fileSystemMock.Setup(x => x.CombinePaths(_deployTempDirectory, "oppo-opcuaapp", "usr", "bin", Constants.ExecutableName.AppClient)).Returns(_appClientDeployTempLocation);
-            fileSystemMock.Setup(x => x.CombinePaths(_deployTempDirectory, "oppo-opcuaapp", "usr", "bin", Constants.ExecutableName.AppServer)).Returns(_appServerDeployTempLocation);
+            fileSystemMock.Setup(x => x.CombinePaths(_deployTempDirectory, Constants.DirectoryName.OpcuaappInstaller, Constants.DirectoryName.Usr, Constants.DirectoryName.Bin, Constants.ExecutableName.AppClient)).Returns(_appClientDeployTempLocation);
+            fileSystemMock.Setup(x => x.CombinePaths(_deployTempDirectory, Constants.DirectoryName.OpcuaappInstaller, Constants.DirectoryName.Usr, Constants.DirectoryName.Bin, Constants.ExecutableName.AppServer)).Returns(_appServerDeployTempLocation);
                           
             // conitue work here
 
