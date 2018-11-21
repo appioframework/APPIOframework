@@ -100,8 +100,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
                           
             // conitue work here
 
-            //fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.CreateDebianInstaller, _deployDirectory, It.IsAny<string>())).Returns(true);
-            fileSystemMock.Setup(x => x.CallExecutable(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(true);
+            fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.CreateDebianInstaller, It.IsAny<string>(), Constants.ExecutableName.CreateDebianInstallerArguments)).Returns(true);
             fileSystemMock.Setup(x => x.FileExists(_appClientPublishLocation)).Returns(true);
             fileSystemMock.Setup(x => x.FileExists(_appServerPublishLocation)).Returns(true);
 
