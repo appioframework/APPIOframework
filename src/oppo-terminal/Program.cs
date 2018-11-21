@@ -17,8 +17,6 @@ namespace Oppo.Terminal
     {
         internal static int Main(string[] args)
         {
-            //fake args for now
-            //args = new[] { "deploy", "-n", "rafApp" };
             var commandFactory = CreateCommandFactory();
             SetupOppoLogger();
             var objectModel = new ObjectModel.ObjectModel(commandFactory);
