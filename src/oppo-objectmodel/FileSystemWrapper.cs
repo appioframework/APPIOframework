@@ -146,7 +146,7 @@ namespace Oppo.ObjectModel
         {
             try
             {
-                if (WriteResourceToFile(CombinePaths(AppDomainBaseDirectory(), resourceDllName), resourceFullName, source))
+                if (WriteResourceToFile(resourceDllName, resourceFullName, source))
                 {
                     ZipFile.ExtractToDirectory(source, target);
                 }                
@@ -163,11 +163,11 @@ namespace Oppo.ObjectModel
             return AppDomain.CurrentDomain.BaseDirectory;
         }
 
-        private bool WriteResourceToFile(string assemblyPath, string resourceName, string fileName)
+        private bool WriteResourceToFile(string assemblyName, string resourceName, string fileName)
         {
             try
             {
-                using (var resource = Assembly.LoadFile(assemblyPath).GetManifestResourceStream(resourceName))
+                using (var resource = Assembly.LoadFrom(assemblyName).GetManifestResourceStream(resourceName))
                 {
                     using (var file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
                     {
