@@ -15,6 +15,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         const string _appServerPublishLocation = "publish\\serverApp";
         const string _appClientDeployLocation = "deploy\\clientApp";
         const string _appServerDeployLocation = "deploy\\serverApp";
+        const string _deployTempDirectory = "deploy\\temp";
+        const string _appClientDeployTempLocation = "deploy\\temp\\oppo-opcuaapp\\usr\\bin\\clientApp";
+        const string _appServerDeployTempLocation = "deploy\\temp\\oppo-opcuaapp\\usr\\bin\\serverApp";
 
         protected static string[][] InvalidInputs()
         {
@@ -89,7 +92,16 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             fileSystemMock.Setup(x => x.CombinePaths(_deployDirectory, Constants.ExecutableName.AppClient)).Returns(_appClientDeployLocation);
             fileSystemMock.Setup(x => x.CombinePaths(_deployDirectory, Constants.ExecutableName.AppServer)).Returns(_appServerDeployLocation);
 
-            fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.CreateDebianInstaller, _deployDirectory, It.IsAny<string>())).Returns(true);
+            
+            fileSystemMock.Setup(x => x.CombinePaths(projectDirectoryName, Constants.DirectoryName.Deploy)).Returns(_deployDirectory);
+            fileSystemMock.Setup(x => x.CombinePaths(_deployDirectory, Constants.DirectoryName.Temp)).Returns(_deployTempDirectory);
+            fileSystemMock.Setup(x => x.CombinePaths(_deployTempDirectory, "oppo-opcuaapp", "usr", "bin", Constants.ExecutableName.AppClient)).Returns(_appClientDeployTempLocation);
+            fileSystemMock.Setup(x => x.CombinePaths(_deployTempDirectory, "oppo-opcuaapp", "usr", "bin", Constants.ExecutableName.AppServer)).Returns(_appServerDeployTempLocation);
+                          
+            // conitue work here
+
+            //fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.CreateDebianInstaller, _deployDirectory, It.IsAny<string>())).Returns(true);
+            fileSystemMock.Setup(x => x.CallExecutable(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(true);
             fileSystemMock.Setup(x => x.FileExists(_appClientPublishLocation)).Returns(true);
             fileSystemMock.Setup(x => x.FileExists(_appServerPublishLocation)).Returns(true);
 
@@ -106,8 +118,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.AreEqual(string.Format(OutputText.OpcuaappDeploySuccess, projectDirectoryName), strategyResult.OutputMessages.First().Key);
             Assert.AreEqual(string.Empty, strategyResult.OutputMessages.First().Value);
             fileSystemMock.Verify(x => x.CreateDirectory(_deployDirectory), Times.Once);
-            fileSystemMock.Verify(x => x.CopyFile(_appClientPublishLocation, _appClientDeployLocation), Times.Once);
-            fileSystemMock.Verify(x => x.CopyFile(_appServerPublishLocation, _appServerDeployLocation), Times.Once);
+            //fileSystemMock.Verify(x => x.CopyFile(_appClientPublishLocation, _appClientDeployLocation), Times.Once);
+            //fileSystemMock.Verify(x => x.CopyFile(_appServerPublishLocation, _appServerDeployLocation), Times.Once);
+            fileSystemMock.Verify(x => x.CopyFile(_appClientPublishLocation, _appClientDeployTempLocation), Times.Once); 
+            fileSystemMock.Verify(x => x.CopyFile(_appServerPublishLocation, _appServerDeployTempLocation), Times.Once);
             loggerListenerMock.Verify(x => x.Info(LoggingText.OpcuaappDeploySuccess), Times.Once);
             loggerListenerMock.Verify(y => y.Info(It.IsAny<string>()), Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);

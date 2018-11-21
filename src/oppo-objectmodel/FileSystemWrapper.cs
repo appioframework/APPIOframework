@@ -2,6 +2,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Diagnostics.CodeAnalysis;
 using Oppo.Resources.text.logging;
+using System.IO.Compression;
+using System;
 
 namespace Oppo.ObjectModel
 {
@@ -137,6 +139,25 @@ namespace Oppo.ObjectModel
         public bool FileExists(string filePath)
         {
             return File.Exists(filePath);
+        }
+
+        public void ExtractFromZip(string source, string target)
+        {
+            try
+            {
+                ZipFile.ExtractToDirectory(source, target);
+            }
+            catch (System.Exception ex)
+            {
+                OppoLogger.Error(LoggingText.ExceptionOccured, ex);
+                throw;
+            }
+            
+        }
+
+        public string AppDomainBaseDirectory()
+        {
+            return AppDomain.CurrentDomain.BaseDirectory;
         }
     }
 }

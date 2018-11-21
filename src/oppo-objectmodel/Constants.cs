@@ -44,7 +44,8 @@ namespace Oppo.ObjectModel
             public const string ServerApp = "server";
             public const string MesonBuild = "build";
             public const string Publish = "publish";
-            public const string Deploy = "deploy";            
+            public const string Deploy = "deploy";
+            public const string Temp = "temp";
         }
 
         public static class ExecutableName
@@ -53,7 +54,7 @@ namespace Oppo.ObjectModel
             public const string Ninja = "ninja";
             public const string AppClient = "client-app";
             public const string AppServer = "server-app";
-            public const string CreateDebianInstaller = "";
+            public const string CreateDebianInstaller = "dpkg --build oppo-opcuaapp";
         }
 
         public static class FileName

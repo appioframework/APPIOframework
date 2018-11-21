@@ -61,6 +61,9 @@
 !src/oppo-resources/text/version/
 !src/oppo-resources/text/logging/
 !src/oppo-resources/text/output/
+!src/oppo-resources/installer/
+!src/oppo-resources/installer/opcuaapp/
+!src/oppo-resources/installer/opcuaapp/oppo-opcuaapp.zip
 
 !src/oppo-terminal/
 !src/oppo-terminal/oppo-terminal.csproj

@@ -44,18 +44,40 @@ namespace Oppo.ObjectModel.CommandStrategies.DeployCommands
                 outputMessages.Add(string.Format(OutputText.OpcuaappDeployWithNameFailure, projectName), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
-
+                       
+            // steps
+            // create deploy dir
             _fileSystem.CreateDirectory(projectDeployDirectory);
-            _fileSystem.CopyFile(appClientPublishLocation, appClientDeployLocation);
-            _fileSystem.CopyFile(appServerPublishLocation, appServerDeployLocation);
 
-            var debianInstallerResult = _fileSystem.CallExecutable(Constants.ExecutableName.CreateDebianInstaller, projectDeployDirectory, string.Empty);
+            // create temp dir
+            var tempDirectory = _fileSystem.CombinePaths(projectDeployDirectory, Constants.DirectoryName.Temp);
+            _fileSystem.CreateDirectory(tempDirectory);
+
+            // create needed installer structure
+            var zipSourceLocation = _fileSystem.CombinePaths(_fileSystem.AppDomainBaseDirectory(), Resources.Resources.OppoOpcuaAppTemplateInstallerZip);
+            _fileSystem.ExtractFromZip(zipSourceLocation, tempDirectory);
+
+            // copy all needed files to temp dir installer source
+            var appClientDeployTempLocation = _fileSystem.CombinePaths(tempDirectory, "oppo-opcuaapp", "usr", "bin", Constants.ExecutableName.AppClient);
+            var appServerDeployTempLocation = _fileSystem.CombinePaths(tempDirectory, "oppo-opcuaapp", "usr", "bin", Constants.ExecutableName.AppServer);
+            _fileSystem.CopyFile(appClientPublishLocation, appClientDeployTempLocation);
+            _fileSystem.CopyFile(appServerPublishLocation, appServerDeployTempLocation);
+                        
+            // create installer
+            var debianInstallerResult = _fileSystem.CallExecutable(Constants.ExecutableName.CreateDebianInstaller, tempDirectory, string.Empty);
             if (!debianInstallerResult)
             {
                 OppoLogger.Warn(LoggingText.CreateDebianInstallerFails);
                 outputMessages.Add(string.Format(OutputText.OpcuaappDeployWithNameFailure, projectName), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
+
+            // move installer to deploy dir
+            
+
+            // remove temp dir
+            _fileSystem.DeleteDirectory(tempDirectory);
+
 
             OppoLogger.Info(LoggingText.OpcuaappDeploySuccess);
             
