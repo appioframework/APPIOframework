@@ -133,10 +133,6 @@ namespace Oppo.Terminal
                 {"<Project>:", "The project directory to deploy" },
                 {string.Empty, string.Empty },
                 {"Options:", string.Empty },
-                {"-n:", "Project name" },
-                {"--name:", "Project name" },
-                {"-h:", "Deploy help" },
-                { "--help:", "Deploy help" }
             };
 
             var deployHelpStrategy = new DeployHelpStrategy(Constants.DeployCommandArguments.Help, deployHelpStrategyHelpText);
