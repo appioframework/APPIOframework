@@ -23,18 +23,20 @@ echo "Testing clean-opcuaapp--success -"
 /bin/bash bash-gitlab-ci/integration-tests/run-clean-opcuaapp--success.sh -
 echo "Testing clean-opcuaapp--success verbose"
 /bin/bash bash-gitlab-ci/integration-tests/run-clean-opcuaapp--success.sh verbose
+echo "Testing clean-opcuaapp--failure"
+/bin/bash bash-gitlab-ci/integration-tests/run-clean-opcuaapp--failure.sh
 
 echo "Testing deploy-help--success -"
 /bin/bash bash-gitlab-ci/integration-tests/run-deploy-help--success.sh -
 echo "Testing deploy-help--success verbose"
 /bin/bash bash-gitlab-ci/integration-tests/run-deploy-help--success.sh verbose
-echo "Testing deploy-opcuaapp--failure"
-/bin/bash bash-gitlab-ci/integration-tests/run-deploy-opcuaapp--failure.sh
 
 echo "Testing deploy-opcuaapp--success -"
 /bin/bash bash-gitlab-ci/integration-tests/run-deploy-opcuaapp--success.sh -
 echo "Testing deploy-opcuaapp--success verbose"
 /bin/bash bash-gitlab-ci/integration-tests/run-deploy-opcuaapp--success.sh verbose
+echo "Testing deploy-opcuaapp--failure"
+/bin/bash bash-gitlab-ci/integration-tests/run-deploy-opcuaapp--failure.sh
 
 echo "Testing hello--success"
 /bin/bash bash-gitlab-ci/integration-tests/run-hello--success.sh
