@@ -19,7 +19,7 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
             var inputsParamsArray = inputParams.ToArray();
-            var commandName = inputsParamsArray.First();
+            var commandName = inputsParamsArray.FirstOrDefault();
             var commandParams = inputsParamsArray.Skip(1).ToArray();
             var strategy = _factory.GetCommand(commandName);
             var result = strategy.Execute(commandParams);

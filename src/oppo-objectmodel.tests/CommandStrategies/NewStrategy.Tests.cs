@@ -25,6 +25,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             return new[]
             {
+                new NewStrategyFixture(new string[0], Constants.CommandResults.Success),
                 new NewStrategyFixture(new[]{ "sln", "-n", "anyName" }, Constants.CommandResults.Success),
                 new NewStrategyFixture(new[]{ "abc", "-n", "my-value" }, Constants.CommandResults.Failure),
                 new NewStrategyFixture(new[]{ "sln", "--name", "anyName" }, Constants.CommandResults.Success),
@@ -49,9 +50,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             // Arrange
             var commandMock = new Mock<ICommand<NewStrategy>>();
-            commandMock.Setup(x => x.Execute(It.IsAny<IEnumerable<string>>())).Returns(new CommandResult(true, new MessageLines(){ { data.Result, string.Empty } }));
+            commandMock.Setup(x => x.Execute(It.IsAny<IEnumerable<string>>())).Returns(new CommandResult(true, new MessageLines {{data.Result, string.Empty}}));
             var factoryMock = new Mock<ICommandFactory<NewStrategy>>();
-            factoryMock.Setup(x => x.GetCommand(data.Input.First())).Returns(commandMock.Object);
+            factoryMock.Setup(x => x.GetCommand(data.Input.FirstOrDefault())).Returns(commandMock.Object);
             var objectUnderTest = new NewStrategy(factoryMock.Object);
 
             // Act
