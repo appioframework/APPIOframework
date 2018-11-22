@@ -4,7 +4,7 @@
 int main(int argc, char *argv[]) {
 	if (argc != 2)
 	{
-		printf("server URL is missing!");
+		printf("server URL is missing!\n");
 		return -1;
 	}
 
@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
 
 	if (connectStatus != UA_STATUSCODE_GOOD)
 	{
-		printf("could not connect to server!");
+		printf("could not connect to server!\n");
 		return -1;
 	}
 
