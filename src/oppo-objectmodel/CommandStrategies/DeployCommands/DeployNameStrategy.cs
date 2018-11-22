@@ -53,7 +53,7 @@ namespace Oppo.ObjectModel.CommandStrategies.DeployCommands
 
             // create needed installer structure            
             var zipSourceLocation = _fileSystem.CombinePaths(projectDeployDirectory, Constants.DirectoryName.Temp, Constants.DirectoryName.OpcuaappInstaller + ".zip");          
-            _fileSystem.ExtractFromZip(zipSourceLocation, tempDirectory, Constants.ExecutableName.OppoResourcesDll, Resources.Resources.InstallerZipResourceName);
+            _fileSystem.ExtractFromZip(zipSourceLocation, tempDirectory, Resources.Resources.InstallerZipResourceName);
 
             // copy all needed files to temp dir installer source
             var appClientDeployTempLocation = _fileSystem.CombinePaths(tempDirectory, Constants.DirectoryName.OpcuaappInstaller, Constants.DirectoryName.Usr, Constants.DirectoryName.Bin, Constants.ExecutableName.AppClient);

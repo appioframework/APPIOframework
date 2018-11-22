@@ -16,7 +16,6 @@
 
         public const string OppoOpcuaAppTemplateFileName_open62541_h = "Oppo.Resources.open62541.open62541.h";
 
-        public const string OppoOpcuaAppTemplateInstallerZip = "installer/opcuaapp/oppo-opcuaapp.zip";
         public const string InstallerZipResourceName = "Oppo.Resources.installer.opcuaapp.oppo-opcuaapp.zip";
     }
 }

@@ -17,7 +17,7 @@ namespace Oppo.ObjectModel
             {
                 return Path.Combine(paths);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 OppoLogger.Error(LoggingText.ExceptionOccured, ex);
                 throw;
@@ -38,7 +38,7 @@ namespace Oppo.ObjectModel
 
                 return process?.ExitCode == 0;
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 OppoLogger.Error(LoggingText.ExceptionOccured, ex);
                 return false;
@@ -51,7 +51,7 @@ namespace Oppo.ObjectModel
             {
                 File.Copy(source, target, true);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 OppoLogger.Error(LoggingText.ExceptionOccured, ex);
                 throw;
@@ -87,7 +87,7 @@ namespace Oppo.ObjectModel
             {
                 Directory.CreateDirectory(directoryName);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 OppoLogger.Error(LoggingText.ExceptionOccured, ex);
                 throw;
@@ -100,7 +100,7 @@ namespace Oppo.ObjectModel
             {
                 File.WriteAllText(filePath, fileContent);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 OppoLogger.Error(LoggingText.ExceptionOccured, ex);
                 throw;
@@ -130,7 +130,7 @@ namespace Oppo.ObjectModel
                     return reader.ReadToEnd();
                 }
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 OppoLogger.Error(LoggingText.ExceptionOccured, ex);
                 throw;
@@ -142,16 +142,16 @@ namespace Oppo.ObjectModel
             return File.Exists(filePath);
         }
 
-        public void ExtractFromZip(string source, string target, string resourceDllName, string resourceFullName)
+        public void ExtractFromZip(string source, string target, string resourceFullName)
         {
             try
             {
-                if (WriteResourceToFile(resourceDllName, resourceFullName, source))
+                if (WriteResourceToFile(resourceFullName, source))
                 {
                     ZipFile.ExtractToDirectory(source, target);
                 }                
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 OppoLogger.Error(LoggingText.ExceptionOccured, ex);
                 throw;
@@ -163,11 +163,11 @@ namespace Oppo.ObjectModel
             return AppDomain.CurrentDomain.BaseDirectory;
         }
 
-        private bool WriteResourceToFile(string assemblyName, string resourceName, string fileName)
+        private bool WriteResourceToFile(string resourceName, string fileName)
         {
             try
             {
-                using (var resource = Assembly.LoadFrom(assemblyName).GetManifestResourceStream(resourceName))
+                using (var resource = GetResourceAssembly().GetManifestResourceStream(resourceName))
                 {
                     using (var file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
                     {
@@ -176,11 +176,16 @@ namespace Oppo.ObjectModel
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return false;
+                OppoLogger.Error(LoggingText.ExceptionOccured, ex);
                 throw;
             }           
+        }
+
+        private static Assembly GetResourceAssembly()
+        {
+            return typeof(Resources.Resources).Assembly;
         }
     }
 }
