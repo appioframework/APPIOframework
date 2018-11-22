@@ -14,15 +14,20 @@ echo "Testing build-opcuaapp--success verbose"
 echo "Testing build-opcuaapp--failure"
 /bin/bash bash-gitlab-ci/integration-tests/run-build-opcuaapp--failure.sh
 
+echo "Testing clean-help--success -"
+/bin/bash bash-gitlab-ci/integration-tests/run-clean-help--success.sh -
+echo "Testing clean-help--success verbose"
+/bin/bash bash-gitlab-ci/integration-tests/run-clean-help--success.sh verbose
+
 echo "Testing clean-opcuaapp--success -"
 /bin/bash bash-gitlab-ci/integration-tests/run-clean-opcuaapp--success.sh -
 echo "Testing clean-opcuaapp--success verbose"
 /bin/bash bash-gitlab-ci/integration-tests/run-clean-opcuaapp--success.sh verbose
 
-echo "Testing clean-help--success -"
-/bin/bash bash-gitlab-ci/integration-tests/run-clean-help--success.sh -
-echo "Testing clean-help--success verbose"
-/bin/bash bash-gitlab-ci/integration-tests/run-clean-help--success.sh verbose
+echo "Testing deploy-opcuaapp--success -"
+/bin/bash bash-gitlab-ci/integration-tests/run-deploy-opcuaapp--success.sh -
+echo "Testing deploy-opcuaapp--success verbose"
+/bin/bash bash-gitlab-ci/integration-tests/run-deploy-opcuaapp--success.sh verbose
 
 echo "Testing hello--success"
 /bin/bash bash-gitlab-ci/integration-tests/run-hello--success.sh
