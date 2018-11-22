@@ -18,6 +18,8 @@ namespace Oppo.ObjectModel
             public const string Build = "build";
             public const string Publish = "publish";
             public const string Help = "help";
+            public const string HelpDash = "-h";
+            public const string HelpDashVerbose = "--help";
             public const string ShortHelp= "?";
             public const string Version= "version";
             public const string Clean = "clean";

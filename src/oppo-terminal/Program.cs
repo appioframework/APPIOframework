@@ -79,6 +79,12 @@ namespace Oppo.Terminal
             var shortHelpStrategy = new HelpStrategy(Constants.CommandName.ShortHelp);
             commands.Add(shortHelpStrategy);
 
+            var helpDashStrategy = new HelpStrategy(Constants.CommandName.HelpDash);
+            commands.Add(helpDashStrategy);
+
+            var helpDashVerboseStrategy = new HelpStrategy(Constants.CommandName.HelpDashVerbose);
+            commands.Add(helpDashVerboseStrategy);
+
             var newHelpStrategyHelpText = new MessageLines
             {                
                 {"Arguments:", string.Empty },
@@ -180,6 +186,8 @@ namespace Oppo.Terminal
 
             helpStrategy.CommandFactory = factory;
             shortHelpStrategy.CommandFactory = factory;            
+            helpDashStrategy.CommandFactory = factory;            
+            helpDashVerboseStrategy.CommandFactory = factory;            
 
             return factory;
         }

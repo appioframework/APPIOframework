@@ -87,17 +87,20 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.AreEqual(helpText, Resources.text.help.HelpTextValues.HelpCommand);
         }
 
-        [Test]
-        public void ShouldReturnCommandName()
+        [TestCase(Constants.CommandName.Help)]
+        [TestCase(Constants.CommandName.ShortHelp)]
+        [TestCase(Constants.CommandName.HelpDash)]
+        [TestCase(Constants.CommandName.HelpDashVerbose)]
+        public void ShouldReturnCommandName(string expectedCommandName)
         {
             // Arrange
-            var helpStrategy = new HelpStrategy(string.Empty);
+            var helpStrategy = new HelpStrategy(expectedCommandName);
 
             // Act
             var commandName = helpStrategy.Name;
 
             // Assert
-            Assert.AreEqual(string.Empty, commandName);
+            Assert.AreEqual(expectedCommandName, commandName);
         }
     }
 }
