@@ -11,6 +11,15 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         private Mock<ICommandFactory<PublishStrategy>> _factoryMock;
         private PublishStrategy _objectUnderTest;
 
+        private static string[][] ValidData()
+        {
+            return new[]
+            {
+                new string[0],
+                new[] {"--any-name", "any", "sub", "parameters"}
+            };
+        }
+
         [SetUp]
         public void SetUp_ObjectUnderTest()
         {
@@ -54,22 +63,19 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         }
 
         [Test]
-        public void PublishStrategy_Should_ExecuteCorrectSubCommandByName()
+        public void PublishStrategy_Should_ExecuteCorrectSubCommandByName([ValueSource(nameof(ValidData))] string[] inputParams)
         {
             // Arrange
-            const string commandName = "--any-name";
             const string expectedCommandResult = "any-result";
-            var commandInputParamsMock = new[] {commandName, "any", "sub", "parameters"};
-            var subCommandInputParamsMock = new[] {"any", "sub", "parameters"};
 
             var commandMock = new Mock<ICommand<PublishStrategy>>();
-            commandMock.Setup(x => x.Execute(It.Is<IEnumerable<string>>(p => p.SequenceEqual(subCommandInputParamsMock)))).
-                Returns(new CommandResult(true, new MessageLines() { { expectedCommandResult, string.Empty } }));
+            commandMock.Setup(x => x.Execute(It.Is<IEnumerable<string>>(p => p.SequenceEqual(inputParams.Skip(1).ToArray())))).
+                Returns(new CommandResult(true, new MessageLines { { expectedCommandResult, string.Empty } }));
 
-            _factoryMock.Setup(x => x.GetCommand(commandName)).Returns(commandMock.Object);
+            _factoryMock.Setup(x => x.GetCommand(inputParams.FirstOrDefault())).Returns(commandMock.Object);
 
             // Act
-            var result = _objectUnderTest.Execute(commandInputParamsMock);
+            var result = _objectUnderTest.Execute(inputParams);
 
             // Assert
             Assert.IsTrue(result.Sucsess);
