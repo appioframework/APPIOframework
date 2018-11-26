@@ -17,6 +17,7 @@ namespace Oppo.Terminal
     {
         internal static int Main(string[] args)
         {
+            var fs = new FileSystemWrapper();
             var commandFactory = CreateCommandFactory();
             SetupOppoLogger();
             var objectModel = new ObjectModel.ObjectModel(commandFactory);
