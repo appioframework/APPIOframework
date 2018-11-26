@@ -17,7 +17,7 @@ namespace Oppo.ObjectModel.CommandStrategies.CleanCommands
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
             var inputParamsArray = inputParams.ToArray();
-            var commandName = inputParamsArray.ElementAt(0);
+            var commandName = inputParamsArray.ElementAtOrDefault(0);
             var commandParams = inputParamsArray.Skip(1).ToArray();
             var command = _factory.GetCommand(commandName);
             return command.Execute(commandParams);
