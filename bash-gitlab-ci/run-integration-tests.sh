@@ -2,10 +2,8 @@
 
 set -euo pipefail
 
-echo "Testing build-help--success -"
-/bin/bash bash-gitlab-ci/integration-tests/run-build-help--success.sh -
-echo "Testing build-help--success verbose"
-/bin/bash bash-gitlab-ci/integration-tests/run-build-help--success.sh verbose
+echo "Testing build-help--success"
+/bin/bash bash-gitlab-ci/integration-tests/run-build-help--success.sh
 
 echo "Testing build-opcuaapp--success -"
 /bin/bash bash-gitlab-ci/integration-tests/run-build-opcuaapp--success.sh -
