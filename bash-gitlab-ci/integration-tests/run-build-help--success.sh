@@ -4,19 +4,27 @@ set -euo pipefail
 
 source bash-gitlab-ci/util-integration-tests.sh
 
-mkdir build-help--success
-cd    build-help--success
+VAR_COMMANDS[0]="oppo build --help"
+VAR_COMMANDS[1]="oppo build -h"
+VAR_COMMANDS[2]="oppo build"
 
-precondition_oppo_log_file_is_not_existent
+for INDEX in "${!VAR_COMMANDS[@]}";
+do
+  VAR_COMMAND=${VAR_COMMANDS[INDEX]}
+  
+  echo "Testing command '${VAR_COMMAND}' ..."
 
-if [ "${1}" = "verbose" ];
-then
-  oppo build --help
-else
-  oppo build -h
-fi
+  mkdir build-help--success
+  cd    build-help--success
 
-check_for_exisiting_oppo_log_file
+  precondition_oppo_log_file_is_not_existent
 
-cd ..
-rm -rf build-help--success
+  ${VAR_COMMAND}
+
+  check_for_exisiting_oppo_log_file
+
+  cd ..
+  rm -rf build-help--success
+
+  echo "Testing command '${VAR_COMMAND}' ... done"
+done
