@@ -7,7 +7,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 {
     public class ImportInformationModelCommandStrategy : ICommand<ImportStrategy>
     {
-        private IFileSystem _fileSystem;
+        private readonly IFileSystem _fileSystem;
 
         public ImportInformationModelCommandStrategy(IFileSystem fileSystem)
         {
@@ -20,7 +20,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
         {
             var inputParamsList = inputParams.ToList();
             var projectName = inputParamsList.ElementAtOrDefault(0);
-            var pathFlag = inputParamsList.ElementAtOrDefault(1);
+            
             var modelPath = inputParamsList.ElementAtOrDefault(2);
             var outputMessages = new MessageLines();
 
