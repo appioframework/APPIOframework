@@ -12,7 +12,7 @@ else
   oppo new opcuaapp -n "my-app"
 fi
 
-if [ ! -f "my-app/models2"]
+if [ ! -d "my-app/models2"]
 then
   echo "oppo project / models directory does not exist ..."
   exit 1
