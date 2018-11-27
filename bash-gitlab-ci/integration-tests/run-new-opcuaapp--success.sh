@@ -12,6 +12,12 @@ else
   oppo new opcuaapp -n "my-app"
 fi
 
+if [ ! -f "my-app/models"]
+then
+  echo "oppo project / models directory does not exist ..."
+  exit 1
+fi
+
 if [ ! -f "./my-app/my-app.oppoproj" ] && [ ! -f "./my-app/meson.build" ];
 then
   echo "oppo project / meson.build file does not exist ..."
