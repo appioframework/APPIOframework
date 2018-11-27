@@ -119,5 +119,10 @@ namespace Oppo.ObjectModel
             public const string Name = "-n";
             public const string VerboseName = "--name";
         }
+
+        public static class ImportInformationModelCommandName
+        {
+            public const string IModel = "information-model";
+        }
     }
 }

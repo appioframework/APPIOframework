@@ -11,6 +11,7 @@ namespace Oppo.Resources.text.logging
         public const string NewSlnCommandSuccess = "Solution with name {0} was successfully created";
         public const string UnknownNewOpcuaappCommandParam = "Unknown new opcuaapp <command> parameter!";
         public const string NewOpcuaappCommandSuccess = "opcuaapp with name {0} was successfully created";
+        public const string ImportInforamtionModelCommandSuccess = "Information model '{0}' imported successfully";        
         public const string EmptyOpcuaappName = "Empty opcuaapp name!";
         public const string InvalidOpcuaappName = "Invalid opcuaapp name!";
         public const string MesonExecutableFails = "Meson Failed!";

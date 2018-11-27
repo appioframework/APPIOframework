@@ -26,5 +26,8 @@
         public const string OpcuaappDeploySuccess = "Deploy '{0}' success!";
         public const string OpcuaappDeployFailure = "Deploy failure!";
         public const string OpcuaappDeployWithNameFailure = "Deploy '{0}' failure!";
+
+        // import <command>
+        public const string ImportInforamtionModelCommandSuccess = "Import information model '{0}' success!";
     }
 }
