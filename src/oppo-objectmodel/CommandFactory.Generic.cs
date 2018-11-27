@@ -38,16 +38,16 @@ namespace Oppo.ObjectModel
         public IEnumerable<ICommand<TDependance>> Commands => _commands.Values;
 
         public ICommand<TDependance> GetCommand(string commandName)
-        {
-            if (string.IsNullOrEmpty(commandName))
+        {            
+            if (string.IsNullOrEmpty(commandName) && _commands.Count > 0)
             {
                 return _commands[_nameOfDefaultCommand];
             }
 
-            if (_commands.ContainsKey(commandName))
+            if (commandName != null && _commands.ContainsKey(commandName))
             {
                 return _commands[commandName];
-            }
+            }                        
 
             return new FallbackCommand();
         }

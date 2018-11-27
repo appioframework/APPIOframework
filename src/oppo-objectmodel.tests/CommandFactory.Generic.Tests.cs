@@ -81,15 +81,17 @@ namespace Oppo.ObjectModel.Tests
             Assert.IsInstanceOf<ICommandFactory<object>>(objectUnderTest);
         }
 
-        [Test]
-        public void CommandFactory_Should_ReturnFallbackCommandOnInvalidCommandName()
+        [TestCase("any-name")]
+        [TestCase("")]
+        [TestCase(null)]
+        public void CommandFactory_Should_ReturnFallbackCommandOnInvalidCommandName(string commandName)
         {
             // Arrange
             var commandArrayMock = new ICommand<object>[0];
             var objectUnderTest = new CommandFactory<object>(commandArrayMock, string.Empty);
 
             // Act
-            var command = objectUnderTest.GetCommand("any-name");
+            var command = objectUnderTest.GetCommand(commandName);
 
             // Assert
             Assert.IsInstanceOf<ICommand<object>>(command);

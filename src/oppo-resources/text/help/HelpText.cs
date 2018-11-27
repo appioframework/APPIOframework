@@ -11,7 +11,8 @@
         public const string HelloCommand = "This prints the hello oppo msg";
         public const string VersionCommand = "This prints the version information";
         public const string CleanCommand = "This cleans a project (removes temporary files and folders)";
-        public const string DeployStrategy = "This will deploy a oppo opcuaapp";        
+        public const string DeployStrategy = "This will deploy a oppo opcuaapp";
+        public const string ImportStrategy = "This will import artifacts into oppo opcuaapp";
 
         public const string BuildHelpArgumentCommandDescription = "Build help";
         public const string BuildNameArgumentCommandDescription = "Project name";

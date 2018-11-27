@@ -24,6 +24,7 @@ namespace Oppo.ObjectModel
             public const string Version= "version";
             public const string Clean = "clean";
             public const string Deploy = "deploy";
+            public const string Import = "import";
         }
 
         public static class CommandResults
