@@ -52,6 +52,7 @@ namespace Oppo.ObjectModel
             public const string OpcuaappInstaller = "oppo-opcuaapp";
             public const string Usr = "usr";
             public const string Bin = "bin";
+            public const string Models = "models";
         }
 
         public static class ExecutableName

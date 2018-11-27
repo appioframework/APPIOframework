@@ -22,7 +22,7 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
             var nameFlag = inputParamsArray.ElementAtOrDefault(0);
             var opcuaAppName = inputParamsArray.ElementAtOrDefault(1);
             var outputMessages = new MessageLines();
-            
+
             if (nameFlag != Constants.NewOpcuaAppCommandArguments.Name && nameFlag != Constants.NewOpcuaAppCommandArguments.VerboseName)
             {
                 OppoLogger.Warn(LoggingText.UnknownNewOpcuaappCommandParam);
@@ -41,7 +41,7 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
             {
                 OppoLogger.Warn(LoggingText.InvalidOpcuaappName);
                 outputMessages.Add(string.Format(OutputText.NewOpcuaappCommandFailure, opcuaAppName), string.Empty);
-                return new CommandResult(false, outputMessages);                
+                return new CommandResult(false, outputMessages);
             }
 
             if (_fileSystem.GetInvalidPathChars().Any(opcuaAppName.Contains))
@@ -52,6 +52,7 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
             }
 
             DeployTemplateOpcuaApp(opcuaAppName);
+            CreateModelsDirectory(opcuaAppName);
 
             var sourceDirectory = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.SourceCode);
             _fileSystem.CreateDirectory(sourceDirectory);
@@ -62,6 +63,12 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
             OppoLogger.Info(string.Format(LoggingText.NewOpcuaappCommandSuccess, opcuaAppName));
             outputMessages.Add(string.Format(OutputText.NewOpcuaappCommandSuccess, opcuaAppName), string.Empty);
             return new CommandResult(true, outputMessages);
+        }
+
+        private void CreateModelsDirectory(string opcuaAppName)
+        {
+            var modelsDirectory = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.Models);
+            _fileSystem.CreateDirectory(modelsDirectory);
         }
 
         public string GetHelpText()

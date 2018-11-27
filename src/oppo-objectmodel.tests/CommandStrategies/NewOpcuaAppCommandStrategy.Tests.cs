@@ -88,6 +88,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             const string serverMainC           = "server-main-c-file";
             const string serverOpen62541C      = "server-open62541-c-file";
             const string serverOpen62541H      = "server-open62541-h-file";
+            const string modelsDirectory       = "models";
 
             _fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, projectFileName)).Returns(projectFilePath);
             _fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.FileName.SourceCode_meson_build)).Returns(mesonBuildFilePath);
@@ -97,6 +98,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _fileSystemMock.Setup(x => x.CombinePaths(serverSourceDirectory, Constants.FileName.SourceCode_main_c)).Returns(serverMainC);
             _fileSystemMock.Setup(x => x.CombinePaths(serverSourceDirectory, Constants.FileName.SourceCode_open62541_c)).Returns(serverOpen62541C);
             _fileSystemMock.Setup(x => x.CombinePaths(serverSourceDirectory, Constants.FileName.SourceCode_open62541_h)).Returns(serverOpen62541H);
+            _fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.DirectoryName.Models)).Returns(modelsDirectory);
 
             // Act
             var result = _objectUnderTest.Execute(inputParams);
@@ -110,6 +112,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _fileSystemMock.Verify(x => x.CreateDirectory(sourceCodeDirectory), Times.AtLeastOnce);
             _fileSystemMock.Verify(x => x.CreateDirectory(clientSourceDirectory), Times.AtLeastOnce);
             _fileSystemMock.Verify(x => x.CreateDirectory(serverSourceDirectory), Times.AtLeastOnce);
+            _fileSystemMock.Verify(x => x.CreateDirectory(modelsDirectory), Times.Once);
 
             _fileSystemMock.Verify(x => x.CreateFile(projectFilePath, It.IsAny<string>()), Times.Once);
             _fileSystemMock.Verify(x => x.CreateFile(mesonBuildFilePath, It.IsAny<string>()), Times.Once);
