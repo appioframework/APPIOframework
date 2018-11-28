@@ -187,5 +187,31 @@ namespace Oppo.ObjectModel
         {
             return typeof(Resources.Resources).Assembly;
         }
+
+        public string GetExtension(string path)
+        {
+            try
+            {
+                return Path.GetExtension(path);
+            }
+            catch (Exception ex)
+            {
+                OppoLogger.Error(LoggingText.ExceptionOccured, ex);
+                throw;
+            }
+        }
+
+        public string GetFileName(string path)
+        {
+            try
+            {
+                return Path.GetFileName(path);
+            }
+            catch (Exception ex)
+            {
+                OppoLogger.Error(LoggingText.ExceptionOccured, ex);
+                throw;
+            }
+        }
     }
 }

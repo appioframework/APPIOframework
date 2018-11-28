@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Oppo.Resources.text.logging
+﻿namespace Oppo.Resources.text.logging
 {
     public static class LoggingText
     {
@@ -37,9 +35,10 @@ namespace Oppo.Resources.text.logging
         public const string ExceptionOccured = "FileWrapper ExceptionOccured, Program termination!";
         public const string CreateDebianInstallerFails = "Create Debian installer failed!";
         public const string MissingPublishedOpcuaAppFiles = "Missing published opcuappp files!";
-
-
-
-
+        public const string ImportInforamtionModelCommandFailure = "Information model import failure, invalid character in name '{0}'";
+        public const string UnknownImportInfomrationModelCommandParam = "Unknown import information-model <command> parameter!";
+        public const string InvalidInformationModelPath = "Information model import failure, invalid character in model path '{0}'";
+        public const string InvalidInformationModelExtension = "Information model import failure, invalid model extension '{0}'";
+        public const string InvalidInformationModelNotExistingPath = "Information model import failure, can't find model '{0}'!";
     }
 }

@@ -29,5 +29,11 @@
 
         // import <command>
         public const string ImportInforamtionModelCommandSuccess = "Import information model '{0}' success!";
+        public const string ImportInforamtionModelCommandFailure = "Import information model '{0}' failure!";
+        public const string ImportInforamtionModelCommandUnknownParamFailure = "Import information model failure!";
+        public const string ImportInforamtionModelCommandInvalidOpcuaappName = "Import information model for opcuaapp '{0}' failure!";
+        public const string ImportInforamtionModelCommandInvalidModelPath = "Information model import failure, invalid character in model path '{0}'";
+        public const string ImportInforamtionModelCommandInvalidModelExtension = "Information model import failure, invalid model extension '{0}'";
+        public const string ImportInforamtionModelCommandNotExistingModelPath = "Information model import failure, can't find model '{0}'!";
     }
 }

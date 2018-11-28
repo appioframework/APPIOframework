@@ -9,6 +9,7 @@ namespace Oppo.ObjectModel
             public const string OppoSln = ".opposln";
             public const string OppoProject = ".oppoproj";
             public const string DebianInstaller = ".deb";
+            public const string InformationModel = ".xml";
         }
 
         public static class CommandName
@@ -122,7 +123,13 @@ namespace Oppo.ObjectModel
 
         public static class ImportInformationModelCommandName
         {
-            public const string IModel = "information-model";
+            public const string InformationModel = "information-model";
+        }
+
+        public static class ImportInformationModelCommandArguments
+        {
+            public const string Path = "-p";
+            public const string VerbosePath = "--path";
         }
     }
 }

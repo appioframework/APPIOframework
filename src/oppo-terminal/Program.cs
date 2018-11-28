@@ -6,6 +6,7 @@ using Oppo.ObjectModel.CommandStrategies.CleanCommands;
 using Oppo.ObjectModel.CommandStrategies.DeployCommands;
 using Oppo.ObjectModel.CommandStrategies.HelloCommands;
 using Oppo.ObjectModel.CommandStrategies.HelpCommands;
+using Oppo.ObjectModel.CommandStrategies.ImportCommands;
 using Oppo.ObjectModel.CommandStrategies.NewCommands;
 using Oppo.ObjectModel.CommandStrategies.PublishCommands;
 using Oppo.ObjectModel.CommandStrategies.VersionCommands;
@@ -181,6 +182,14 @@ namespace Oppo.Terminal
             cleanHelpVerboseStrategy.CommandFactory = cleanStrategyCommandFactory;
 
             commands.Add(new CleanStrategy(cleanStrategyCommandFactory));
+
+            var importCommands = new ICommand<ImportStrategy>[]
+            {
+                new ImportInformationModelCommandStrategy(fileSystem)
+            };
+
+            var importStrategyCommandFactory = new CommandFactory<ImportStrategy>(importCommands, Constants.ImportInformationModelCommandName.InformationModel);
+            commands.Add(new ImportStrategy(importStrategyCommandFactory));
 
             var factory = new CommandFactory<ObjectModel.ObjectModel>(commands, Constants.CommandName.Help);
 

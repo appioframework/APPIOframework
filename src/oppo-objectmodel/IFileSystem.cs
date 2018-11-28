@@ -20,5 +20,7 @@ namespace Oppo.ObjectModel
         bool FileExists(string filePath);
         void ExtractFromZip(string source, string target, string resourceFullName);
         string AppDomainBaseDirectory();
+        string GetExtension(string path);
+        string GetFileName(string path);
     }    
 }
