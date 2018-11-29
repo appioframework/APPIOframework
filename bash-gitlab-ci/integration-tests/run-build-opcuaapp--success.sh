@@ -21,7 +21,8 @@ do
 
   precondition_oppo_log_file_is_not_existent
 
-  ${VAR_COMMAND}
+  # ${VAR_COMMAND}
+  oppo build --name "my-app"
 
   if [ ! -f "./my-app/build/client-app" ];
   then
