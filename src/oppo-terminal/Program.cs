@@ -194,14 +194,18 @@ namespace Oppo.Terminal
                 { "--path","Information models path to use"}
             };
 
+            var importHelpStrategy = new ImportHelpStrategy(Constants.ImportInformationModelCommandArguments.Help, importHelpStrategyHelpText);
+            var importHelpStrategyVerbose = new ImportHelpStrategy(Constants.ImportInformationModelCommandArguments.VerboseHelp, importHelpStrategyHelpText);
             var importCommands = new ICommand<ImportStrategy>[]
             {
                 new ImportInformationModelCommandStrategy(fileSystem),
-                new ImportHelpStrategy(Constants.ImportInformationModelCommandArguments.Help, importHelpStrategyHelpText),
-                new ImportHelpStrategy(Constants.ImportInformationModelCommandArguments.VerboseHelp, importHelpStrategyHelpText),
+                importHelpStrategy,
+                importHelpStrategyVerbose
             };
 
             var importStrategyCommandFactory = new CommandFactory<ImportStrategy>(importCommands, Constants.ImportInformationModelCommandArguments.Help);
+            importHelpStrategy.CommandFactory = importStrategyCommandFactory;
+            importHelpStrategyVerbose.CommandFactory = importStrategyCommandFactory;
             commands.Add(new ImportStrategy(importStrategyCommandFactory));
 
             var factory = new CommandFactory<ObjectModel.ObjectModel>(commands, Constants.CommandName.Help);

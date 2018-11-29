@@ -41,5 +41,6 @@
         public const string InvalidInformationModelExtension = "Information model import failure, invalid model extension '{0}'";
         public const string InvalidInformationModelNotExistingPath = "Information model import failure, can't find model '{0}'!";
         public const string InvalidInformationModelMissingModelFile = "Information model import failure, missing model file!";
+        public const string OppoHelpForImportInformationModel = "Help for import <command> called";
     }
 }

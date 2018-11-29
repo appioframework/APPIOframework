@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Oppo.Resources.text.logging;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,13 +16,21 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
             _helpText = helpText;
             Name = commandName;
         }
+        public ICommandFactory<ImportStrategy> CommandFactory { get; set; }
 
         public string Name { get; private set; }
 
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
             var outputMessages = new MessageLines(_helpText);
-            return new CommandResult(true,outputMessages);
+
+            foreach (var command in CommandFactory.Commands)
+            {
+                outputMessages.Add(command.Name, command.GetHelpText());
+            }
+
+            OppoLogger.Info(LoggingText.OppoHelpForImportInformationModel);
+            return new CommandResult(true, outputMessages);
         }
 
         public string GetHelpText()
