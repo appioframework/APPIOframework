@@ -27,13 +27,13 @@ do
 
   echo "creating dummy model.xml"
   touch "model.xml"
-  touch "model.txt"
+  
   ${VAR_COMMAND}
   
-  if [ ${?} = 1 ];
+  if [ ${?} = 0 ];
   then
-    echo "import command failed as expected..."
-    exit 0
+    echo "import command didn't failed as expected..."
+    exit 1
   fi
   
   check_for_exisiting_oppo_log_file
