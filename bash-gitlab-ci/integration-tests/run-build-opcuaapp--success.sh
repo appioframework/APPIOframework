@@ -4,8 +4,8 @@ set -euo pipefail
 
 source bash-gitlab-ci/util-integration-tests.sh
 
-VAR_COMMANDS[0]="oppo build --name \"my-app\""
-VAR_COMMANDS[1]="oppo build -n     \"my-app\""
+VAR_COMMANDS[0]="oppo build -n     \"my-app\""
+VAR_COMMANDS[1]="oppo build --name \"my-app\""
 
 for INDEX in "${!VAR_COMMANDS[@]}";
 do
@@ -18,6 +18,8 @@ do
 
   oppo new opcuaapp -n "my-app"
   rm --force "./oppo.log"
+
+  ls -Al
 
   precondition_oppo_log_file_is_not_existent
 
