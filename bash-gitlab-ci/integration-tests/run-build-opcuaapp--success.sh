@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# set -euo pipefail
+set -euo pipefail
 
 source bash-gitlab-ci/util-integration-tests.sh
 
@@ -22,10 +22,6 @@ do
   precondition_oppo_log_file_is_not_existent
 
   ${VAR_COMMAND}
-
-  echo "CAVEMAN ???"
-  cat "./oppo.log"
-  exit 1
 
   if [ ! -f "./my-app/build/client-app" ];
   then

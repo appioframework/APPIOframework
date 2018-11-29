@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# set -euo pipefail
+set -euo pipefail
 
 echo "Testing build-help--success"
 /bin/bash bash-gitlab-ci/integration-tests/run-build-help--success.sh
