@@ -29,10 +29,10 @@ do
   touch "model.xml"
   ${VAR_COMMAND}
   
-  if [ ${?} = 0 ];
+  if [ ${?} = 1 ];
   then
-    echo "failing command did not result in exit code != 0 ..."
-    exit 1
+    echo "import command failed as expected..."
+    exit 0
   fi
   
   check_for_exisiting_oppo_log_file
