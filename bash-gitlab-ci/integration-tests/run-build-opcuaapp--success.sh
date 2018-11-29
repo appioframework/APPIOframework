@@ -2,48 +2,55 @@
 
 set -euo pipefail
 
-mkdir build-opcuaapp--success
-cd    build-opcuaapp--success
+source bash-gitlab-ci/util-integration-tests.sh
 
-oppo new opcuaapp -n "my-app"
-rm --force "./oppo.log"
+VAR_COMMANDS[0]="oppo build --name \"my-app\""
+VAR_COMMANDS[1]="oppo build -n     \"my-app\""
 
-if [ "${1}" = "verbose" ];
-then
-  oppo build --name "my-app"
-else
-  oppo build -n "my-app"
-fi
+for INDEX in "${!VAR_COMMANDS[@]}";
+do
+  VAR_COMMAND=${VAR_COMMANDS[INDEX]}
+  
+  echo "Testing command '${VAR_COMMAND}' ..."
 
-if [ ! -f "./my-app/build/client-app" ];
-then
-  echo "deployable client application file does not exist ..."
-  exit 1
-fi
+  mkdir build-opcuaapp--success
+  cd    build-opcuaapp--success
 
-if [[ ! -x "./my-app/build/client-app" ]]
-then
-  echo "deployable client application file is not executable ..."
-  exit 1
-fi
+  oppo new opcuaapp -n "my-app"
+  rm --force "./oppo.log"
 
-if [ ! -f "./my-app/build/server-app" ];
-then
-  echo "deployable server application file does not exist ..."
-  exit 1
-fi
+  precondition_oppo_log_file_is_not_existen
 
-if [[ ! -x "./my-app/build/server-app" ]]
-then
-  echo "deployable server application file is not executable ..."
-  exit 1
-fi
+  ${VAR_COMMAND}
 
-if [ ! -f "./oppo.log" ];
-then
-  echo "no log entry was created ..."
-  exit 1
-fi
+  if [ ! -f "./my-app/build/client-app" ];
+  then
+    echo "deployable client application file does not exist ..."
+    exit 1
+  fi
 
-cd ..
-rm -rf build-opcuaapp--success
+  if [[ ! -x "./my-app/build/client-app" ]]
+  then
+    echo "deployable client application file is not executable ..."
+    exit 1
+  fi
+
+  if [ ! -f "./my-app/build/server-app" ];
+  then
+    echo "deployable server application file does not exist ..."
+    exit 1
+  fi
+
+  if [[ ! -x "./my-app/build/server-app" ]]
+  then
+    echo "deployable server application file is not executable ..."
+    exit 1
+  fi
+
+  check_for_exisiting_oppo_log_file
+
+  cd ..
+  rm -rf build-opcuaapp--success
+
+  echo "Testing command '${VAR_COMMAND}' ... done"
+done
