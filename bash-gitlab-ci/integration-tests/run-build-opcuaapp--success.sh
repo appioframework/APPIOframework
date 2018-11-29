@@ -19,7 +19,7 @@ do
   oppo new opcuaapp -n "my-app"
   rm --force "./oppo.log"
 
-  precondition_oppo_log_file_is_not_existen
+  precondition_oppo_log_file_is_not_existent
 
   ${VAR_COMMAND}
 
