@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#set -euo pipefail
+set -euo pipefail
 
 source bash-gitlab-ci/util-integration-tests.sh
 
@@ -27,6 +27,7 @@ do
 
   echo "creating dummy model.xml"
   touch "model.xml"
+  touch "model.txt"
   ${VAR_COMMAND}
   
   if [ ${?} = 1 ];
