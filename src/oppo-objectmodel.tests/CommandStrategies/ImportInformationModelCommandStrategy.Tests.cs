@@ -69,7 +69,16 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
                 new[] { "myApp/", "-p", "model.xml"},
                 new[] { "my\\App", "--path", "model.xml"}
             };
-        }        
+        }
+
+        private static string[][] InvalidInputsMissingInformationModel()
+        {
+            return new[]
+            {
+                new[] { "myApp", "-p"},
+                new[] { "myApp", "--path"}
+            };
+        }
 
         private Mock<IFileSystem> _fileSystemMock;
         private ImportInformationModelCommandStrategy _objectUnderTest;
@@ -303,6 +312,30 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsFalse(result.Sucsess);
             Assert.AreEqual(string.Format(OutputText.ImportInforamtionModelCommandNotExistingModelPath, modelFilePath), result.OutputMessages.First().Key);
             _fileSystemMock.Verify(x => x.CopyFile(modelFilePath, modelsDirectory), Times.Never);
+            OppoLogger.RemoveListener(loggerListenerMock.Object);
+        }
+
+        [Test]
+        public void ImportInformationModelCommandStrategy_Should_ImportModel_ModelFileParamMissing_Failure([ValueSource(nameof(InvalidInputsMissingInformationModel))]string[] inputParams)
+        {
+            // Arrange
+            var warnWrittenOut = false;
+            var opcuaAppName = $"{inputParams.ElementAtOrDefault(0)}";
+            var modelsDirectory = "models";           
+            
+            _fileSystemMock.Setup(x => x.CombinePaths(opcuaAppName, Constants.DirectoryName.Models)).Returns(modelsDirectory);
+
+            var loggerListenerMock = new Mock<ILoggerListener>();
+            loggerListenerMock.Setup(listener => listener.Warn(LoggingText.InvalidInformationModelMissingModelFile)).Callback(delegate { warnWrittenOut = true; });
+            OppoLogger.RegisterListener(loggerListenerMock.Object);
+
+            // Act
+            var result = _objectUnderTest.Execute(inputParams);
+
+            // Assert
+            Assert.IsTrue(warnWrittenOut);
+            Assert.IsFalse(result.Sucsess);
+            Assert.AreEqual(OutputText.ImportInforamtionModelCommandMissingModelPath, result.OutputMessages.First().Key);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
     }

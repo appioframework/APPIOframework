@@ -48,6 +48,13 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
             }
 
             // model path validation
+            if (string.IsNullOrEmpty(modelPath))
+            {
+                OppoLogger.Warn(LoggingText.InvalidInformationModelMissingModelFile);
+                outputMessages.Add(OutputText.ImportInforamtionModelCommandMissingModelPath, string.Empty);
+                return new CommandResult(false, outputMessages);
+            }
+
             if (_fileSystem.GetInvalidPathChars().Any(modelPath.Contains))
             {
                 OppoLogger.Warn(string.Format(LoggingText.InvalidInformationModelPath, modelPath));
