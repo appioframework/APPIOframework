@@ -28,10 +28,10 @@ do
   echo "creating dummy model.xml"
   touch "model.xml"
   ${VAR_COMMAND}
-
-  if [ -f "./my-app/models/model.xml" ];
+  
+  if [ ${?} = 0 ];
   then
-    echo "information-model import failed! ..."
+    echo "failing command did not result in exit code != 0 ..."
     exit 1
   fi
   
