@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -euo pipefail
+#set -euo pipefail
 
 source bash-gitlab-ci/util-integration-tests.sh
 
