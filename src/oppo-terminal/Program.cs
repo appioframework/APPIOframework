@@ -186,6 +186,7 @@ namespace Oppo.Terminal
             var importHelpStrategyHelpText = new MessageLines
             {
                 {"Arguments:", "" },
+                {"information-model", "OPC UA conform information model" },
                 {"<opcuaapp name>", "The name to opcuapp to use" },
                 {string.Empty, string.Empty },
                 { "Options:", "" },
