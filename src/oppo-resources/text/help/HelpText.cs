@@ -19,6 +19,7 @@
         public const string CleanHelpArgumentCommandDescription = "Clean help";
         public const string CleanNameArgumentCommandDescription = "Project name";
         public const string DeployHelpArgumentCommandDescription = "Deploy help";
-        public const string DeployNameArgumentCommandDescription = "Deploy name";        
+        public const string DeployNameArgumentCommandDescription = "Deploy name";
+        public const string ImportHelpArgumentCommandDescription = "Import help:";
     }
 }

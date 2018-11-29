@@ -130,6 +130,8 @@ namespace Oppo.ObjectModel
         {
             public const string Path = "-p";
             public const string VerbosePath = "--path";
+            public const string Help = "-h";
+            public const string VerboseHelp = "--help";
         }
     }
 }

@@ -183,12 +183,24 @@ namespace Oppo.Terminal
 
             commands.Add(new CleanStrategy(cleanStrategyCommandFactory));
 
-            var importCommands = new ICommand<ImportStrategy>[]
+            var importHelpStrategyHelpText = new MessageLines
             {
-                new ImportInformationModelCommandStrategy(fileSystem)
+                {"Arguments:", "" },
+                {"<opcuaapp name>", "The name to opcuapp to use" },
+                {string.Empty, string.Empty },
+                { "Options:", "" },
+                { "-p","Information models path to use"},
+                { "--path","Information models path to use"}
             };
 
-            var importStrategyCommandFactory = new CommandFactory<ImportStrategy>(importCommands, Constants.ImportInformationModelCommandName.InformationModel);
+            var importCommands = new ICommand<ImportStrategy>[]
+            {
+                new ImportInformationModelCommandStrategy(fileSystem),
+                new ImportHelpStrategy(Constants.ImportInformationModelCommandArguments.Help, importHelpStrategyHelpText),
+                new ImportHelpStrategy(Constants.ImportInformationModelCommandArguments.VerboseHelp, importHelpStrategyHelpText),
+            };
+
+            var importStrategyCommandFactory = new CommandFactory<ImportStrategy>(importCommands, Constants.ImportInformationModelCommandArguments.Help);
             commands.Add(new ImportStrategy(importStrategyCommandFactory));
 
             var factory = new CommandFactory<ObjectModel.ObjectModel>(commands, Constants.CommandName.Help);
