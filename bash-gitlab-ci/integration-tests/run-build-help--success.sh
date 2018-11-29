@@ -4,9 +4,9 @@ set -euo pipefail
 
 source bash-gitlab-ci/util-integration-tests.sh
 
-VAR_COMMANDS[0]='oppo build --help'
-VAR_COMMANDS[1]='oppo build -h'
-VAR_COMMANDS[2]='oppo build'
+VAR_COMMANDS[0]="oppo build --help"
+VAR_COMMANDS[1]="oppo build -h"
+VAR_COMMANDS[2]="oppo build"
 
 for INDEX in "${!VAR_COMMANDS[@]}";
 do
