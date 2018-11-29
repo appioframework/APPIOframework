@@ -23,6 +23,7 @@ do
 
   ${VAR_COMMAND}
 
+  echo "CAVEMAN ???"
   cat "./oppo.log"
   exit 1
 
