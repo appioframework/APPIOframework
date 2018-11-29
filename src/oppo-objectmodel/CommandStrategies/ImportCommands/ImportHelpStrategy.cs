@@ -7,7 +7,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
     public class ImportHelpStrategy : ICommand<ImportStrategy>
     {
 
-        private MessageLines _helpText;
+        private readonly MessageLines _helpText;
 
         public ImportHelpStrategy(string commandName, MessageLines helpText)
         {
