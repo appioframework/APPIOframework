@@ -2,12 +2,14 @@
 
 set -uo pipefail
 
-VAR_COMMANDS[0]="oppo build opcuaapp --name \"my/\-app\""
-VAR_COMMANDS[1]="oppo build opcuaapp -n     \"my/\-app\""
-VAR_COMMANDS[2]="oppo build opcuaapp --name"
-VAR_COMMANDS[3]="oppo build opcuaapp -n"
-VAR_COMMANDS[4]="oppo build opcuaapp --exit"
-VAR_COMMANDS[5]="oppo build opcuaapp -x"
+source bash-gitlab-ci/util-integration-tests.sh
+
+VAR_COMMANDS[0]="oppo build --name \"my/\-app\""
+VAR_COMMANDS[1]="oppo build -n     \"my/\-app\""
+VAR_COMMANDS[2]="oppo build --name"
+VAR_COMMANDS[3]="oppo build -n"
+VAR_COMMANDS[4]="oppo build --exit"
+VAR_COMMANDS[5]="oppo build -x"
 
 for INDEX in "${!VAR_COMMANDS[@]}";
 do
@@ -18,6 +20,8 @@ do
   mkdir new-opcuaapp--failure
   cd    new-opcuaapp--failure
 
+  precondition_oppo_log_file_is_not_existent
+
   ${VAR_COMMAND}
 
   if [ ${?} = 0 ];
@@ -26,11 +30,7 @@ do
     exit 1
   fi
 
-  if [ ! -f "./oppo.log" ];
-  then
-    echo "no log entry was created ..."
-    exit 1
-  fi
+  check_for_exisiting_oppo_log_file
 
   cd ..
   rm -rf new-opcuaapp--failure
