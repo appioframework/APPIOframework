@@ -19,7 +19,20 @@ namespace Oppo.ObjectModel.Tests
                 new string[]{ }
             };
         }
-        
+
+        [Test]
+        public void ShouldCreateObjectModelInstance()
+        {
+            // Arrange
+            var reflectionWrapperMock = new Mock<IReflection>();
+            
+            // Act
+            var objectModel = new ObjectModel(reflectionWrapperMock.Object);
+
+            // Assert
+            Assert.IsNotNull(objectModel);
+        }
+
         [Test]
         public void ShouldGetValidInputParams([ValueSource(nameof(ValidInputs))] string[] inputParams)
         {
