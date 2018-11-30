@@ -9,7 +9,7 @@ namespace Oppo.Terminal
         internal static int Main(string[] args)
         {
             SetupOppoLogger();
-            var objectModel = new ObjectModel.ObjectModel(new ReflectionWrapper());
+            var objectModel = new ObjectModel.ObjectModel(ObjectModel.ObjectModel.CreateCommandFactory(new ReflectionWrapper()));
 
             var writer = new ConsoleWriter();
 

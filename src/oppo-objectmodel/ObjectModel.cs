@@ -16,18 +16,13 @@ namespace Oppo.ObjectModel
 {
     public class ObjectModel : IObjectModel
     {      
-        private readonly ICommandFactory<ObjectModel> _commandStrategyFactory;
-        
+        private readonly ICommandFactory<ObjectModel> _commandStrategyFactory;        
 
-        public ObjectModel(IReflection reflectionWrapper) : this (CreateCommandFactory(reflectionWrapper))
+        public ObjectModel(ICommandFactory<ObjectModel> commandFactory)
         {
+            _commandStrategyFactory = commandFactory;
         }
-
-        public ObjectModel(ICommandFactory<ObjectModel> commandStrategyFactory)
-        {
-            _commandStrategyFactory = commandStrategyFactory;
-        }              
-
+        
         public CommandResult ExecuteCommand(IEnumerable<string> inputParams)
         {
             if (inputParams == null)

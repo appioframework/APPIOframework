@@ -21,19 +21,6 @@ namespace Oppo.ObjectModel.Tests
         }
 
         [Test]
-        public void ShouldCreateObjectModelInstance()
-        {
-            // Arrange
-            var reflectionWrapperMock = new Mock<IReflection>();
-            
-            // Act
-            var objectModel = new ObjectModel(reflectionWrapperMock.Object);
-
-            // Assert
-            Assert.IsNotNull(objectModel);
-        }
-
-        [Test]
         public void ShouldGetValidInputParams([ValueSource(nameof(ValidInputs))] string[] inputParams)
         {
             // Arrange
@@ -72,6 +59,20 @@ namespace Oppo.ObjectModel.Tests
 
             // Assert
             Assert.IsTrue(errorWrittenOut);            
+        }
+
+        [Test]
+        public void ShoulCreateCommandFactory()
+        {
+            // Arrange
+            var reflectionWrapperMock = new Mock<IReflection>();
+
+            // Act
+            var commandFactory = ObjectModel.CreateCommandFactory(reflectionWrapperMock.Object);
+
+            // Assert
+            Assert.IsNotNull(commandFactory);
+            Assert.IsTrue(commandFactory.Commands.Count() > 0);
         }
     }
 }
