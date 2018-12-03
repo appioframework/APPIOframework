@@ -76,5 +76,5 @@ echo "Testing version--success"
 
 echo "Testing import information-mode--success"
 /bin/bash bash-gitlab-ci/integration-tests/run-import-information-model--success.sh
-echo "Testing import information-mode--failure"
-/bin/bash bash-gitlab-ci/integration-tests/run-import-information-model--failure.sh
+#echo "Testing import information-mode--failure"
+#/bin/bash bash-gitlab-ci/integration-tests/run-import-information-model--failure.sh
