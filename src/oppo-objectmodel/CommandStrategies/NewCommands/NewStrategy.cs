@@ -13,7 +13,7 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
             _factory = factory;
         }
 
-        [ExcludeFromCodeCoverage]
+        
         public string Name => Constants.CommandName.New;
 
         public CommandResult Execute(IEnumerable<string> inputParams)

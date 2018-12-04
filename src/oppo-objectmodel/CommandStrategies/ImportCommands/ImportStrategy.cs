@@ -15,7 +15,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
             _factory = factory;
         }
 
-        [ExcludeFromCodeCoverage]
+      
         public string Name => Constants.CommandName.Import;
         
         public CommandResult Execute(IEnumerable<string> inputParams)
