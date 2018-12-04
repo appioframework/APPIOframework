@@ -128,15 +128,32 @@ namespace Oppo.ObjectModel
                 { "--help", "New help" }
             };
 
+            var newHelpStrategyData = new HelpData
+            {
+                CommandName = Constants.NewCommandName.Help,
+                HelpTextFirstLine = newHelpStrategyHelpText,
+                LogMessage = LoggingText.OppoHelpForNewCommandCalled,
+                HelpText = Resources.text.help.HelpTextValues.NewHelpArgumentCommandDescription,
+            };
+
+            var newHelpStrategy = new HelpStrategy<NewStrategy>(newHelpStrategyData);
+
+            newHelpStrategyData.CommandName = Constants.NewCommandName.VerboseHelp;
+
+            var newHelpVerboseStrategy = new HelpStrategy<NewStrategy>(newHelpStrategyData);
+
             var newStrategies = new ICommand<NewStrategy>[]
             {
                 new NewSlnCommandStrategy(fileSystem),
                 new NewOpcuaAppCommandStrategy(fileSystem),
-                new NewHelpCommandStrategy(Constants.NewCommandName.Help, newHelpStrategyHelpText),
-                new NewHelpCommandStrategy(Constants.NewCommandName.VerboseHelp, newHelpStrategyHelpText)
+                newHelpStrategy,
+                newHelpVerboseStrategy,
             };
 
             var newStrategyCommandFactory = new CommandFactory<NewStrategy>(newStrategies, Constants.NewCommandName.Help);
+            newHelpStrategy.CommandFactory = newStrategyCommandFactory;
+            newHelpVerboseStrategy.CommandFactory = newStrategyCommandFactory;
+
             commands.Add(new NewStrategy(newStrategyCommandFactory));
 
             var publishHelpStrategyHelpText = new MessageLines
