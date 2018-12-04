@@ -2,12 +2,12 @@ using System.Collections;
 using System.Linq;
 using NUnit.Framework;
 
-namespace Oppo.ObjectModel.Tests
+namespace Oppo.ObjectModel.Tests.CommandStrategies
 {
     public class MessageLinesTests
     {
         [Test]
-        public void ShouldInstatianteObject()
+        public void ShouldInstantiateObject()
         {
             // Arrange
             
@@ -24,7 +24,7 @@ namespace Oppo.ObjectModel.Tests
             // Arrange
             var msgKey = "key";
             var msgValue = "value";
-            var messageLineToCopy = new MessageLines() { { msgKey, msgValue } };
+            var messageLineToCopy = new MessageLines { { msgKey, msgValue } };
 
             // Act
             var messageLine = new MessageLines(messageLineToCopy);
@@ -44,16 +44,39 @@ namespace Oppo.ObjectModel.Tests
             var msgValue = "value";
 
             var messageLine = new MessageLines();
-            var counBeforeAdd = messageLine.Count();
+            var countBeforeAdd = messageLine.Count();
 
             // Act
             messageLine.Add(msgKey, msgValue);
-            var counAfterAdd = messageLine.Count();
+            var countAfterAdd = messageLine.Count();
 
             // Assert
             Assert.IsNotNull(messageLine);
-            Assert.AreEqual(0, counBeforeAdd);
-            Assert.AreEqual(1, counAfterAdd);
+            Assert.AreEqual(0, countBeforeAdd);
+            Assert.AreEqual(1, countAfterAdd);
+            Assert.IsTrue(messageLine.All(v => v.Key.Contains(msgKey)));
+            Assert.IsTrue(messageLine.All(v => v.Value.Contains(msgValue)));
+        }
+
+        [Test]
+        public void Add_ShouldCopyOtherMessageLines()
+        {
+            // Arrange
+            var msgKey = "key";
+            var msgValue = "value";
+            var messageLineToAdd = new MessageLines { { msgKey, msgValue } };
+
+            var messageLine = new MessageLines();
+            var countBeforeAdd = messageLine.Count();
+
+            // Act
+            messageLine.Add(messageLineToAdd);
+            var countAfterAdd = messageLine.Count();
+
+            // Assert
+            Assert.IsNotNull(messageLine);
+            Assert.AreEqual(0, countBeforeAdd);
+            Assert.AreEqual(1, countAfterAdd);
             Assert.IsTrue(messageLine.All(v => v.Key.Contains(msgKey)));
             Assert.IsTrue(messageLine.All(v => v.Value.Contains(msgValue)));
         }

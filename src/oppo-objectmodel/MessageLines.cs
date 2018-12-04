@@ -24,6 +24,14 @@ namespace Oppo.ObjectModel
             _messages.Add(new KeyValuePair<string, string>(messageHeader, message));
         }
 
+        public void Add(MessageLines lines)
+        {
+            foreach (var line in lines)
+            {
+                Add(line.Key, line.Value);
+            }
+        }
+
         public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
         {
             return _messages.GetEnumerator();

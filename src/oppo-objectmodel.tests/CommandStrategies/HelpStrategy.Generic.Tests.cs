@@ -1,7 +1,6 @@
 using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies.HelpCommands;
-using Oppo.Resources.text.logging;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,8 +15,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var helpData = new HelpData
             {
                 CommandName       = "any-name",
-                HelpTextFirstLine = "any-text",
-                HelpTextLastLine  = "any-other-text",
+                HelpTextFirstLine = { { "any-text", "" } },
+                HelpTextLastLine  = { { "any-other-text", "" } },
                 LogMessage        = "any-message",
                 HelpText          = "any-text",
             };
@@ -36,8 +35,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var helpData = new HelpData
             {
                 CommandName = "any-name",
-                HelpTextFirstLine = "any-text",
-                HelpTextLastLine = "any-other-text",
+                HelpTextFirstLine = { { "any-text", "" } },
+                HelpTextLastLine = { { "", "any-other-text" } },
                 LogMessage = "any-message",
                 HelpText = "any-text",
             };
@@ -65,7 +64,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             Assert.IsTrue(strategyResult.Sucsess);
             Assert.IsNotNull(strategyResult.OutputMessages);
-            Assert.AreEqual(string.Empty, strategyResult.OutputMessages.First().Value);
            
             Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>("any-text", string.Empty)));
             Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>(commandName, commandHelpText)));
@@ -82,8 +80,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var helpData = new HelpData
             {
                 CommandName = "any-name",
-                HelpTextFirstLine = "any-text",
-                HelpTextLastLine = "any-other-text",
+                HelpTextFirstLine = { { "any-text", "" } },
+                HelpTextLastLine = { { "", "any-other-text" } },
                 LogMessage = "any-message",
                 HelpText = "any-text",
             };
@@ -108,8 +106,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var helpData = new HelpData
             {
                 CommandName = "any-name",
-                HelpTextFirstLine = "any-text",
-                HelpTextLastLine = "any-other-text",
+                HelpTextFirstLine = { { "any-text", "" } },
+                HelpTextLastLine = { { "any-other-text", "" } },
                 LogMessage = "any-message",
                 HelpText = "any-text",
             };
@@ -130,8 +128,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var helpData = new HelpData
             {
                 CommandName = "any-name",
-                HelpTextFirstLine = "any-text",
-                HelpTextLastLine = "any-other-text",
+                HelpTextFirstLine = { { "any-text", "" } },
+                HelpTextLastLine = { { "any-other-text", "" } },
                 LogMessage = "any-message",
                 HelpText = "any-text",
             };

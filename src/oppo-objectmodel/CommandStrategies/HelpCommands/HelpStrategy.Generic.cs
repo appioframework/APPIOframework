@@ -8,7 +8,7 @@ namespace Oppo.ObjectModel.CommandStrategies.HelpCommands
 
         public HelpStrategy(HelpData helpData)
         {
-            _helpData = helpData;
+            _helpData = helpData.Clone();
         }
 
         public ICommandFactory<ObjectModel> CommandFactory { get; set; }
@@ -18,14 +18,14 @@ namespace Oppo.ObjectModel.CommandStrategies.HelpCommands
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
             var outputMessages = new MessageLines();
-            outputMessages.Add(_helpData.HelpTextFirstLine, string.Empty);
+            outputMessages.Add(_helpData.HelpTextFirstLine);
             
             foreach (var command in CommandFactory?.Commands ?? new ICommand<ObjectModel>[0])
             {                
                 outputMessages.Add(command.Name, command.GetHelpText());
             }
 
-            outputMessages.Add(string.Empty, _helpData.HelpTextLastLine);
+            outputMessages.Add(_helpData.HelpTextLastLine);
             
             OppoLogger.Info(_helpData.LogMessage);
             return new CommandResult(true, outputMessages);            

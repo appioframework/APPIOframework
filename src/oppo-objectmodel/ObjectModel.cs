@@ -79,8 +79,8 @@ namespace Oppo.ObjectModel
             var helpData = new HelpData
             {
                 CommandName       = Constants.CommandName.Help,
-                HelpTextFirstLine = Resources.text.help.HelpTextValues.HelpStartCommand,
-                HelpTextLastLine  = Resources.text.help.HelpTextValues.HelpEndCommand,
+                HelpTextFirstLine = { { Resources.text.help.HelpTextValues.HelpStartCommand, "" } },
+                HelpTextLastLine  = { { "", Resources.text.help.HelpTextValues.HelpEndCommand } },
                 LogMessage        = LoggingText.OppoHelpCalled,
                 HelpText          = Resources.text.help.HelpTextValues.HelpCommand,
             };
