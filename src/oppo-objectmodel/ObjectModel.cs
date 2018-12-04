@@ -62,8 +62,8 @@ namespace Oppo.ObjectModel
             {
                 CommandName = Constants.BuildCommandArguments.Help,
                 HelpTextFirstLine = buildHelpStrategyHelpText,
-                LogMessage = LoggingText.OppoHelpCalled,
-                HelpText = Resources.text.help.HelpTextValues.HelpCommand,
+                LogMessage = LoggingText.OppoHelpForBuildCommandCalled,
+                HelpText = Resources.text.help.HelpTextValues.BuildHelpArgumentCommandDescription,
             };
 
             var buildHelpStrategy = new HelpStrategy<BuildStrategy>(buildHelpStrategyData);
