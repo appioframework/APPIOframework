@@ -58,8 +58,19 @@ namespace Oppo.ObjectModel
                 { "Options:", "" }
             };
 
-            var buildHelpStrategy = new BuildHelpStrategy(Constants.BuildCommandArguments.Help, buildHelpStrategyHelpText);
-            var buildHelpVerboseStrategy = new BuildHelpStrategy(Constants.BuildCommandArguments.VerboseHelp, buildHelpStrategyHelpText);
+            var buildHelpStrategyData = new HelpData
+            {
+                CommandName = Constants.BuildCommandArguments.Help,
+                HelpTextFirstLine = buildHelpStrategyHelpText,
+                LogMessage = LoggingText.OppoHelpCalled,
+                HelpText = Resources.text.help.HelpTextValues.HelpCommand,
+            };
+
+            var buildHelpStrategy = new HelpStrategy<BuildStrategy>(buildHelpStrategyData);
+
+            buildHelpStrategyData.CommandName = Constants.BuildCommandArguments.VerboseHelp;
+
+            var buildHelpVerboseStrategy = new HelpStrategy<BuildStrategy>(buildHelpStrategyData);
 
             var buildStrategies = new ICommand<BuildStrategy>[]
             {
@@ -76,7 +87,7 @@ namespace Oppo.ObjectModel
             commands.Add(new BuildStrategy(buildStrategyCommandFactory));
             commands.Add(new HelloStrategy());
 
-            var helpData = new HelpData
+            var helpStrategyData = new HelpData
             {
                 CommandName       = Constants.CommandName.Help,
                 HelpTextFirstLine = { { Resources.text.help.HelpTextValues.HelpStartCommand, "" } },
@@ -85,22 +96,22 @@ namespace Oppo.ObjectModel
                 HelpText          = Resources.text.help.HelpTextValues.HelpCommand,
             };
 
-            var helpStrategy = new HelpStrategy<ObjectModel>(helpData);
+            var helpStrategy = new HelpStrategy<ObjectModel>(helpStrategyData);
             commands.Add(helpStrategy);
 
-            helpData.CommandName = Constants.CommandName.ShortHelp;
+            helpStrategyData.CommandName = Constants.CommandName.ShortHelp;
 
-            var shortHelpStrategy = new HelpStrategy<ObjectModel>(helpData);
+            var shortHelpStrategy = new HelpStrategy<ObjectModel>(helpStrategyData);
             commands.Add(shortHelpStrategy);
 
-            helpData.CommandName = Constants.CommandName.HelpDash;
+            helpStrategyData.CommandName = Constants.CommandName.HelpDash;
 
-            var helpDashStrategy = new HelpStrategy<ObjectModel>(helpData);
+            var helpDashStrategy = new HelpStrategy<ObjectModel>(helpStrategyData);
             commands.Add(helpDashStrategy);
 
-            helpData.CommandName = Constants.CommandName.HelpDashVerbose;
+            helpStrategyData.CommandName = Constants.CommandName.HelpDashVerbose;
 
-            var helpDashVerboseStrategy = new HelpStrategy<ObjectModel>(helpData);
+            var helpDashVerboseStrategy = new HelpStrategy<ObjectModel>(helpStrategyData);
             commands.Add(helpDashVerboseStrategy);
 
             var newHelpStrategyHelpText = new MessageLines

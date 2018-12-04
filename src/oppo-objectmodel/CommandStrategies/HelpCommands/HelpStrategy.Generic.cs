@@ -11,7 +11,7 @@ namespace Oppo.ObjectModel.CommandStrategies.HelpCommands
             _helpData = helpData.Clone();
         }
 
-        public ICommandFactory<ObjectModel> CommandFactory { get; set; }
+        public ICommandFactory<TDependance> CommandFactory { get; set; }
 
         public string Name => _helpData.CommandName;
 
@@ -20,7 +20,7 @@ namespace Oppo.ObjectModel.CommandStrategies.HelpCommands
             var outputMessages = new MessageLines();
             outputMessages.Add(_helpData.HelpTextFirstLine);
             
-            foreach (var command in CommandFactory?.Commands ?? new ICommand<ObjectModel>[0])
+            foreach (var command in CommandFactory?.Commands ?? new ICommand<TDependance>[0])
             {                
                 outputMessages.Add(command.Name, command.GetHelpText());
             }

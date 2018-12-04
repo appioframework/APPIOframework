@@ -48,11 +48,11 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             loggerListenerMock.Setup(x => x.Info("any-message"));
             OppoLogger.RegisterListener(loggerListenerMock.Object);
 
-            var commandMock = new Mock<ICommand<ObjectModel>>();
+            var commandMock = new Mock<ICommand<object>>();
             commandMock.Setup(x => x.Name).Returns(commandName);
             commandMock.Setup(x => x.GetHelpText()).Returns(commandHelpText);
 
-            var factoryMock = new Mock<ICommandFactory<ObjectModel>>();
+            var factoryMock = new Mock<ICommandFactory<object>>();
             factoryMock.Setup(x => x.Commands).Returns(new[] {commandMock.Object});
 
             var helpStrategy = new HelpStrategy<object>(helpData);
