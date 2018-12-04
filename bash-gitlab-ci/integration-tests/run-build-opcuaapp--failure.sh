@@ -4,8 +4,6 @@ set -uo pipefail
 
 source bash-gitlab-ci/util-integration-tests.sh
 
-exit 0
-
 VAR_COMMANDS[0]="oppo build --name my-app-5263452364"
 VAR_COMMANDS[1]="oppo build -n     my-app-5263452364"
 VAR_COMMANDS[2]="oppo build --name"
