@@ -8,28 +8,45 @@ using System.Linq;
 namespace Oppo.ObjectModel.Tests.CommandStrategies
 {
     public class HelpStrategyTests
-    {     
+    {
         [Test]
-        public void HelpStrategy_Should_ImplementICommandOfObjectModel()
+        public void HelpStrategy_Should_ImplementICommandOfAnyType()
         {
             // Arrange
+            var helpData = new HelpData
+            {
+                CommandName       = "any-name",
+                HelpTextFirstLine = "any-text",
+                HelpTextLastLine  = "any-other-text",
+                LogMessage        = "any-message",
+                HelpText          = "any-text",
+            };
 
             // Act
-            var objectUnderTest = new HelpStrategy(string.Empty);
+            var objectUnderTest = new HelpStrategy<object>(helpData);
 
             // Assert
-            Assert.IsInstanceOf<ICommand<ObjectModel>>(objectUnderTest);
+            Assert.IsInstanceOf<ICommand<object>>(objectUnderTest);
         }
 
         [Test]
         public void HelpStrategy_Should_WriteHelpText()
         {
             // Arrange
-            const string commandName = "any-name";
+            var helpData = new HelpData
+            {
+                CommandName = "any-name",
+                HelpTextFirstLine = "any-text",
+                HelpTextLastLine = "any-other-text",
+                LogMessage = "any-message",
+                HelpText = "any-text",
+            };
+
+            const string commandName = "any-name-2";
             const string commandHelpText = "any help text \r\n maybe with multiple lines ...";
 
             var loggerListenerMock = new Mock<ILoggerListener>();
-            loggerListenerMock.Setup(x => x.Info(LoggingText.OppoHelpCalled));
+            loggerListenerMock.Setup(x => x.Info("any-message"));
             OppoLogger.RegisterListener(loggerListenerMock.Object);
 
             var commandMock = new Mock<ICommand<ObjectModel>>();
@@ -39,7 +56,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var factoryMock = new Mock<ICommandFactory<ObjectModel>>();
             factoryMock.Setup(x => x.Commands).Returns(new[] {commandMock.Object});
 
-            var helpStrategy = new HelpStrategy(string.Empty);
+            var helpStrategy = new HelpStrategy<object>(helpData);
             helpStrategy.CommandFactory = factoryMock.Object;
 
             // Act
@@ -50,10 +67,11 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsNotNull(strategyResult.OutputMessages);
             Assert.AreEqual(string.Empty, strategyResult.OutputMessages.First().Value);
            
-            Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>(Resources.text.help.HelpTextValues.HelpStartCommand, string.Empty)));
+            Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>("any-text", string.Empty)));
             Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>(commandName, commandHelpText)));
-            Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>(string.Empty, Resources.text.help.HelpTextValues.HelpEndCommand)));
-            loggerListenerMock.Verify(x => x.Info(LoggingText.OppoHelpCalled), Times.Once);
+            Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>(string.Empty, "any-other-text")));
+
+            loggerListenerMock.Verify(x => x.Info("any-message"), Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
 
@@ -61,7 +79,16 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void HelpStrategy_Should_WriteSparseHelpTextIfNoCommandFactoryIsProvided()
         {
             // Arrange
-            var helpStrategy = new HelpStrategy(string.Empty);
+            var helpData = new HelpData
+            {
+                CommandName = "any-name",
+                HelpTextFirstLine = "any-text",
+                HelpTextLastLine = "any-other-text",
+                LogMessage = "any-message",
+                HelpText = "any-text",
+            };
+
+            var helpStrategy = new HelpStrategy<object>(helpData);
 
             // Act
             var strategyResult = helpStrategy.Execute(new string[] { });
@@ -70,37 +97,52 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsTrue(strategyResult.Sucsess);
             Assert.IsNotNull(strategyResult.OutputMessages);
             Assert.AreEqual(string.Empty, strategyResult.OutputMessages.First().Value);
-            Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>(Resources.text.help.HelpTextValues.HelpStartCommand, string.Empty)));
-            Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>(string.Empty, Resources.text.help.HelpTextValues.HelpEndCommand)));
+            Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>("any-text", string.Empty)));
+            Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>(string.Empty, "any-other-text")));
         }
 
         [Test]
         public void ShouldReturnHelpText()
         {
             // Arrange
-            var helpStrategy = new HelpStrategy(string.Empty);
+            var helpData = new HelpData
+            {
+                CommandName = "any-name",
+                HelpTextFirstLine = "any-text",
+                HelpTextLastLine = "any-other-text",
+                LogMessage = "any-message",
+                HelpText = "any-text",
+            };
+
+            var helpStrategy = new HelpStrategy<object>(helpData);
 
             // Act
             var helpText = helpStrategy.GetHelpText();
 
             // Assert
-            Assert.AreEqual(helpText, Resources.text.help.HelpTextValues.HelpCommand);
+            Assert.AreEqual("any-text", helpText);
         }
-
-        [TestCase(Constants.CommandName.Help)]
-        [TestCase(Constants.CommandName.ShortHelp)]
-        [TestCase(Constants.CommandName.HelpDash)]
-        [TestCase(Constants.CommandName.HelpDashVerbose)]
-        public void ShouldReturnCommandName(string expectedCommandName)
+        
+        [Test]
+        public void ShouldReturnCommandName()
         {
             // Arrange
-            var helpStrategy = new HelpStrategy(expectedCommandName);
+            var helpData = new HelpData
+            {
+                CommandName = "any-name",
+                HelpTextFirstLine = "any-text",
+                HelpTextLastLine = "any-other-text",
+                LogMessage = "any-message",
+                HelpText = "any-text",
+            };
+
+            var helpStrategy = new HelpStrategy<object>(helpData);
 
             // Act
             var commandName = helpStrategy.Name;
 
             // Assert
-            Assert.AreEqual(expectedCommandName, commandName);
+            Assert.AreEqual("any-name", commandName);
         }
     }
 }

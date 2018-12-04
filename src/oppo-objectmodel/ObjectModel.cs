@@ -76,16 +76,31 @@ namespace Oppo.ObjectModel
             commands.Add(new BuildStrategy(buildStrategyCommandFactory));
             commands.Add(new HelloStrategy());
 
-            var helpStrategy = new HelpStrategy(Constants.CommandName.Help);
+            var helpData = new HelpData
+            {
+                CommandName       = Constants.CommandName.Help,
+                HelpTextFirstLine = Resources.text.help.HelpTextValues.HelpStartCommand,
+                HelpTextLastLine  = Resources.text.help.HelpTextValues.HelpEndCommand,
+                LogMessage        = LoggingText.OppoHelpCalled,
+                HelpText          = Resources.text.help.HelpTextValues.HelpCommand,
+            };
+
+            var helpStrategy = new HelpStrategy<ObjectModel>(helpData);
             commands.Add(helpStrategy);
 
-            var shortHelpStrategy = new HelpStrategy(Constants.CommandName.ShortHelp);
+            helpData.CommandName = Constants.CommandName.ShortHelp;
+
+            var shortHelpStrategy = new HelpStrategy<ObjectModel>(helpData);
             commands.Add(shortHelpStrategy);
 
-            var helpDashStrategy = new HelpStrategy(Constants.CommandName.HelpDash);
+            helpData.CommandName = Constants.CommandName.HelpDash;
+
+            var helpDashStrategy = new HelpStrategy<ObjectModel>(helpData);
             commands.Add(helpDashStrategy);
 
-            var helpDashVerboseStrategy = new HelpStrategy(Constants.CommandName.HelpDashVerbose);
+            helpData.CommandName = Constants.CommandName.HelpDashVerbose;
+
+            var helpDashVerboseStrategy = new HelpStrategy<ObjectModel>(helpData);
             commands.Add(helpDashVerboseStrategy);
 
             var newHelpStrategyHelpText = new MessageLines

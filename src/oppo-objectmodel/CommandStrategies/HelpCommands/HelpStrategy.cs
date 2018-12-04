@@ -1,38 +1,39 @@
-﻿using Oppo.Resources.text.logging;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Oppo.ObjectModel.CommandStrategies.HelpCommands
 {
-    public class HelpStrategy : ICommand<ObjectModel>
+    public class HelpStrategy<TDependance> : ICommand<TDependance>
     {
-        public HelpStrategy(string helpCommandName)
+        private readonly HelpData _helpData;
+
+        public HelpStrategy(HelpData helpData)
         {
-            Name = helpCommandName;
+            _helpData = helpData;
         }
 
         public ICommandFactory<ObjectModel> CommandFactory { get; set; }
 
-        public string Name { get; private set; }
+        public string Name => _helpData.CommandName;
 
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
             var outputMessages = new MessageLines();
-            outputMessages.Add(Resources.text.help.HelpTextValues.HelpStartCommand, string.Empty);
+            outputMessages.Add(_helpData.HelpTextFirstLine, string.Empty);
             
             foreach (var command in CommandFactory?.Commands ?? new ICommand<ObjectModel>[0])
             {                
                 outputMessages.Add(command.Name, command.GetHelpText());
             }
 
-            outputMessages.Add(string.Empty, Resources.text.help.HelpTextValues.HelpEndCommand);
+            outputMessages.Add(string.Empty, _helpData.HelpTextLastLine);
             
-            OppoLogger.Info(LoggingText.OppoHelpCalled);
+            OppoLogger.Info(_helpData.LogMessage);
             return new CommandResult(true, outputMessages);            
         }
 
         public string GetHelpText()
         {
-            return Resources.text.help.HelpTextValues.HelpCommand;
+            return _helpData.HelpText;
         }
     }
 }
