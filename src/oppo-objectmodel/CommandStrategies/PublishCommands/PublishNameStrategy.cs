@@ -51,7 +51,7 @@ namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
 
         public string GetHelpText()
         {
-            return string.Empty;
+            return Resources.text.help.HelpTextValues.PublishNameArgumentCommandDescription;
         }
     }
 }

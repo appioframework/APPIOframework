@@ -23,5 +23,6 @@
         public const string ImportHelpArgumentCommandDescription  = "Import help";
         public const string NewHelpArgumentCommandDescription     = "New help";
         public const string PublishHelpArgumentCommandDescription = "Publish help";
+        public const string PublishNameArgumentCommandDescription = "Project name";
     }
 }

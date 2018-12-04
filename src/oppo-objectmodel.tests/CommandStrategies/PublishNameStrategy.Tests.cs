@@ -37,7 +37,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         }
 
         [Test]
-        public void PublishNameStrategy_Should_ProvideEmptyHelpText()
+        public void PublishNameStrategy_Should_ProvideSomeHelpText()
         {
             // Arrange
             var fileSystemMock = new Mock<IFileSystem>();
@@ -47,7 +47,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var helpText = objectUnderTest.GetHelpText();
 
             // Assert
-            Assert.AreEqual(string.Empty, helpText);
+            Assert.AreEqual(Resources.text.help.HelpTextValues.PublishNameArgumentCommandDescription, helpText);
         }
 
         [Test]

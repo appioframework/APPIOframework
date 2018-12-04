@@ -162,10 +162,6 @@ namespace Oppo.ObjectModel
                 {"<Project>:", "The project directory to use" },
                 {string.Empty, string.Empty },
                 {"Options:", string.Empty },
-                {"-n:", "Project name" },
-                {"--name:", "Project name" },
-                {"-h:", "Publish help" },
-                { "--help:", "Publish help" }
             };
 
             var publishHelpStrategyData = new HelpData
@@ -191,6 +187,9 @@ namespace Oppo.ObjectModel
             };
 
             var publishStrategyCommandFactory = new CommandFactory<PublishStrategy>(publishStrategies, Constants.PublishCommandArguments.Help);
+            publishHelpStrategy.CommandFactory = publishStrategyCommandFactory;
+            publishHelpVerboseStrategy.CommandFactory = publishStrategyCommandFactory;
+
             commands.Add(new PublishStrategy(publishStrategyCommandFactory));
 
             var deployHelpStrategyHelpText = new MessageLines
