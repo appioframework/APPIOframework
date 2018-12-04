@@ -168,12 +168,26 @@ namespace Oppo.ObjectModel
                 { "--help:", "Publish help" }
             };
 
+            var publishHelpStrategyData = new HelpData
+            {
+                CommandName = Constants.PublishCommandArguments.Help,
+                HelpTextFirstLine = publishHelpStrategyHelpText,
+                LogMessage = LoggingText.OpcuaappPublishHelpCalled,
+                HelpText = Resources.text.help.HelpTextValues.PublishHelpArgumentCommandDescription,
+            };
+
+            var publishHelpStrategy = new HelpStrategy<PublishStrategy>(publishHelpStrategyData);
+
+            publishHelpStrategyData.CommandName = Constants.PublishCommandArguments.VerboseHelp;
+
+            var publishHelpVerboseStrategy = new HelpStrategy<PublishStrategy>(publishHelpStrategyData);
+
             var publishStrategies = new ICommand<PublishStrategy>[]
             {
                 new PublishNameStrategy(Constants.PublishCommandArguments.Name, fileSystem),
                 new PublishNameStrategy(Constants.PublishCommandArguments.VerboseName, fileSystem),
-                new PublishHelpStrategy(Constants.PublishCommandArguments.Help, publishHelpStrategyHelpText),
-                new PublishHelpStrategy(Constants.PublishCommandArguments.VerboseHelp, publishHelpStrategyHelpText)
+                publishHelpStrategy,
+                publishHelpVerboseStrategy,
             };
 
             var publishStrategyCommandFactory = new CommandFactory<PublishStrategy>(publishStrategies, Constants.PublishCommandArguments.Help);

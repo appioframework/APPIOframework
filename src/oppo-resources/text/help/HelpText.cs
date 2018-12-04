@@ -14,13 +14,14 @@
         public const string DeployStrategy = "This will deploy a oppo opcuaapp";
         public const string ImportStrategy = "This will import artifacts into oppo opcuaapp";
 
-        public const string BuildHelpArgumentCommandDescription  = "Build help";
-        public const string BuildNameArgumentCommandDescription  = "Project name";
-        public const string CleanHelpArgumentCommandDescription  = "Clean help";
-        public const string CleanNameArgumentCommandDescription  = "Project name";
-        public const string DeployHelpArgumentCommandDescription = "Deploy help";
-        public const string DeployNameArgumentCommandDescription = "Deploy name";
-        public const string ImportHelpArgumentCommandDescription = "Import help";
-        public const string NewHelpArgumentCommandDescription    = "New help";
+        public const string BuildHelpArgumentCommandDescription   = "Build help";
+        public const string BuildNameArgumentCommandDescription   = "Project name";
+        public const string CleanHelpArgumentCommandDescription   = "Clean help";
+        public const string CleanNameArgumentCommandDescription   = "Project name";
+        public const string DeployHelpArgumentCommandDescription  = "Deploy help";
+        public const string DeployNameArgumentCommandDescription  = "Deploy name";
+        public const string ImportHelpArgumentCommandDescription  = "Import help";
+        public const string NewHelpArgumentCommandDescription     = "New help";
+        public const string PublishHelpArgumentCommandDescription = "Publish help";
     }
 }
