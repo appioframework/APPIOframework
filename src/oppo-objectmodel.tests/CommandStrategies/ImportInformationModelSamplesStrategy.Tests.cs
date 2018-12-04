@@ -49,6 +49,18 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.AreEqual(Resources.text.help.HelpTextValues.ImportSamplesArgumentCommandDescription,helpText);
         }
 
+        [Test]
+        public void ShouldImportSamplesOnExecution()
+        {
+            //Arange
+            var obj = new ImportInformationModelSamplesStrategy(String.Empty);
+            //Act
+
+            //Assert
+            Assert.Throws<NotImplementedException>(() => obj.Execute(null));
+        }
+
+
 
 
 
