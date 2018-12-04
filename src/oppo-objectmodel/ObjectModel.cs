@@ -170,8 +170,20 @@ namespace Oppo.ObjectModel
                 {"Options:", string.Empty },
             };
 
-            var deployHelpStrategy = new DeployHelpStrategy(Constants.DeployCommandArguments.Help, deployHelpStrategyHelpText);
-            var deployVerboseHelpStrategy = new DeployHelpStrategy(Constants.DeployCommandArguments.VerboseHelp, deployHelpStrategyHelpText);
+            var deployHelpStrategyData = new HelpData
+            {
+                CommandName = Constants.DeployCommandArguments.Help,
+                HelpTextFirstLine = deployHelpStrategyHelpText,
+                LogMessage = LoggingText.OppoHelpForDeployCommandCalled,
+                HelpText = Resources.text.help.HelpTextValues.DeployHelpArgumentCommandDescription,
+            };
+
+            var deployHelpStrategy = new HelpStrategy<DeployStrategy>(deployHelpStrategyData);
+
+            deployHelpStrategyData.CommandName = Constants.CleanCommandArguments.VerboseHelp;
+
+            var deployVerboseHelpStrategy = new HelpStrategy<DeployStrategy>(deployHelpStrategyData);
+
             var deployStrategies = new ICommand<DeployStrategy>[]
             {
                 new DeployNameStrategy(Constants.DeployCommandArguments.Name, fileSystem),
