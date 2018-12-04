@@ -245,8 +245,19 @@ namespace Oppo.ObjectModel
                 { "--path","Information models path to use"}
             };
 
-            var importHelpStrategy = new ImportHelpStrategy(Constants.ImportInformationModelCommandArguments.Help, importHelpStrategyHelpText);
-            var importHelpStrategyVerbose = new ImportHelpStrategy(Constants.ImportInformationModelCommandArguments.VerboseHelp, importHelpStrategyHelpText);
+            var importHelpStrategyData = new HelpData
+            {
+                CommandName = Constants.ImportInformationModelCommandArguments.Help,
+                HelpTextFirstLine = importHelpStrategyHelpText,
+                LogMessage = LoggingText.OppoHelpForImportInformationModel,
+                HelpText = Resources.text.help.HelpTextValues.ImportHelpArgumentCommandDescription,
+            };
+
+            var importHelpStrategy = new HelpStrategy<ImportStrategy>(importHelpStrategyData);
+
+            importHelpStrategyData.CommandName = Constants.ImportInformationModelCommandArguments.VerboseHelp;
+
+            var importHelpStrategyVerbose = new HelpStrategy<ImportStrategy>(importHelpStrategyData);
             var importCommands = new ICommand<ImportStrategy>[]
             {
                 new ImportInformationModelCommandStrategy(fileSystem),
