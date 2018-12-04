@@ -65,6 +65,8 @@
 !src/oppo-resources/installer/
 !src/oppo-resources/installer/opcuaapp/
 !src/oppo-resources/installer/opcuaapp/oppo-opcuaapp.zip
+!src/oppo-resources/information-models/
+!src/oppo-resources/information-models/OpcUaDiModel.xml
 
 !src/oppo-terminal/
 !src/oppo-terminal/oppo-terminal.csproj
