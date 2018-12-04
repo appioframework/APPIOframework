@@ -195,8 +195,19 @@ namespace Oppo.ObjectModel
                 { "Options:", "" }
             };
 
-            var cleanHelpStrategy = new CleanHelpStrategy(Constants.CleanCommandArguments.Help, cleanHelpStrategyHelpText);
-            var cleanHelpVerboseStrategy = new CleanHelpStrategy(Constants.CleanCommandArguments.VerboseHelp, cleanHelpStrategyHelpText);
+            var cleanHelpStrategyData = new HelpData
+            {
+                CommandName = Constants.CleanCommandArguments.Help,
+                HelpTextFirstLine = cleanHelpStrategyHelpText,
+                LogMessage = LoggingText.OppoHelpForCleanCommandCalled,
+                HelpText = Resources.text.help.HelpTextValues.CleanHelpArgumentCommandDescription,
+            };
+
+            var cleanHelpStrategy = new HelpStrategy<CleanStrategy>(cleanHelpStrategyData);
+
+            cleanHelpStrategyData.CommandName = Constants.CleanCommandArguments.VerboseHelp;
+
+            var cleanHelpVerboseStrategy = new HelpStrategy<CleanStrategy>(cleanHelpStrategyData);
 
             var cleanStrategies = new ICommand<CleanStrategy>[]
             {
