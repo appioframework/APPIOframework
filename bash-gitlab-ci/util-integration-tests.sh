@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -euo pipefail
-
 function precondition_oppo_log_file_is_not_existent() {
     if [ -f "./oppo.log" ];
     then
