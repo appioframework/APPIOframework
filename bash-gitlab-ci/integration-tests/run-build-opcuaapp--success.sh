@@ -26,20 +26,14 @@ do
   check_for_exisiting_file_named "./my-app/build/client-app" \
                                  "deployable client application file does not exist ..."
 
-  if [[ ! -x "./my-app/build/client-app" ]]
-  then
-    echo "deployable client application file is not executable ..."
-    exit 1
-  fi
+  check_for_executable_file "./my-app/build/client-app" \
+                            "deployable client application file is not executable ..."
 
   check_for_exisiting_file_named "./my-app/build/server-app" \
                                  "deployable server application file does not exist ..."
 
-  if [[ ! -x "./my-app/build/server-app" ]]
-  then
-    echo "deployable server application file is not executable ..."
-    exit 1
-  fi
+  check_for_executable_file "./my-app/build/server-app" \
+                            "deployable server application file is not executable ..."
 
   check_for_exisiting_oppo_log_file
 

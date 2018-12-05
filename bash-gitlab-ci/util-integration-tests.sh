@@ -19,7 +19,15 @@ function check_for_exisiting_oppo_log_file() {
 function check_for_exisiting_file_named() {
     if [ ! -f "${1}" ];
     then
-        echo "${2} ..."
+        echo "${2}"
+        exit 1
+    fi
+}
+
+function check_for_executable_file() {
+    if [[ ! -x "${1}" ]];
+    then
+        echo "${2}"
         exit 1
     fi
 }
