@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Moq;
+using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies.ImportCommands;
 using System;
 using System.Collections.Generic;
@@ -8,16 +9,15 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 {
     public class ImportInformationModelSamplesStrategyTest
     {
-        //load embeded resource
-        //write resource to file
+      
 
         [Test]
         public void ShouldImplementICommandOfImportStrategy()
         {
             //Arange
-
+            var fileSystemMock = new Mock<IFileSystem>();
             //Act
-            var obj = new ImportInformationModelSamplesStrategy(String.Empty);
+            var obj = new ImportInformationModelSamplesStrategy(String.Empty,fileSystemMock.Object);
 
             //Assert
             Assert.IsInstanceOf<ICommand<ImportStrategy>>(obj);
@@ -26,8 +26,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void ShouldProvideCorrectName()
         {
             //Arange
+            var fileSystemMock = new Mock<IFileSystem>();
             const string expectedName = "Any Name!";
-            var obj = new ImportInformationModelSamplesStrategy(expectedName);
+            var obj = new ImportInformationModelSamplesStrategy(expectedName,fileSystemMock.Object);
 
             //Act
             var name = obj.Name;
@@ -40,7 +41,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void ShouldProvideCorrectHelpText()
         {
             //Arange
-            var obj = new ImportInformationModelSamplesStrategy(String.Empty);
+            var fileSystemMock = new Mock<IFileSystem>();
+            var obj = new ImportInformationModelSamplesStrategy(String.Empty,fileSystemMock.Object);
 
             //Act 
             var helpText = obj.GetHelpText();
@@ -53,14 +55,26 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void ShouldImportSamplesOnExecution()
         {
             //Arange
-            var obj = new ImportInformationModelSamplesStrategy(String.Empty);
+            const string content = "AnyContent";
+            const string projectName = "AnyProjectName";
+            const string relativeModelsDirPath = "AnyModel";
+            const string relativeModelFilePath = "AnyFilePath";
+            var fileSystemMock = new Mock<IFileSystem>();
+            fileSystemMock.Setup(x=>x.LoadTemplateFile(Resources.Resources.SampleInformationModelFileName)).Returns(content);
+            fileSystemMock.Setup(x=>x.CreateFile(relativeModelFilePath,content));
+            fileSystemMock.Setup(x => x.CombinePaths(projectName,Constants.DirectoryName.Models)).Returns(relativeModelsDirPath);
+            fileSystemMock.Setup(x => x.CombinePaths(relativeModelsDirPath, Constants.FileName.SampleInformationModelFile)).Returns(relativeModelFilePath);
+            var obj = new ImportInformationModelSamplesStrategy(String.Empty,fileSystemMock.Object);
             //Act
 
+            var result = obj.Execute(new string[] {projectName});
             //Assert
-            Assert.Throws<NotImplementedException>(() => obj.Execute(null));
+            Assert.IsTrue(result.Sucsess);
+            fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.SampleInformationModelFileName), Times.Once);
+            fileSystemMock.Verify(x => x.CreateFile(relativeModelFilePath, content), Times.Once);
         }
 
-
+        
 
 
 
