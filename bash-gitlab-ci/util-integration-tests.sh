@@ -31,3 +31,11 @@ function check_for_executable_file() {
         exit 1
     fi
 }
+
+function check_for_non_zero_error_code() {
+    if [ ${?} = 0 ];
+    then
+        echo "failing command did not result in exit code != 0 ..."
+        exit 1
+    fi
+}

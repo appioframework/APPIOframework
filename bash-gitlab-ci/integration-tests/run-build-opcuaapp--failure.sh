@@ -24,12 +24,8 @@ do
 
   ${VAR_COMMAND}
 
-  if [ ${?} = 0 ];
-  then
-    echo "failing command did not result in exit code != 0 ..."
-    exit 1
-  fi
-
+  check_for_non_zero_error_code
+  
   check_for_exisiting_oppo_log_file
 
   cd ..
