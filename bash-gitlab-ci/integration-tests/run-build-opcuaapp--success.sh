@@ -25,11 +25,6 @@ do
 
   check_for_exisiting_file_named "./my-app/build/client-app" \
                                  "deployable client application file does not exist ..."
-  # if [ ! -f "./my-app/build/client-app" ];
-  # then
-  #   echo "deployable client application file does not exist ..."
-  #   exit 1
-  # fi
 
   if [[ ! -x "./my-app/build/client-app" ]]
   then
@@ -37,11 +32,8 @@ do
     exit 1
   fi
 
-  if [ ! -f "./my-app/build/server-app" ];
-  then
-    echo "deployable server application file does not exist ..."
-    exit 1
-  fi
+  check_for_exisiting_file_named "./my-app/build/server-app" \
+                                 "deployable server application file does not exist ..."
 
   if [[ ! -x "./my-app/build/server-app" ]]
   then
