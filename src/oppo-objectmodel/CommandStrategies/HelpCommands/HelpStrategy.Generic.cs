@@ -17,16 +17,20 @@ namespace Oppo.ObjectModel.CommandStrategies.HelpCommands
 
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
-            var outputMessages = new MessageLines();
-            outputMessages.Add(_helpData.HelpTextFirstLine);
-            
+            var commandLines = new MessageLines();
             foreach (var command in CommandFactory?.Commands ?? new ICommand<TDependance>[0])
-            {                
-                outputMessages.Add(command.Name, command.GetHelpText());
+            {
+                commandLines.Add(command.Name, command.GetHelpText());
             }
+            commandLines.Sort();
 
-            outputMessages.Add(_helpData.HelpTextLastLine);
-            
+            var outputMessages = new MessageLines
+            {
+                _helpData.HelpTextFirstLine,
+                commandLines,
+                _helpData.HelpTextLastLine
+            };
+
             OppoLogger.Info(_helpData.LogMessage);
             return new CommandResult(true, outputMessages);            
         }

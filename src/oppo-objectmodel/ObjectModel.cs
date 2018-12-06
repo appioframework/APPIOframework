@@ -122,10 +122,6 @@ namespace Oppo.ObjectModel
                 {string.Empty, "opcuaapp" },
                 {string.Empty, "" },
                 {"Options:", "" },
-                { "-n", "Name of the object to create"},
-                {"--name", "Name of the object to create" },
-                {"-h", "New help" },
-                { "--help", "New help" }
             };
 
             var newHelpStrategyData = new HelpData

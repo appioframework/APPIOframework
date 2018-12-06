@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Oppo.ObjectModel
 {
@@ -32,6 +34,11 @@ namespace Oppo.ObjectModel
             }
         }
 
+        public void Sort()
+        {
+            _messages.Sort(new KeyValuePairComparer());
+        }
+
         public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
         {
             return _messages.GetEnumerator();
@@ -40,6 +47,19 @@ namespace Oppo.ObjectModel
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        private class KeyValuePairComparer : IComparer<KeyValuePair<string, string>>
+        {
+            public int Compare(KeyValuePair<string, string> x, KeyValuePair<string, string> y)
+            {
+                return string.Compare(TrimStartDash(x.Key), TrimStartDash(y.Key), StringComparison.Ordinal);
+            }
+
+            private static string TrimStartDash(string value)
+            {
+                return value.TrimStart('-');
+            }
         }
     }
 }

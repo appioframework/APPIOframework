@@ -80,5 +80,32 @@ namespace Oppo.ObjectModel.Tests
             Assert.IsTrue(messageLine.All(v => v.Key.Contains(msgKey)));
             Assert.IsTrue(messageLine.All(v => v.Value.Contains(msgValue)));
         }
+
+        [Test]
+        public void Sort_ShouldSortContent()
+        {
+            // Arrange
+            var obj = new MessageLines
+            {
+                { "-x", "any-text" },
+                { "--a", "any-other-text" },
+                { "d", "any-other-text-374573" },
+                { "---c", "any-other-text-2" },
+            };
+
+            // Act
+            obj.Sort();
+
+            // Assert
+            Assert.AreEqual(4, obj.Count());
+            Assert.AreEqual("--a", obj.ElementAt(0).Key);
+            Assert.AreEqual("any-other-text", obj.ElementAt(0).Value);
+            Assert.AreEqual("---c", obj.ElementAt(1).Key);
+            Assert.AreEqual("any-other-text-2", obj.ElementAt(1).Value);
+            Assert.AreEqual("d", obj.ElementAt(2).Key);
+            Assert.AreEqual("any-other-text-374573", obj.ElementAt(2).Value);
+            Assert.AreEqual("-x", obj.ElementAt(3).Key);
+            Assert.AreEqual("any-text", obj.ElementAt(3).Value);
+        }
     }
 }
