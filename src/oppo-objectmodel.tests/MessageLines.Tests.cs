@@ -2,7 +2,7 @@ using System.Collections;
 using System.Linq;
 using NUnit.Framework;
 
-namespace Oppo.ObjectModel.Tests.CommandStrategies
+namespace Oppo.ObjectModel.Tests
 {
     public class MessageLinesTests
     {
