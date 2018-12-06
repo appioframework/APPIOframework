@@ -38,6 +38,6 @@
         public const string ImportInforamtionModelCommandMissingModelPath = "Information model import failure, missing model name!";
 
         // import sample <command>
-        public const string ImportSampleInforamtionModelSucess = "Sample information model load success.";
+        public const string ImportSampleInforamtionModelSucess = "Sample information model '{0}' load success.";
     }
 }
