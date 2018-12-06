@@ -2,47 +2,54 @@
 
 set -euo pipefail
 
-mkdir deploy-opcuaapp--success
-cd    deploy-opcuaapp--success
+source bash-gitlab-ci/util-integration-tests.sh
 
-oppo new opcuaapp --name "my-app"
-oppo build   -n "my-app"
-oppo publish -n "my-app"
+VAR_COMMANDS[0]="oppo deploy --name my-app"
+VAR_COMMANDS[1]="oppo deploy -n     my-app"
 
-if [ "${1}" = "verbose" ];
-then
-  oppo deploy --name "my-app"
-else
-  oppo deploy -n "my-app"
-fi
+for INDEX in "${!VAR_COMMANDS[@]}";
+do
+  VAR_COMMAND=${VAR_COMMANDS[INDEX]}
+  
+  echo "Testing command '${VAR_COMMAND}' ..."
 
-if [ ! -f "./my-app/deploy/oppo-opcuaapp.deb" ];
-then
-  echo "deployable debian installer is missing ..."
-  exit 1
-fi
+  mkdir deploy-opcuaapp--success
+  cd    deploy-opcuaapp--success
 
-if [ -d "./my-app/deploy/temp" ];
-then
-  echo "deploy temp directory is still existing ..."
-  exit 1
-fi
+  oppo new opcuaapp --name "my-app"
+  oppo build        --name "my-app"
+  oppo publish      --name "my-app"
 
-dpkg --install ./my-app/deploy/oppo-opcuaapp.deb
+  precondition_oppo_log_file_is_not_existent
 
-if [ ! -f "/usr/bin/client-app" ];
-then
-  echo "deployed client application is missing ..."
-  exit 1
-fi
+  ${VAR_COMMAND}
 
-if [ ! -f "/usr/bin/server-app" ];
-then
-  echo "deployed server application is missing ..."
-  exit 1
-fi
+  check_for_exisiting_oppo_log_file
 
-dpkg --purge oppo-opcuaapp-installer
+  check_for_exisiting_file_named "./my-app/deploy/oppo-opcuaapp.deb" \
+                                 "deployable debian installer is missing ..."
 
-cd ..
-rm -rf deploy-opcuaapp--success
+  check_for_missing_directory_named "./my-app/deploy/temp" \
+                                    "deploy temp directory is still existing ..."
+
+  dpkg --install ./my-app/deploy/oppo-opcuaapp.deb
+
+  check_for_exisiting_file_named "/usr/bin/client-app" \
+                                 "installed client application is missing ..."
+
+  check_for_exisiting_file_named "/usr/bin/server-app" \
+                                 "installed server application is missing ..."
+
+  dpkg --purge oppo-opcuaapp-installer
+
+  check_for_missing_file_named "/usr/bin/client-app" \
+                               "un-installed client application is still existent ..."
+
+  check_for_missing_file_named "/usr/bin/server-app" \
+                               "un-installed server application is still existent ..."
+
+  cd ..
+  rm -rf deploy-opcuaapp--success
+
+  echo "Testing command '${VAR_COMMAND}' ... done"
+done
