@@ -24,8 +24,8 @@ do
 
   ${VAR_COMMAND}
 
-  check_for_exisiting_directory_named "./my-app/build" \
-                                      "build directory was not removed ..."
+  check_for_missing_directory_named "./my-app/build" \
+                                    "build directory was not removed ..."
 
   check_for_exisiting_oppo_log_file
 
