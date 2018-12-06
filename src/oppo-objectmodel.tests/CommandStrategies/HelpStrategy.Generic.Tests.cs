@@ -9,6 +9,44 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
     public class HelpStrategyTests
     {
         [Test]
+        public void HelpData_Clone_ShouldPerformDeepClone()
+        {
+            // Arrange
+            const string commandName = "any-name";
+            var helpTextFirstLine = new MessageLines { {"any-header-begin", "any-message-begin"} };
+            var helpTextLastLine = new MessageLines { {"any-header-end", "any-message-end"} };
+            const string helpText = "any-help-text";
+            const string logMessage = "any-log-message";
+
+            var obj = new HelpData
+            {
+                CommandName = commandName,
+                HelpTextFirstLine = helpTextFirstLine,
+                HelpTextLastLine = helpTextLastLine,
+                HelpText = helpText,
+                LogMessage = logMessage,
+            };
+
+            // Act
+            var clone = obj.Clone();
+
+            // Assert
+            Assert.AreEqual(commandName, clone.CommandName);
+            Assert.AreNotSame(helpTextFirstLine, clone.HelpTextFirstLine);
+            Assert.AreEqual(1, helpTextFirstLine.Count());
+            Assert.AreEqual(1, clone.HelpTextFirstLine.Count());
+            Assert.AreEqual(1, helpTextLastLine.Count());
+            Assert.AreEqual(1, clone.HelpTextLastLine.Count());
+            Assert.AreEqual(helpTextFirstLine.First().Key, clone.HelpTextFirstLine.First().Key);
+            Assert.AreEqual(helpTextFirstLine.First().Value, clone.HelpTextFirstLine.First().Value);
+            Assert.AreEqual(helpTextLastLine.First().Key, clone.HelpTextLastLine.First().Key);
+            Assert.AreEqual(helpTextLastLine.First().Value, clone.HelpTextLastLine.First().Value);
+            Assert.AreNotSame(helpTextLastLine, clone.HelpTextLastLine);
+            Assert.AreEqual(helpText, clone.HelpText);
+            Assert.AreEqual(logMessage, clone.LogMessage);
+        }
+
+        [Test]
         public void HelpStrategy_Should_ImplementICommandOfAnyType()
         {
             // Arrange
