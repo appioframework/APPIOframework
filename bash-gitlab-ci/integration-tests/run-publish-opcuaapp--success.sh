@@ -2,42 +2,44 @@
 
 set -euo pipefail
 
-mkdir publish-opcuaapp--success
-cd    publish-opcuaapp--success
+source bash-gitlab-ci/util-integration-tests.sh
 
-oppo new opcuaapp --name "my-app"
-oppo build -n "my-app"
+VAR_COMMANDS[0]="oppo publish --name my-app"
+VAR_COMMANDS[1]="oppo publish -n     my-app"
 
-if [ "${1}" = "verbose" ];
-then
-  oppo publish --name "my-app"
-else
-  oppo publish -n "my-app"
-fi
+for INDEX in "${!VAR_COMMANDS[@]}";
+do
+  VAR_COMMAND=${VAR_COMMANDS[INDEX]}
+  
+  echo "Testing command '${VAR_COMMAND}' ..."
 
-if [ ! -f "./my-app/publish/client-app" ];
-then
-  echo "published client application file is missing ..."
-  exit 1
-fi
+  mkdir publish-opcuaapp--success
+  cd    publish-opcuaapp--success
 
-if [[ ! -x "./my-app/publish/client-app" ]]
-then
-  echo "published client application file is not executable ..."
-  exit 1
-fi
+  oppo new opcuaapp --name "my-app"
+  oppo build        --name "my-app"
+  rm --force "./oppo.log"
 
-if [ ! -f "./my-app/publish/server-app" ];
-then
-  echo "published server application file is missing ..."
-  exit 1
-fi
+  precondition_oppo_log_file_is_not_existent
 
-if [[ ! -x "./my-app/publish/server-app" ]]
-then
-  echo "published server application file is not executable ..."
-  exit 1
-fi
+  ${VAR_COMMAND}
 
-cd ..
-rm -rf publish-opcuaapp--success
+  check_for_exisiting_oppo_log_file
+
+  check_for_exisiting_file_named "./my-app/publish/client-app" \
+                                 "published client application file is missing ..."
+
+  check_for_executable_file "./my-app/publish/client-app" \
+                            "published client application file is not executable ..."
+
+  check_for_exisiting_file_named "./my-app/publish/server-app" \
+                                 "published server application file is missing ..."
+
+  check_for_executable_file "./my-app/publish/server-app" \
+                            "published server application file is not executable ..."
+
+  cd ..
+  rm -rf publish-opcuaapp--success
+
+  echo "Testing command '${VAR_COMMAND}' ... done"
+done
