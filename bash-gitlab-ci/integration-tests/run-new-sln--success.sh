@@ -4,8 +4,8 @@ set -euo pipefail
 
 source bash-gitlab-ci/util-integration-tests.sh
 
-VAR_COMMANDS[0]="oppo new sln --name my-app"
-VAR_COMMANDS[1]="oppo new sln -n     my-app"
+VAR_COMMANDS[0]="oppo new sln --name my-solution"
+VAR_COMMANDS[1]="oppo new sln -n     my-solution"
 
 for INDEX in "${!VAR_COMMANDS[@]}";
 do
