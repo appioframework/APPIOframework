@@ -14,35 +14,45 @@ namespace Oppo.ObjectModel
 
             foreach (var info in infos)
             {
-                for (var i = 0; i < arguments.Count; ++i)
+                ParseArgumentsByInfos(info, arguments);
+            }
+        }
+
+        private void ParseArgumentsByInfos(ArgumentInfo info, IReadOnlyList<string> arguments)
+        {
+            for (var i = 0; i < arguments.Count; ++i)
+            {
+                var possibleFlag = arguments[i];
+
+                if (info.HasValue)
                 {
-                    var possibleFlag = arguments[i];
-
-                    if (info.HasValue)
+                    if (i == arguments.Count - 1)
                     {
-                        if (i == arguments.Count - 1)
-                        {
-                            break;
-                        }
-
-                        var nextArgument = arguments[i + 1];
-
-                        if (possibleFlag == info.Name || possibleFlag == info.VerboseName)
-                        {
-                            _flagValuesForShortName.Add(info.Name, nextArgument);
-                            _flagValuesForVerboseName.Add(info.VerboseName, nextArgument);
-                        }
+                        break;
                     }
-                    else
+
+                    var nextArgument = arguments[i + 1];
+
+                    if (IsCommandLineFlag(possibleFlag, info))
                     {
-                        if (possibleFlag == info.Name || possibleFlag == info.VerboseName)
-                        {
-                            _flagValuesForShortName.Add(info.Name, string.Empty);
-                            _flagValuesForVerboseName.Add(info.VerboseName, string.Empty);
-                        }
+                        _flagValuesForShortName.Add(info.Name, nextArgument);
+                        _flagValuesForVerboseName.Add(info.VerboseName, nextArgument);
+                    }
+                }
+                else
+                {
+                    if (IsCommandLineFlag(possibleFlag, info))
+                    {
+                        _flagValuesForShortName.Add(info.Name, string.Empty);
+                        _flagValuesForVerboseName.Add(info.VerboseName, string.Empty);
                     }
                 }
             }
+        }
+        
+        private static bool IsCommandLineFlag(string possibleFlag, ArgumentInfo info)
+        {
+            return possibleFlag == info.Name || possibleFlag == info.VerboseName;
         }
 
         public Argument this[string key]
