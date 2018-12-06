@@ -2,45 +2,55 @@
 
 set -euo pipefail
 
-mkdir new-opcuaapp--success
-cd    new-opcuaapp--success
+source bash-gitlab-ci/util-integration-tests.sh
 
-if [ "${1}" = "verbose" ];
-then
-  oppo new opcuaapp --name "my-app"
-else
-  oppo new opcuaapp -n "my-app"
-fi
+VAR_COMMANDS[0]="oppo new --name my-app"
+VAR_COMMANDS[1]="oppo new -n     my-app"
 
-if [ ! -d "my-app/models" ];
-then
-  echo "oppo project / models directory does not exist ..."
-  exit 1
-fi
+for INDEX in "${!VAR_COMMANDS[@]}";
+do
+  VAR_COMMAND=${VAR_COMMANDS[INDEX]}
+  
+  echo "Testing command '${VAR_COMMAND}' ..."
 
-if [ ! -f "./my-app/my-app.oppoproj" ] && [ ! -f "./my-app/meson.build" ];
-then
-  echo "oppo project / meson.build file does not exist ..."
-  exit 1
-fi
+  mkdir new-opcuaapp--success
+  cd    new-opcuaapp--success
 
-if [ ! -f "./my-app/src/client/main.c" ] && [ ! -f "./my-app/src/client/open62541.c" ] && [ ! -f "./my-app/src/client/open62541.h" ];
-then
-  echo "any oppo project source file for the client application does not exist ..."
-  exit 1
-fi
+  precondition_oppo_log_file_is_not_existent
 
-if [ ! -f "./my-app/src/server/main.c" ] && [ ! -f "./my-app/src/server/open62541.c" ] && [ ! -f "./my-app/src/server/open62541.h" ];
-then
-  echo "any oppo project source file for the server application does not exist ..."
-  exit 1
-fi
+  ${VAR_COMMAND}
 
-if [ ! -f "./oppo.log" ];
-then
-  echo "no log entry was created ..."
-  exit 1
-fi
+  check_for_exisiting_oppo_log_file
 
-cd ..
-rm -rf new-opcuaapp--success
+  check_for_exisiting_directory_named "./my-app/models" \
+                                      "models directory does not exist ..."
+
+  check_for_exisiting_file_named "./my-app/my-app.oppoproj" \
+                                 "oppo project file does not exist ..."
+
+  check_for_exisiting_file_named "./my-app/meson.build" \
+                                 "meson.build file does not exist ..."
+
+  check_for_exisiting_file_named "./my-app/src/client/main.c" \
+                                 "any oppo project source file for the client application does not exist ..."
+
+  check_for_exisiting_file_named "./my-app/src/client/open62541.c" \
+                                 "any oppo project source file for the client application does not exist ..."
+
+  check_for_exisiting_file_named "./my-app/src/client/open62541.h" \
+                                 "any oppo project source file for the client application does not exist ..."
+
+  check_for_exisiting_file_named "./my-app/src/server/main.c" \
+                                 "any oppo project source file for the server application does not exist ..."
+
+  check_for_exisiting_file_named "./my-app/src/server/open62541.c" \
+                                 "any oppo project source file for the server application does not exist ..."
+
+  check_for_exisiting_file_named "./my-app/src/server/open62541.h" \
+                                 "any oppo project source file for the server application does not exist ..."
+
+  cd ..
+  rm -rf new-opcuaapp--success
+
+  echo "Testing command '${VAR_COMMAND}' ... done"
+done
