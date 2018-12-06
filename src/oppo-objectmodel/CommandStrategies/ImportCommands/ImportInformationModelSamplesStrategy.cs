@@ -9,7 +9,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
     {
         private readonly string _name;
         private readonly IFileSystem _fileSystem;
-        public ImportInformationModelSamplesStrategy(string name,IFileSystem fileSystem)
+        public ImportInformationModelSamplesStrategy(IFileSystem fileSystem, string name)
         {
             _name = name;
             _fileSystem = fileSystem;

@@ -125,6 +125,7 @@ namespace Oppo.ObjectModel
         public static class ImportInformationModelCommandName
         {
             public const string InformationModel = "information-model";
+            public const string InformationModelSample = "sample-information-model";
         }
 
         public static class ImportInformationModelCommandArguments
@@ -133,6 +134,9 @@ namespace Oppo.ObjectModel
             public const string VerbosePath = "--path";
             public const string Help = "-h";
             public const string VerboseHelp = "--help";
+            public const string Sample = "-s";
+            public const string VerboseSample = "--sample";
+
         }
     }
 }

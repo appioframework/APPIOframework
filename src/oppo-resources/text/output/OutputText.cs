@@ -36,5 +36,8 @@
         public const string ImportInforamtionModelCommandInvalidModelExtension = "Information model import failure, invalid model extension '{0}'";
         public const string ImportInforamtionModelCommandNotExistingModelPath = "Information model import failure, can't find model '{0}'!";
         public const string ImportInforamtionModelCommandMissingModelPath = "Information model import failure, missing model name!";
+
+        // import sample <command>
+        public const string ImportSampleInforamtionModelSucess = "Sample information model load success.";
     }
 }

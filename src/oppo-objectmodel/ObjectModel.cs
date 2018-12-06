@@ -291,6 +291,8 @@ namespace Oppo.ObjectModel
             var importCommands = new ICommand<ImportStrategy>[]
             {
                 new ImportInformationModelCommandStrategy(fileSystem),
+                new ImportInformationModelSamplesStrategy(fileSystem, Constants.ImportInformationModelCommandArguments.Sample),
+                new ImportInformationModelSamplesStrategy(fileSystem, Constants.ImportInformationModelCommandArguments.VerboseSample),
                 importHelpStrategy,
                 importHelpStrategyVerbose
             };

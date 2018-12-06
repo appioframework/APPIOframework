@@ -17,7 +17,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             //Arange
             var fileSystemMock = new Mock<IFileSystem>();
             //Act
-            var obj = new ImportInformationModelSamplesStrategy(String.Empty,fileSystemMock.Object);
+            var obj = new ImportInformationModelSamplesStrategy(fileSystemMock.Object, String.Empty);
 
             //Assert
             Assert.IsInstanceOf<ICommand<ImportStrategy>>(obj);
@@ -28,7 +28,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             //Arange
             var fileSystemMock = new Mock<IFileSystem>();
             const string expectedName = "Any Name!";
-            var obj = new ImportInformationModelSamplesStrategy(expectedName,fileSystemMock.Object);
+            var obj = new ImportInformationModelSamplesStrategy(fileSystemMock.Object, expectedName);
 
             //Act
             var name = obj.Name;
@@ -42,7 +42,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             //Arange
             var fileSystemMock = new Mock<IFileSystem>();
-            var obj = new ImportInformationModelSamplesStrategy(String.Empty,fileSystemMock.Object);
+            var obj = new ImportInformationModelSamplesStrategy(fileSystemMock.Object, String.Empty);
 
             //Act 
             var helpText = obj.GetHelpText();
@@ -64,7 +64,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             fileSystemMock.Setup(x=>x.CreateFile(relativeModelFilePath,content));
             fileSystemMock.Setup(x => x.CombinePaths(projectName,Constants.DirectoryName.Models)).Returns(relativeModelsDirPath);
             fileSystemMock.Setup(x => x.CombinePaths(relativeModelsDirPath, Constants.FileName.SampleInformationModelFile)).Returns(relativeModelFilePath);
-            var obj = new ImportInformationModelSamplesStrategy(String.Empty,fileSystemMock.Object);
+            var obj = new ImportInformationModelSamplesStrategy(fileSystemMock.Object, String.Empty);
             //Act
 
             var result = obj.Execute(new string[] {projectName});

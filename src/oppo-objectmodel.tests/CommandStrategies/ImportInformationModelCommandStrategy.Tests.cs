@@ -22,6 +22,15 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             };
         }
 
+        private static string[][] ValidInputsLoadSample()
+        {
+            return new[]
+            {
+                new[] {"myApp", "-s"},
+                new[] {"myApp", "--sample"}
+            };
+        }
+
         private static string[][] InvalidInputsInvalidModelPath()
         {
             return new[]
@@ -336,6 +345,44 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsTrue(warnWrittenOut);
             Assert.IsFalse(result.Sucsess);
             Assert.AreEqual(OutputText.ImportInforamtionModelCommandMissingModelPath, result.OutputMessages.First().Key);
+            OppoLogger.RemoveListener(loggerListenerMock.Object);
+        }
+
+        [Test]
+        public void ImportInformationModelCommandStrategy_Should_ImportSampleModel([ValueSource(nameof(ValidInputsLoadSample))]string[] inputParams)
+        {
+            // Arrange
+            var infoWrittenOut = false;
+            var projectDirectory = $"{inputParams.ElementAt(0)}";
+            var modelsDirectory = "models";
+            var loadedModel = "anyString";
+            var modelFilePath = Constants.FileName.SampleInformationModelFile;
+            var modelTargetPath = projectDirectory + "\\" + _modelName;
+
+            _fileSystemMock.Setup(x => x.LoadTemplateFile(Resources.Resources.SampleInformationModelFileName)).Returns(loadedModel);
+
+            _fileSystemMock.Setup(x => x.FileExists(modelFilePath)).Returns(true);
+            _fileSystemMock.Setup(x => x.GetFileName(modelFilePath)).Returns(_modelName);
+            _fileSystemMock.Setup(x => x.GetExtension(modelFilePath)).Returns(_validModelExtension);
+            _fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.DirectoryName.Models)).Returns(modelsDirectory);
+
+            _fileSystemMock.Setup(x => x.CombinePaths(modelsDirectory, Constants.FileName.SampleInformationModelFile)).Returns(modelTargetPath);
+
+            
+
+
+            var loggerListenerMock = new Mock<ILoggerListener>();
+            loggerListenerMock.Setup(listener => listener.Info(string.Format(LoggingText.ImportInforamtionModelCommandSuccess, modelFilePath))).Callback(delegate { infoWrittenOut = true; });
+            OppoLogger.RegisterListener(loggerListenerMock.Object);
+
+            // Act
+            var result = _objectUnderTest.Execute(inputParams);
+
+            // Assert
+            Assert.IsTrue(infoWrittenOut);
+            Assert.IsTrue(result.Sucsess);
+            Assert.AreEqual(string.Format(OutputText.ImportSampleInforamtionModelSucess, modelFilePath), result.OutputMessages.First().Key);
+            _fileSystemMock.Verify(x => x.CreateFile(modelTargetPath, loadedModel), Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
     }

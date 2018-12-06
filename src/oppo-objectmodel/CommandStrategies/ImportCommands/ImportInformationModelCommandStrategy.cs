@@ -39,6 +39,18 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
                 return new CommandResult(false, outputMessages);
             }
 
+            // -s flag (temporary solution for now -> needs bigger design changes)
+            if (pathFlag == Constants.ImportInformationModelCommandArguments.Sample || pathFlag == Constants.ImportInformationModelCommandArguments.VerboseSample)
+            {
+                var content = _fileSystem.LoadTemplateFile(Resources.Resources.SampleInformationModelFileName);
+                var modelsDir = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.Models);
+                var modelFilePath = _fileSystem.CombinePaths(modelsDir, Constants.FileName.SampleInformationModelFile);
+                _fileSystem.CreateFile(modelFilePath, content);
+                outputMessages.Add(string.Format(OutputText.ImportSampleInforamtionModelSucess, Constants.FileName.SampleInformationModelFile), string.Empty);
+                OppoLogger.Info(string.Format(LoggingText.ImportInforamtionModelCommandSuccess, Constants.FileName.SampleInformationModelFile));
+                return new CommandResult(true, outputMessages);
+            }
+
             // path flag validation
             if (pathFlag != Constants.ImportInformationModelCommandArguments.Path && pathFlag != Constants.ImportInformationModelCommandArguments.VerbosePath)
             {

@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="information-models\OpcUaDiModel.xml" />
+    <None Remove="information_models\OpcUaDiModel.xml" />
     <None Remove="installer\opcuaapp\oppo-opcuaapp.zip" />
     <None Remove="open62541\main-client.c" />
     <None Remove="open62541\meson.build" />
@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="information-models\OpcUaDiModel.xml" />
+    <EmbeddedResource Include="information_models\OpcUaDiModel.xml" />
     <EmbeddedResource Include="installer\opcuaapp\oppo-opcuaapp.zip" />
     <EmbeddedResource Include="open62541\main-client.c" />
     <EmbeddedResource Include="open62541\open62541.c" />

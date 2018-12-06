@@ -18,7 +18,7 @@
 
         public const string InstallerZipResourceName = "Oppo.Resources.installer.opcuaapp.oppo-opcuaapp.zip";
 
-        public const string SampleInformationModelFileName = "Oppo.Resources.information-models.OpcUaDiModel.xml";
+        public const string SampleInformationModelFileName = "Oppo.Resources.information_models.OpcUaDiModel.xml";
 
     }
 }
