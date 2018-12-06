@@ -23,14 +23,12 @@ do
 
   echo "creating dummy model.xml"
   touch "model.xml"
+
   ${VAR_COMMAND}
 
-  if [ ! -f "./my-app/models/model.xml" ];
-  then
-    echo "information-model import failed! ..."
-    exit 1
-  fi
-  
+  check_for_exisiting_file_named "./my-app/models/model.xml" \
+                                 "information-model import failed ..."
+
   check_for_exisiting_oppo_log_file
 
   cd ..
