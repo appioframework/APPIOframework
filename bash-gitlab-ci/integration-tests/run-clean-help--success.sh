@@ -2,21 +2,29 @@
 
 set -euo pipefail
 
-mkdir clean-help--success
-cd    clean-help--success
+source bash-gitlab-ci/util-integration-tests.sh
 
-if [ "${1}" = "verbose" ];
-then
-  oppo clean --help
-else
-  oppo clean -h
-fi
+VAR_COMMANDS[0]="oppo clean --help"
+VAR_COMMANDS[1]="oppo clean -h"
+VAR_COMMANDS[2]="oppo clean"
 
-if [ ! -f "./oppo.log" ];
-then
-  echo "no log entry was created ..."
-  exit 1
-fi
+for INDEX in "${!VAR_COMMANDS[@]}";
+do
+  VAR_COMMAND=${VAR_COMMANDS[INDEX]}
+  
+  echo "Testing command '${VAR_COMMAND}' ..."
 
-cd ..
-rm -rf clean-help--success
+  mkdir clean-help--success
+  cd    clean-help--success
+
+  precondition_oppo_log_file_is_not_existent
+
+  ${VAR_COMMAND}
+
+  check_for_exisiting_oppo_log_file
+
+  cd ..
+  rm -rf clean-help--success
+
+  echo "Testing command '${VAR_COMMAND}' ... done"
+done
