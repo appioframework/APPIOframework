@@ -19,6 +19,7 @@ do
   oppo new opcuaapp --name "my-app"
   oppo build        --name "my-app"
   oppo publish      --name "my-app"
+  rm --force "./oppo.log"
 
   precondition_oppo_log_file_is_not_existent
 
