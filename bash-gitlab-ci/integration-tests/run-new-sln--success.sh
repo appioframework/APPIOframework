@@ -2,27 +2,31 @@
 
 set -euo pipefail
 
-mkdir new-sln--success
-cd    new-sln--success
+source bash-gitlab-ci/util-integration-tests.sh
 
-if [ "${1}" = "verbose" ];
-then
-  oppo new sln --name "my-solution"
-else
-  oppo new sln -n "my-solution"
-fi
+VAR_COMMANDS[0]="oppo new sln --name my-app"
+VAR_COMMANDS[1]="oppo new sln -n     my-app"
 
-if [ ! -f "./my-solution.opposln" ];
-then
-  echo "oppo solution file does not exist ..."
-  exit 1
-fi
+for INDEX in "${!VAR_COMMANDS[@]}";
+do
+  VAR_COMMAND=${VAR_COMMANDS[INDEX]}
+  
+  echo "Testing command '${VAR_COMMAND}' ..."
 
-if [ ! -f "./oppo.log" ];
-then
-  echo "no log entry was created ..."
-  exit 1
-fi
+  mkdir new-sln--success
+  cd    new-sln--success
 
-cd ..
-rm -rf new-sln--success
+  precondition_oppo_log_file_is_not_existent
+
+  ${VAR_COMMAND}
+
+  check_for_exisiting_oppo_log_file
+
+  check_for_exisiting_file_named "./my-solution.opposln" \
+                                 "oppo solution file does not exist ..."
+
+  cd ..
+  rm -rf new-sln--success
+
+  echo "Testing command '${VAR_COMMAND}' ... done"
+done

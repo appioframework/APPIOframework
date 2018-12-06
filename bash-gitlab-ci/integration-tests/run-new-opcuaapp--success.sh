@@ -4,8 +4,8 @@ set -euo pipefail
 
 source bash-gitlab-ci/util-integration-tests.sh
 
-VAR_COMMANDS[0]="oppo new --name my-app"
-VAR_COMMANDS[1]="oppo new -n     my-app"
+VAR_COMMANDS[0]="oppo new opcuaapp --name my-app"
+VAR_COMMANDS[1]="oppo new opcuaapp -n     my-app"
 
 for INDEX in "${!VAR_COMMANDS[@]}";
 do
