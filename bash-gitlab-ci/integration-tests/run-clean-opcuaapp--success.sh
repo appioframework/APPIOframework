@@ -2,31 +2,35 @@
 
 set -euo pipefail
 
-mkdir clean-opcuaapp--success
-cd    clean-opcuaapp--success
+source bash-gitlab-ci/util-integration-tests.sh
 
-oppo new opcuaapp -n "my-app"
-oppo build -n "my-app"
-rm --force "./oppo.log"
+VAR_COMMANDS[0]="oppo clean --name my-app"
+VAR_COMMANDS[1]="oppo clean -n     my-app"
 
-if [ "${1}" = "verbose" ];
-then
-  oppo clean --name "my-app"
-else
-  oppo clean -n "my-app"
-fi
+for INDEX in "${!VAR_COMMANDS[@]}";
+do
+  VAR_COMMAND=${VAR_COMMANDS[INDEX]}
+  
+  echo "Testing command '${VAR_COMMAND}' ..."
 
-if [ -d "./my-app/build" ];
-then
-  echo "build directory was not removed ..."
-  exit 1
-fi
+  mkdir clean-opcuaapp--success
+  cd    clean-opcuaapp--success
 
-if [ ! -f "./oppo.log" ];
-then
-  echo "no log entry was created ..."
-  exit 1
-fi
+  oppo new opcuaapp -n "my-app"
+  oppo build        -n "my-app"
+  rm --force "./oppo.log"
 
-cd ..
-rm -rf clean-opcuaapp--success
+  precondition_oppo_log_file_is_not_existent
+
+  ${VAR_COMMAND}
+
+  check_for_exisiting_directory_named "./my-app/build" \
+                                      "build directory was not removed ..."
+
+  check_for_exisiting_oppo_log_file
+
+  cd ..
+  rm -rf clean-opcuaapp--success
+
+  echo "Testing command '${VAR_COMMAND}' ... done"
+done
