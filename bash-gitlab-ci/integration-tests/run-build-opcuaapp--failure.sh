@@ -19,8 +19,8 @@ do
   
   echo "Testing command '${VAR_COMMAND}' ..."
 
-  mkdir new-opcuaapp--failure
-  cd    new-opcuaapp--failure
+  mkdir build-opcuaapp--failure
+  cd    build-opcuaapp--failure
 
   precondition_oppo_log_file_is_not_existent
 
@@ -31,7 +31,7 @@ do
   check_for_exisiting_oppo_log_file
 
   cd ..
-  rm -rf new-opcuaapp--failure
+  rm -rf build-opcuaapp--failure
 
   echo "Testing command '${VAR_COMMAND}' ... done"
 done
