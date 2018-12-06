@@ -74,7 +74,11 @@ echo "Testing publish-opcuaapp--failure"
 echo "Testing version--success"
 /bin/bash bash-gitlab-ci/integration-tests/run-version--success.sh
 
-echo "Testing import information-mode--success"
+echo "Testing import information-model--success"
 /bin/bash bash-gitlab-ci/integration-tests/run-import-information-model--success.sh
-echo "Testing import information-mode--failure"
+echo "Testing import information-model--failure"
 /bin/bash bash-gitlab-ci/integration-tests/run-import-information-model--failure.sh
+echo "Testing import information-model sample--success"
+/bin/bash bash-gitlab-ci/integration-tests/run-import-information-model-sample--success.sh
+echo "Testing import information-model sample--failure"
+/bin/bash bash-gitlab-ci/integration-tests/run-import-information-model-sample--failure.sh
