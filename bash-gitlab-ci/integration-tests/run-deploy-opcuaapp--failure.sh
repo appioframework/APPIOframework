@@ -2,6 +2,8 @@
 
 set -uo pipefail
 
+source bash-gitlab-ci/util-integration-tests.sh
+
 VAR_COMMANDS[0]="oppo deploy --name \"my/\-app\""
 VAR_COMMANDS[1]="oppo deploy -n     \"my/\-app\""
 VAR_COMMANDS[2]="oppo deploy --name"
@@ -18,19 +20,13 @@ do
   mkdir deploy--failure
   cd    deploy--failure
 
+  precondition_oppo_log_file_is_not_existent
+
   ${VAR_COMMAND}
 
-  if [ ${?} = 0 ];
-  then
-    echo "failing command did not result in exit code != 0 ..."
-    exit 1
-  fi
-
-  if [ ! -f "./oppo.log" ];
-  then
-    echo "no log entry was created ..."
-    exit 1
-  fi
+  check_for_non_zero_error_code
+  
+  check_for_exisiting_oppo_log_file
 
   cd ..
   rm -rf deploy--failure
