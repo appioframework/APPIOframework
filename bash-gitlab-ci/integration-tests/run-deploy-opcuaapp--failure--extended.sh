@@ -7,7 +7,7 @@ source bash-gitlab-ci/util-integration-tests.sh
 VAR_COMMANDS[0]="oppo deploy --name my-app"
 VAR_COMMANDS[1]="oppo deploy -n     my-app"
 
-echo "Testing failure of dpkg call ..."
+echo "Testing failure of package preparation ..."
 
 for INDEX in "${!VAR_COMMANDS[@]}";
 do
@@ -39,4 +39,4 @@ do
   echo "Testing command '${VAR_COMMAND}' ... done"
 done
 
-echo "Testing failure of dpkg call ... done"
+echo "Testing failure of preparation ... done"
