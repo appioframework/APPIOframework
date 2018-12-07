@@ -9,6 +9,8 @@ echo "Testing build-opcuaapp--success"
 /bin/bash bash-gitlab-ci/integration-tests/run-build-opcuaapp--success.sh
 echo "Testing build-opcuaapp--failure"
 /bin/bash bash-gitlab-ci/integration-tests/run-build-opcuaapp--failure.sh
+echo "Testing build-opcuaapp--failure--extended"
+/bin/bash bash-gitlab-ci/integration-tests/run-build-opcuaapp--failure--extended.sh
 
 echo "Testing clean-help--success -"
 /bin/bash bash-gitlab-ci/integration-tests/run-clean-help--success.sh -
