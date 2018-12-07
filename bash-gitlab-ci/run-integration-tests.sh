@@ -35,6 +35,8 @@ echo "Testing deploy-opcuaapp--success verbose"
 /bin/bash bash-gitlab-ci/integration-tests/run-deploy-opcuaapp--success.sh verbose
 echo "Testing deploy-opcuaapp--failure"
 /bin/bash bash-gitlab-ci/integration-tests/run-deploy-opcuaapp--failure.sh
+echo "Testing deploy-opcuaapp--failure--extended"
+/bin/bash bash-gitlab-ci/integration-tests/run-deploy-opcuaapp--failure--extended.sh
 
 echo "Testing hello--success"
 /bin/bash bash-gitlab-ci/integration-tests/run-hello--success.sh
