@@ -13,7 +13,7 @@ before_script:
   - export CI_GIT_SERVER_USER_GIT="git"
   - export CI_GIT_SERVER_SSH_PORT="30222"
 
-build-test-dotnet-application:
+build-and-test-dotnet-application:
   stage: 'build-test'
   tags:
     - 'dotnet-core'
@@ -40,7 +40,7 @@ publish-dotnet-application:
     - cd src/oppo-terminal
     - dotnet publish -c Release -o ../../publish
 
-build-debian-installer:
+debian-installer:
   dependencies: 
     - 'publish-dotnet-application'
   artifacts:
@@ -55,7 +55,7 @@ build-debian-installer:
   script:    
     - /bin/bash bash-gitlab-ci/run-build-installer.sh
 
-prepare-integration-test:
+run-integration-test:
   dependencies: 
     - 'build-debian-installer'
   stage: 'integration-test'
