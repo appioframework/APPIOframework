@@ -57,7 +57,7 @@ debian-installer:
 
 run-integration-test:
   dependencies: 
-    - 'build-debian-installer'
+    - 'debian-installer'
   stage: 'integration-test'
   tags:
     - 'dotnet-core'
