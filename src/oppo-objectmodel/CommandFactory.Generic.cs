@@ -20,7 +20,7 @@ namespace Oppo.ObjectModel
 
             _nameOfDefaultCommand = nameOfDefaultCommand ?? throw new ArgumentNullException(nameof(nameOfDefaultCommand));
 
-            if (commandArray.Any() && string.IsNullOrEmpty(nameOfDefaultCommand))
+            if (!commandArray.Any() && string.IsNullOrEmpty(nameOfDefaultCommand))
             {
                 throw new ArgumentException(nameof(commandArray));
             }
