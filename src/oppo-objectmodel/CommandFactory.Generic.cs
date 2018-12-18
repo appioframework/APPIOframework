@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Oppo.ObjectModel.Exceptions;
 using Oppo.Resources.text.logging;
 
@@ -15,9 +16,14 @@ namespace Oppo.ObjectModel
             if (commandArray == null)
             {
                 throw new ArgumentNullException(nameof(commandArray));
-            }
+            }           
 
             _nameOfDefaultCommand = nameOfDefaultCommand ?? throw new ArgumentNullException(nameof(nameOfDefaultCommand));
+
+            if (commandArray.Count() == 0 && string.IsNullOrEmpty(nameOfDefaultCommand))
+            {
+                throw new ArgumentException(nameof(commandArray));
+            }
 
             foreach (var command in commandArray)
             {

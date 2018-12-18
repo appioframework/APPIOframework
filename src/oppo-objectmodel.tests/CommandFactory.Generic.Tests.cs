@@ -75,10 +75,22 @@ namespace Oppo.ObjectModel.Tests
             var commandArrayMock = new ICommand<object>[0];
 
             // Act
-            var objectUnderTest = new CommandFactory<object>(commandArrayMock, string.Empty);
+            var objectUnderTest = new CommandFactory<object>(commandArrayMock, "any-name");
 
             // Assert
             Assert.IsInstanceOf<ICommandFactory<object>>(objectUnderTest);
+        }
+
+        [Test]
+        public void CommandFactory_Should_ThrowArgumentException()
+        {
+            // Arrange
+            var commandArrayMock = new ICommand<object>[0];
+
+            // Act
+
+            // Assert
+            Assert.Throws<ArgumentException>(() => new CommandFactory<object>(commandArrayMock, string.Empty));
         }
 
         [TestCase("any-name")]
@@ -88,7 +100,7 @@ namespace Oppo.ObjectModel.Tests
         {
             // Arrange
             var commandArrayMock = new ICommand<object>[0];
-            var objectUnderTest = new CommandFactory<object>(commandArrayMock, string.Empty);
+            var objectUnderTest = new CommandFactory<object>(commandArrayMock, "any-name");
 
             // Act
             var command = objectUnderTest.GetCommand(commandName);
@@ -130,7 +142,7 @@ namespace Oppo.ObjectModel.Tests
         {
             // Arrange
             var commandArrayMock = new ICommand<object>[0];
-            var objectUnderTest = new CommandFactory<object>(commandArrayMock, string.Empty);
+            var objectUnderTest = new CommandFactory<object>(commandArrayMock, "any-name");
             var command = objectUnderTest.GetCommand("any-name");
             var loggerListenerMock = new Mock<ILoggerListener>();
             loggerListenerMock.Setup(x => x.Warn(LoggingText.UnknownCommandCalled));
@@ -151,7 +163,7 @@ namespace Oppo.ObjectModel.Tests
         {
             // Arrange
             var commandArrayMock = new ICommand<object>[0];
-            var objectUnderTest = new CommandFactory<object>(commandArrayMock, string.Empty);
+            var objectUnderTest = new CommandFactory<object>(commandArrayMock, "any-name");
             var command = objectUnderTest.GetCommand("any-name");
 
             // Act
