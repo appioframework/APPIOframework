@@ -84,10 +84,24 @@ namespace Oppo.ObjectModel.Tests
         }
 
         [Test]
-        public void CommandFactory_Should_ThrowArgumentNullException()
+        public void CommandFactory_Should_ThrowArgumentNullExceptionOnCommandArray()
         {
             // Arrange
             var commandArrayMock = new ICommand<object>[0];
+
+            // Act
+
+            // Assert
+            Assert.Throws<ArgumentNullException>(() => new CommandFactory<object>(commandArrayMock, string.Empty));
+        }
+
+        [Test]
+        public void CommandFactory_Should_ThrowArgumentNullExceptionOnDefaultCommandName()
+        {
+            // Arrange
+            var mockCommand = new Mock<ICommand<object>>();
+            mockCommand.Setup(x => x.Name).Returns("any-name");
+            var commandArrayMock = new ICommand<object>[] { mockCommand.Object };
 
             // Act
 
