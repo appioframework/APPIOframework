@@ -93,6 +93,7 @@ namespace Oppo.ObjectModel.Tests
 
             // Assert
             Assert.Throws<ArgumentNullException>(() => new CommandFactory<object>(commandArrayMock, string.Empty));
+            Assert.Throws<ArgumentNullException>(() => new CommandFactory<object>(commandArrayMock, null as string));
         }
 
         public void CommandFactory_Should_ReturnFallbackCommandOnInvalidCommandName()
