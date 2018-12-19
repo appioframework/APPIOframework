@@ -4,8 +4,10 @@ set -euo pipefail
 
 source bash-gitlab-ci/util-integration-tests.sh
 
-VAR_COMMANDS[0]="oppo import information-model my-app -s"
-VAR_COMMANDS[1]="oppo import information-model my-app --sample"
+VAR_COMMANDS[0]="oppo import information-model -n my-app -s"
+VAR_COMMANDS[1]="oppo import information-model -n my-app --sample"
+VAR_COMMANDS[2]="oppo import information-model --name my-app -s"
+VAR_COMMANDS[3]="oppo import information-model --name my-app --sample"
 
 for INDEX in "${!VAR_COMMANDS[@]}";
 do

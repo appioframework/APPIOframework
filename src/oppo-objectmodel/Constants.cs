@@ -130,6 +130,8 @@ namespace Oppo.ObjectModel
 
         public static class ImportInformationModelCommandArguments
         {
+            public const string Name = "-n";
+            public const string VerboseName = "--name";
             public const string Path = "-p";
             public const string VerbosePath = "--path";
             public const string Help = "-h";

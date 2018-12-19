@@ -19,10 +19,18 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
             var inputParamsList = inputParams.ToList();
-            var opcuaAppName = inputParamsList.ElementAtOrDefault(0);
-            var pathFlag = inputParams.ElementAtOrDefault(1);
-            var modelPath = inputParamsList.ElementAtOrDefault(2);
+            var nameFlag = inputParamsList.ElementAtOrDefault(0);
+            var opcuaAppName = inputParamsList.ElementAtOrDefault(1);
+            var pathFlag = inputParams.ElementAtOrDefault(2);
+            var modelPath = inputParamsList.ElementAtOrDefault(3);
             var outputMessages = new MessageLines();
+
+            if (nameFlag != Constants.ImportInformationModelCommandArguments.Name && nameFlag != Constants.ImportInformationModelCommandArguments.VerboseName)
+            {
+                OppoLogger.Warn(LoggingText.UnknownImportInfomrationModelCommandParam);
+                outputMessages.Add(OutputText.ImportInforamtionModelCommandUnknownParamFailure, string.Empty);
+                return new CommandResult(false, outputMessages);
+            }
 
             // opcuaapp name validation
             if (string.IsNullOrEmpty(opcuaAppName))
