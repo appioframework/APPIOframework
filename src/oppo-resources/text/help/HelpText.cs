@@ -5,6 +5,7 @@
         //General texts
         public const string GeneralUsage    = "Usage:";
         public const string GeneralOptions  = "Options:";
+        public const string GeneralArguments = "Arguments:";
 
         //Help command
         public const string HelpStartWelcome                = "Welcome to the Open Plug and Produce Orchestration Framework!";
@@ -33,14 +34,24 @@
         public const string BuildCallDescription    = "oppo build <Options>";
 
         //Clean command
+        public const string CleanFirstLine = "Cleans an oppo project. Removes temporary files and folders.";
+        public const string CleanCallDescription = "oppo clean <Options>";
 
         //Publish command
+        public const string PublishFirstLine = "Publishes an oppo project for deployment.";
+        public const string PublishCallDescription = "oppo publish <Options>";
 
         //Deploy command
-
+        public const string DeployFirstLine = "Builds and installs package(.deb) containing the opcuuaapp ready for deployment.";
+        
+        public const string DeployCallDescription = "oppo deploy <Options>";
         //Import command
+        public const string ImportFirstLine = "Imports an OPC UA conform information model. This will update/extend an opcua-app with this information model. User specific information models needs to placed in 'project/models'. Alternatively a sample provided by oppo can be used. Available are: DI-Informationmodel.";
+        public const string ImportCallDescription = "oppo import <Arguments> <Options>";
+        public const string ImportArguments = "<information-model> OPC UA conform information model ";
 
         //New command
+
 
         //Version command
 

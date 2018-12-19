@@ -180,10 +180,13 @@ namespace Oppo.ObjectModel
 
             var publishHelpStrategyHelpText = new MessageLines
             {
-                {"Arguments:", string.Empty },
-                {"<Project>:", "The project directory to use" },
-                {string.Empty, string.Empty },
-                {"Options:", string.Empty },
+                {string.Empty,Resources.text.help.HelpTextValues.PublishFirstLine},
+                {string.Empty,string.Empty},
+                {string.Empty,Resources.text.help.HelpTextValues.GeneralUsage},
+
+                {string.Empty,Resources.text.help.HelpTextValues.PublishCallDescription},
+                {string.Empty,string.Empty},
+                {string.Empty,Resources.text.help.HelpTextValues.GeneralOptions},
             };
 
             var publishHelpStrategyData = new HelpData
@@ -216,10 +219,13 @@ namespace Oppo.ObjectModel
 
             var deployHelpStrategyHelpText = new MessageLines
             {
-                {"Arguments:", string.Empty },
-                {"<Project>:", "The project directory to deploy" },
-                {string.Empty, string.Empty },
-                {"Options:", string.Empty },
+               {string.Empty,Resources.text.help.HelpTextValues.DeployFirstLine},
+                {string.Empty,string.Empty},
+                {string.Empty,Resources.text.help.HelpTextValues.GeneralUsage},
+
+                {string.Empty,Resources.text.help.HelpTextValues.DeployCallDescription},
+                {string.Empty,string.Empty},
+                {string.Empty,Resources.text.help.HelpTextValues.GeneralOptions},
             };
 
             var deployHelpStrategyData = new HelpData
@@ -253,10 +259,15 @@ namespace Oppo.ObjectModel
 
             var cleanHelpStrategyHelpText = new MessageLines
             {
-                {"Arguments:", "" },
-                {"<Project>", "The project directory to use" },
-                {string.Empty, string.Empty },
-                { "Options:", "" }
+                {string.Empty,Resources.text.help.HelpTextValues.CleanFirstLine},
+                {string.Empty,string.Empty},
+                {string.Empty,Resources.text.help.HelpTextValues.GeneralUsage},
+               
+                {string.Empty,Resources.text.help.HelpTextValues.CleanCallDescription},
+                {string.Empty,string.Empty},
+                {string.Empty,Resources.text.help.HelpTextValues.GeneralOptions},
+
+                
             };
 
             var cleanHelpStrategyData = new HelpData
@@ -288,10 +299,18 @@ namespace Oppo.ObjectModel
 
             var importHelpStrategyHelpText = new MessageLines
             {
-                {"Arguments:", "" },
-                {"information-model", "OPC UA conform information model" },
-                {string.Empty, string.Empty },
-                { "Options:", "" },
+                {string.Empty,Resources.text.help.HelpTextValues.ImportFirstLine},
+                {string.Empty,string.Empty},
+                {string.Empty,Resources.text.help.HelpTextValues.GeneralUsage},
+
+                {string.Empty,Resources.text.help.HelpTextValues.ImportCallDescription},
+                {string.Empty,string.Empty},
+                {string.Empty,Resources.text.help.HelpTextValues.GeneralArguments},
+                {string.Empty,Resources.text.help.HelpTextValues.ImportArguments},
+                {string.Empty,string.Empty},
+                {string.Empty,Resources.text.help.HelpTextValues.GeneralOptions},
+
+            
                 {"-n", "The name to opcuapp to use" },
                 {"--name", "The name to opcuapp to use" },
                 { "-p","Information models path to use"},
