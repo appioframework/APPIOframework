@@ -72,7 +72,9 @@ namespace Oppo.ObjectModel.Tests
         public void CommandFactory_Should_ImplementICommandFactoryGeneric()
         {
             // Arrange
-            var commandArrayMock = new ICommand<object>[0];
+            var mockCommand = new Mock<ICommand<object>>();
+            mockCommand.Setup(x => x.Name).Returns("any-name");
+            var commandArrayMock = new ICommand<object>[] { mockCommand.Object };
 
             // Act
             var objectUnderTest = new CommandFactory<object>(commandArrayMock, "any-name");
@@ -82,7 +84,7 @@ namespace Oppo.ObjectModel.Tests
         }
 
         [Test]
-        public void CommandFactory_Should_ThrowArgumentException()
+        public void CommandFactory_Should_ThrowArgumentNullException()
         {
             // Arrange
             var commandArrayMock = new ICommand<object>[0];
@@ -90,20 +92,20 @@ namespace Oppo.ObjectModel.Tests
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => new CommandFactory<object>(commandArrayMock, string.Empty));
+            Assert.Throws<ArgumentNullException>(() => new CommandFactory<object>(commandArrayMock, string.Empty));
         }
 
-        [TestCase("any-name")]
-        [TestCase("")]
-        [TestCase(null)]
-        public void CommandFactory_Should_ReturnFallbackCommandOnInvalidCommandName(string commandName)
+        public void CommandFactory_Should_ReturnFallbackCommandOnInvalidCommandName()
         {
             // Arrange
-            var commandArrayMock = new ICommand<object>[0];
+            const string defaultCommandName = "any-name";
+            var mockCommand = new Mock<ICommand<object>>();
+            mockCommand.Setup(x => x.Name).Returns(defaultCommandName);
+            var commandArrayMock = new ICommand<object>[] { mockCommand.Object };
             var objectUnderTest = new CommandFactory<object>(commandArrayMock, "any-name");
 
             // Act
-            var command = objectUnderTest.GetCommand(commandName);
+            var command = objectUnderTest.GetCommand("any-name2");
 
             // Assert
             Assert.IsInstanceOf<ICommand<object>>(command);
@@ -141,9 +143,13 @@ namespace Oppo.ObjectModel.Tests
         public void CommandFactoryFallbackCommand_Should_ReturnFailure()
         {
             // Arrange
-            var commandArrayMock = new ICommand<object>[0];
-            var objectUnderTest = new CommandFactory<object>(commandArrayMock, "any-name");
-            var command = objectUnderTest.GetCommand("any-name");
+            const string defaultCommandName = "any-name";
+            var mockCommand = new Mock<ICommand<object>>();
+            mockCommand.Setup(x => x.Name).Returns(defaultCommandName);
+            
+            var commandArrayMock = new ICommand<object>[] { mockCommand.Object };
+            var objectUnderTest = new CommandFactory<object>(commandArrayMock, defaultCommandName);
+            var command = objectUnderTest.GetCommand("any-name2");
             var loggerListenerMock = new Mock<ILoggerListener>();
             loggerListenerMock.Setup(x => x.Warn(LoggingText.UnknownCommandCalled));
             OppoLogger.RegisterListener(loggerListenerMock.Object);
@@ -162,9 +168,12 @@ namespace Oppo.ObjectModel.Tests
         public void CommandFactoryFallbackCommand_Should_ReturnDefaultValues()
         {
             // Arrange
-            var commandArrayMock = new ICommand<object>[0];
-            var objectUnderTest = new CommandFactory<object>(commandArrayMock, "any-name");
-            var command = objectUnderTest.GetCommand("any-name");
+            const string expectedCommandName = "any-name";
+            var mockCommand = new Mock<ICommand<object>>();
+            mockCommand.Setup(x => x.Name).Returns(expectedCommandName);
+            var commandArrayMock = new ICommand<object>[]{mockCommand.Object};
+            var objectUnderTest = new CommandFactory<object>(commandArrayMock, expectedCommandName);
+            var command = objectUnderTest.GetCommand("dummyCommand");
 
             // Act
             var commandName = command.Name;

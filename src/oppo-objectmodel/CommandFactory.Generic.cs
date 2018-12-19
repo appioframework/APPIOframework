@@ -17,13 +17,18 @@ namespace Oppo.ObjectModel
             {
                 throw new ArgumentNullException(nameof(commandArray));
             }           
-
-            _nameOfDefaultCommand = nameOfDefaultCommand ?? throw new ArgumentNullException(nameof(nameOfDefaultCommand));
-
-            if (!commandArray.Any() && string.IsNullOrEmpty(nameOfDefaultCommand))
+            
+            if (!commandArray.Any())
             {
-                throw new ArgumentException(nameof(commandArray));
+                throw new ArgumentNullException(nameof(commandArray));
             }
+
+            if (string.IsNullOrEmpty(nameOfDefaultCommand))
+            {
+                throw new ArgumentNullException(nameof(nameOfDefaultCommand));
+            }
+
+            _nameOfDefaultCommand = nameOfDefaultCommand;
 
             foreach (var command in commandArray)
             {
@@ -35,7 +40,7 @@ namespace Oppo.ObjectModel
                 _commands.Add(command.Name, command);
             }
 
-            if (_commands.Count > 0 && !_commands.ContainsKey(nameOfDefaultCommand))
+            if (!_commands.ContainsKey(nameOfDefaultCommand))
             {
                 throw new ArgumentOutOfRangeException(nameof(nameOfDefaultCommand));
             }
@@ -45,12 +50,12 @@ namespace Oppo.ObjectModel
 
         public ICommand<TDependance> GetCommand(string commandName)
         {            
-            if (string.IsNullOrEmpty(commandName) && _commands.Count > 0)
+            if (string.IsNullOrEmpty(commandName))
             {
                 return _commands[_nameOfDefaultCommand];
             }
 
-            if (commandName != null && _commands.ContainsKey(commandName))
+            if (_commands.ContainsKey(commandName))
             {
                 return _commands[commandName];
             }                        
