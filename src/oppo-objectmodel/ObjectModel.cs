@@ -264,9 +264,10 @@ namespace Oppo.ObjectModel
             {
                 {"Arguments:", "" },
                 {"information-model", "OPC UA conform information model" },
-                {"<opcuaapp name>", "The name to opcuapp to use" },
                 {string.Empty, string.Empty },
                 { "Options:", "" },
+                {"-n", "The name to opcuapp to use" },
+                {"--name", "The name to opcuapp to use" },
                 { "-p","Information models path to use"},
                 { "--path","Information models path to use"}
             };
