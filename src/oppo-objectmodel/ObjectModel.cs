@@ -52,10 +52,12 @@ namespace Oppo.ObjectModel
 
             var buildHelpStrategyHelpText = new MessageLines
             {
-                { "Arguments:", "" },
-                { "<Project>", "The project directory to use" },
+                { string.Empty, Resources.text.help.HelpTextValues.BuildFirstLine },
                 { string.Empty, string.Empty },
-                { "Options:", "" }
+                { string.Empty, Resources.text.help.HelpTextValues.GeneralUsage },
+                { string.Empty, Resources.text.help.HelpTextValues.BuildCallDescription },
+                { string.Empty, string.Empty },
+                { string.Empty, Resources.text.help.HelpTextValues.GeneralOptions },
             };
 
             var buildHelpStrategyData = new HelpData
@@ -87,11 +89,35 @@ namespace Oppo.ObjectModel
             commands.Add(new BuildStrategy(buildStrategyCommandFactory));
             commands.Add(new HelloStrategy());
 
+            var helpStrategyFirstLineText = new MessageLines
+            {
+                { string.Empty, Resources.text.help.HelpTextValues.HelpStartWelcome },
+                { string.Empty, string.Empty },
+                { string.Empty, Resources.text.help.HelpTextValues.HelpStartDocuLink },
+                { string.Empty, string.Empty },
+                { string.Empty, Resources.text.help.HelpTextValues.GeneralUsage },
+                { string.Empty, Resources.text.help.HelpTextValues.HelpStartUsageDescription },
+                { string.Empty, string.Empty },
+                { string.Empty, Resources.text.help.HelpTextValues.HelpStartTerminology },
+                { string.Empty, Resources.text.help.HelpTextValues.HelpStartOpcuaapp },
+                { string.Empty, Resources.text.help.HelpTextValues.HelpStartOpcuaappDescription },
+                { string.Empty, string.Empty },
+                { string.Empty, Resources.text.help.HelpTextValues.HelpStartOppoOptions },
+                { string.Empty, string.Empty },
+                { string.Empty, Resources.text.help.HelpTextValues.HelpStartCommand },
+            };
+
+            var helpStrategyLastLineText = new MessageLines
+            {
+                { string.Empty, string.Empty },
+                { string.Empty, Resources.text.help.HelpTextValues.HelpEndCommand },
+            };
+
             var helpStrategyData = new HelpData
             {
-                CommandName       = Constants.CommandName.Help,
-                HelpTextFirstLine = { { Resources.text.help.HelpTextValues.HelpStartCommand, "" } },
-                HelpTextLastLine  = { { "", Resources.text.help.HelpTextValues.HelpEndCommand } },
+                CommandName = Constants.CommandName.Help,
+                HelpTextFirstLine = helpStrategyFirstLineText,
+                HelpTextLastLine = helpStrategyLastLineText,
                 LogMessage        = LoggingText.OppoHelpCalled,
                 HelpText          = Resources.text.help.HelpTextValues.HelpCommand,
             };
