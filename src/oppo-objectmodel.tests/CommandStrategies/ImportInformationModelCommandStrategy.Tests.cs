@@ -17,8 +17,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             return new[]
             {
-                new[] {"myApp", "-p", "model.xml"},
-                new[] {"myApp", "--path", "model.xml"}
+                new[] {"-n", "myApp", "-p", "model.xml"},
+                new[] {"-n", "myApp", "--path", "model.xml"},
+                new[] {"--name", "myApp", "-p", "model.xml"},
+                new[] {"--name", "myApp", "--path", "model.xml"}
             };
         }
 
@@ -26,8 +28,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             return new[]
             {
-                new[] {"myApp", "-s"},
-                new[] {"myApp", "--sample"}
+                new[] {"-n", "myApp", "-s"},
+                new[] {"-n", "myApp", "--sample"}
             };
         }
 
@@ -35,8 +37,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             return new[]
             {
-                new[] {"myApp", "-p", "ab/yx.xml"},
-                new[] {"myApp", "--path", "ab\\yx.xml"},
+                new[] { "-n", "myApp", "-p", "ab/yx.xml"},
+                new[] { "-n", "myApp", "--path", "ab\\yx.xml"},
             };
         }
 
@@ -44,9 +46,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             return new[]
             {
-                new[] {"myApp", "-p", "model.txt"},
-                new[] {"myApp", "--path", "model.xxx"},
-                new[] {"myApp", "--path", "model.xml.txt"}
+                new[] { "-n", "myApp", "-p", "model.txt"},
+                new[] { "-n", "myApp", "--path", "model.xxx"},
+                new[] { "-n", "myApp", "--path", "model.xml.txt"}
             };
         }
 
@@ -54,10 +56,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             return new[]
             {
-                new[] {"myApp", "-P", ""},
-                new[] {"myApp", "--Path", ""},
+                new[] { "-n", "myApp", "-P", ""},
+                new[] { "-n", "myApp", "--Path", ""},
                 new[] {"-N", "ab/yx"},
-                new[] {"-n"}                
+                new[] {"-n", "myApp", "-P" }                
             };
         }
 
@@ -65,9 +67,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             return new[]
             {
-                new string[] { },
-                new[] {"", "-p", "model.xml"},
-                new[] {"", "--path", "model.xml"}
+                new[] { "-n", "", "-p", "model.xml"},
+                new[] { "--name", "", "--path", "model.xml"}
             };
         }
 
@@ -75,8 +76,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             return new[]
             {
-                new[] { "myApp/", "-p", "model.xml"},
-                new[] { "my\\App", "--path", "model.xml"}
+                new[] { "-n", "myApp/", "-p", "model.xml"},
+                new[] { "-n", "my\\App", "--path", "model.xml"}
             };
         }
 
@@ -84,8 +85,17 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             return new[]
             {
-                new[] { "myApp", "-p"},
-                new[] { "myApp", "--path"}
+                new[] { "-n", "myApp", "-p"},
+                new[] { "-n", "myApp", "--path"}
+            };
+        }
+
+        private static string[][] InvalidInputsInvalidNameArgument()
+        {
+            return new[]
+            {
+                new[] { "-N", "myApp", "-p", "model.xml"},
+                new[] { "-name", "myApp", "--path", "model.xml"}
             };
         }
 
@@ -139,10 +149,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             // Arrange
             var infoWrittenOut = false;
-            var projectDirectory = $"{inputParams.ElementAt(0)}";
+            var projectDirectory = $"{inputParams.ElementAt(1)}";
             var modelsDirectory = "models";
             
-            var modelFilePath = $"{inputParams.ElementAt(2)}";
+            var modelFilePath = $"{inputParams.ElementAt(3)}";
             var modelTargetPath = projectDirectory + "\\" + _modelName;
             _fileSystemMock.Setup(x => x.FileExists(modelFilePath)).Returns(true);
             _fileSystemMock.Setup(x => x.GetFileName(modelFilePath)).Returns(_modelName);
@@ -160,7 +170,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             Assert.IsTrue(infoWrittenOut);
             Assert.IsTrue(result.Sucsess);
-            Assert.AreEqual(string.Format(OutputText.ImportInforamtionModelCommandSuccess, inputParams.ElementAt(2)), result.OutputMessages.First().Key);
+            Assert.AreEqual(string.Format(OutputText.ImportInforamtionModelCommandSuccess, inputParams.ElementAt(3)), result.OutputMessages.First().Key);
             _fileSystemMock.Verify(x => x.CopyFile(modelFilePath, modelTargetPath), Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
@@ -170,10 +180,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             // Arrange
             var warnWrittenOut = false;
-            var projectDirectory = $"{inputParams.ElementAtOrDefault(0)}";
+            var projectDirectory = $"{inputParams.ElementAtOrDefault(1)}";
             var modelsDirectory = "models";
             _fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.DirectoryName.Models)).Returns(modelsDirectory);
-            var modelFilePath = $"{inputParams.ElementAtOrDefault(2)}";
+            var modelFilePath = $"{inputParams.ElementAtOrDefault(3)}";
 
             var loggerListenerMock = new Mock<ILoggerListener>();
             loggerListenerMock.Setup(listener => listener.Warn(LoggingText.UnknownImportInfomrationModelCommandParam)).Callback(delegate { warnWrittenOut = true; });
@@ -195,10 +205,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             // Arrange
             var warnWrittenOut = false;
-            var projectDirectory = $"{inputParams.ElementAtOrDefault(0)}";
+            var projectDirectory = $"{inputParams.ElementAtOrDefault(1)}";
             var modelsDirectory = "models";
             _fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.DirectoryName.Models)).Returns(modelsDirectory);
-            var modelFilePath = $"{inputParams.ElementAtOrDefault(2)}";
+            var modelFilePath = $"{inputParams.ElementAtOrDefault(3)}";
 
             var loggerListenerMock = new Mock<ILoggerListener>();
             loggerListenerMock.Setup(listener => listener.Warn(LoggingText.EmptyOpcuaappName)).Callback(delegate { warnWrittenOut = true; });
@@ -220,11 +230,11 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             // Arrange
             var warnWrittenOut = false;
-            var opcuaAppName = $"{inputParams.ElementAtOrDefault(0)}";
+            var opcuaAppName = $"{inputParams.ElementAtOrDefault(1)}";
             var modelsDirectory = "models";
             _fileSystemMock.Setup(x => x.CombinePaths(opcuaAppName, Constants.DirectoryName.Models)).Returns(modelsDirectory);
             _fileSystemMock.Setup(x => x.GetInvalidFileNameChars()).Returns(new[] { '\\', '/'});
-            var modelFilePath = $"{inputParams.ElementAtOrDefault(2)}";
+            var modelFilePath = $"{inputParams.ElementAtOrDefault(3)}";
 
             var loggerListenerMock = new Mock<ILoggerListener>();
             loggerListenerMock.Setup(listener => listener.Warn(LoggingText.InvalidOpcuaappName)).Callback(delegate { warnWrittenOut = true; });
@@ -246,11 +256,11 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             // Arrange
             var warnWrittenOut = false;
-            var opcuaAppName = $"{inputParams.ElementAtOrDefault(0)}";
+            var opcuaAppName = $"{inputParams.ElementAtOrDefault(1)}";
             var modelsDirectory = "models";
             _fileSystemMock.Setup(x => x.CombinePaths(opcuaAppName, Constants.DirectoryName.Models)).Returns(modelsDirectory);
             _fileSystemMock.Setup(x => x.GetInvalidPathChars()).Returns(new[] { '\\', '/' });
-            var modelFilePath = $"{inputParams.ElementAtOrDefault(2)}";
+            var modelFilePath = $"{inputParams.ElementAtOrDefault(3)}";
 
             var loggerListenerMock = new Mock<ILoggerListener>();
             loggerListenerMock.Setup(listener => listener.Warn(string.Format(LoggingText.InvalidInformationModelPath, modelFilePath))).Callback(delegate { warnWrittenOut = true; });
@@ -272,9 +282,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             // Arrange
             var warnWrittenOut = false;
-            var opcuaAppName = $"{inputParams.ElementAtOrDefault(0)}";
+            var opcuaAppName = $"{inputParams.ElementAtOrDefault(1)}";
             var modelsDirectory = "models";
-            var modelFilePath = $"{inputParams.ElementAtOrDefault(2)}";
+            var modelFilePath = $"{inputParams.ElementAtOrDefault(3)}";
             
             _fileSystemMock.Setup(x => x.CombinePaths(opcuaAppName, Constants.DirectoryName.Models)).Returns(modelsDirectory);
             _fileSystemMock.Setup(x => x.GetExtension(modelFilePath)).Returns(_invalidModelExtension);
@@ -301,9 +311,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             // Arrange
             var warnWrittenOut = false;
-            var opcuaAppName = $"{inputParams.ElementAtOrDefault(0)}";
+            var opcuaAppName = $"{inputParams.ElementAtOrDefault(1)}";
             var modelsDirectory = "models";
-            var modelFilePath = $"{inputParams.ElementAtOrDefault(2)}";
+            var modelFilePath = $"{inputParams.ElementAtOrDefault(3)}";
             var validModelExtension = ".xml";
             _fileSystemMock.Setup(x => x.CombinePaths(opcuaAppName, Constants.DirectoryName.Models)).Returns(modelsDirectory);
             _fileSystemMock.Setup(x => x.GetExtension(modelFilePath)).Returns(validModelExtension);
@@ -329,7 +339,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             // Arrange
             var warnWrittenOut = false;
-            var opcuaAppName = $"{inputParams.ElementAtOrDefault(0)}";
+            var opcuaAppName = $"{inputParams.ElementAtOrDefault(1)}";
             var modelsDirectory = "models";           
             
             _fileSystemMock.Setup(x => x.CombinePaths(opcuaAppName, Constants.DirectoryName.Models)).Returns(modelsDirectory);
@@ -353,7 +363,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             // Arrange
             var infoWrittenOut = false;
-            var projectDirectory = $"{inputParams.ElementAt(0)}";
+            var projectDirectory = $"{inputParams.ElementAt(1)}";
             var modelsDirectory = "models";
             var loadedModel = "anyString";
             var modelFilePath = Constants.FileName.SampleInformationModelFile;
@@ -366,9 +376,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _fileSystemMock.Setup(x => x.GetExtension(modelFilePath)).Returns(_validModelExtension);
             _fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.DirectoryName.Models)).Returns(modelsDirectory);
 
-            _fileSystemMock.Setup(x => x.CombinePaths(modelsDirectory, Constants.FileName.SampleInformationModelFile)).Returns(modelTargetPath);
-
-            
+            _fileSystemMock.Setup(x => x.CombinePaths(modelsDirectory, Constants.FileName.SampleInformationModelFile)).Returns(modelTargetPath);            
 
 
             var loggerListenerMock = new Mock<ILoggerListener>();
@@ -383,6 +391,26 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsTrue(result.Sucsess);
             Assert.AreEqual(string.Format(OutputText.ImportSampleInforamtionModelSucess, modelFilePath), result.OutputMessages.First().Key);
             _fileSystemMock.Verify(x => x.CreateFile(modelTargetPath, loadedModel), Times.Once);
+            OppoLogger.RemoveListener(loggerListenerMock.Object);
+        }
+
+        [Test]
+        public void ImportInformationModelCommandStrategy_Should_ImportModel_WrongNameFlag_Failure([ValueSource(nameof(InvalidInputsInvalidNameArgument))]string[] inputParams)
+        {
+            // Arrange
+            var warnWrittenOut = false;
+
+            var loggerListenerMock = new Mock<ILoggerListener>();
+            loggerListenerMock.Setup(listener => listener.Warn(LoggingText.UnknownImportInfomrationModelCommandParam)).Callback(delegate { warnWrittenOut = true; });
+            OppoLogger.RegisterListener(loggerListenerMock.Object);
+
+            // Act
+            var result = _objectUnderTest.Execute(inputParams);
+
+            // Assert
+            Assert.IsTrue(warnWrittenOut);
+            Assert.IsFalse(result.Sucsess);
+            Assert.AreEqual(OutputText.ImportInforamtionModelCommandUnknownParamFailure, result.OutputMessages.First().Key);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
     }
