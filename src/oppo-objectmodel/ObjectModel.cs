@@ -142,12 +142,17 @@ namespace Oppo.ObjectModel
 
             var newHelpStrategyHelpText = new MessageLines
             {
-                {"Arguments:", string.Empty },
-                {"<Object>", "The object to create, can either be:" },
-                {string.Empty, "sln" },
-                {string.Empty, "opcuaapp" },
-                {string.Empty, "" },
-                {"Options:", "" },
+                { string.Empty, Resources.text.help.HelpTextValues.NewFirstLine },
+                { string.Empty, string.Empty},
+                { string.Empty, Resources.text.help.HelpTextValues.GeneralUsage },
+                { string.Empty, Resources.text.help.HelpTextValues.NewCallDescription },
+                { string.Empty, string.Empty },
+                { string.Empty, Resources.text.help.HelpTextValues.GeneralArguments },
+                { string.Empty, Resources.text.help.HelpTextValues.NewArgumentsObject },
+                { string.Empty, Resources.text.help.HelpTextValues.NewArgumentsSln },
+                { string.Empty, Resources.text.help.HelpTextValues.NewArgumentsOpcuaapp },
+                { string.Empty, string.Empty },
+                { string.Empty, Resources.text.help.HelpTextValues.GeneralOptions },
             };
 
             var newHelpStrategyData = new HelpData
@@ -180,13 +185,12 @@ namespace Oppo.ObjectModel
 
             var publishHelpStrategyHelpText = new MessageLines
             {
-                {string.Empty,Resources.text.help.HelpTextValues.PublishFirstLine},
-                {string.Empty,string.Empty},
-                {string.Empty,Resources.text.help.HelpTextValues.GeneralUsage},
-
-                {string.Empty,Resources.text.help.HelpTextValues.PublishCallDescription},
-                {string.Empty,string.Empty},
-                {string.Empty,Resources.text.help.HelpTextValues.GeneralOptions},
+                { string.Empty, Resources.text.help.HelpTextValues.PublishFirstLine },
+                { string.Empty, string.Empty },
+                { string.Empty, Resources.text.help.HelpTextValues.GeneralUsage },
+                { string.Empty, Resources.text.help.HelpTextValues.PublishCallDescription },
+                { string.Empty, string.Empty },
+                { string.Empty, Resources.text.help.HelpTextValues.GeneralOptions },
             };
 
             var publishHelpStrategyData = new HelpData
@@ -219,13 +223,12 @@ namespace Oppo.ObjectModel
 
             var deployHelpStrategyHelpText = new MessageLines
             {
-               {string.Empty,Resources.text.help.HelpTextValues.DeployFirstLine},
-                {string.Empty,string.Empty},
-                {string.Empty,Resources.text.help.HelpTextValues.GeneralUsage},
-
-                {string.Empty,Resources.text.help.HelpTextValues.DeployCallDescription},
-                {string.Empty,string.Empty},
-                {string.Empty,Resources.text.help.HelpTextValues.GeneralOptions},
+                { string.Empty, Resources.text.help.HelpTextValues.DeployFirstLine },
+                { string.Empty, string.Empty },
+                { string.Empty, Resources.text.help.HelpTextValues.GeneralUsage },
+                { string.Empty, Resources.text.help.HelpTextValues.DeployCallDescription },
+                { string.Empty, string.Empty },
+                { string.Empty, Resources.text.help.HelpTextValues.GeneralOptions },
             };
 
             var deployHelpStrategyData = new HelpData
@@ -259,15 +262,12 @@ namespace Oppo.ObjectModel
 
             var cleanHelpStrategyHelpText = new MessageLines
             {
-                {string.Empty,Resources.text.help.HelpTextValues.CleanFirstLine},
-                {string.Empty,string.Empty},
-                {string.Empty,Resources.text.help.HelpTextValues.GeneralUsage},
-               
-                {string.Empty,Resources.text.help.HelpTextValues.CleanCallDescription},
-                {string.Empty,string.Empty},
-                {string.Empty,Resources.text.help.HelpTextValues.GeneralOptions},
-
-                
+                { string.Empty, Resources.text.help.HelpTextValues.CleanFirstLine },
+                { string.Empty, string.Empty },
+                { string.Empty, Resources.text.help.HelpTextValues.GeneralUsage },
+                { string.Empty, Resources.text.help.HelpTextValues.CleanCallDescription },
+                { string.Empty, string.Empty },
+                { string.Empty, Resources.text.help.HelpTextValues.GeneralOptions },
             };
 
             var cleanHelpStrategyData = new HelpData
@@ -299,22 +299,19 @@ namespace Oppo.ObjectModel
 
             var importHelpStrategyHelpText = new MessageLines
             {
-                {string.Empty,Resources.text.help.HelpTextValues.ImportFirstLine},
-                {string.Empty,string.Empty},
-                {string.Empty,Resources.text.help.HelpTextValues.GeneralUsage},
-
-                {string.Empty,Resources.text.help.HelpTextValues.ImportCallDescription},
-                {string.Empty,string.Empty},
-                {string.Empty,Resources.text.help.HelpTextValues.GeneralArguments},
-                {string.Empty,Resources.text.help.HelpTextValues.ImportArguments},
-                {string.Empty,string.Empty},
-                {string.Empty,Resources.text.help.HelpTextValues.GeneralOptions},
-
-            
-                {"-n", "The name to opcuapp to use" },
-                {"--name", "The name to opcuapp to use" },
-                { "-p","Information models path to use"},
-                { "--path","Information models path to use"}
+                { string.Empty, Resources.text.help.HelpTextValues.ImportFirstLine },
+                { string.Empty, string.Empty },
+                { string.Empty, Resources.text.help.HelpTextValues.GeneralUsage },
+                { string.Empty, Resources.text.help.HelpTextValues.ImportCallDescription },
+                { string.Empty, string.Empty },
+                { string.Empty, Resources.text.help.HelpTextValues.GeneralArguments },
+                { string.Empty, Resources.text.help.HelpTextValues.ImportArguments },
+                { string.Empty, string.Empty },
+                { string.Empty, Resources.text.help.HelpTextValues.GeneralOptions },
+                { "-n", "The name to opcuapp to use" },
+                { "--name", "The name to opcuapp to use" },
+                { "-p", "Information models path to use" },
+                { "--path", "Information models path to use" },
             };
 
             var importHelpStrategyData = new HelpData
