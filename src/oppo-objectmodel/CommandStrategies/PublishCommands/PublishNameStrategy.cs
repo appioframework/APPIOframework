@@ -19,7 +19,7 @@ namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
 
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
-            var projectName = inputParams.ElementAt(0);
+            var projectName = inputParams.ElementAtOrDefault(0);
 
             var outputMessages = new MessageLines();
 
