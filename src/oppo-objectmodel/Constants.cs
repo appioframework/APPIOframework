@@ -31,7 +31,7 @@ namespace Oppo.ObjectModel
         public static class CommandResults
         {
             public const string Success = "success";
-            public static string Failure = "failure";
+            public static string Failure { get; set; } = "failure";
         }
 
         public static class NewCommandName
