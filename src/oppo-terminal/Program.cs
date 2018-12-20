@@ -11,6 +11,8 @@ namespace Oppo.Terminal
             SetupOppoLogger();
             var objectModel = new ObjectModel.ObjectModel(ObjectModel.ObjectModel.CreateCommandFactory(new ReflectionWrapper()));
 
+            Constants.CommandResults.Failure = objectModel.PrepareCommandFailureOutputText(args);
+
             var writer = new ConsoleWriter();
 
             var commandResult = objectModel.ExecuteCommand(args);

@@ -95,5 +95,24 @@ namespace Oppo.ObjectModel.Tests
             Assert.IsTrue(commands.Any(x => x is PublishStrategy));
             Assert.IsTrue(commands.Any(x => x is VersionStrategy));
         }
+
+        [Test]
+        public void PrepareCommandFailureOutputText_ShouldCreateCorrectlyFormattedText()
+        {
+            // Arrange
+            var argsMock = new[] { "build", "--exit", "any-value" };
+
+            const string expectedResult = "Command \"oppo build --exit any-value\" failed.";
+
+            var factoryMock = new Mock<ICommandFactory<ObjectModel>>();
+
+            var objectModel = new ObjectModel(factoryMock.Object);
+
+            // Act
+            var result = objectModel.PrepareCommandFailureOutputText(argsMock);
+
+            // Assert
+            Assert.AreEqual(expectedResult, result);
+        }
     }
 }

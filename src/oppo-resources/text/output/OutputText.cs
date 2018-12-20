@@ -1,7 +1,12 @@
-﻿namespace Oppo.Resources.text.output
+﻿using System;
+
+namespace Oppo.Resources.text.output
 {
     public static class OutputText
     {
+        // general
+        public const string GeneralCommandExecutionFailure = "Command \"oppo {0}\" failed.";
+
         // publish <command>
         public const string OpcuaappPublishFailure = "Publish failure!";
         public const string OpcuaappPublishSuccess = "Publish '{0}' success!";

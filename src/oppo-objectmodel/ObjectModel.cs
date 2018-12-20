@@ -348,5 +348,10 @@ namespace Oppo.ObjectModel
 
             return factory;
         }
+
+        public string PrepareCommandFailureOutputText(string[] args)
+        {
+            return string.Format(Resources.text.output.OutputText.GeneralCommandExecutionFailure, string.Join(' ', args));
+        }
     }
 }
