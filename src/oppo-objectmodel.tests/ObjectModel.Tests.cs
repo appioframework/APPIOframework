@@ -102,7 +102,7 @@ namespace Oppo.ObjectModel.Tests
             // Arrange
             var argsMock = new[] { "build", "--exit", "any-value" };
 
-            const string expectedResult = "Command \"oppo build --exit any-value\" failed.";
+            const string expectedResult = "Command \"oppo build --exit any-value\" failed!";
 
             var factoryMock = new Mock<ICommandFactory<ObjectModel>>();
 

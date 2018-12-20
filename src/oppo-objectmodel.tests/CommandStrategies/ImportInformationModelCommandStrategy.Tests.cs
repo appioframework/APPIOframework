@@ -170,7 +170,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             Assert.IsTrue(infoWrittenOut);
             Assert.IsTrue(result.Sucsess);
-            Assert.AreEqual(string.Format(OutputText.ImportInforamtionModelCommandSuccess, inputParams.ElementAt(3)), result.OutputMessages.First().Key);
+            Assert.AreEqual(string.Format(OutputText.ImportInformationModelCommandSuccess, inputParams.ElementAt(3)), result.OutputMessages.First().Key);
             _fileSystemMock.Verify(x => x.CopyFile(modelFilePath, modelTargetPath), Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
@@ -195,7 +195,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             Assert.IsTrue(warnWrittenOut);
             Assert.IsFalse(result.Sucsess);
-            Assert.AreEqual(OutputText.ImportInforamtionModelCommandUnknownParamFailure, result.OutputMessages.First().Key);
+            Assert.AreEqual(OutputText.ImportInformationModelCommandUnknownParamFailure, result.OutputMessages.First().Key);
             _fileSystemMock.Verify(x => x.CopyFile(modelFilePath, modelsDirectory), Times.Never);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
@@ -220,7 +220,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             Assert.IsTrue(warnWrittenOut);
             Assert.IsFalse(result.Sucsess);
-            Assert.AreEqual(OutputText.ImportInforamtionModelCommandUnknownParamFailure, result.OutputMessages.First().Key);
+            Assert.AreEqual(OutputText.ImportInformationModelCommandUnknownParamFailure, result.OutputMessages.First().Key);
             _fileSystemMock.Verify(x => x.CopyFile(modelFilePath, modelsDirectory), Times.Never);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
@@ -246,7 +246,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             Assert.IsTrue(warnWrittenOut);
             Assert.IsFalse(result.Sucsess);
-            Assert.AreEqual(string.Format(OutputText.ImportInforamtionModelCommandInvalidOpcuaappName, opcuaAppName), result.OutputMessages.First().Key);
+            Assert.AreEqual(string.Format(OutputText.ImportInformationModelCommandInvalidOpcuaappName, opcuaAppName), result.OutputMessages.First().Key);
             _fileSystemMock.Verify(x => x.CopyFile(modelFilePath, modelsDirectory), Times.Never);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
@@ -272,7 +272,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             Assert.IsTrue(warnWrittenOut);
             Assert.IsFalse(result.Sucsess);
-            Assert.AreEqual(string.Format(OutputText.ImportInforamtionModelCommandInvalidModelPath, modelFilePath), result.OutputMessages.First().Key);
+            Assert.AreEqual(string.Format(OutputText.ImportInformationModelCommandInvalidModelPath, modelFilePath), result.OutputMessages.First().Key);
             _fileSystemMock.Verify(x => x.CopyFile(modelFilePath, modelsDirectory), Times.Never);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
@@ -301,7 +301,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             Assert.IsTrue(warnWrittenOut);
             Assert.IsFalse(result.Sucsess);
-            Assert.AreEqual(string.Format(OutputText.ImportInforamtionModelCommandInvalidModelExtension, _modelName), result.OutputMessages.First().Key);
+            Assert.AreEqual(string.Format(OutputText.ImportInformationModelCommandInvalidModelExtension, _modelName), result.OutputMessages.First().Key);
             _fileSystemMock.Verify(x => x.CopyFile(modelFilePath, modelsDirectory), Times.Never);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
@@ -329,7 +329,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             Assert.IsTrue(warnWrittenOut);
             Assert.IsFalse(result.Sucsess);
-            Assert.AreEqual(string.Format(OutputText.ImportInforamtionModelCommandNotExistingModelPath, modelFilePath), result.OutputMessages.First().Key);
+            Assert.AreEqual(string.Format(OutputText.ImportInformationModelCommandNotExistingModelPath, modelFilePath), result.OutputMessages.First().Key);
             _fileSystemMock.Verify(x => x.CopyFile(modelFilePath, modelsDirectory), Times.Never);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
@@ -354,7 +354,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             Assert.IsTrue(warnWrittenOut);
             Assert.IsFalse(result.Sucsess);
-            Assert.AreEqual(OutputText.ImportInforamtionModelCommandMissingModelPath, result.OutputMessages.First().Key);
+            Assert.AreEqual(OutputText.ImportInformationModelCommandMissingModelPath, result.OutputMessages.First().Key);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
 
@@ -389,7 +389,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             Assert.IsTrue(infoWrittenOut);
             Assert.IsTrue(result.Sucsess);
-            Assert.AreEqual(string.Format(OutputText.ImportSampleInforamtionModelSucess, modelFilePath), result.OutputMessages.First().Key);
+            Assert.AreEqual(string.Format(OutputText.ImportSampleInformationModelSuccess, modelFilePath), result.OutputMessages.First().Key);
             _fileSystemMock.Verify(x => x.CreateFile(modelTargetPath, loadedModel), Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
@@ -410,7 +410,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             Assert.IsTrue(warnWrittenOut);
             Assert.IsFalse(result.Sucsess);
-            Assert.AreEqual(OutputText.ImportInforamtionModelCommandUnknownParamFailure, result.OutputMessages.First().Key);
+            Assert.AreEqual(OutputText.ImportInformationModelCommandUnknownParamFailure, result.OutputMessages.First().Key);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
     }
