@@ -37,8 +37,7 @@ publish-dotnet-application:
     refs:
       - deliverable
   script:
-    - cd src/oppo-terminal
-    - dotnet publish -c Release -o ../../publish
+    - /bin/bash bash-gitlab-ci/run-publish.sh
 
 debian-installer:
   dependencies: 
@@ -77,5 +76,4 @@ mark-repository-as-deliverable:
     refs:
       - deliverable
   script:
-    - echo "Mark repository as deliverable..."
     - /bin/bash /utility/auto-tagging/run-auto-tagging.sh
