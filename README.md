@@ -22,7 +22,7 @@ The terminal project used to create / build and deploy oppo applications.
    - ssh-askpass-gnome
    Just install one of them:  
    sudo apt-get update
-   sudo apt-get install <ssh-askpass-package-name>
+   sudo apt-get install < ssh-askpass-package-name >
 2. Navigate with the terminal to the project root.
 3. Call  
    /bin/bash bash-developer/run-reinstall-oppo-local.sh
@@ -36,4 +36,4 @@ The terminal project used to create / build and deploy oppo applications.
    dpkg --list | grep "oppo-*"  
    to print the debian package information for oppo terminal (and possibly other oppo packages)
 2. Call  
-   sudo dpkg --purge <oppo-terminal-package-name>
+   sudo dpkg --purge < oppo-terminal-package-name >
