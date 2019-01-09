@@ -1,10 +1,10 @@
-Package: OPPO-terminal-installer
+Package: OPPO-terminal
 Architecture: all
 Maintainer: Talsen Team
 Depends: debconf (>= 0.5.00), dotnet-runtime-2.1, gcc (>= 7), g++ (>= 7), meson (>= 0.45)
 Priority: optional
 Version: 0.1
-Description: OPPO-Terminal is used to create OPPO artefacts in your locall file storage.
+Description: OPPO-Terminal is used to create OPPO artefacts in your local file storage.
 Homepage: https://www.talsen.team
 Vcs-Git: https://github.com/talsen-team/oppo-terminal.git
-Filename: oppo-terminal-installer.deb 
+Filename: oppo-terminal.deb 
