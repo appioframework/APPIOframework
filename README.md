@@ -32,7 +32,7 @@ The terminal project used to create / build and deploy oppo applications.
 
 ## debian installer - purge oppo-terminal package manually
 
-1. Call 
+1. Call  
    dpkg --list | grep "oppo-*"  
    to print the debian package information for oppo terminal (and possibly other oppo packages)
 2. Call  
