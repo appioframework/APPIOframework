@@ -4,6 +4,8 @@
 
 !bash-developer/
 !bash-developer/run-build-installer-local.sh
+!bash-developer/run-reinstall-oppo-local.sh
+!bash-developer/util-elevate.sh
 
 !bash-gitlab-ci/
 !bash-gitlab-ci/integration-tests/
