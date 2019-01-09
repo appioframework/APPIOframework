@@ -57,6 +57,9 @@
         public const string NewArgumentsSln      = "sln";
         public const string NewArgumentsOpcuaapp = "opcuapp";
 
+        //Generate command
+        public const string GenerateCommand = "Generates artifacts into existing oppo project.";
+
         //Version command
 
         //Commands description
