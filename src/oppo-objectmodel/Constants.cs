@@ -26,7 +26,6 @@ namespace Oppo.ObjectModel
             public const string Clean = "clean";
             public const string Deploy = "deploy";
             public const string Import = "import";
-            public const string Generate = "generate";
         }
 
         public static class CommandResults
@@ -127,11 +126,6 @@ namespace Oppo.ObjectModel
         {
             public const string InformationModel = "information-model";
             public const string InformationModelSample = "sample-information-model";
-        }
-
-        public static class GenerateInformationModelCommandName
-        {
-            public const string InformationModel = "information-model";
         }
 
         public static class ImportInformationModelCommandArguments
