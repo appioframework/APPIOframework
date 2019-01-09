@@ -19,9 +19,9 @@ The terminal project used to create / build and deploy oppo applications.
    There are three packages available:
    - ssh-askpass
    - ssh-askpass-fullscreen
-   - ssh-askpass-gnome
+   - ssh-askpass-gnome  
    Just install one of them:  
-   sudo apt-get update
+   sudo apt-get update  
    sudo apt-get install &lt;ssh-askpass-package-name&gt;
 2. Navigate with the terminal to the project root.
 3. Call  
