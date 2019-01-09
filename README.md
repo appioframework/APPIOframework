@@ -12,3 +12,20 @@ The terminal project used to create / build and deploy oppo applications.
    /bin/bash bash-developer/run-build-installer-local.sh
 3. The debian installer can be found in  
    installer/oppo-terminal.deb
+
+## debian installer - local developer re-install
+
+1. Ensure that a SSH askpass is installed.  
+   There are three packages available:
+   - ssh-askpass
+   - ssh-askpass-fullscreen
+   - ssh-askpass-gnome
+   Just install one of them:  
+   sudo apt-get update
+   sudo apt-get install <ssh-askpass-package-name>
+2. Navigate with the terminal to the project root.
+3. Call  
+   /bin/bash bash-developer/run-reinstall-oppo-local.sh
+4. Call  
+   dpkg --list | grep "oppo-terminal"
+   to print the debian package information for the oppo terminal
