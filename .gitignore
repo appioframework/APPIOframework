@@ -42,7 +42,6 @@
 !src/oppo-objectmodel/CommandStrategies/VersionCommands/
 !src/oppo-objectmodel/CommandStrategies/DeployCommands/
 !src/oppo-objectmodel/CommandStrategies/ImportCommands/
-!src/oppo-objectmodel/CommandStrategies/GenerateCommands/
 
 !src/oppo-objectmodel.tests/
 !src/oppo-objectmodel.tests/oppo-objectmodel.tests.csproj
