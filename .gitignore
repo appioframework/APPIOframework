@@ -2,6 +2,9 @@
 !.vscode/
 !.vscode/tasks.json
 
+!bash-developer/
+!bash-developer/run-build-installer-local.sh
+
 !bash-gitlab-ci/
 !bash-gitlab-ci/integration-tests/
 !bash-gitlab-ci/*.sh
