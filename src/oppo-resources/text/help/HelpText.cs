@@ -74,6 +74,7 @@
         public const string PublishHelpArgumentCommandDescription   = "Publish help";
         public const string PublishNameArgumentCommandDescription   = "Project name";
         public const string ImportSamplesArgumentCommandDescription = "Import Samples";
+        public const string GenerateInformationModelArgumentCommandDescription = "Project name";
 
     }
 }

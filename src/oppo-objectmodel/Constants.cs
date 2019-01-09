@@ -56,6 +56,7 @@ namespace Oppo.ObjectModel
             public const string Usr = "usr";
             public const string Bin = "bin";
             public const string Models = "models";
+            public const string InformationModels = "information-models";
         }
 
         public static class ExecutableName
@@ -67,6 +68,7 @@ namespace Oppo.ObjectModel
             public const string CreateDebianInstaller = "dpkg";
             public static readonly string CreateDebianInstallerArguments = "--build " + DirectoryName.OpcuaappInstaller;
             public const string OppoResourcesDll = "oppo-resources.dll";
+            public const string NodsetCompiler = @"python ./nodeset_compiler.py --types-array=UA_TYPES --existing ../../deps/ua-nodeset/Schema/Opc.Ua.NodeSet2.xml --xml ";
         }
 
         public static class FileName
@@ -121,6 +123,14 @@ namespace Oppo.ObjectModel
             public const string VerboseHelp = "--help";
             public const string Name = "-n";
             public const string VerboseName = "--name";
+        }
+
+        public static class GenerateInformationModeCommandArguments
+        {
+            public const string Name = "-n";
+            public const string VerboseName = "--name";
+            public const string VerboseHelp = "--help";
+            public const string Help = "-h";
         }
 
         public static class ImportInformationModelCommandName
