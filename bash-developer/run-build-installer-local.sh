@@ -2,6 +2,11 @@
 
 set -euo pipefail
 
+echo "Building..."
 /bin/bash bash-gitlab-ci/run-build.sh
+
+echo "Publishing..."
 /bin/bash bash-gitlab-ci/run-publish.sh
-/bin/bash bash-gitlab-ci/run-installer.sh
+
+echo "Building installer..."
+/bin/bash bash-gitlab-ci/run-build-installer.sh
