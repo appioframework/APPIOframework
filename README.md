@@ -27,5 +27,13 @@ The terminal project used to create / build and deploy oppo applications.
 3. Call  
    /bin/bash bash-developer/run-reinstall-oppo-local.sh
 4. Call  
-   dpkg --list | grep "oppo-terminal"
+   dpkg --list | grep "oppo-terminal"  
    to print the debian package information for oppo terminal
+
+## debian installer - purge oppo-terminal package manually
+
+1. Call 
+   dpkg --list | grep "oppo-*"  
+   to print the debian package information for oppo terminal (and possibly other oppo packages)
+2. Call  
+   sudo dpkg --purge <oppo-terminal-package-name>
