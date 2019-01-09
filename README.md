@@ -28,4 +28,4 @@ The terminal project used to create / build and deploy oppo applications.
    /bin/bash bash-developer/run-reinstall-oppo-local.sh
 4. Call  
    dpkg --list | grep "oppo-terminal"
-   to print the debian package information for the oppo terminal
+   to print the debian package information for oppo terminal
