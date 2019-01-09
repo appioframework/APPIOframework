@@ -142,6 +142,11 @@ namespace Oppo.ObjectModel
             return File.Exists(filePath);
         }
 
+        public bool DirectoryExists(string directoryPath)
+        {
+            return Directory.Exists(directoryPath);
+        }
+
         public void ExtractFromZip(string source, string target, string resourceFullName)
         {
             try

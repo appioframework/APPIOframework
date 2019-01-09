@@ -18,6 +18,7 @@ namespace Oppo.ObjectModel
 
         void DeleteDirectory(string name);
         bool FileExists(string filePath);
+        bool DirectoryExists(string directoryPath);
         void ExtractFromZip(string source, string target, string resourceFullName);
         string AppDomainBaseDirectory();
         string GetExtension(string path);

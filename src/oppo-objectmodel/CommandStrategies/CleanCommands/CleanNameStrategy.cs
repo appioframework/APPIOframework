@@ -21,10 +21,10 @@ namespace Oppo.ObjectModel.CommandStrategies.CleanCommands
             var projectName = inputParamsArray.ElementAtOrDefault(0);
             var outputMessages = new MessageLines();
 
-            if (string.IsNullOrEmpty(projectName))
+            if (string.IsNullOrEmpty(projectName) || !_fileSystem.DirectoryExists(projectName))
             {
                 OppoLogger.Info(Resources.text.logging.LoggingText.CleanFailure);
-                outputMessages.Add(Resources.text.output.OutputText.OpcuaappCleanFailure, string.Empty );
+                outputMessages.Add(Resources.text.output.OutputText.OpcuaappCleanFailure, string.Empty);
                 return new CommandResult(false, outputMessages);
             }
 

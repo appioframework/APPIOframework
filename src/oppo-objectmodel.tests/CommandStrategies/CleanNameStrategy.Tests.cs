@@ -89,9 +89,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             const string projectBuildDirectory = "build-dir";
             var projectName = inputParams.ElementAt(0);
             var resultMessage = string.Format(OutputText.OpcuaappCleanSuccess, projectName);
-
+            
             _fileSystemMock.Setup(x => x.CombinePaths(projectName, Constants.DirectoryName.MesonBuild)).Returns(projectBuildDirectory);
             _fileSystemMock.Setup(x => x.DeleteDirectory(projectBuildDirectory));
+            _fileSystemMock.Setup(x => x.DirectoryExists(projectName)).Returns(true);
 
             var loggerListenerMock = new Mock<ILoggerListener>();
             OppoLogger.RegisterListener(loggerListenerMock.Object);
@@ -110,6 +111,26 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void CleanNameStrategy_Should_IgnoreInvalidParameters([ValueSource(nameof(InvalidInputs))] string[] inputParams)
         {
             // Arrange
+
+            var loggerListenerMock = new Mock<ILoggerListener>();
+            OppoLogger.RegisterListener(loggerListenerMock.Object);
+
+            // Act
+            var result = _objectUnderTest.Execute(inputParams);
+
+            // Assert
+            OppoLogger.RemoveListener(loggerListenerMock.Object);
+            loggerListenerMock.Verify(x => x.Info(Resources.text.logging.LoggingText.CleanFailure), Times.Once);
+            Assert.IsFalse(result.Sucsess);
+            Assert.AreEqual(OutputText.OpcuaappCleanFailure, result.OutputMessages.First().Key);
+        }
+
+        [Test]
+        public void CleanNameStrategy_Should_IgnoreNotExistingDirectory([ValueSource(nameof(ValidInputs))] string[] inputParams)
+        {
+            // Arrange
+            var projectName = inputParams.ElementAt(0);
+            _fileSystemMock.Setup(x => x.DirectoryExists(projectName)).Returns(false);
 
             var loggerListenerMock = new Mock<ILoggerListener>();
             OppoLogger.RegisterListener(loggerListenerMock.Object);
