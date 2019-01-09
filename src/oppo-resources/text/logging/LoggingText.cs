@@ -14,7 +14,6 @@
         public const string InvalidOpcuaappName = "Invalid opcuaapp name!";
         public const string MesonExecutableFails = "Meson Failed!";
         public const string NinjaExecutableFails = "Ninja Failed!";
-        public const string NodesetCompilerExecutableFails = "Nodeset compiler Failed!";
         public const string BuildSuccess = "Build Success!";
         public const string CleanSuccess = "Clean Success!";
         public const string CleanFailure = "Clean Failure!";
@@ -27,8 +26,7 @@
         public const string OppoHelpForCleanCommandCalled = "Help for clean <command> called";
         public const string UnknownCommandCalled = "Unknown <command> called";
         public const string VersionCommandCalled = "version <command> called";
-        public const string OppoHelpForDeployCommandCalled = "Help for deploy <command> called";
-        public const string GenerateInformationModelSuccess = "Generate information-model success!";
+        public const string OppoHelpForDeployCommandCalled = "Help for deploy <command> called";        
 
         public const string DirectoryIOException = "Directory IOException detected!";
         public const string DirectoryNotFoundException = "Directory DirectoryNotFoundException detected!";
