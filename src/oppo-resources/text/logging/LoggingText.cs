@@ -9,17 +9,16 @@
         public const string NewSlnCommandSuccess = "Solution with name {0} was successfully created";
         public const string UnknownNewOpcuaappCommandParam = "Unknown new opcuaapp <command> parameter!";
         public const string NewOpcuaappCommandSuccess = "opcuaapp with name {0} was successfully created";
-        public const string ImportInforamtionModelCommandSuccess = "Information model '{0}' imported successfully";
+        public const string ImportInforamtionModelCommandSuccess = "Information model '{0}' imported successfully";        
         public const string EmptyOpcuaappName = "Empty opcuaapp name!";
         public const string InvalidOpcuaappName = "Invalid opcuaapp name!";
         public const string MesonExecutableFails = "Meson Failed!";
         public const string NinjaExecutableFails = "Ninja Failed!";
-        public const string NodesetCompilerExecutableFails = "Nodeset compiler Failed!";
         public const string BuildSuccess = "Build Success!";
         public const string CleanSuccess = "Clean Success!";
         public const string CleanFailure = "Clean Failure!";
         public const string OpcuaappPublishedSuccess = "Publish Success!";
-        public const string OpcuaappDeploySuccess = "Deploy Success!";
+        public const string OpcuaappDeploySuccess = "Deploy Success!";        
         public const string OpcuaappPublishHelpCalled = "Publish <command> --help called";
         public const string OppoHelpCalled = "Help <command> called";
         public const string OppoHelpForNewCommandCalled = "Help for new <command> called";
@@ -27,8 +26,7 @@
         public const string OppoHelpForCleanCommandCalled = "Help for clean <command> called";
         public const string UnknownCommandCalled = "Unknown <command> called";
         public const string VersionCommandCalled = "version <command> called";
-        public const string OppoHelpForDeployCommandCalled = "Help for deploy <command> called";
-        public const string GenerateInformationModelSuccess = "Generate information-model success!";
+        public const string OppoHelpForDeployCommandCalled = "Help for deploy <command> called";        
 
         public const string DirectoryIOException = "Directory IOException detected!";
         public const string DirectoryNotFoundException = "Directory DirectoryNotFoundException detected!";

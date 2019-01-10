@@ -21,12 +21,11 @@ namespace Oppo.ObjectModel
             public const string Help = "help";
             public const string HelpDash = "-h";
             public const string HelpDashVerbose = "--help";
-            public const string ShortHelp = "?";
-            public const string Version = "version";
+            public const string ShortHelp= "?";
+            public const string Version= "version";
             public const string Clean = "clean";
             public const string Deploy = "deploy";
             public const string Import = "import";
-            public const string Generate = "generate";
         }
 
         public static class CommandResults
@@ -56,7 +55,6 @@ namespace Oppo.ObjectModel
             public const string Usr = "usr";
             public const string Bin = "bin";
             public const string Models = "models";
-            public const string InformationModels = "information-models";
         }
 
         public static class ExecutableName
@@ -68,7 +66,6 @@ namespace Oppo.ObjectModel
             public const string CreateDebianInstaller = "dpkg";
             public static readonly string CreateDebianInstallerArguments = "--build " + DirectoryName.OpcuaappInstaller;
             public const string OppoResourcesDll = "oppo-resources.dll";
-            public const string NodsetCompiler = @"python ./nodeset_compiler.py --types-array=UA_TYPES --existing ../../deps/ua-nodeset/Schema/Opc.Ua.NodeSet2.xml --xml ";
         }
 
         public static class FileName
@@ -125,23 +122,10 @@ namespace Oppo.ObjectModel
             public const string VerboseName = "--name";
         }
 
-        public static class GenerateInformationModeCommandArguments
-        {
-            public const string Name = "-n";
-            public const string VerboseName = "--name";
-            public const string VerboseHelp = "--help";
-            public const string Help = "-h";
-        }
-
         public static class ImportInformationModelCommandName
         {
             public const string InformationModel = "information-model";
             public const string InformationModelSample = "sample-information-model";
-        }
-
-        public static class GenerateInformationModelCommandName
-        {
-            public const string InformationModel = "information-model";
         }
 
         public static class ImportInformationModelCommandArguments

@@ -43,9 +43,5 @@ namespace Oppo.Resources.text.output
 
         // import sample <command>
         public const string ImportSampleInformationModelSuccess = "Sample information model '{0}' import success!";
-
-        // generate information model <command>
-        public const string GenerateInformationModelSuccess = "Generate source code from information model '{0}' success!";
-        public const string GenerateInformationModelFailure = "Generate source code from information model '{0}' failure!";
     }
 }
