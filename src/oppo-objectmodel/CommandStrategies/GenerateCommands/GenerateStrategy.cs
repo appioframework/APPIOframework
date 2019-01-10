@@ -26,6 +26,5 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
         {
             return Resources.text.help.HelpTextValues.GenerateCommand;
         }
-
     }
 }
