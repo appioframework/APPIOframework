@@ -83,21 +83,13 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 return new CommandResult(false, outputMessages);
             }
 
-            //AdjustServerTemplate(srcDirectory, modelName);
+            //AdjustServerTemplate
 
             outputMessages.Add(string.Format(OutputText.GenerateInformationModelSuccess, modelFullName), string.Empty);
             OppoLogger.Info(LoggingText.GenerateInformationModelSuccess);
             return new CommandResult(true, outputMessages);            
         }
-
-        /// <summary>
-        /// Server template should call the (from information-model) generated code. 
-        /// </summary>
-        /// <param name="srcDirectory"></param>
-        private void AdjustServerTemplate(string srcDirectory, string modelName)
-        {
-        }
-
+        
         private void CreateNeededDirectories(string srcDirectory)
         {
             var pathToCreate = System.IO.Path.Combine(srcDirectory, Constants.DirectoryName.InformationModels);
