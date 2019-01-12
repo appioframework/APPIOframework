@@ -35,30 +35,31 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 
             //    return new CommandResult(false, outputMessages);
             //}
+            
+            // check if model file exists
+            var calculatedModelFilePath = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.Models, modelFullName);
+            if (!_fileSystem.FileExists(calculatedModelFilePath))
+            {
+                OppoLogger.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsMissingModelFile, calculatedModelFilePath));
+                outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureMissingModel, modelFullName, calculatedModelFilePath), string.Empty);
+                return new CommandResult(false, outputMessages);
+            }
 
-            //var buildDirectory = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.MesonBuild);
-            //var mesonResult = _fileSystem.CallExecutable(Constants.ExecutableName.Meson, projectName, Constants.DirectoryName.MesonBuild);
-            //if (!mesonResult)
-            //{
-            //    OppoLogger.Warn(LoggingText.MesonExecutableFails);
-            //    outputMessages.Add(OutputText.OpcuaappBuildFailure, string.Empty);
-
-            //    return new CommandResult(false, outputMessages);
-            //}
-            //var ninjaResult = _fileSystem.CallExecutable(Constants.ExecutableName.Ninja, buildDirectory, string.Empty);
-            //if (!ninjaResult)
-            //{
-            //    OppoLogger.Warn(LoggingText.NinjaExecutableFails);
-            //    outputMessages.Add(OutputText.OpcuaappBuildFailure, string.Empty);
-            //    return new CommandResult(false, outputMessages);
-            //}
+            // check if model file is an *.xml file
+            var modelFileExtension = _fileSystem.GetExtension(modelFullName);
+            if (modelFileExtension != Constants.FileExtension.InformationModel)
+            {
+                OppoLogger.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidModelFile, modelFullName));
+                outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureInvalidModel, modelFullName), string.Empty);
+                return new CommandResult(false, outputMessages);
+            }
 
             var srcDirectory = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp);
 
             // create inside src/server the information-models directory if it is not already created
             CreateNeededDirectories(srcDirectory);
 
-            var modelName = _fileSystem.GetFileName(modelFullName);
+            var modelName = _fileSystem.GetFileNameWithoutExtension(modelFullName);
             var args = modelFullName + " " + modelName; 
             var pythonResult = _fileSystem.CallExecutable(Constants.ExecutableName.NodsetCompiler, srcDirectory, args);
             if (!pythonResult)

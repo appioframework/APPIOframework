@@ -218,5 +218,18 @@ namespace Oppo.ObjectModel
                 throw;
             }
         }
+
+        public string GetFileNameWithoutExtension(string path)
+        {
+            try
+            {
+                return Path.GetFileNameWithoutExtension(path);
+            }
+            catch (Exception ex)
+            {
+                OppoLogger.Error(LoggingText.ExceptionOccured, ex);
+                throw;
+            }
+        }
     }
 }
