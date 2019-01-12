@@ -129,6 +129,8 @@ namespace Oppo.ObjectModel
         {
             public const string Name = "-n";
             public const string VerboseName = "--name";
+            public const string Model = "-m";
+            public const string VerboseModel = "--model";
             public const string VerboseHelp = "--help";
             public const string Help = "-h";
         }

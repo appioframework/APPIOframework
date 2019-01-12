@@ -35,6 +35,13 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 return new CommandResult(false, outputMessages);
             }
 
+            if (modelFlag != Constants.GenerateInformationModeCommandArguments.Model && modelFlag != Constants.GenerateInformationModeCommandArguments.VerboseModel)
+            {
+                OppoLogger.Warn(string.Format(LoggingText.GenerateInformationModelFailureUnknownParam, modelFlag));
+                outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, modelFlag), string.Empty);
+                return new CommandResult(false, outputMessages);
+            }
+
             //if (string.IsNullOrEmpty(projectName))
             //{
             //    OppoLogger.Warn(LoggingText.InvalidOpcuaappName);

@@ -39,6 +39,17 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             };
         }
 
+        protected static string[][] InvalidInputs_UnknownModelParam()
+        {
+            return new[]
+            {
+                new []{"-n", "testApp", "-any string", "model.txt"},
+                new []{"-n", "testApp", "-M", "model.txt"},
+                new []{"--name", "testApp", "-model", "model.txt"},
+                new []{"--name", "testApp", "--mod", "model.txt"}
+            };
+        }
+
         protected static string[][] ValidInputs()
         {
             return new[]
@@ -284,6 +295,23 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, inputParams.ElementAtOrDefault(0)), firstMessageLine.Key);
+            Assert.AreEqual(string.Empty, firstMessageLine.Value);
+        }
+
+        [Test]
+        public void FailOnGenerateInformationModelBecauseUknownModelParam([ValueSource(nameof(InvalidInputs_UnknownModelParam))] string[] inputParams)
+        {
+            // Arrange            
+            _loggerListenerMock.Setup(x => x.Warn(string.Format(LoggingText.GenerateInformationModelFailureUnknownParam, inputParams.ElementAtOrDefault(2))));
+
+            // Act
+            var commandResult = _strategy.Execute(inputParams);
+
+            // Assert
+            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsNotNull(commandResult.OutputMessages);
+            var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
+            Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, inputParams.ElementAtOrDefault(2)), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
         }
 
