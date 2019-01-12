@@ -28,6 +28,13 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 
             var outputMessages = new MessageLines();
 
+            if (nameFlag != Constants.GenerateInformationModeCommandArguments.Name && nameFlag != Constants.GenerateInformationModeCommandArguments.VerboseName)
+            {
+                OppoLogger.Warn(string.Format(LoggingText.GenerateInformationModelFailureUnknownParam, nameFlag));
+                outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, nameFlag), string.Empty);
+                return new CommandResult(false, outputMessages);
+            }
+
             //if (string.IsNullOrEmpty(projectName))
             //{
             //    OppoLogger.Warn(LoggingText.InvalidOpcuaappName);
@@ -35,7 +42,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 
             //    return new CommandResult(false, outputMessages);
             //}
-            
+
             // check if model file exists
             var calculatedModelFilePath = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.Models, modelFullName);
             if (!_fileSystem.FileExists(calculatedModelFilePath))

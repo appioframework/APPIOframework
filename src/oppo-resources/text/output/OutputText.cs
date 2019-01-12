@@ -49,5 +49,6 @@ namespace Oppo.Resources.text.output
         public const string GenerateInformationModelFailure = "Generate source code from information model '{0}' failure!";
         public const string GenerateInformationModelFailureMissingModel = "Generate source code from information model '{0}' failure! Can't find model with path '{1}'!";
         public const string GenerateInformationModelFailureInvalidModel = "Generate source code from information model failure! Invalid model extension '{0}'!";
+        public const string GenerateInformationModelFailureUnknownParam = "Generate source code from information model failure! Unknown command parameter '{0}'!";
     }
 }

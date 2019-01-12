@@ -28,6 +28,17 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             };
         }
 
+        protected static string[][] InvalidInputs_UnknownNameParam()
+        {
+            return new[]
+            {
+                new []{"-any string", "testApp", "-m", "model.txt"},
+                new []{"-N", "testApp", "-m", "model.txt"},
+                new []{"-name", "testApp", "-m", "model.txt"},
+                new []{"--nam", "testApp", "-m", "model.txt"}
+            };
+        }
+
         protected static string[][] ValidInputs()
         {
             return new[]
@@ -257,6 +268,23 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureInvalidModel, modelName), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
             _mockFileSystem.Verify(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), Constants.DirectoryName.Models, inputParams.ElementAtOrDefault(3)), Times.Once);
+        }
+
+        [Test]
+        public void FailOnGenerateInformationModelBecauseUknownNameParam([ValueSource(nameof(InvalidInputs_UnknownNameParam))] string[] inputParams)
+        {
+            // Arrange            
+            _loggerListenerMock.Setup(x => x.Warn(string.Format(LoggingText.GenerateInformationModelFailureUnknownParam, inputParams.ElementAtOrDefault(0))));
+
+            // Act
+            var commandResult = _strategy.Execute(inputParams);
+
+            // Assert
+            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsNotNull(commandResult.OutputMessages);
+            var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
+            Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, inputParams.ElementAtOrDefault(0)), firstMessageLine.Key);
+            Assert.AreEqual(string.Empty, firstMessageLine.Value);
         }
 
         //[Test]
