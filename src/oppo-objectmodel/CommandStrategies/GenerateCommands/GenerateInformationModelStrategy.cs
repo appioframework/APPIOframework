@@ -83,7 +83,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 return new CommandResult(false, outputMessages);
             }
 
-            AdjustServerTemplate(srcDirectory, modelName);
+            //AdjustServerTemplate(srcDirectory, modelName);
 
             outputMessages.Add(string.Format(OutputText.GenerateInformationModelSuccess, modelFullName), string.Empty);
             OppoLogger.Info(LoggingText.GenerateInformationModelSuccess);
@@ -96,8 +96,6 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
         /// <param name="srcDirectory"></param>
         private void AdjustServerTemplate(string srcDirectory, string modelName)
         {
-            // remove, dummy only so sonarqube don't fails
-            srcDirectory = modelName;
         }
 
         private void CreateNeededDirectories(string srcDirectory)
