@@ -42,13 +42,13 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 return new CommandResult(false, outputMessages);
             }
 
-            //if (string.IsNullOrEmpty(projectName))
-            //{
-            //    OppoLogger.Warn(LoggingText.InvalidOpcuaappName);
-            //    outputMessages.Add(OutputText.OpcuaappBuildFailure, string.Empty);
+            if (string.IsNullOrEmpty(opcuaAppName))
+            {
+                OppoLogger.Warn(LoggingText.GenerateInformationModelFailureEmptyOpcuaAppName);
+                outputMessages.Add(OutputText.GenerateInformationModelFailureEmptyOpcuaAppName, string.Empty);
 
-            //    return new CommandResult(false, outputMessages);
-            //}
+                return new CommandResult(false, outputMessages);
+            }
 
             // check if model file exists
             var calculatedModelFilePath = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.Models, modelFullName);

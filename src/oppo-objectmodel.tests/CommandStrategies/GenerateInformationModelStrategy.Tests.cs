@@ -28,6 +28,15 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             };
         }
 
+        protected static string[][] InvalidInputs_EmptyOpcuaAppName()
+        {
+            return new[]
+            {
+                new []{"-n", "", "--model", "model.xml"},
+                new []{"--name", "", "-m", "model.xml"}
+            };
+        }
+
         protected static string[][] InvalidInputs_UnknownNameParam()
         {
             return new[]
@@ -314,6 +323,26 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, inputParams.ElementAtOrDefault(2)), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
         }
+
+        [Test]
+        public void FailOnGenerateInformationModelBecauseEmptyOpcuaAppName([ValueSource(nameof(InvalidInputs_EmptyOpcuaAppName))] string[] inputParams)
+        {
+            // Arrange            
+            _loggerListenerMock.Setup(x => x.Warn(LoggingText.GenerateInformationModelFailureEmptyOpcuaAppName));
+
+            // Act
+            var commandResult = _strategy.Execute(inputParams);
+
+            // Assert
+            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsNotNull(commandResult.OutputMessages);
+            var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
+            Assert.AreEqual(OutputText.GenerateInformationModelFailureEmptyOpcuaAppName, firstMessageLine.Key);
+            Assert.AreEqual(string.Empty, firstMessageLine.Value);
+        }
+
+
+        
 
         //[Test]
         //public void CallExecuteOnProvidedInvalidCommand([ValueSource(nameof(InvalidInputs))] string[] inputParams)
