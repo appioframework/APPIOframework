@@ -133,7 +133,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var helpText = _strategy.GetHelpText();
 
             // Assert
-            Assert.AreEqual(Resources.text.help.HelpTextValues.GenerateInformationModelArgumentCommandDescription, helpText);
+            Assert.AreEqual(Resources.text.help.HelpTextValues.GenerateInformationModelCommandDescription, helpText);
         }
 
         [Test]

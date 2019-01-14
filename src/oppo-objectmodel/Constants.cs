@@ -27,6 +27,7 @@ namespace Oppo.ObjectModel
             public const string Deploy = "deploy";
             public const string Import = "import";
             public const string Generate = "generate";
+            public const string GenerateInformationModel = "information-model";
         }
 
         public static class CommandResults
@@ -131,6 +132,13 @@ namespace Oppo.ObjectModel
             public const string VerboseName = "--name";
             public const string Model = "-m";
             public const string VerboseModel = "--model";
+            public const string VerboseHelp = "--help";
+            public const string Help = "-h";
+        }
+
+        public static class GenerateCommandArguments
+        {
+            public const string InformationModel = "information-model";
             public const string VerboseHelp = "--help";
             public const string Help = "-h";
         }

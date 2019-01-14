@@ -101,7 +101,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 
         public string GetHelpText()
         {
-            return Resources.text.help.HelpTextValues.GenerateInformationModelArgumentCommandDescription;
+            return Resources.text.help.HelpTextValues.GenerateInformationModelCommandDescription;
         }
     }
 }

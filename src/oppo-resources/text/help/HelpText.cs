@@ -59,6 +59,10 @@
 
         //Generate command
         public const string GenerateCommand = "Generates artifacts into existing oppo project.";
+        public const string GenerateFirstLine = "Generates ...";
+        public const string GenerateCallDescription = "oppo generate <Arguments> <Options>";
+        public const string GenerateArguments = "<information-model> previous imported, OPC UA conform information model.";
+        public const string GenerateInformationModelCommandDescription = "Generates information-model code from ...";
 
         //Version command
 
@@ -74,7 +78,7 @@
         public const string PublishHelpArgumentCommandDescription = "Publish help";
         public const string PublishNameArgumentCommandDescription = "Project name";
         public const string ImportSamplesArgumentCommandDescription = "Import Samples";
-        public const string GenerateInformationModelArgumentCommandDescription = "Project name";
+        public const string GenerateHelpArgumentCommandDescription = "Generate help";               
 
     }
 }

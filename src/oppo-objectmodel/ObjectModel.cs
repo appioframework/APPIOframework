@@ -11,31 +11,32 @@ using Oppo.ObjectModel.CommandStrategies.ImportCommands;
 using Oppo.ObjectModel.CommandStrategies.NewCommands;
 using Oppo.ObjectModel.CommandStrategies.PublishCommands;
 using Oppo.ObjectModel.CommandStrategies.VersionCommands;
+using Oppo.ObjectModel.CommandStrategies.GenerateCommands;
 
 namespace Oppo.ObjectModel
 {
     public class ObjectModel : IObjectModel
-    {      
-        private readonly ICommandFactory<ObjectModel> _commandStrategyFactory;        
+    {
+        private readonly ICommandFactory<ObjectModel> _commandStrategyFactory;
 
         public ObjectModel(ICommandFactory<ObjectModel> commandFactory)
         {
             _commandStrategyFactory = commandFactory;
         }
-        
+
         public CommandResult ExecuteCommand(IEnumerable<string> inputParams)
         {
             if (inputParams == null)
             {
                 try
                 {
-                    throw new ArgumentNullException(nameof(inputParams));                    
+                    throw new ArgumentNullException(nameof(inputParams));
                 }
                 catch (Exception ex)
                 {
                     OppoLogger.Error(LoggingText.NullInputParams_Msg, ex);
                     throw;
-                }                
+                }
             }
 
             var inputParamsArray = inputParams.ToArray();
@@ -49,7 +50,93 @@ namespace Oppo.ObjectModel
             var fileSystem = new FileSystemWrapper();
 
             var commands = new List<ICommand<ObjectModel>>();
+            
+            var buildStrategy = CreateBuildStrategy(fileSystem);
+            commands.Add(buildStrategy);
+            commands.Add(new HelloStrategy());
 
+            var helpStrategy = new HelpStrategy<ObjectModel>(CreateHelpData(Constants.CommandName.Help));
+            commands.Add(helpStrategy);
+
+            var shortHelpStrategy = new HelpStrategy<ObjectModel>(CreateHelpData(Constants.CommandName.ShortHelp));
+            commands.Add(shortHelpStrategy);
+
+            var helpDashStrategy = new HelpStrategy<ObjectModel>(CreateHelpData(Constants.CommandName.HelpDash));
+            commands.Add(helpDashStrategy);
+
+            var helpDashVerboseStrategy = new HelpStrategy<ObjectModel>(CreateHelpData(Constants.CommandName.HelpDashVerbose));
+            commands.Add(helpDashVerboseStrategy);
+
+            var newStrategy = CreateNewStrategy(fileSystem);
+            commands.Add(newStrategy);
+
+            var publishStrategy = CreatePublishStrategy(fileSystem);
+            commands.Add(publishStrategy);
+
+            var deployStrategy = CreateDeployStrategy(fileSystem);
+            commands.Add(deployStrategy);
+
+            commands.Add(new VersionStrategy(reflection));
+
+            var cleanStrategy = CreateCleanStrategy(fileSystem);
+            commands.Add(cleanStrategy);
+
+            var importStrategy = CreateImportStrategy(fileSystem);
+            commands.Add(importStrategy);
+
+            var generateStrategy = CreateGenerateStrategy(fileSystem);
+            commands.Add(generateStrategy);
+
+            var factory = new CommandFactory<ObjectModel>(commands, Constants.CommandName.Help);
+
+            helpStrategy.CommandFactory = factory;
+            shortHelpStrategy.CommandFactory = factory;
+            helpDashStrategy.CommandFactory = factory;
+            helpDashVerboseStrategy.CommandFactory = factory;
+
+            return factory;
+        }
+
+        private static HelpData CreateHelpData(string commandName)
+        {
+            // generic help data
+            var helpStrategyFirstLineText = new MessageLines
+            {
+                { string.Empty, Resources.text.help.HelpTextValues.HelpStartWelcome },
+                { string.Empty, string.Empty },
+                { string.Empty, Resources.text.help.HelpTextValues.HelpStartDocuLink },
+                { string.Empty, string.Empty },
+                { string.Empty, Resources.text.help.HelpTextValues.GeneralUsage },
+                { string.Empty, Resources.text.help.HelpTextValues.HelpStartUsageDescription },
+                { string.Empty, string.Empty },
+                { string.Empty, Resources.text.help.HelpTextValues.HelpStartTerminology },
+                { string.Empty, Resources.text.help.HelpTextValues.HelpStartOpcuaapp },
+                { string.Empty, Resources.text.help.HelpTextValues.HelpStartOpcuaappDescription },
+                { string.Empty, string.Empty },
+                { string.Empty, Resources.text.help.HelpTextValues.HelpStartOppoOptions },
+                { string.Empty, string.Empty },
+                { string.Empty, Resources.text.help.HelpTextValues.HelpStartCommand },
+            };
+
+            var helpStrategyLastLineText = new MessageLines
+            {
+                { string.Empty, string.Empty },
+                { string.Empty, Resources.text.help.HelpTextValues.HelpEndCommand },
+            };
+
+            return new HelpData
+            {
+                CommandName = commandName,
+                HelpTextFirstLine = helpStrategyFirstLineText,
+                HelpTextLastLine = helpStrategyLastLineText,
+                LogMessage = LoggingText.OppoHelpCalled,
+                HelpText = Resources.text.help.HelpTextValues.HelpCommand,
+            };
+        }
+
+        private static BuildStrategy CreateBuildStrategy(IFileSystem fileSystem)
+        {
+            // oppo build <command>
             var buildHelpStrategyHelpText = new MessageLines
             {
                 { string.Empty, Resources.text.help.HelpTextValues.BuildFirstLine },
@@ -86,60 +173,12 @@ namespace Oppo.ObjectModel
             buildHelpStrategy.CommandFactory = buildStrategyCommandFactory;
             buildHelpVerboseStrategy.CommandFactory = buildStrategyCommandFactory;
 
-            commands.Add(new BuildStrategy(buildStrategyCommandFactory));
-            commands.Add(new HelloStrategy());
+            return new BuildStrategy(buildStrategyCommandFactory);
+        }
 
-            var helpStrategyFirstLineText = new MessageLines
-            {
-                { string.Empty, Resources.text.help.HelpTextValues.HelpStartWelcome },
-                { string.Empty, string.Empty },
-                { string.Empty, Resources.text.help.HelpTextValues.HelpStartDocuLink },
-                { string.Empty, string.Empty },
-                { string.Empty, Resources.text.help.HelpTextValues.GeneralUsage },
-                { string.Empty, Resources.text.help.HelpTextValues.HelpStartUsageDescription },
-                { string.Empty, string.Empty },
-                { string.Empty, Resources.text.help.HelpTextValues.HelpStartTerminology },
-                { string.Empty, Resources.text.help.HelpTextValues.HelpStartOpcuaapp },
-                { string.Empty, Resources.text.help.HelpTextValues.HelpStartOpcuaappDescription },
-                { string.Empty, string.Empty },
-                { string.Empty, Resources.text.help.HelpTextValues.HelpStartOppoOptions },
-                { string.Empty, string.Empty },
-                { string.Empty, Resources.text.help.HelpTextValues.HelpStartCommand },
-            };
-
-            var helpStrategyLastLineText = new MessageLines
-            {
-                { string.Empty, string.Empty },
-                { string.Empty, Resources.text.help.HelpTextValues.HelpEndCommand },
-            };
-
-            var helpStrategyData = new HelpData
-            {
-                CommandName = Constants.CommandName.Help,
-                HelpTextFirstLine = helpStrategyFirstLineText,
-                HelpTextLastLine = helpStrategyLastLineText,
-                LogMessage        = LoggingText.OppoHelpCalled,
-                HelpText          = Resources.text.help.HelpTextValues.HelpCommand,
-            };
-
-            var helpStrategy = new HelpStrategy<ObjectModel>(helpStrategyData);
-            commands.Add(helpStrategy);
-
-            helpStrategyData.CommandName = Constants.CommandName.ShortHelp;
-
-            var shortHelpStrategy = new HelpStrategy<ObjectModel>(helpStrategyData);
-            commands.Add(shortHelpStrategy);
-
-            helpStrategyData.CommandName = Constants.CommandName.HelpDash;
-
-            var helpDashStrategy = new HelpStrategy<ObjectModel>(helpStrategyData);
-            commands.Add(helpDashStrategy);
-
-            helpStrategyData.CommandName = Constants.CommandName.HelpDashVerbose;
-
-            var helpDashVerboseStrategy = new HelpStrategy<ObjectModel>(helpStrategyData);
-            commands.Add(helpDashVerboseStrategy);
-
+        private static NewStrategy CreateNewStrategy(IFileSystem fileSystem)
+        {
+            // oppo new <command>
             var newHelpStrategyHelpText = new MessageLines
             {
                 { string.Empty, Resources.text.help.HelpTextValues.NewFirstLine },
@@ -181,8 +220,12 @@ namespace Oppo.ObjectModel
             newHelpStrategy.CommandFactory = newStrategyCommandFactory;
             newHelpVerboseStrategy.CommandFactory = newStrategyCommandFactory;
 
-            commands.Add(new NewStrategy(newStrategyCommandFactory));
+            return new NewStrategy(newStrategyCommandFactory);
+        }
 
+        private static PublishStrategy CreatePublishStrategy(IFileSystem fileSystem)
+        {
+            // oppo publish <command>
             var publishHelpStrategyHelpText = new MessageLines
             {
                 { string.Empty, Resources.text.help.HelpTextValues.PublishFirstLine },
@@ -218,9 +261,13 @@ namespace Oppo.ObjectModel
             var publishStrategyCommandFactory = new CommandFactory<PublishStrategy>(publishStrategies, Constants.PublishCommandArguments.Help);
             publishHelpStrategy.CommandFactory = publishStrategyCommandFactory;
             publishHelpVerboseStrategy.CommandFactory = publishStrategyCommandFactory;
+            
+            return new PublishStrategy(publishStrategyCommandFactory);
+        }
 
-            commands.Add(new PublishStrategy(publishStrategyCommandFactory));
-
+        private static DeployStrategy CreateDeployStrategy(IFileSystem fileSystem)
+        {
+            // oppo deploy <command>
             var deployHelpStrategyHelpText = new MessageLines
             {
                 { string.Empty, Resources.text.help.HelpTextValues.DeployFirstLine },
@@ -256,10 +303,13 @@ namespace Oppo.ObjectModel
             var deployStrategyCommandFactory = new CommandFactory<DeployStrategy>(deployStrategies, Constants.DeployCommandArguments.Help);
             deployHelpStrategy.CommandFactory = deployStrategyCommandFactory;
             deployVerboseHelpStrategy.CommandFactory = deployStrategyCommandFactory;
-            commands.Add(new DeployStrategy(deployStrategyCommandFactory));
 
-            commands.Add(new VersionStrategy(reflection));
+            return new DeployStrategy(deployStrategyCommandFactory);
+        }
 
+        private static CleanStrategy CreateCleanStrategy(IFileSystem fileSystem)
+        {
+            // oppo clean <command>
             var cleanHelpStrategyHelpText = new MessageLines
             {
                 { string.Empty, Resources.text.help.HelpTextValues.CleanFirstLine },
@@ -295,8 +345,12 @@ namespace Oppo.ObjectModel
             cleanHelpStrategy.CommandFactory = cleanStrategyCommandFactory;
             cleanHelpVerboseStrategy.CommandFactory = cleanStrategyCommandFactory;
 
-            commands.Add(new CleanStrategy(cleanStrategyCommandFactory));
+            return new CleanStrategy(cleanStrategyCommandFactory);
+        }
 
+        private static ImportStrategy CreateImportStrategy(IFileSystem fileSystem)
+        {
+            // oppo import <command>
             var importHelpStrategyHelpText = new MessageLines
             {
                 { string.Empty, Resources.text.help.HelpTextValues.ImportFirstLine },
@@ -329,7 +383,7 @@ namespace Oppo.ObjectModel
             var importHelpStrategyVerbose = new HelpStrategy<ImportStrategy>(importHelpStrategyData);
             var importCommands = new ICommand<ImportStrategy>[]
             {
-                new ImportInformationModelCommandStrategy(fileSystem),              
+                new ImportInformationModelCommandStrategy(fileSystem),
                 importHelpStrategy,
                 importHelpStrategyVerbose
             };
@@ -337,16 +391,55 @@ namespace Oppo.ObjectModel
             var importStrategyCommandFactory = new CommandFactory<ImportStrategy>(importCommands, Constants.ImportInformationModelCommandArguments.Help);
             importHelpStrategy.CommandFactory = importStrategyCommandFactory;
             importHelpStrategyVerbose.CommandFactory = importStrategyCommandFactory;
-            commands.Add(new ImportStrategy(importStrategyCommandFactory));
 
-            var factory = new CommandFactory<ObjectModel>(commands, Constants.CommandName.Help);
+            return new ImportStrategy(importStrategyCommandFactory);
+        }
 
-            helpStrategy.CommandFactory = factory;
-            shortHelpStrategy.CommandFactory = factory;
-            helpDashStrategy.CommandFactory = factory;
-            helpDashVerboseStrategy.CommandFactory = factory;
+        private static GenerateStrategy CreateGenerateStrategy(IFileSystem fileSystem)
+        {
+            // oppo generate <command>
+            var generateHelpStrategyHelpText = new MessageLines
+            {
+                { string.Empty, Resources.text.help.HelpTextValues.GenerateFirstLine },
+                { string.Empty, string.Empty },
+                { string.Empty, Resources.text.help.HelpTextValues.GeneralUsage },
+                { string.Empty, Resources.text.help.HelpTextValues.GenerateCallDescription },
+                { string.Empty, string.Empty },
+                { string.Empty, Resources.text.help.HelpTextValues.GeneralArguments },
+                { string.Empty, Resources.text.help.HelpTextValues.GenerateArguments },
+                { string.Empty, string.Empty },
+                { string.Empty, Resources.text.help.HelpTextValues.GeneralOptions },
+                { "-n", "The name to opcuapp to use" },
+                { "--name", "The name to opcuapp to use" },
+                { "-m", "Information model to use" },
+                { "--model", "Information model to use" },
+            };
 
-            return factory;
+            var generateHelpStrategyData = new HelpData
+            {
+                CommandName = Constants.GenerateCommandArguments.Help,
+                HelpTextFirstLine = generateHelpStrategyHelpText,
+                LogMessage = LoggingText.OppoHelpForGenerateCommand,
+                HelpText = Resources.text.help.HelpTextValues.GenerateHelpArgumentCommandDescription,
+            };
+
+            var generateHelpStrategy = new HelpStrategy<GenerateStrategy>(generateHelpStrategyData);
+
+            generateHelpStrategyData.CommandName = Constants.GenerateCommandArguments.VerboseHelp;
+
+            var generateHelpStrategyVerbose = new HelpStrategy<GenerateStrategy>(generateHelpStrategyData);
+            var generateSubCommands = new ICommand<GenerateStrategy>[]
+            {
+                new GenerateInformationModelStrategy(Constants.CommandName.GenerateInformationModel, fileSystem),
+                generateHelpStrategy,
+                generateHelpStrategyVerbose
+            };
+
+            var generateStrategyCommandFactory = new CommandFactory<GenerateStrategy>(generateSubCommands, Constants.GenerateCommandArguments.Help);
+            generateHelpStrategy.CommandFactory = generateStrategyCommandFactory;
+            generateHelpStrategyVerbose.CommandFactory = generateStrategyCommandFactory;
+
+            return new GenerateStrategy(generateStrategyCommandFactory);
         }
 
         public string PrepareCommandFailureOutputText(string[] args)
