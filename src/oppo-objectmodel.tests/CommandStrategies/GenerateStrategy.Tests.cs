@@ -25,8 +25,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             return new[]
             {
                 new []{"information-model", "-n", "testApp", "-m", "model.xml"},
+                new []{"information-model", "-n", "testApp", "--model", "model.xml"},
                 new []{"information-model", "--name", "testApp", "-m", "model.xml"},
-                new []{"information-model", "--name", "testApp", "--model", "model.xml"},
+                new []{"information-model", "--name", "testApp", "--model", "model.xml"}               
             };
         }
         private Mock<ICommandFactory<GenerateStrategy>> _mockFactory;
