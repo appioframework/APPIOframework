@@ -74,8 +74,11 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             CreateNeededDirectories(srcDirectory);
 
             var modelName = _fileSystem.GetFileNameWithoutExtension(modelFullName);
-            var args = modelFullName + " " + modelName; 
-            var pythonResult = _fileSystem.CallExecutable(Constants.ExecutableName.NodsetCompiler, srcDirectory, args);
+            var modelTargetLocation = _fileSystem.CombinePaths(Constants.DirectoryName.InformationModels, modelName);
+            
+            // /etc/oppo/tools/open62541/v0.3.0/nodeset-compiler/nodeset_compiler.py --types-array=UA_TYPES --existing /etc/oppo/tools/open62541/v0.3.0/existing-nodes/Opc.Ua.NodeSet2.xml  --xml ../../models/myNS.xml information-models/myNs
+            var sourceModelRelativePath = @"..\..\" + _fileSystem.CombinePaths(Constants.DirectoryName.Models, modelFullName);
+            var pythonResult = _fileSystem.CallExecutable(string.Format(Constants.ExecutableName.NodsetCompiler, sourceModelRelativePath, modelTargetLocation), srcDirectory, string.Empty);
             if (!pythonResult)
             {
                 OppoLogger.Warn(LoggingText.NodesetCompilerExecutableFails);

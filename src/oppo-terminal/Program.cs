@@ -7,7 +7,7 @@ namespace Oppo.Terminal
     internal static class Program
     {
         internal static int Main(string[] args)
-        { 
+        {          
             SetupOppoLogger();
             var objectModel = new ObjectModel.ObjectModel(ObjectModel.ObjectModel.CreateCommandFactory(new ReflectionWrapper()));
 
@@ -16,7 +16,7 @@ namespace Oppo.Terminal
             var writer = new ConsoleWriter();
 
             var commandResult = objectModel.ExecuteCommand(args);
-           
+
             if (commandResult.OutputMessages != null)
             {
                 writer.Write(commandResult.OutputMessages);
@@ -30,6 +30,6 @@ namespace Oppo.Terminal
         {
             // setups the logger
             OppoLogger.RegisterListener(new LoggerListenerWrapper());
-        }      
+        }
     }
 }
