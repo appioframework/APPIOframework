@@ -72,7 +72,8 @@ namespace Oppo.ObjectModel
 
             // 0 xml model source path
             // 1 output directory with name for generated files and method
-            public const string NodsetCompiler = @"/etc/oppo/tools/open62541/v0.3.0/nodeset-compiler/nodeset_compiler.py --types-array=UA_TYPES --existing /etc/oppo/tools/open62541/v0.3.0/existing-nodes/Opc.Ua.NodeSet2.xml --xml {0} {1}";
+            public const string NodsetCompiler = @"python3";
+            public const string NodsetCompilerArguments = @"/etc/oppo/tools/open62541/v0.3.0/nodeset-compiler/nodeset_compiler.py --types-array=UA_TYPES --existing /etc/oppo/tools/open62541/v0.3.0/existing-nodes/Opc.Ua.NodeSet2.xml --xml {0} {1}";
         }
 
         public static class FileName

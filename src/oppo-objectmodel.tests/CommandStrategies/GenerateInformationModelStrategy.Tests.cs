@@ -160,7 +160,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var sourceModelRelativePath = @"../../" + modelPath;
             _mockFileSystem.Setup(x => x.CombinePaths(Constants.DirectoryName.Models, inputParams.ElementAtOrDefault(3))).Returns(modelPath);
 
-            _mockFileSystem.Setup(x => x.CallExecutable(string.Format(Constants.ExecutableName.NodsetCompiler, sourceModelRelativePath, modelTargetLocation), _srcDir, string.Empty)).Returns(true);
+            _mockFileSystem.Setup(x => x.CallExecutable(Constants.ExecutableName.NodsetCompiler, _srcDir, string.Format(Constants.ExecutableName.NodsetCompilerArguments, sourceModelRelativePath, modelTargetLocation))).Returns(true);
 
             // Act
             var commandResult = _strategy.Execute(inputParams);
@@ -199,7 +199,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var modelPath = System.IO.Path.Combine(Constants.DirectoryName.Models, inputParams.ElementAtOrDefault(3));
             var sourceModelRelativePath = @"../../" + modelPath;
             _mockFileSystem.Setup(x => x.CombinePaths(Constants.DirectoryName.Models, inputParams.ElementAtOrDefault(3))).Returns(modelPath);
-            _mockFileSystem.Setup(x => x.CallExecutable(string.Format(Constants.ExecutableName.NodsetCompiler, sourceModelRelativePath, modelTargetLocation), _srcDir, string.Empty)).Returns(true);
+            _mockFileSystem.Setup(x => x.CallExecutable(Constants.ExecutableName.NodsetCompiler, _srcDir, string.Format(Constants.ExecutableName.NodsetCompilerArguments, sourceModelRelativePath, modelTargetLocation))).Returns(true);
 
             _mockFileSystem.Setup(x => x.DirectoryExists(System.IO.Path.Combine(_srcDir, DirectoryName.InformationModels))).Returns(true);
 

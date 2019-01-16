@@ -80,7 +80,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             var sourceModelRelativePath = @"../../" + _fileSystem.CombinePaths(Constants.DirectoryName.Models, modelFullName);
 
             OppoLogger.Info("Calling NodesetCompiler with script: " + string.Format(Constants.ExecutableName.NodsetCompiler, sourceModelRelativePath, modelTargetLocation));
-            var pythonResult = _fileSystem.CallExecutable(string.Format(Constants.ExecutableName.NodsetCompiler, sourceModelRelativePath, modelTargetLocation), srcDirectory, string.Empty);
+            var pythonResult = _fileSystem.CallExecutable(Constants.ExecutableName.NodsetCompiler, srcDirectory, string.Format(Constants.ExecutableName.NodsetCompilerArguments, sourceModelRelativePath, modelTargetLocation));
             if (!pythonResult)
             {
                 OppoLogger.Warn(LoggingText.NodesetCompilerExecutableFails);
