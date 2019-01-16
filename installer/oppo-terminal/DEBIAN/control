@@ -1,7 +1,7 @@
 Package: OPPO-terminal
 Architecture: all
 Maintainer: Talsen Team
-Depends: debconf (>= 0.5.00), dotnet-runtime-2.1, gcc (>= 7), g++ (>= 7), meson (>= 0.45)
+Depends: debconf (>= 0.5.00), dotnet-runtime-2.1, gcc (>= 7), g++ (>= 7), meson (>= 0.45), open62541--v0.3.0 (= 0.3.0)
 Priority: optional
 Version: 0.1
 Description: OPPO-Terminal is used to create OPPO artefacts in your local file storage.

@@ -288,7 +288,7 @@ namespace Oppo.ObjectModel
 
             var deployHelpStrategy = new HelpStrategy<DeployStrategy>(deployHelpStrategyData);
 
-            deployHelpStrategyData.CommandName = Constants.CleanCommandArguments.VerboseHelp;
+            deployHelpStrategyData.CommandName = Constants.DeployCommandArguments.VerboseHelp;
 
             var deployVerboseHelpStrategy = new HelpStrategy<DeployStrategy>(deployHelpStrategyData);
 

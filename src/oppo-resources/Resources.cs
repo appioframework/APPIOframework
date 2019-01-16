@@ -10,11 +10,9 @@
 
         public const string OppoOpcuaAppTemplateFileName_main_server_c = "Oppo.Resources.open62541.main-server.c";
 
+        public const string OppoOpcuaAppTemplateFileName_models_server_c = "Oppo.Resources.open62541.models-server.c";
+
         public const string OppoOpcuaAppTemplateFileName_meson_build = "Oppo.Resources.open62541.meson.build";
-
-        public const string OppoOpcuaAppTemplateFileName_open62541_c = "Oppo.Resources.open62541.open62541.c";
-
-        public const string OppoOpcuaAppTemplateFileName_open62541_h = "Oppo.Resources.open62541.open62541.h";
 
         public const string InstallerZipResourceName = "Oppo.Resources.installer.opcuaapp.oppo-opcuaapp.zip";
 

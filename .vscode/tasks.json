@@ -26,6 +26,16 @@
                              "bash-gitlab-ci/run-build.sh"
             ],
             "problemMatcher": [ ]         
-        }           
+        },
+        {
+            "label":         "dpkg-reinstall--oppo-terminal",
+            "type":          "shell",
+            "command":       "/bin/bash",
+            "args":
+            [
+                             "bash-developer/run-reinstall--oppo-terminal--local.sh"
+            ],
+            "problemMatcher": [ ]         
+        },
     ]
 }

@@ -1,6 +1,6 @@
 /* THIS IS A SINGLE-FILE DISTRIBUTION CONCATENATED FROM THE OPEN62541 SOURCES
  * visit http://open62541.org/ for information about this software
- * Git-Revision: 0.3-rc2
+ * Git-Revision: v0.3.0
  */
 
 /*
@@ -35,8 +35,8 @@ extern "C" {
 #define UA_OPEN62541_VER_MAJOR 0
 #define UA_OPEN62541_VER_MINOR 3
 #define UA_OPEN62541_VER_PATCH 0
-#define UA_OPEN62541_VER_LABEL "-rc2" /* Release candidate label, etc. */
-#define UA_OPEN62541_VER_COMMIT "0.3-rc2"
+#define UA_OPEN62541_VER_LABEL "" /* Release candidate label, etc. */
+#define UA_OPEN62541_VER_COMMIT "v0.3.0"
 
 /**
  * Feature Options
@@ -53,7 +53,6 @@ extern "C" {
 #define UA_ENABLE_STATUSCODE_DESCRIPTIONS
 #define UA_ENABLE_TYPENAMES
 /* #undef UA_ENABLE_DETERMINISTIC_RNG */
-/* #undef UA_ENABLE_GENERATE_NAMESPACE0 */
 /* #undef UA_ENABLE_NONSTANDARD_UDP */
 #define UA_ENABLE_DISCOVERY
 /* #undef UA_ENABLE_DISCOVERY_MULTICAST */
@@ -2229,6 +2228,14 @@ typedef enum {
 #define UA_NS0ID_SERVER_NAMESPACES_OPCUANAMESPACEURI_NAMESPACEFILE_EXPORTNAMESPACE 15211 // Method
 #define UA_NS0ID_HASMODELPARENT 50 // ReferenceType
 
+#define UA_VALUERANK_SCALAR_OR_ONE_DIMENSION  -3
+#define UA_VALUERANK_ANY                      -2
+#define UA_VALUERANK_SCALAR                   -1
+#define UA_VALUERANK_ONE_OR_MORE_DIMENSIONS    0
+#define UA_VALUERANK_ONE_DIMENSION             1
+#define UA_VALUERANK_TWO_DIMENSIONS            2
+#define UA_VALUERANK_THREE_DIMENSIONS          3
+
 #ifdef __cplusplus
 } // extern "C"
 #endif
@@ -2248,7 +2255,7 @@ typedef enum {
  *    Copyright 2015 (c) Nick Goossens
  *    Copyright 2015-2016 (c) Oleksiy Vasylyev
  *    Copyright 2017 (c) Stefan Profanter, fortiss GmbH
- *    Copyright 2017 (c) Thomas Stalder
+ *    Copyright 2017 (c) Thomas Stalder, Blue Time Concept SA
  */
 
 
@@ -3047,7 +3054,11 @@ struct UA_DataType {
     UA_DataTypeMember *members;
 };
 
-UA_Boolean isDataTypeNumeric(const UA_DataType *type);
+/* Test if the data type is a numeric builtin data type. This includes Boolean,
+ * integers and floating point numbers. Not included are DateTime and
+ * StatusCode. */
+UA_Boolean
+isDataTypeNumeric(const UA_DataType *type);
 
 /* The following is used to exclude type names in the definition of UA_DataType
  * structures if the feature is disabled. */
@@ -3219,7 +3230,7 @@ deprecatedDateTimeMultiple(double multiple) {
 /*********************************** amalgamated original file "/home/travis/build/open62541/open62541/build/src_generated/ua_types_generated.h" ***********************************/
 
 /* Generated from Opc.Ua.Types.bsd with script /home/travis/build/open62541/open62541/tools/generate_datatypes.py
- * on host travis-job-58e35654-0d0b-419b-8d10-2d50a5ceef65 by user travis at 2018-06-12 07:23:58 */
+ * on host travis-job-193db498-e14a-4886-911f-7172c9e50b7a by user travis at 2018-12-19 02:29:43 */
 
 
 #ifdef __cplusplus
@@ -5907,7 +5918,7 @@ typedef UA_Double UA_Duration;
 /*********************************** amalgamated original file "/home/travis/build/open62541/open62541/build/src_generated/ua_types_generated_handling.h" ***********************************/
 
 /* Generated from Opc.Ua.Types.bsd with script /home/travis/build/open62541/open62541/tools/generate_datatypes.py
- * on host travis-job-58e35654-0d0b-419b-8d10-2d50a5ceef65 by user travis at 2018-06-12 07:23:58 */
+ * on host travis-job-193db498-e14a-4886-911f-7172c9e50b7a by user travis at 2018-12-19 02:29:43 */
 
 
 #ifdef __cplusplus
@@ -12362,7 +12373,7 @@ struct UA_Connection {
                                       * simplifies the design. */
     UA_DateTime openingDate;         /* The date the connection was created */
     void *handle;                    /* A pointer to internal data */
-    UA_ByteString incompleteMessage; /* A half-received message (TCP is a
+    UA_ByteString incompleteMessage; /* A half-received chunk (TCP is a
                                       * streaming protocol) is stored here */
 
     /* Get a buffer for sending */
@@ -12404,6 +12415,9 @@ struct UA_Connection {
     /* To be called only from within the server (and not the network layer).
      * Frees up the connection's memory. */
     void (*free)(UA_Connection *connection);
+
+    /* A message has not been processed yet */
+    UA_Boolean pendingMessage;
 };
 
 /* Cleans up half-received messages, and so on. Called from connection->free. */
@@ -12651,8 +12665,17 @@ typedef struct UA_CertificateVerification UA_CertificateVerification;
 
 struct UA_CertificateVerification {
     void *context;
+
+    /* Verify the certificate against the configured policies and trust chain. */
     UA_StatusCode (*verifyCertificate)(void *verificationContext,
                                        const UA_ByteString *certificate);
+
+    /* Verify that the certificate has the applicationURI in the subject name. */
+    UA_StatusCode (*verifyApplicationURI)(void *verificationContext,
+                                          const UA_ByteString *certificate,
+                                          const UA_String *applicationURI);
+
+    /* Delete the certificate verification context */
     void (*deleteMembers)(UA_CertificateVerification *cv);
 };
 
@@ -13683,7 +13706,7 @@ struct UA_ServerConfig {
 
     /* Limits for Subscriptions */
     UA_UInt32 maxSubscriptionsPerSession;
-    UA_DurationRange publishingIntervalLimits;
+    UA_DurationRange publishingIntervalLimits; /* in ms (must not be less than 5) */
     UA_UInt32Range lifeTimeCountLimits;
     UA_UInt32Range keepAliveCountLimits;
     UA_UInt32 maxNotificationsPerPublish;
@@ -13691,7 +13714,7 @@ struct UA_ServerConfig {
 
     /* Limits for MonitoredItems */
     UA_UInt32 maxMonitoredItemsPerSubscription;
-    UA_DurationRange samplingIntervalLimits;
+    UA_DurationRange samplingIntervalLimits; /* in ms (must not be less than 5) */
     UA_UInt32Range queueSizeLimits; /* Negotiated with the client */
 
     /* Limits for PublishRequests */
@@ -13721,6 +13744,7 @@ struct UA_ServerConfig {
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  *    Copyright 2018 (c) Stefan Profanter, fortiss GmbH
+ *    Copyright 2018 (c) Thomas Stalder, Blue Time Concept SA
  */
 
 #ifndef UA_CLIENT_CONFIG_H
@@ -13779,11 +13803,17 @@ typedef void (*UA_SubscriptionInactivityCallback)(UA_Client *client, UA_UInt32 s
 #endif
 
 /**
+ * Inactivity callback
+ * ^^^^^^^^^^^^^^^^^^^ */
+
+typedef void (*UA_InactivityCallback)(UA_Client *client);
+
+/**
  * Client Configuration Data
  * ^^^^^^^^^^^^^^^^^^^^^^^^^ */
 
 typedef struct UA_ClientConfig {
-    UA_UInt32 timeout;               /* Sync response timeout in ms */
+    UA_UInt32 timeout;               /* ASync + Sync response timeout in ms */
     UA_UInt32 secureChannelLifeTime; /* Lifetime in ms (then the channel needs
                                         to be renewed) */
     UA_Logger logger;
@@ -13797,16 +13827,36 @@ typedef struct UA_ClientConfig {
     /* Callback function */
     UA_ClientStateCallback stateCallback;
 #ifdef UA_ENABLE_SUBSCRIPTIONS
+    /* When outStandingPublishRequests is greater than 0,
+     * the server automatically create publishRequest when
+     * UA_Client_runAsync is called. If the client don't receive
+     * a publishResponse after :
+     *     (sub->publishingInterval * sub->maxKeepAliveCount) +
+     *     client->config.timeout)
+     * then, the client call subscriptionInactivityCallback
+     * The connection can be closed, this in an attempt to
+     * recreate a healthy connection. */
     UA_SubscriptionInactivityCallback subscriptionInactivityCallback;
 #endif
+
+    /* When connectivityCheckInterval is greater than 0,
+     * every connectivityCheckInterval (in ms), a async read request
+     * is performed on the server. inactivityCallback is called
+     * when the client receive no response for this read request
+     * The connection can be closed, this in an attempt to
+     * recreate a healthy connection. */
+    UA_InactivityCallback inactivityCallback;
 
     void *clientContext;
 
 #ifdef UA_ENABLE_SUBSCRIPTIONS
-    /* number of PublishResponse standing in the sever */
-    /* 0 = background task disabled                    */
+    /* number of PublishResponse standing in the sever
+     * 0 = background task disabled                    */
     UA_UInt16 outStandingPublishRequests;
 #endif
+    /* connectivity check interval in ms
+     * 0 = background task disabled */
+    UA_UInt32 connectivityCheckInterval;
 } UA_ClientConfig;
 
 
@@ -13839,7 +13889,7 @@ UA_Server_getClientConfig(void);
  *    Copyright 2015 (c) Oleksiy Vasylyev
  *    Copyright 2017 (c) Stefan Profanter, fortiss GmbH
  *    Copyright 2017 (c) Mark Giraud, Fraunhofer IOSB
- *    Copyright 2018 (c) Thomas Stalder
+ *    Copyright 2018 (c) Thomas Stalder, Blue Time Concept SA
  */
 
 
@@ -14183,6 +14233,13 @@ typedef void
  * The statusCode received when the client is shutting down is
  * UA_STATUSCODE_BADSHUTDOWN.
  *
+ * The statusCode received when the client don't receive response
+ * after specified config->timeout (in ms) is
+ * UA_STATUSCODE_BADTIMEOUT.
+ *
+ * Instead, you can use __UA_Client_AsyncServiceEx to specify
+ * a custom timeout
+ *
  * The userdata and requestId arguments can be NULL. */
 UA_StatusCode UA_EXPORT
 __UA_Client_AsyncService(UA_Client *client, const void *request,
@@ -14190,6 +14247,33 @@ __UA_Client_AsyncService(UA_Client *client, const void *request,
                          UA_ClientAsyncServiceCallback callback,
                          const UA_DataType *responseType,
                          void *userdata, UA_UInt32 *requestId);
+
+/* Use the type versions of this method. See below. However, the general
+ * mechanism of async service calls is explained here.
+ *
+ * We say that an async service call has been dispatched once this method
+ * returns UA_STATUSCODE_GOOD. If there is an error after an async service has
+ * been dispatched, the callback is called with an "empty" response where the
+ * statusCode has been set accordingly. This is also done if the client is
+ * shutting down and the list of dispatched async services is emptied.
+ *
+ * The statusCode received when the client is shutting down is
+ * UA_STATUSCODE_BADSHUTDOWN.
+ *
+ * The statusCode received when the client don't receive response
+ * after specified timeout (in ms) is
+ * UA_STATUSCODE_BADTIMEOUT.
+ *
+ * The timeout can be disabled by setting timeout to 0
+ *
+ * The userdata and requestId arguments can be NULL. */
+UA_StatusCode UA_EXPORT
+__UA_Client_AsyncServiceEx(UA_Client *client, const void *request,
+                           const UA_DataType *requestType,
+                           UA_ClientAsyncServiceCallback callback,
+                           const UA_DataType *responseType,
+                           void *userdata, UA_UInt32 *requestId,
+                           UA_UInt32 timeout);
 
 static UA_INLINE UA_StatusCode
 UA_Client_AsyncService_read(UA_Client *client, const UA_ReadRequest *request,
@@ -15221,6 +15305,77 @@ UA_CertificateVerification_Trustlist(UA_CertificateVerification *cv,
 }
 #endif
 
+
+/*********************************** amalgamated original file "/home/travis/build/open62541/open62541/plugins/ua_securitypolicy_basic128rsa15.h" ***********************************/
+
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ *
+ *    Copyright 2018 (c) Mark Giraud, Fraunhofer IOSB
+ */
+
+#ifndef UA_SECURITYPOLICY_BASIC128RSA15_H_
+#define UA_SECURITYPOLICY_BASIC128RSA15_H_
+
+
+#ifdef UA_ENABLE_ENCRYPTION
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+UA_EXPORT UA_StatusCode
+UA_SecurityPolicy_Basic128Rsa15(UA_SecurityPolicy *policy,
+                                UA_CertificateVerification *certificateVerification,
+                                const UA_ByteString localCertificate,
+                                const UA_ByteString localPrivateKey,
+                                UA_Logger logger);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* UA_ENABLE_ENCRYPTION */
+
+#endif // UA_SECURITYPOLICY_BASIC128RSA15_H_
+
+/*********************************** amalgamated original file "/home/travis/build/open62541/open62541/plugins/ua_securitypolicy_basic256sha256.h" ***********************************/
+
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ *    Copyright 2018 (c) Mark Giraud, Fraunhofer IOSB
+ *    Copyright 2018 (c) Daniel Feist, Precitec GmbH & Co. KG
+ */
+
+#ifndef UA_SECURITYPOLICY_BASIC256SHA256_H_
+#define UA_SECURITYPOLICY_BASIC256SHA256_H_
+
+
+#ifdef UA_ENABLE_ENCRYPTION
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+UA_EXPORT UA_StatusCode
+UA_SecurityPolicy_Basic256Sha256(UA_SecurityPolicy *policy,
+                                 UA_CertificateVerification *certificateVerification,
+                                 const UA_ByteString localCertificate,
+                                 const UA_ByteString localPrivateKey,
+                                 UA_Logger logger);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* UA_ENABLE_ENCRYPTION */
+
+#endif // UA_SECURITYPOLICY_BASIC256SHA256_H_
 
 /*********************************** amalgamated original file "/home/travis/build/open62541/open62541/plugins/ua_log_stdout.h" ***********************************/
 
