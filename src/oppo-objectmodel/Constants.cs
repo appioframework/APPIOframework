@@ -78,9 +78,8 @@ namespace Oppo.ObjectModel
         public static class FileName
         {
             public const string SourceCode_main_c = "main.c";
+            public const string SourceCode_models_c = "models.c";
             public const string SourceCode_meson_build = "meson.build";
-            public const string SourceCode_open62541_c = "open62541.c";
-            public const string SourceCode_open62541_h = "open62541.h";
             public const string SampleInformationModelFile = "OpcUaDiModel.xml";
         }
 
@@ -149,7 +148,6 @@ namespace Oppo.ObjectModel
         public static class ImportInformationModelCommandName
         {
             public const string InformationModel = "information-model";
-            public const string InformationModelSample = "sample-information-model";
         }
 
         public static class GenerateInformationModelCommandName

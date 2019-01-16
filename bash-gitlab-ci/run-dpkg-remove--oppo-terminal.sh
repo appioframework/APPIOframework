@@ -2,4 +2,4 @@
 
 set -euo pipefail
 
-dpkg --purge oppo-terminal
+dpkg --remove oppo-terminal
