@@ -26,9 +26,6 @@ do
   rm --force "./oppo.log"
 
   precondition_oppo_log_file_is_not_existent
-
-  echo "creating dummy model.xml"
-  touch "model.xml"
   
   ${VAR_COMMAND}
   
