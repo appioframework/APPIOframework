@@ -231,5 +231,18 @@ namespace Oppo.ObjectModel
                 throw;
             }
         }
+
+        public Stream ReadFile(string path)
+        {
+            try
+            {
+                return File.Open(path, FileMode.OpenOrCreate);
+            }
+            catch (Exception ex)
+            {
+                OppoLogger.Error(LoggingText.ExceptionOccured, ex);
+                throw;
+            }
+        }
     }
 }

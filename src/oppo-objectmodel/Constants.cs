@@ -10,6 +10,7 @@ namespace Oppo.ObjectModel
             public const string OppoProject = ".oppoproj";
             public const string DebianInstaller = ".deb";
             public const string InformationModel = ".xml";
+            public const string CFile = ".c";
         }
 
         public static class CommandName

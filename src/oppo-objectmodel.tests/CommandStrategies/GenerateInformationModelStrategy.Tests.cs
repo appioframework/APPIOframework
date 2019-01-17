@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.IO;
 using System.Linq;
 using Moq;
 using NUnit.Framework;
@@ -85,6 +85,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         private GenerateInformationModelStrategy _strategy;
         private Mock<ILoggerListener> _loggerListenerMock;
         private readonly string _srcDir = @"src\server";
+        private readonly string _defaultModelsC = "/* \n* This is an automatically generated file.\n*/";
+        private readonly string _defaultModelIncludeSnippet = "#include \"information-models/{0}.c\"";
 
         [SetUp]
         public void SetUpTest()
@@ -161,19 +163,35 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _mockFileSystem.Setup(x => x.CombinePaths(Constants.DirectoryName.Models, inputParams.ElementAtOrDefault(3))).Returns(modelPath);
 
             _mockFileSystem.Setup(x => x.CallExecutable(Constants.ExecutableName.NodsetCompiler, _srcDir, string.Format(Constants.ExecutableName.NodsetCompilerArguments, sourceModelRelativePath, modelTargetLocation))).Returns(true);
+            
+            using (var memoryStream = GenerateStreamFromString(_defaultModelsC))
+            {
+                var modelsFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_models_c);
+                _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_models_c)).Returns(modelsFilePath);
+                _mockFileSystem.Setup(x => x.ReadFile(modelsFilePath)).Returns(memoryStream);
 
-            // Act
-            var commandResult = _strategy.Execute(inputParams);
+                // Act
+                var commandResult = _strategy.Execute(inputParams);
 
-            // Assert
-            Assert.IsTrue(commandResult.Sucsess);
-            Assert.IsNotNull(commandResult.OutputMessages);
-            var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
-            Assert.AreEqual(string.Format(OutputText.GenerateInformationModelSuccess, inputParams.ElementAtOrDefault(3)), firstMessageLine.Key);
-            Assert.AreEqual(string.Empty, firstMessageLine.Value);
-            _loggerListenerMock.Verify(x => x.Info(LoggingText.GenerateInformationModelSuccess), Times.Once);
-            _mockFileSystem.Verify(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp), Times.Once);
-            _mockFileSystem.Verify(x => x.CreateDirectory(System.IO.Path.Combine(_srcDir, DirectoryName.InformationModels)), Times.Once);
+                // Assert
+                Assert.IsTrue(commandResult.Sucsess);
+                Assert.IsNotNull(commandResult.OutputMessages);
+                var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
+                Assert.AreEqual(string.Format(OutputText.GenerateInformationModelSuccess, inputParams.ElementAtOrDefault(3)), firstMessageLine.Key);
+                Assert.AreEqual(string.Empty, firstMessageLine.Value);
+                _loggerListenerMock.Verify(x => x.Info(LoggingText.GenerateInformationModelSuccess), Times.Once);
+                _mockFileSystem.Verify(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp), Times.Once);
+                _mockFileSystem.Verify(x => x.CreateDirectory(System.IO.Path.Combine(_srcDir, DirectoryName.InformationModels)), Times.Once);               
+            }            
+        }
+        public static Stream GenerateStreamFromString(string s)
+        {
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.Write(s);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
         }
 
         [Test]
@@ -203,18 +221,24 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             _mockFileSystem.Setup(x => x.DirectoryExists(System.IO.Path.Combine(_srcDir, DirectoryName.InformationModels))).Returns(true);
 
-            // Act
-            var commandResult = _strategy.Execute(inputParams);
+            using (var memoryStream = GenerateStreamFromString(_defaultModelsC + "\n" + string.Format(_defaultModelIncludeSnippet, modelName)))
+            {
+                var modelsFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_models_c);
+                _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_models_c)).Returns(modelsFilePath);
+                _mockFileSystem.Setup(x => x.ReadFile(modelsFilePath)).Returns(memoryStream);
+                // Act
+                var commandResult = _strategy.Execute(inputParams);
 
-            // Assert
-            Assert.IsTrue(commandResult.Sucsess);
-            Assert.IsNotNull(commandResult.OutputMessages);
-            var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
-            Assert.AreEqual(string.Format(OutputText.GenerateInformationModelSuccess, inputParams.ElementAtOrDefault(3)), firstMessageLine.Key);
-            Assert.AreEqual(string.Empty, firstMessageLine.Value);
-            _loggerListenerMock.Verify(x => x.Info(LoggingText.GenerateInformationModelSuccess), Times.Once);
-            _mockFileSystem.Verify(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp), Times.Once);
-            _mockFileSystem.Verify(x => x.CreateDirectory(System.IO.Path.Combine(_srcDir, DirectoryName.InformationModels)), Times.Never);
+                // Assert
+                Assert.IsTrue(commandResult.Sucsess);
+                Assert.IsNotNull(commandResult.OutputMessages);
+                var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
+                Assert.AreEqual(string.Format(OutputText.GenerateInformationModelSuccess, inputParams.ElementAtOrDefault(3)), firstMessageLine.Key);
+                Assert.AreEqual(string.Empty, firstMessageLine.Value);
+                _loggerListenerMock.Verify(x => x.Info(LoggingText.GenerateInformationModelSuccess), Times.Once);
+                _mockFileSystem.Verify(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp), Times.Once);
+                _mockFileSystem.Verify(x => x.CreateDirectory(System.IO.Path.Combine(_srcDir, DirectoryName.InformationModels)), Times.Never);
+            }
         }
 
         [Test]

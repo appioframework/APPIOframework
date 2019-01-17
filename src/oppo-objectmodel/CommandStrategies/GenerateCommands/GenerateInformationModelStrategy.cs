@@ -86,13 +86,56 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 return new CommandResult(false, outputMessages);
             }
 
-            //AdjustServerTemplate
+            AdjustModelsTemplate(srcDirectory, modelName);
 
             outputMessages.Add(string.Format(OutputText.GenerateInformationModelSuccess, modelFullName), string.Empty);
             OppoLogger.Info(LoggingText.GenerateInformationModelSuccess);
             return new CommandResult(true, outputMessages);            
         }
-        
+
+        /// <summary>
+        /// Models.c template should have an #include line for-each generated information-model source code.
+        /// Like for myModel.c, myModel.h -> #include "information-models/mmyModel.c".
+        /// </summary>
+        /// <param name="srcDirectory"></param>
+        /// <param name="fileNameToInclude"></param>
+        private void AdjustModelsTemplate(string srcDirectory, string fileNameToInclude)
+        {
+            var includeSnippet = "#include \""+ Constants.DirectoryName.InformationModels + "/" + fileNameToInclude + Constants.FileExtension.CFile + "\"";
+
+            var modelsFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_models_c));
+            var currentFileContentLineByLine = ReadFileContent(modelsFileStream);
+
+            if (!currentFileContentLineByLine.Contains(includeSnippet))
+            {
+                System.IO.StreamWriter sw = new System.IO.StreamWriter(modelsFileStream);
+                foreach (var previousTextLine in currentFileContentLineByLine)
+                {
+                    sw.WriteLine(previousTextLine);
+                }
+                
+                sw.WriteLine(includeSnippet);
+                sw.Close();
+                sw.Dispose();
+            }
+            modelsFileStream.Close();
+            modelsFileStream.Dispose();
+        }
+
+        private IEnumerable<string> ReadFileContent(System.IO.Stream stream)
+        {
+            var fileContent = new List<string>();
+            var sr = new System.IO.StreamReader(stream);
+            string lineOfText;
+            while ((lineOfText = sr.ReadLine()) != null)
+            {
+                fileContent.Add(lineOfText);
+            }
+
+            stream.Position = 0;
+            return fileContent;
+        }
+
         private void CreateNeededDirectories(string srcDirectory)
         {
             var pathToCreate = System.IO.Path.Combine(srcDirectory, Constants.DirectoryName.InformationModels);

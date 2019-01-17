@@ -1,3 +1,5 @@
+using System.IO;
+
 namespace Oppo.ObjectModel
 {
     public interface IFileSystem
@@ -24,5 +26,6 @@ namespace Oppo.ObjectModel
         string GetExtension(string path);
         string GetFileName(string path);
         string GetFileNameWithoutExtension(string path);
+        Stream ReadFile(string path);
     }    
 }
