@@ -428,6 +428,7 @@ namespace Oppo.ObjectModel
             generateHelpStrategyData.CommandName = Constants.GenerateCommandArguments.VerboseHelp;
 
             var generateHelpStrategyVerbose = new HelpStrategy<GenerateStrategy>(generateHelpStrategyData);
+            
             var generateSubCommands = new ICommand<GenerateStrategy>[]
             {
                 new GenerateInformationModelStrategy(Constants.CommandName.GenerateInformationModel, fileSystem),

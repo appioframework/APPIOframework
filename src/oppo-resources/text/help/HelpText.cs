@@ -46,9 +46,9 @@
         public const string DeployCallDescription = "oppo deploy <Options>";
 
         //Import command
-        public const string ImportFirstLine = "Imports an OPC UA conform information model. This will update/extend an opcua-app with this information model. User specific information models needs to placed in 'project/models'. Alternatively a sample provided by oppo can be used. Available are: DI-Informationmodel.";
+        public const string ImportFirstLine = "Imports an OPC UA conform information model. User specific information models needs to be placed in 'project/models'. Alternatively a sample provided by oppo can be used. Available are: DI-Informationmodel.";
         public const string ImportCallDescription = "oppo import <Arguments> <Options>";
-        public const string ImportArguments = "<information-model> OPC UA conform information model ";
+        public const string ImportArguments = "information-model";
 
         //New command
         public const string NewFirstLine = "Creates a new oppo project.";
@@ -59,9 +59,9 @@
 
         //Generate command
         public const string GenerateCommand = "Generates artifacts into existing oppo project.";
-        public const string GenerateFirstLine = "Generates ...";
+        public const string GenerateFirstLine = "This will update/extend an opcua-app with the chosen information model. The information model needs to be imported first by oppo 'import'.";
         public const string GenerateCallDescription = "oppo generate <Arguments> <Options>";
-        public const string GenerateArguments = "<information-model> previous imported, OPC UA conform information model.";
+        public const string GenerateArguments = "information-model";
         public const string GenerateInformationModelCommandDescription = "Generates information-model code from ...";
 
         //Version command
