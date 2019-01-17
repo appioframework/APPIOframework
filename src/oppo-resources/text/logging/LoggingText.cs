@@ -43,7 +43,8 @@
 
         public const string ExceptionOccured = "FileWrapper ExceptionOccured, Program termination!";
         public const string CreateDebianInstallerFails = "Create Debian installer failed!";
-        public const string MissingPublishedOpcuaAppFiles = "Missing published opcuappp files!";
+        public const string MissingBuiltOpcuaAppFiles = "Missing built opcuaapp files!";
+        public const string MissingPublishedOpcuaAppFiles = "Missing published opcuaapp files!";
         public const string ImportInforamtionModelCommandFailure = "Information model import failure, invalid character in name '{0}'";
         public const string UnknownImportInfomrationModelCommandParam = "Unknown import information-model <command> parameter!";
         public const string InvalidInformationModelPath = "Information model import failure, invalid character in model path '{0}'";
