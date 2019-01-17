@@ -10,10 +10,12 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
     public class GenerateInformationModelStrategy : ICommand<GenerateStrategy>
     {
         private readonly IFileSystem _fileSystem;
+        private readonly IModelValidator _modelValidator;
 
-        public GenerateInformationModelStrategy(string commandName, IFileSystem fileSystem)
+        public GenerateInformationModelStrategy(string commandName, IFileSystem fileSystem, IModelValidator modelValidator)
         {
             _fileSystem = fileSystem;
+            _modelValidator = modelValidator;
             Name = commandName;
         }
 
@@ -68,6 +70,13 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureInvalidModel, opcuaAppName, modelFullName, modelFileExtension), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
+            // validate model
+            if (!_modelValidator.Validate(calculatedModelFilePath, Resources.Resources.UANodeSetXsdFileName))
+            {
+                OppoLogger.Warn(string.Format(LoggingText.GenerateInformationModelFailureValidatingModel, modelFullName));
+                outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureValidatingModel, modelFullName), string.Empty);
+                return new CommandResult(false, outputMessages);
+            }
 
             var srcDirectory = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp);
 
@@ -93,7 +102,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             OppoLogger.Info(LoggingText.GenerateInformationModelSuccess);
             return new CommandResult(true, outputMessages);            
         }
-
+        
         /// <summary>
         /// Models.c template should have an #include line for-each generated information-model source code.
         /// Like for myModel.c, myModel.h -> #include "information-models/mmyModel.c".

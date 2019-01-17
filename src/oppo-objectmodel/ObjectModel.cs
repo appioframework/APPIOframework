@@ -431,7 +431,7 @@ namespace Oppo.ObjectModel
             
             var generateSubCommands = new ICommand<GenerateStrategy>[]
             {
-                new GenerateInformationModelStrategy(Constants.CommandName.GenerateInformationModel, fileSystem),
+                new GenerateInformationModelStrategy(Constants.CommandName.GenerateInformationModel, fileSystem, new ModelValidator(fileSystem)),
                 generateHelpStrategy,
                 generateHelpStrategyVerbose
             };

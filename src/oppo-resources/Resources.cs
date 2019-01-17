@@ -18,5 +18,7 @@
 
         public const string SampleInformationModelFileName = "Oppo.Resources.information_models.OpcUaDiModel.xml";
 
+        public const string UANodeSetXsdFileName = "Oppo.Resources.information_models.UANodeSet.xsd";
+
     }
 }

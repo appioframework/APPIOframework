@@ -1,0 +1,926 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="xmlFileToValidate_Invalid" xml:space="preserve">
+    <value>&lt;UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"
+           xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd"
+           xmlns:s1="http://yourorganisation.org/example_nodeset/"
+           xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+    &lt;NamespaceUris&gt;
+        &lt;Uri&gt;http://yourorganisation.org/example_nodeset/&lt;/Uri&gt;
+    &lt;/NamespaceUris&gt;
+    &lt;Aliases&gt;
+&lt;raf&gt;&lt;/raf&gt;
+        &lt;Alias Alias="Boolean"&gt;i=1&lt;/Alias&gt;
+        &lt;Alias Alias="UInt32"&gt;i=7&lt;/Alias&gt;
+        &lt;Alias Alias="String"&gt;i=12&lt;/Alias&gt;
+        &lt;Alias Alias="HasModellingRule"&gt;i=37&lt;/Alias&gt;
+        &lt;Alias Alias="HasTypeDefinition"&gt;i=40&lt;/Alias&gt;
+        &lt;Alias Alias="HasSubtype"&gt;i=45&lt;/Alias&gt;
+        &lt;Alias Alias="HasProperty"&gt;i=46&lt;/Alias&gt;
+        &lt;Alias Alias="HasComponent"&gt;i=47&lt;/Alias&gt;
+        &lt;Alias Alias="Argument"&gt;i=296&lt;/Alias&gt;
+    &lt;/Aliases&gt;
+    &lt;Extensions&gt;
+        &lt;Extension&gt;
+            &lt;ModelInfo Tool="UaModeler" Hash="Zs8w1AQI71W8P/GOk3k/xQ=="
+                       Version="1.3.4"/&gt;
+        &lt;/Extension&gt;
+    &lt;/Extensions&gt;
+    &lt;UAReferenceType NodeId="ns=1;i=4001" BrowseName="1:providesInputTo"&gt;
+        &lt;DisplayName&gt;providesInputTo&lt;/DisplayName&gt;
+        &lt;References&gt;
+            &lt;Reference ReferenceType="HasSubtype" IsForward="false"&gt;
+                i=33
+            &lt;/Reference&gt;
+        &lt;/References&gt;
+        &lt;InverseName Locale="en-US"&gt;inputProcidedBy&lt;/InverseName&gt;
+    &lt;/UAReferenceType&gt;
+    &lt;UAObjectType IsAbstract="true" NodeId="ns=1;i=1001"
+                  BrowseName="1:FieldDevice"&gt;
+        &lt;DisplayName&gt;FieldDevice&lt;/DisplayName&gt;
+        &lt;References&gt;
+            &lt;Reference ReferenceType="HasSubtype" IsForward="false"&gt;
+                i=58
+            &lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasComponent"&gt;ns=1;i=6001&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasComponent"&gt;ns=1;i=6002&lt;/Reference&gt;
+        &lt;/References&gt;
+    &lt;/UAObjectType&gt;
+    &lt;UAVariable DataType="String" ParentNodeId="ns=1;i=1001"
+                NodeId="ns=1;i=6001" BrowseName="1:ManufacturerName"
+                UserAccessLevel="3" AccessLevel="3"&gt;
+        &lt;DisplayName&gt;ManufacturerName&lt;/DisplayName&gt;
+        &lt;References&gt;
+            &lt;Reference ReferenceType="HasTypeDefinition"&gt;i=63&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasModellingRule"&gt;i=78&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasComponent" IsForward="false"&gt;
+                ns=1;i=1001
+            &lt;/Reference&gt;
+        &lt;/References&gt;
+    &lt;/UAVariable&gt;
+    &lt;UAVariable DataType="String" ParentNodeId="ns=1;i=1001"
+                NodeId="ns=1;i=6002" BrowseName="1:ModelName"
+                UserAccessLevel="3" AccessLevel="3"&gt;
+        &lt;DisplayName&gt;ModelName&lt;/DisplayName&gt;
+        &lt;References&gt;
+            &lt;Reference ReferenceType="HasTypeDefinition"&gt;i=63&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasModellingRule"&gt;i=78&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasComponent" IsForward="false"&gt;
+                ns=1;i=1001
+            &lt;/Reference&gt;
+        &lt;/References&gt;
+    &lt;/UAVariable&gt;
+    &lt;UAObjectType NodeId="ns=1;i=1002" BrowseName="1:Pump"&gt;
+        &lt;DisplayName&gt;Pump&lt;/DisplayName&gt;
+        &lt;References&gt;
+            &lt;Reference ReferenceType="HasComponent"&gt;ns=1;i=6003&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasComponent"&gt;ns=1;i=6004&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasSubtype" IsForward="false"&gt;
+                ns=1;i=1001
+            &lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasComponent"&gt;ns=1;i=7001&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasComponent"&gt;ns=1;i=7002&lt;/Reference&gt;
+        &lt;/References&gt;
+    &lt;/UAObjectType&gt;
+    &lt;UAVariable DataType="Boolean" ParentNodeId="ns=1;i=1002"
+                NodeId="ns=1;i=6003" BrowseName="1:isOn" UserAccessLevel="3"
+                AccessLevel="3"&gt;
+        &lt;DisplayName&gt;isOn&lt;/DisplayName&gt;
+        &lt;References&gt;
+            &lt;Reference ReferenceType="HasTypeDefinition"&gt;i=63&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasModellingRule"&gt;i=78&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasComponent" IsForward="false"&gt;
+                ns=1;i=1002
+            &lt;/Reference&gt;
+        &lt;/References&gt;
+    &lt;/UAVariable&gt;
+    &lt;UAVariable DataType="UInt32" ParentNodeId="ns=1;i=1002"
+                NodeId="ns=1;i=6004" BrowseName="1:MotorRPM"
+                UserAccessLevel="3" AccessLevel="3"&gt;
+        &lt;DisplayName&gt;MotorRPM&lt;/DisplayName&gt;
+        &lt;References&gt;
+            &lt;Reference ReferenceType="HasTypeDefinition"&gt;i=63&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasModellingRule"&gt;i=78&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasComponent" IsForward="false"&gt;
+                ns=1;i=1002
+            &lt;/Reference&gt;
+        &lt;/References&gt;
+    &lt;/UAVariable&gt;
+    &lt;UAMethod ParentNodeId="ns=1;i=1002" NodeId="ns=1;i=7001"
+              BrowseName="1:startPump"&gt;
+        &lt;DisplayName&gt;startPump&lt;/DisplayName&gt;
+        &lt;References&gt;
+            &lt;Reference ReferenceType="HasModellingRule"&gt;i=78&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasProperty"&gt;ns=1;i=6005&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasComponent" IsForward="false"&gt;
+                ns=1;i=1002
+            &lt;/Reference&gt;
+        &lt;/References&gt;
+    &lt;/UAMethod&gt;
+    &lt;UAVariable DataType="Argument" ParentNodeId="ns=1;i=7001" ValueRank="1"
+                NodeId="ns=1;i=6005" ArrayDimensions="1"
+                BrowseName="OutputArguments"&gt;
+        &lt;DisplayName&gt;OutputArguments&lt;/DisplayName&gt;
+        &lt;References&gt;
+            &lt;Reference ReferenceType="HasModellingRule"&gt;i=78&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasProperty"
+                       IsForward="false"&gt;ns=1;i=7001&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasTypeDefinition"&gt;i=68&lt;/Reference&gt;
+        &lt;/References&gt;
+        &lt;Value&gt;
+            &lt;ListOfExtensionObject&gt;
+                &lt;ExtensionObject&gt;
+                    &lt;TypeId&gt;
+                        &lt;Identifier&gt;i=297&lt;/Identifier&gt;
+                    &lt;/TypeId&gt;
+                    &lt;Body&gt;
+                        &lt;Argument&gt;
+                            &lt;Name&gt;started&lt;/Name&gt;
+                            &lt;DataType&gt;
+                                &lt;Identifier&gt;i=1&lt;/Identifier&gt;
+                            &lt;/DataType&gt;
+                            &lt;ValueRank&gt;-1&lt;/ValueRank&gt;
+                            &lt;ArrayDimensions&gt;&lt;/ArrayDimensions&gt;
+                            &lt;Description/&gt;
+                        &lt;/Argument&gt;
+                    &lt;/Body&gt;
+                &lt;/ExtensionObject&gt;
+            &lt;/ListOfExtensionObject&gt;
+        &lt;/Value&gt;
+    &lt;/UAVariable&gt;
+    &lt;UAMethod ParentNodeId="ns=1;i=1002" NodeId="ns=1;i=7002"
+              BrowseName="1:stopPump"&gt;
+        &lt;DisplayName&gt;stopPump&lt;/DisplayName&gt;
+        &lt;References&gt;
+            &lt;Reference ReferenceType="HasModellingRule"&gt;i=78&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasProperty"&gt;ns=1;i=6006&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasComponent"
+                       IsForward="false"&gt;ns=1;i=1002&lt;/Reference&gt;
+        &lt;/References&gt;
+    &lt;/UAMethod&gt;
+    &lt;UAVariable DataType="Argument" ParentNodeId="ns=1;i=7002" ValueRank="1"
+                NodeId="ns=1;i=6006" ArrayDimensions="1"
+                BrowseName="OutputArguments"&gt;
+        &lt;DisplayName&gt;OutputArguments&lt;/DisplayName&gt;
+        &lt;References&gt;
+            &lt;Reference ReferenceType="HasModellingRule"&gt;i=78&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasProperty" IsForward="false"&gt;
+                ns=1;i=7002
+            &lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasTypeDefinition"&gt;i=68&lt;/Reference&gt;
+        &lt;/References&gt;
+        &lt;Value&gt;
+            &lt;ListOfExtensionObject&gt;
+                &lt;ExtensionObject&gt;
+                    &lt;TypeId&gt;
+                        &lt;Identifier&gt;i=297&lt;/Identifier&gt;
+                    &lt;/TypeId&gt;
+                    &lt;Body&gt;
+                        &lt;Argument&gt;
+                            &lt;Name&gt;stopped&lt;/Name&gt;
+                            &lt;DataType&gt;
+                                &lt;Identifier&gt;i=1&lt;/Identifier&gt;
+                            &lt;/DataType&gt;
+                            &lt;ValueRank&gt;-1&lt;/ValueRank&gt;
+                            &lt;ArrayDimensions&gt;&lt;/ArrayDimensions&gt;
+                            &lt;Description/&gt;
+                        &lt;/Argument&gt;
+                    &lt;/Body&gt;
+                &lt;/ExtensionObject&gt;
+            &lt;/ListOfExtensionObject&gt;
+        &lt;/Value&gt;
+    &lt;/UAVariable&gt;
+&lt;/UANodeSet&gt;</value>
+  </data>
+  <data name="xmlFileToValidate_Valid" xml:space="preserve">
+    <value>&lt;UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"
+           xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd"
+           xmlns:s1="http://yourorganisation.org/example_nodeset/"
+           xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+    &lt;NamespaceUris&gt;
+        &lt;Uri&gt;http://yourorganisation.org/example_nodeset/&lt;/Uri&gt;
+    &lt;/NamespaceUris&gt;
+    &lt;Aliases&gt;
+
+        &lt;Alias Alias="Boolean"&gt;i=1&lt;/Alias&gt;
+        &lt;Alias Alias="UInt32"&gt;i=7&lt;/Alias&gt;
+        &lt;Alias Alias="String"&gt;i=12&lt;/Alias&gt;
+        &lt;Alias Alias="HasModellingRule"&gt;i=37&lt;/Alias&gt;
+        &lt;Alias Alias="HasTypeDefinition"&gt;i=40&lt;/Alias&gt;
+        &lt;Alias Alias="HasSubtype"&gt;i=45&lt;/Alias&gt;
+        &lt;Alias Alias="HasProperty"&gt;i=46&lt;/Alias&gt;
+        &lt;Alias Alias="HasComponent"&gt;i=47&lt;/Alias&gt;
+        &lt;Alias Alias="Argument"&gt;i=296&lt;/Alias&gt;
+    &lt;/Aliases&gt;
+    &lt;Extensions&gt;
+        &lt;Extension&gt;
+            &lt;ModelInfo Tool="UaModeler" Hash="Zs8w1AQI71W8P/GOk3k/xQ=="
+                       Version="1.3.4"/&gt;
+        &lt;/Extension&gt;
+    &lt;/Extensions&gt;
+    &lt;UAReferenceType NodeId="ns=1;i=4001" BrowseName="1:providesInputTo"&gt;
+        &lt;DisplayName&gt;providesInputTo&lt;/DisplayName&gt;
+        &lt;References&gt;
+            &lt;Reference ReferenceType="HasSubtype" IsForward="false"&gt;
+                i=33
+            &lt;/Reference&gt;
+        &lt;/References&gt;
+        &lt;InverseName Locale="en-US"&gt;inputProcidedBy&lt;/InverseName&gt;
+    &lt;/UAReferenceType&gt;
+    &lt;UAObjectType IsAbstract="true" NodeId="ns=1;i=1001"
+                  BrowseName="1:FieldDevice"&gt;
+        &lt;DisplayName&gt;FieldDevice&lt;/DisplayName&gt;
+        &lt;References&gt;
+            &lt;Reference ReferenceType="HasSubtype" IsForward="false"&gt;
+                i=58
+            &lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasComponent"&gt;ns=1;i=6001&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasComponent"&gt;ns=1;i=6002&lt;/Reference&gt;
+        &lt;/References&gt;
+    &lt;/UAObjectType&gt;
+    &lt;UAVariable DataType="String" ParentNodeId="ns=1;i=1001"
+                NodeId="ns=1;i=6001" BrowseName="1:ManufacturerName"
+                UserAccessLevel="3" AccessLevel="3"&gt;
+        &lt;DisplayName&gt;ManufacturerName&lt;/DisplayName&gt;
+        &lt;References&gt;
+            &lt;Reference ReferenceType="HasTypeDefinition"&gt;i=63&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasModellingRule"&gt;i=78&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasComponent" IsForward="false"&gt;
+                ns=1;i=1001
+            &lt;/Reference&gt;
+        &lt;/References&gt;
+    &lt;/UAVariable&gt;
+    &lt;UAVariable DataType="String" ParentNodeId="ns=1;i=1001"
+                NodeId="ns=1;i=6002" BrowseName="1:ModelName"
+                UserAccessLevel="3" AccessLevel="3"&gt;
+        &lt;DisplayName&gt;ModelName&lt;/DisplayName&gt;
+        &lt;References&gt;
+            &lt;Reference ReferenceType="HasTypeDefinition"&gt;i=63&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasModellingRule"&gt;i=78&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasComponent" IsForward="false"&gt;
+                ns=1;i=1001
+            &lt;/Reference&gt;
+        &lt;/References&gt;
+    &lt;/UAVariable&gt;
+    &lt;UAObjectType NodeId="ns=1;i=1002" BrowseName="1:Pump"&gt;
+        &lt;DisplayName&gt;Pump&lt;/DisplayName&gt;
+        &lt;References&gt;
+            &lt;Reference ReferenceType="HasComponent"&gt;ns=1;i=6003&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasComponent"&gt;ns=1;i=6004&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasSubtype" IsForward="false"&gt;
+                ns=1;i=1001
+            &lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasComponent"&gt;ns=1;i=7001&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasComponent"&gt;ns=1;i=7002&lt;/Reference&gt;
+        &lt;/References&gt;
+    &lt;/UAObjectType&gt;
+    &lt;UAVariable DataType="Boolean" ParentNodeId="ns=1;i=1002"
+                NodeId="ns=1;i=6003" BrowseName="1:isOn" UserAccessLevel="3"
+                AccessLevel="3"&gt;
+        &lt;DisplayName&gt;isOn&lt;/DisplayName&gt;
+        &lt;References&gt;
+            &lt;Reference ReferenceType="HasTypeDefinition"&gt;i=63&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasModellingRule"&gt;i=78&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasComponent" IsForward="false"&gt;
+                ns=1;i=1002
+            &lt;/Reference&gt;
+        &lt;/References&gt;
+    &lt;/UAVariable&gt;
+    &lt;UAVariable DataType="UInt32" ParentNodeId="ns=1;i=1002"
+                NodeId="ns=1;i=6004" BrowseName="1:MotorRPM"
+                UserAccessLevel="3" AccessLevel="3"&gt;
+        &lt;DisplayName&gt;MotorRPM&lt;/DisplayName&gt;
+        &lt;References&gt;
+            &lt;Reference ReferenceType="HasTypeDefinition"&gt;i=63&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasModellingRule"&gt;i=78&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasComponent" IsForward="false"&gt;
+                ns=1;i=1002
+            &lt;/Reference&gt;
+        &lt;/References&gt;
+    &lt;/UAVariable&gt;
+    &lt;UAMethod ParentNodeId="ns=1;i=1002" NodeId="ns=1;i=7001"
+              BrowseName="1:startPump"&gt;
+        &lt;DisplayName&gt;startPump&lt;/DisplayName&gt;
+        &lt;References&gt;
+            &lt;Reference ReferenceType="HasModellingRule"&gt;i=78&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasProperty"&gt;ns=1;i=6005&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasComponent" IsForward="false"&gt;
+                ns=1;i=1002
+            &lt;/Reference&gt;
+        &lt;/References&gt;
+    &lt;/UAMethod&gt;
+    &lt;UAVariable DataType="Argument" ParentNodeId="ns=1;i=7001" ValueRank="1"
+                NodeId="ns=1;i=6005" ArrayDimensions="1"
+                BrowseName="OutputArguments"&gt;
+        &lt;DisplayName&gt;OutputArguments&lt;/DisplayName&gt;
+        &lt;References&gt;
+            &lt;Reference ReferenceType="HasModellingRule"&gt;i=78&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasProperty"
+                       IsForward="false"&gt;ns=1;i=7001&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasTypeDefinition"&gt;i=68&lt;/Reference&gt;
+        &lt;/References&gt;
+        &lt;Value&gt;
+            &lt;ListOfExtensionObject&gt;
+                &lt;ExtensionObject&gt;
+                    &lt;TypeId&gt;
+                        &lt;Identifier&gt;i=297&lt;/Identifier&gt;
+                    &lt;/TypeId&gt;
+                    &lt;Body&gt;
+                        &lt;Argument&gt;
+                            &lt;Name&gt;started&lt;/Name&gt;
+                            &lt;DataType&gt;
+                                &lt;Identifier&gt;i=1&lt;/Identifier&gt;
+                            &lt;/DataType&gt;
+                            &lt;ValueRank&gt;-1&lt;/ValueRank&gt;
+                            &lt;ArrayDimensions&gt;&lt;/ArrayDimensions&gt;
+                            &lt;Description/&gt;
+                        &lt;/Argument&gt;
+                    &lt;/Body&gt;
+                &lt;/ExtensionObject&gt;
+            &lt;/ListOfExtensionObject&gt;
+        &lt;/Value&gt;
+    &lt;/UAVariable&gt;
+    &lt;UAMethod ParentNodeId="ns=1;i=1002" NodeId="ns=1;i=7002"
+              BrowseName="1:stopPump"&gt;
+        &lt;DisplayName&gt;stopPump&lt;/DisplayName&gt;
+        &lt;References&gt;
+            &lt;Reference ReferenceType="HasModellingRule"&gt;i=78&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasProperty"&gt;ns=1;i=6006&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasComponent"
+                       IsForward="false"&gt;ns=1;i=1002&lt;/Reference&gt;
+        &lt;/References&gt;
+    &lt;/UAMethod&gt;
+    &lt;UAVariable DataType="Argument" ParentNodeId="ns=1;i=7002" ValueRank="1"
+                NodeId="ns=1;i=6006" ArrayDimensions="1"
+                BrowseName="OutputArguments"&gt;
+        &lt;DisplayName&gt;OutputArguments&lt;/DisplayName&gt;
+        &lt;References&gt;
+            &lt;Reference ReferenceType="HasModellingRule"&gt;i=78&lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasProperty" IsForward="false"&gt;
+                ns=1;i=7002
+            &lt;/Reference&gt;
+            &lt;Reference ReferenceType="HasTypeDefinition"&gt;i=68&lt;/Reference&gt;
+        &lt;/References&gt;
+        &lt;Value&gt;
+            &lt;ListOfExtensionObject&gt;
+                &lt;ExtensionObject&gt;
+                    &lt;TypeId&gt;
+                        &lt;Identifier&gt;i=297&lt;/Identifier&gt;
+                    &lt;/TypeId&gt;
+                    &lt;Body&gt;
+                        &lt;Argument&gt;
+                            &lt;Name&gt;stopped&lt;/Name&gt;
+                            &lt;DataType&gt;
+                                &lt;Identifier&gt;i=1&lt;/Identifier&gt;
+                            &lt;/DataType&gt;
+                            &lt;ValueRank&gt;-1&lt;/ValueRank&gt;
+                            &lt;ArrayDimensions&gt;&lt;/ArrayDimensions&gt;
+                            &lt;Description/&gt;
+                        &lt;/Argument&gt;
+                    &lt;/Body&gt;
+                &lt;/ExtensionObject&gt;
+            &lt;/ListOfExtensionObject&gt;
+        &lt;/Value&gt;
+    &lt;/UAVariable&gt;
+&lt;/UANodeSet&gt;</value>
+  </data>
+  <data name="xsdFileToValidateAgainst" xml:space="preserve">
+    <value>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;xs:schema
+    targetNamespace="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd"
+    elementFormDefault="qualified"
+    xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;xs:element name="UANodeSet"&gt;
+    &lt;xs:complexType&gt;
+      &lt;xs:sequence&gt;
+        &lt;xs:element name="NamespaceUris" type="UriTable" minOccurs="0"&gt;&lt;/xs:element&gt;
+        &lt;xs:element name="ServerUris" type ="UriTable" minOccurs="0"&gt;&lt;/xs:element&gt;
+        &lt;xs:element name="Models" type="ModelTable" minOccurs="0"&gt;&lt;/xs:element&gt;
+        &lt;xs:element name="Aliases" type ="AliasTable" minOccurs="0"&gt;&lt;/xs:element&gt;
+        &lt;xs:element name="Extensions" type="ListOfExtensions" minOccurs="0"&gt;&lt;/xs:element&gt;
+        &lt;xs:choice minOccurs="0" maxOccurs="unbounded"&gt;
+          &lt;xs:element name="UAObject" type="UAObject"&gt;&lt;/xs:element&gt;
+          &lt;xs:element name="UAVariable" type="UAVariable"&gt;&lt;/xs:element&gt;
+          &lt;xs:element name="UAMethod" type="UAMethod"&gt;&lt;/xs:element&gt;
+          &lt;xs:element name="UAView" type="UAView"&gt;&lt;/xs:element&gt;
+          &lt;xs:element name="UAObjectType" type="UAObjectType"&gt;&lt;/xs:element&gt;
+          &lt;xs:element name="UAVariableType" type="UAVariableType"&gt;&lt;/xs:element&gt;
+          &lt;xs:element name="UADataType" type="UADataType"&gt;&lt;/xs:element&gt;
+          &lt;xs:element name="UAReferenceType" type="UAReferenceType"&gt;&lt;/xs:element&gt;
+        &lt;/xs:choice&gt;
+      &lt;/xs:sequence&gt;
+      &lt;xs:attribute name="LastModified" type="xs:dateTime" use="optional"&gt;&lt;/xs:attribute&gt;
+    &lt;/xs:complexType&gt;
+  &lt;/xs:element&gt;
+  
+  &lt;xs:element name="UANodeSetChanges"&gt;
+    &lt;xs:complexType&gt;
+      &lt;xs:sequence&gt;
+        &lt;xs:element name="NamespaceUris" type ="UriTable" minOccurs="0"&gt;&lt;/xs:element&gt;
+        &lt;xs:element name="ServerUris" type ="UriTable" minOccurs="0"&gt;&lt;/xs:element&gt;
+        &lt;xs:element name="Aliases" type ="AliasTable" minOccurs="0"&gt;&lt;/xs:element&gt;
+        &lt;xs:element name="Extensions" type="ListOfExtensions" minOccurs="0"&gt;&lt;/xs:element&gt;
+        &lt;xs:element name="NodesToAdd" type="NodesToAdd" minOccurs="0"&gt;&lt;/xs:element&gt;
+        &lt;xs:element name="ReferencesToAdd" type="ReferencesToChange" minOccurs="0"&gt;&lt;/xs:element&gt;
+        &lt;xs:element name="NodesToDelete" type="NodesToDelete" minOccurs="0"&gt;&lt;/xs:element&gt;
+        &lt;xs:element name="ReferencesToDelete" type="ReferencesToChange" minOccurs="0"&gt;&lt;/xs:element&gt;
+      &lt;/xs:sequence&gt;
+      &lt;xs:attribute name="Version" type="xs:string" use="optional"&gt;&lt;/xs:attribute&gt;
+      &lt;xs:attribute name="LastModified" type="xs:dateTime" use="optional"&gt;&lt;/xs:attribute&gt;
+      &lt;xs:attribute name="TransactionId" type="xs:string" use="required"&gt;&lt;/xs:attribute&gt;
+      &lt;xs:attribute name="AcceptAllOrNothing" type="xs:boolean" default="false"&gt;&lt;/xs:attribute&gt;
+    &lt;/xs:complexType&gt;
+  &lt;/xs:element&gt;
+
+  &lt;xs:element name="UANodeSetChangesStatus"&gt;
+    &lt;xs:complexType&gt;
+      &lt;xs:sequence&gt;
+        &lt;xs:element name="NodesToAdd" type="NodeSetStatusList" minOccurs="0"&gt;&lt;/xs:element&gt;
+        &lt;xs:element name="ReferencesToAdd" type="NodeSetStatusList" minOccurs="0"&gt;&lt;/xs:element&gt;
+        &lt;xs:element name="NodesToDelete" type="NodeSetStatusList" minOccurs="0"&gt;&lt;/xs:element&gt;
+        &lt;xs:element name="ReferencesToDelete" type="NodeSetStatusList" minOccurs="0"&gt;&lt;/xs:element&gt;
+      &lt;/xs:sequence&gt;
+      &lt;xs:attribute name="Version" type="xs:string" use="optional"&gt;&lt;/xs:attribute&gt;
+      &lt;xs:attribute name="LastModified" type="xs:dateTime" use="optional"&gt;&lt;/xs:attribute&gt;
+      &lt;xs:attribute name="TransactionId" type="xs:string" use="required"&gt;&lt;/xs:attribute&gt;
+    &lt;/xs:complexType&gt;
+  &lt;/xs:element&gt;
+  
+  &lt;xs:complexType name="NodesToAdd"&gt;
+    &lt;xs:choice minOccurs="0" maxOccurs="unbounded"&gt;
+      &lt;xs:element name="UAObject" type="UAObject"&gt;&lt;/xs:element&gt;
+      &lt;xs:element name="UAVariable" type="UAVariable"&gt;&lt;/xs:element&gt;
+      &lt;xs:element name="UAMethod" type="UAMethod"&gt;&lt;/xs:element&gt;
+      &lt;xs:element name="UAView" type="UAView"&gt;&lt;/xs:element&gt;
+      &lt;xs:element name="UAObjectType" type="UAObjectType"&gt;&lt;/xs:element&gt;
+      &lt;xs:element name="UAVariableType" type="UAVariableType"&gt;&lt;/xs:element&gt;
+      &lt;xs:element name="UADataType" type="UADataType"&gt;&lt;/xs:element&gt;
+      &lt;xs:element name="UAReferenceType" type="UAReferenceType"&gt;&lt;/xs:element&gt;
+    &lt;/xs:choice&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="NodesToDelete"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="Node" type="NodeToDelete" minOccurs="0" maxOccurs="unbounded"&gt;&lt;/xs:element&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+  
+  &lt;xs:complexType name="NodeToDelete"&gt;
+    &lt;xs:simpleContent&gt;
+      &lt;xs:extension base="NodeId"&gt;
+        &lt;xs:attribute name="DeleteReverseReferences" type="xs:boolean" default="true"&gt;&lt;/xs:attribute&gt;
+      &lt;/xs:extension&gt;
+    &lt;/xs:simpleContent&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="ReferencesToChange"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="Reference" type="ReferenceChange" minOccurs="0" maxOccurs="unbounded"&gt;&lt;/xs:element&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+  
+  &lt;xs:complexType name="ReferenceChange"&gt;
+    &lt;xs:simpleContent&gt;
+      &lt;xs:extension base="NodeId"&gt;
+        &lt;xs:attribute name="Source" type="NodeId" use="required"&gt;&lt;/xs:attribute&gt;
+        &lt;xs:attribute name="ReferenceType" type="NodeId" use="required"&gt;&lt;/xs:attribute&gt;
+        &lt;xs:attribute name="IsForward" type="xs:boolean" default="true"&gt;&lt;/xs:attribute&gt;
+      &lt;/xs:extension&gt;
+    &lt;/xs:simpleContent&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="NodeSetStatus"&gt;
+    &lt;xs:simpleContent&gt;
+      &lt;xs:extension base="xs:string"&gt;
+        &lt;xs:attribute name="Code" type="xs:unsignedInt" default="0"&gt;&lt;/xs:attribute&gt;
+      &lt;/xs:extension&gt;
+    &lt;/xs:simpleContent&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="NodeSetStatusList"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="Status" type="NodeSetStatus" minOccurs="0" maxOccurs="unbounded"&gt;&lt;/xs:element&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+  
+  &lt;xs:complexType name="UriTable"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="Uri" type="xs:string" minOccurs="0" maxOccurs="unbounded"&gt;&lt;/xs:element&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="ModelTableEntry"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="RequiredModel" type="ModelTableEntry" minOccurs="0" maxOccurs="unbounded"&gt;&lt;/xs:element&gt;
+    &lt;/xs:sequence&gt;
+    &lt;xs:attribute name="ModelUri" type="xs:string" use="optional"&gt;&lt;/xs:attribute&gt;
+    &lt;xs:attribute name="Version" type="xs:string" use="optional"&gt;&lt;/xs:attribute&gt;
+    &lt;xs:attribute name="PublicationDate" type="xs:dateTime" use="optional"&gt;&lt;/xs:attribute&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="ModelTable"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="Model" type="ModelTableEntry" minOccurs="0" maxOccurs="unbounded"&gt;&lt;/xs:element&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:simpleType name="NodeId"&gt;
+    &lt;xs:restriction base="xs:string"&gt;&lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="QualifiedName"&gt;
+    &lt;xs:restriction base="xs:string"&gt;&lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:complexType name="NodeIdAlias"&gt;
+    &lt;xs:simpleContent&gt;
+      &lt;xs:extension base="NodeId"&gt;
+        &lt;xs:attribute name="Alias" type="xs:string"&gt;&lt;/xs:attribute&gt;
+      &lt;/xs:extension&gt;
+    &lt;/xs:simpleContent&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="AliasTable"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="Alias" type="NodeIdAlias" minOccurs="0" maxOccurs="unbounded"&gt;&lt;/xs:element&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:simpleType name="Locale"&gt;
+    &lt;xs:restriction base="xs:string"&gt;&lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:complexType name="LocalizedText"&gt;
+    &lt;xs:simpleContent&gt;
+      &lt;xs:extension base="xs:string"&gt;
+        &lt;xs:attribute name="Locale" type="Locale" default=""&gt;&lt;/xs:attribute&gt;
+      &lt;/xs:extension&gt;
+    &lt;/xs:simpleContent&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:simpleType name="WriteMask"&gt;
+    &lt;xs:restriction base="xs:unsignedInt"&gt;&lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="EventNotifier"&gt;
+    &lt;xs:restriction base="xs:unsignedByte"&gt;&lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="ValueRank"&gt;
+    &lt;xs:restriction base="xs:int"&gt;&lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="ArrayDimensions"&gt;
+    &lt;xs:list&gt;
+      &lt;xs:simpleType&gt;
+        &lt;xs:restriction base="xs:token"&gt;
+          &lt;xs:pattern value="([0-9]*,|[0-9]*)*"&gt;&lt;/xs:pattern&gt;
+        &lt;/xs:restriction&gt;
+      &lt;/xs:simpleType&gt;
+    &lt;/xs:list&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="SymbolicName"&gt;
+    &lt;xs:list&gt;
+      &lt;xs:simpleType&gt;
+        &lt;xs:restriction base="xs:string"&gt;
+          &lt;xs:pattern value="(\p{L})(\p{L}|\p{N}|_)*"&gt;&lt;/xs:pattern&gt;
+        &lt;/xs:restriction&gt;
+      &lt;/xs:simpleType&gt;
+    &lt;/xs:list&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="CardinalityType"&gt;
+    &lt;xs:list&gt;
+      &lt;xs:simpleType&gt;
+        &lt;xs:restriction base="xs:string"&gt;
+          &lt;xs:pattern value="(\p{N})*|unbounded"&gt;&lt;/xs:pattern&gt;
+        &lt;/xs:restriction&gt;
+      &lt;/xs:simpleType&gt;
+    &lt;/xs:list&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="Duration"&gt;
+    &lt;xs:restriction base="xs:double"&gt;&lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="AccessLevel"&gt;
+    &lt;xs:restriction base="xs:unsignedByte"&gt;&lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:complexType name="Reference"&gt;
+    &lt;xs:simpleContent&gt;
+      &lt;xs:extension base="NodeId"&gt;
+        &lt;xs:attribute name="ReferenceType" type="NodeId" use="required"&gt;&lt;/xs:attribute&gt;
+        &lt;xs:attribute name="IsForward" type="xs:boolean" default="true"&gt;&lt;/xs:attribute&gt;
+      &lt;/xs:extension&gt;
+    &lt;/xs:simpleContent&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="ListOfReferences"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="Reference" type="Reference" minOccurs="0" maxOccurs="unbounded"&gt;&lt;/xs:element&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="ListOfExtensions"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="Extension" minOccurs="0" maxOccurs="unbounded"&gt;
+        &lt;xs:complexType&gt;
+          &lt;xs:sequence&gt;
+            &lt;xs:any minOccurs="0" processContents="lax" /&gt;
+          &lt;/xs:sequence&gt;
+        &lt;/xs:complexType&gt;
+      &lt;/xs:element&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="UANode"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="DisplayName" type="LocalizedText" minOccurs="0" maxOccurs="unbounded"&gt;&lt;/xs:element&gt;
+      &lt;xs:element name="Description" type="LocalizedText" minOccurs="0" maxOccurs="unbounded"&gt;&lt;/xs:element&gt;
+      &lt;xs:element name="Category" type="xs:string" minOccurs="0" maxOccurs="unbounded"&gt;&lt;/xs:element&gt;
+      &lt;xs:element name="Documentation" type="xs:string" minOccurs="0" maxOccurs="1"&gt;&lt;/xs:element&gt;
+      &lt;xs:element name="References" type="ListOfReferences" minOccurs="0"&gt;&lt;/xs:element&gt;
+      &lt;xs:element name="Extensions" type="ListOfExtensions" minOccurs="0"&gt;&lt;/xs:element&gt;
+    &lt;/xs:sequence&gt;
+    &lt;xs:attribute name="NodeId" type="NodeId" use="required"&gt;&lt;/xs:attribute&gt;
+    &lt;xs:attribute name="BrowseName" type="QualifiedName" use="required"&gt;&lt;/xs:attribute&gt;
+    &lt;xs:attribute name="WriteMask" type="WriteMask" default="0"&gt;&lt;/xs:attribute&gt;
+    &lt;xs:attribute name="UserWriteMask" type="WriteMask" default="0"&gt;&lt;/xs:attribute&gt;
+    &lt;xs:attribute name="SymbolicName" type="SymbolicName" use="optional"&gt;&lt;/xs:attribute&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="UAInstance"&gt;
+    &lt;xs:complexContent&gt;
+      &lt;xs:extension base="UANode"&gt;
+        &lt;xs:attribute name="ParentNodeId" type="NodeId" use="optional"&gt;&lt;/xs:attribute&gt;
+      &lt;/xs:extension&gt;
+    &lt;/xs:complexContent&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="UAObject"&gt;
+    &lt;xs:complexContent&gt;
+      &lt;xs:extension base="UAInstance"&gt;
+        &lt;xs:attribute name="EventNotifier" type="EventNotifier" default="0"&gt;&lt;/xs:attribute&gt;
+      &lt;/xs:extension&gt;
+    &lt;/xs:complexContent&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="UAVariable"&gt;
+    &lt;xs:complexContent&gt;
+      &lt;xs:extension base="UAInstance"&gt;
+        &lt;xs:sequence&gt;
+          &lt;xs:element name="Value" minOccurs="0"&gt;
+            &lt;xs:complexType&gt;
+              &lt;xs:sequence&gt;
+                &lt;xs:any minOccurs="0" processContents="lax" /&gt;
+              &lt;/xs:sequence&gt;
+            &lt;/xs:complexType&gt;
+          &lt;/xs:element&gt;
+          &lt;xs:element name="Translation" type="TranslationType" minOccurs="0" maxOccurs="unbounded"&gt;&lt;/xs:element&gt;
+        &lt;/xs:sequence&gt;
+        &lt;xs:attribute name="DataType" type="NodeId" default="i=24"&gt;&lt;/xs:attribute&gt;
+        &lt;xs:attribute name="ValueRank" type="ValueRank" default="-1"&gt;&lt;/xs:attribute&gt;
+        &lt;xs:attribute name="ArrayDimensions" type="ArrayDimensions" default=""&gt;&lt;/xs:attribute&gt;
+        &lt;xs:attribute name="AccessLevel" type="AccessLevel" default="1"&gt;&lt;/xs:attribute&gt;
+        &lt;xs:attribute name="UserAccessLevel" type="AccessLevel" default="1"&gt;&lt;/xs:attribute&gt;
+        &lt;xs:attribute name="MinimumSamplingInterval" type="Duration" default="0"&gt;&lt;/xs:attribute&gt;
+        &lt;xs:attribute name="Historizing" type="xs:boolean" default="false"&gt;&lt;/xs:attribute&gt;
+      &lt;/xs:extension&gt;
+    &lt;/xs:complexContent&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="UAMethod"&gt;
+    &lt;xs:complexContent&gt;
+      &lt;xs:extension base="UAInstance"&gt;
+        &lt;xs:attribute name="Executable" type="xs:boolean" default="true"&gt;&lt;/xs:attribute&gt;
+        &lt;xs:attribute name="UserExecutable" type="xs:boolean" default="true"&gt;&lt;/xs:attribute&gt;
+        &lt;xs:attribute name="MethodDeclarationId" type="NodeId" use="optional"&gt;&lt;/xs:attribute&gt;
+      &lt;/xs:extension&gt;
+    &lt;/xs:complexContent&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="TranslationType"&gt;
+    &lt;xs:choice minOccurs="0"&gt;
+      &lt;xs:element name="Text" type="LocalizedText" minOccurs="0" maxOccurs="unbounded"&gt;&lt;/xs:element&gt;
+      &lt;xs:element name="Field" type="StructureTranslationType" minOccurs="0" maxOccurs="unbounded"&gt;&lt;/xs:element&gt;
+    &lt;/xs:choice&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="StructureTranslationType"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="Text" type="LocalizedText" minOccurs="0" maxOccurs="unbounded"&gt;&lt;/xs:element&gt;
+    &lt;/xs:sequence&gt;
+    &lt;xs:attribute name="Name" type="xs:string" use="required"&gt;&lt;/xs:attribute&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="UAView"&gt;
+    &lt;xs:complexContent&gt;
+      &lt;xs:extension base="UAInstance"&gt;
+        &lt;xs:attribute name="ContainsNoLoops" type="xs:boolean" default="false"&gt;&lt;/xs:attribute&gt;
+        &lt;xs:attribute name="EventNotifier" type="EventNotifier" default="0"&gt;&lt;/xs:attribute&gt;
+      &lt;/xs:extension&gt;
+    &lt;/xs:complexContent&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="UAType"&gt;
+    &lt;xs:complexContent&gt;
+      &lt;xs:extension base="UANode"&gt;
+        &lt;xs:attribute name="IsAbstract" type="xs:boolean" default="false"&gt;&lt;/xs:attribute&gt;
+      &lt;/xs:extension&gt;
+    &lt;/xs:complexContent&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="UAObjectType"&gt;
+    &lt;xs:complexContent&gt;
+      &lt;xs:extension base="UAType"&gt;&lt;/xs:extension&gt;
+    &lt;/xs:complexContent&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="UAVariableType"&gt;
+    &lt;xs:complexContent&gt;
+      &lt;xs:extension base="UAType"&gt;
+        &lt;xs:sequence&gt;
+          &lt;xs:element name="Value" minOccurs="0"&gt;
+            &lt;xs:complexType&gt;
+              &lt;xs:sequence&gt;
+                &lt;xs:any minOccurs="0" processContents="lax" /&gt;
+              &lt;/xs:sequence&gt;
+            &lt;/xs:complexType&gt;
+          &lt;/xs:element&gt;
+        &lt;/xs:sequence&gt;
+        &lt;xs:attribute name="DataType" type="NodeId" default="i=24"&gt;&lt;/xs:attribute&gt;
+        &lt;xs:attribute name="ValueRank" type="ValueRank" default="-1"&gt;&lt;/xs:attribute&gt;
+        &lt;xs:attribute name="ArrayDimensions" type="ArrayDimensions" default=""&gt;&lt;/xs:attribute&gt;
+      &lt;/xs:extension&gt;
+    &lt;/xs:complexContent&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="UADataType"&gt;
+    &lt;xs:complexContent&gt;
+      &lt;xs:extension base="UAType"&gt;
+        &lt;xs:sequence&gt;
+          &lt;xs:element name="Definition" type="DataTypeDefinition" minOccurs="0"&gt;&lt;/xs:element&gt;
+        &lt;/xs:sequence&gt;
+      &lt;/xs:extension&gt;
+    &lt;/xs:complexContent&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="DataTypeDefinition"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="Field" type="DataTypeField" minOccurs="0" maxOccurs="unbounded"&gt;&lt;/xs:element&gt;
+    &lt;/xs:sequence&gt;
+    &lt;xs:attribute name="Name" type="QualifiedName" use="required"&gt;&lt;/xs:attribute&gt;
+    &lt;xs:attribute name="BaseType" type="QualifiedName" use="optional" default=""&gt;&lt;/xs:attribute&gt;
+    &lt;xs:attribute name="SymbolicName" type="SymbolicName" use="optional" default=""&gt;&lt;/xs:attribute&gt;
+    &lt;xs:attribute name="IsUnion" type="xs:boolean" use="optional" default="false"&gt;&lt;/xs:attribute&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="DataTypeField"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="Description" type="LocalizedText" minOccurs="0" maxOccurs="unbounded"&gt;&lt;/xs:element&gt;
+      &lt;xs:element name="Definition" type="DataTypeDefinition" minOccurs="0"&gt;&lt;/xs:element&gt;
+    &lt;/xs:sequence&gt;
+    &lt;xs:attribute name="Name" type="xs:string" use="required"&gt;&lt;/xs:attribute&gt;
+    &lt;xs:attribute name="SymbolicName" type="SymbolicName" use="optional"&gt;&lt;/xs:attribute&gt;
+    &lt;xs:attribute name="DataType" type="NodeId" default="i=24"&gt;&lt;/xs:attribute&gt;
+    &lt;xs:attribute name="ValueRank" type="ValueRank" default="-1"&gt;&lt;/xs:attribute&gt;
+    &lt;xs:attribute name="Value" type="xs:int" default="-1"&gt;&lt;/xs:attribute&gt;
+    &lt;xs:attribute name="IsOptional" type="xs:boolean" use="optional" default="false"&gt;&lt;/xs:attribute&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="UAReferenceType"&gt;
+    &lt;xs:complexContent&gt;
+      &lt;xs:extension base="UAType"&gt;
+        &lt;xs:sequence&gt;
+          &lt;xs:element name="InverseName" type="LocalizedText" minOccurs="0" maxOccurs="unbounded"&gt;&lt;/xs:element&gt;
+        &lt;/xs:sequence&gt;
+        &lt;xs:attribute name="Symmetric" type="xs:boolean" default="false"&gt;&lt;/xs:attribute&gt;
+      &lt;/xs:extension&gt;
+    &lt;/xs:complexContent&gt;
+  &lt;/xs:complexType&gt;
+
+&lt;/xs:schema&gt;</value>
+  </data>
+</root>

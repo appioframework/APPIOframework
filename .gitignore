@@ -76,6 +76,7 @@
 !src/oppo-resources/open62541/
 !src/oppo-resources/open62541/*
 !src/oppo-resources/*.cs
+!src/oppo-resources/*.resx
 !src/oppo-resources/oppo-resources.csproj
 !src/oppo-resources/templates/
 !src/oppo-resources/templates/*
@@ -90,6 +91,7 @@
 !src/oppo-resources/installer/opcuaapp/oppo-opcuaapp.zip
 !src/oppo-resources/information_models/
 !src/oppo-resources/information_models/OpcUaDiModel.xml
+!src/oppo-resources/information_models/UANodeSet.xsd
 
 !src/oppo-terminal/
 !src/oppo-terminal/oppo-terminal.csproj

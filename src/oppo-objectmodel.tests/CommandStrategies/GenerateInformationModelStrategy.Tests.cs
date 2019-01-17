@@ -65,6 +65,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         }
 
         private Mock<IFileSystem> _mockFileSystem;
+        private Mock<IModelValidator> _modelValidatorMock;
         private GenerateInformationModelStrategy _strategy;
         private Mock<ILoggerListener> _loggerListenerMock;
         private readonly string _srcDir = @"src\server";
@@ -77,7 +78,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _loggerListenerMock = new Mock<ILoggerListener>();
             OppoLogger.RegisterListener(_loggerListenerMock.Object);
             _mockFileSystem = new Mock<IFileSystem>();
-            _strategy = new GenerateInformationModelStrategy(GenerateInformationModeCommandArguments.Name, _mockFileSystem.Object);
+            _modelValidatorMock = new Mock<IModelValidator>();
+            _strategy = new GenerateInformationModelStrategy(GenerateInformationModeCommandArguments.Name, _mockFileSystem.Object, _modelValidatorMock.Object);
         }
 
         [TearDown]
@@ -146,7 +148,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _mockFileSystem.Setup(x => x.CombinePaths(Constants.DirectoryName.Models, inputParams.ElementAtOrDefault(3))).Returns(modelPath);
 
             _mockFileSystem.Setup(x => x.CallExecutable(Constants.ExecutableName.NodsetCompiler, _srcDir, string.Format(Constants.ExecutableName.NodsetCompilerArguments, sourceModelRelativePath, modelTargetLocation))).Returns(true);
-            
+            _modelValidatorMock.Setup(x => x.Validate(calculatedModelFilePath, Resources.Resources.UANodeSetXsdFileName)).Returns(true);
+
             using (var memoryStream = GenerateStreamFromString(_defaultModelsC))
             {
                 var modelsFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_models_c);
@@ -167,6 +170,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
                 _mockFileSystem.Verify(x => x.CreateDirectory(System.IO.Path.Combine(_srcDir, DirectoryName.InformationModels)), Times.Once);               
             }            
         }
+
         public static Stream GenerateStreamFromString(string s)
         {
             var stream = new MemoryStream();
@@ -203,6 +207,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _mockFileSystem.Setup(x => x.CallExecutable(Constants.ExecutableName.NodsetCompiler, _srcDir, string.Format(Constants.ExecutableName.NodsetCompilerArguments, sourceModelRelativePath, modelTargetLocation))).Returns(true);
 
             _mockFileSystem.Setup(x => x.DirectoryExists(System.IO.Path.Combine(_srcDir, DirectoryName.InformationModels))).Returns(true);
+            _modelValidatorMock.Setup(x => x.Validate(calculatedModelFilePath, Resources.Resources.UANodeSetXsdFileName)).Returns(true);
 
             using (var memoryStream = GenerateStreamFromString(_defaultModelsC + "\n" + string.Format(_defaultModelIncludeSnippet, modelName)))
             {
@@ -225,6 +230,46 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         }
 
         [Test]
+        public void FailOnGenerateInformationModelBecauseModelIsNotValid([ValueSource(nameof(ValidInputs))] string[] inputParams)
+        {
+            // Arrange
+            _loggerListenerMock.Setup(x => x.Info(LoggingText.GenerateInformationModelSuccess));
+            _mockFileSystem.Setup(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp)).Returns(_srcDir);
+            var modelFullName = inputParams.ElementAtOrDefault(3);
+            var modelName = System.IO.Path.GetFileNameWithoutExtension(modelFullName);
+            _mockFileSystem.Setup(x => x.GetFileName(inputParams.ElementAtOrDefault(3))).Returns(modelName);
+
+            var calculatedModelFilePath = System.IO.Path.Combine(inputParams.ElementAtOrDefault(1), DirectoryName.Models, inputParams.ElementAtOrDefault(3));
+            _mockFileSystem.Setup(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), DirectoryName.Models, inputParams.ElementAtOrDefault(3))).Returns(calculatedModelFilePath);
+
+            var modelTargetLocation = System.IO.Path.Combine(Constants.DirectoryName.InformationModels, modelName);
+            _mockFileSystem.Setup(x => x.CombinePaths(Constants.DirectoryName.InformationModels, modelName)).Returns(modelTargetLocation);
+            _mockFileSystem.Setup(x => x.FileExists(calculatedModelFilePath)).Returns(true);
+
+            var modelExtension = System.IO.Path.GetExtension(inputParams.ElementAtOrDefault(3));
+            _mockFileSystem.Setup(x => x.GetExtension(inputParams.ElementAtOrDefault(3))).Returns(modelExtension);
+            _mockFileSystem.Setup(x => x.GetFileNameWithoutExtension(inputParams.ElementAtOrDefault(3))).Returns(modelName);
+
+            var modelPath = System.IO.Path.Combine(Constants.DirectoryName.Models, inputParams.ElementAtOrDefault(3));
+            var sourceModelRelativePath = @"../../" + modelPath;
+            _mockFileSystem.Setup(x => x.CombinePaths(Constants.DirectoryName.Models, inputParams.ElementAtOrDefault(3))).Returns(modelPath);
+
+            _mockFileSystem.Setup(x => x.CallExecutable(Constants.ExecutableName.NodsetCompiler, _srcDir, string.Format(Constants.ExecutableName.NodsetCompilerArguments, sourceModelRelativePath, modelTargetLocation))).Returns(true);
+            _modelValidatorMock.Setup(x => x.Validate(calculatedModelFilePath, Resources.Resources.UANodeSetXsdFileName)).Returns(false);
+
+            // Act
+            var commandResult = _strategy.Execute(inputParams);
+
+            // Assert
+            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsNotNull(commandResult.OutputMessages);
+            var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
+            Assert.AreEqual(string.Format(string.Format(OutputText.GenerateInformationModelFailureValidatingModel, modelFullName)), firstMessageLine.Key);
+            Assert.AreEqual(string.Empty, firstMessageLine.Value);
+            _loggerListenerMock.Verify(x => x.Warn(string.Format(LoggingText.GenerateInformationModelFailureValidatingModel, modelFullName)), Times.Once);            
+        }
+
+        [Test]
         public void FailOnGenerateInformationModelBecauseNodesetCompilerCallFailure([ValueSource(nameof(ValidInputs))] string[] inputParams)
         {
             // Arrange
@@ -242,6 +287,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             var modelExtension = System.IO.Path.GetExtension(inputParams.ElementAtOrDefault(3));
             _mockFileSystem.Setup(x => x.GetExtension(inputParams.ElementAtOrDefault(3))).Returns(modelExtension);
+
+            _modelValidatorMock.Setup(x => x.Validate(calculatedModelFilePath, Resources.Resources.UANodeSetXsdFileName)).Returns(true);
 
             // Act
             var commandResult = _strategy.Execute(inputParams);
