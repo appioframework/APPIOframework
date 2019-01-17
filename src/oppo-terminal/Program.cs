@@ -9,7 +9,6 @@ namespace Oppo.Terminal
         internal static int Main(string[] args)
         {          
             SetupOppoLogger();
-            args = new string[] { "generate", "information-model", "-n", "rTets", "-m", "myNS.xml"};
 
             var objectModel = new ObjectModel.ObjectModel(ObjectModel.ObjectModel.CreateCommandFactory(new ReflectionWrapper()));
 

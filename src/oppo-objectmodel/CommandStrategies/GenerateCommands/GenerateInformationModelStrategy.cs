@@ -70,6 +70,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureInvalidModel, opcuaAppName, modelFullName, modelFileExtension), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
+
             // validate model
             if (!_modelValidator.Validate(calculatedModelFilePath, Resources.Resources.UANodeSetXsdFileName))
             {
