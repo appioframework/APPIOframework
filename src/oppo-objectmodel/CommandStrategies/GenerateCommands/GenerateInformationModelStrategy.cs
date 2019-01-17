@@ -3,6 +3,7 @@ using System.Linq;
 using Oppo.Resources.text.output;
 using Oppo.Resources.text.logging;
 using System;
+using System.IO;
 
 namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 {
@@ -97,18 +98,18 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
         /// Models.c template should have an #include line for-each generated information-model source code.
         /// Like for myModel.c, myModel.h -> #include "information-models/mmyModel.c".
         /// </summary>
-        /// <param name="srcDirectory"></param>
-        /// <param name="fileNameToInclude"></param>
+        /// <param name="srcDirectory">Server source directory for current opcuaapp project.</param>
+        /// <param name="fileNameToInclude">Generated file name without extension to be included.</param>
         private void AdjustModelsTemplate(string srcDirectory, string fileNameToInclude)
         {
-            var includeSnippet = "#include \""+ Constants.DirectoryName.InformationModels + "/" + fileNameToInclude + Constants.FileExtension.CFile + "\"";
+            var includeSnippet = Constants.IncludeSnippet + "\"" + Constants.DirectoryName.InformationModels + "/" + fileNameToInclude + Constants.FileExtension.CFile + "\"";
 
             var modelsFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_models_c));
             var currentFileContentLineByLine = ReadFileContent(modelsFileStream);
 
             if (!currentFileContentLineByLine.Contains(includeSnippet))
             {
-                System.IO.StreamWriter sw = new System.IO.StreamWriter(modelsFileStream);
+                var sw = new StreamWriter(modelsFileStream);
                 foreach (var previousTextLine in currentFileContentLineByLine)
                 {
                     sw.WriteLine(previousTextLine);
@@ -118,14 +119,15 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 sw.Close();
                 sw.Dispose();
             }
+
             modelsFileStream.Close();
             modelsFileStream.Dispose();
         }
 
-        private IEnumerable<string> ReadFileContent(System.IO.Stream stream)
+        private IEnumerable<string> ReadFileContent(Stream stream)
         {
             var fileContent = new List<string>();
-            var sr = new System.IO.StreamReader(stream);
+            var sr = new StreamReader(stream);
             string lineOfText;
             while ((lineOfText = sr.ReadLine()) != null)
             {
@@ -138,7 +140,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 
         private void CreateNeededDirectories(string srcDirectory)
         {
-            var pathToCreate = System.IO.Path.Combine(srcDirectory, Constants.DirectoryName.InformationModels);
+            var pathToCreate = Path.Combine(srcDirectory, Constants.DirectoryName.InformationModels);
             if (!_fileSystem.DirectoryExists(pathToCreate))
             {
                 _fileSystem.CreateDirectory(pathToCreate);

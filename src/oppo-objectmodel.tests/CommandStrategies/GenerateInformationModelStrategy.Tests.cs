@@ -10,24 +10,7 @@ using static Oppo.ObjectModel.Constants;
 namespace Oppo.ObjectModel.Tests.CommandStrategies
 {
     public class GenerateInformationModelStrategyShould
-    {
-        protected static string[][] InvalidInputs()
-        {
-            return new[]
-            {
-                new []{""},
-                new string[0],
-                new []{"any string"},
-                new []{"-n", ""},
-                new []{"-name", ""},
-                new []{"-n", "testApp"},
-                new []{"-n", "testApp", "-M"},
-                new []{"-n", "testApp", "-m"},
-                new []{"-n", "testApp", "-m", ""},
-                new []{"-n", "testApp", "-m", "model.txt"},
-            };
-        }
-
+    {      
         protected static string[][] InvalidInputs_EmptyOpcuaAppName()
         {
             return new[]
@@ -376,31 +359,5 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.AreEqual(OutputText.GenerateInformationModelFailureEmptyOpcuaAppName, firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
         }
-
-
-        
-
-        //[Test]
-        //public void CallExecuteOnProvidedInvalidCommand([ValueSource(nameof(InvalidInputs))] string[] inputParams)
-        //{
-        //    // Arrange
-        //    var mockCommandResult = new CommandResult(true, new MessageLines());
-        //    var mockCommand = new Mock<ICommand<GenerateStrategy>>();
-        //    mockCommand.Setup(command => command.Execute(It.IsAny<IEnumerable<string>>())).Returns(mockCommandResult);
-
-        //    var mockInvalidCommandResult = new CommandResult(false, new MessageLines());
-        //    var mockInvalidCommand = new Mock<ICommand<GenerateStrategy>>();
-        //    mockInvalidCommand.Setup(command => command.Execute(It.IsAny<IEnumerable<string>>())).Returns(mockInvalidCommandResult);
-
-        //    _mockFactory.Setup(facory => facory.GetCommand(GenerateInformationModelCommandName.InformationModel)).Returns(mockCommand.Object);
-        //    _mockFactory.Setup(facory => facory.GetCommand(It.Is<string>(s=>s != GenerateInformationModelCommandName.InformationModel))).Returns(mockInvalidCommand.Object);
-
-        //    // Act
-        //    var commandResult = _strategy.Execute(inputParams);
-
-        //    // Assert
-        //    Assert.IsFalse(commandResult.Sucsess);
-        //    Assert.IsNotNull(commandResult.OutputMessages);
-        //}
     }
 }

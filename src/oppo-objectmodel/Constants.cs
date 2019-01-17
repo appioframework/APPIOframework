@@ -3,6 +3,7 @@ namespace Oppo.ObjectModel
     public static class Constants
     {
         public const string HelloString = "Hello from OPPO";
+        public const string IncludeSnippet = "#include";
 
         public static class FileExtension
         {
@@ -71,9 +72,9 @@ namespace Oppo.ObjectModel
             public static readonly string CreateDebianInstallerArguments = "--build " + DirectoryName.OpcuaappInstaller;
             public const string OppoResourcesDll = "oppo-resources.dll";
 
+            public const string NodsetCompiler = @"python3";
             // 0 xml model source path
             // 1 output directory with name for generated files and method
-            public const string NodsetCompiler = @"python3";
             public const string NodsetCompilerArguments = @"/etc/oppo/tools/open62541/v0.3.0/nodeset-compiler/nodeset_compiler.py --types-array=UA_TYPES --existing /etc/oppo/tools/open62541/v0.3.0/existing-nodes/Opc.Ua.NodeSet2.xml --xml {0} {1}";
         }
 
