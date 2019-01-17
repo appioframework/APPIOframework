@@ -32,21 +32,21 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             if (nameFlag != Constants.GenerateInformationModeCommandArguments.Name && nameFlag != Constants.GenerateInformationModeCommandArguments.VerboseName)
             {
                 OppoLogger.Warn(string.Format(LoggingText.GenerateInformationModelFailureUnknownParam, nameFlag));
-                outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, nameFlag), string.Empty);
+                outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, opcuaAppName, modelFullName, nameFlag), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
 
             if (modelFlag != Constants.GenerateInformationModeCommandArguments.Model && modelFlag != Constants.GenerateInformationModeCommandArguments.VerboseModel)
             {
                 OppoLogger.Warn(string.Format(LoggingText.GenerateInformationModelFailureUnknownParam, modelFlag));
-                outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, modelFlag), string.Empty);
+                outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, opcuaAppName, modelFullName, modelFlag), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
 
             if (string.IsNullOrEmpty(opcuaAppName))
             {
                 OppoLogger.Warn(LoggingText.GenerateInformationModelFailureEmptyOpcuaAppName);
-                outputMessages.Add(OutputText.GenerateInformationModelFailureEmptyOpcuaAppName, string.Empty);
+                outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureEmptyOpcuaAppName, opcuaAppName, modelFullName), string.Empty);
 
                 return new CommandResult(false, outputMessages);
             }
@@ -56,7 +56,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             if (!_fileSystem.FileExists(calculatedModelFilePath))
             {
                 OppoLogger.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsMissingModelFile, calculatedModelFilePath));
-                outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureMissingModel, modelFullName, calculatedModelFilePath), string.Empty);
+                outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureMissingModel, opcuaAppName, modelFullName, calculatedModelFilePath), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
 
@@ -65,7 +65,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             if (modelFileExtension != Constants.FileExtension.InformationModel)
             {
                 OppoLogger.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidModelFile, modelFullName));
-                outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureInvalidModel, modelFullName), string.Empty);
+                outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureInvalidModel, opcuaAppName, modelFullName, modelFileExtension), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
 
@@ -83,13 +83,13 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             if (!pythonResult)
             {
                 OppoLogger.Warn(LoggingText.NodesetCompilerExecutableFails);
-                outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailure, modelFullName), string.Empty);
+                outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailure, opcuaAppName, modelFullName), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
 
             AdjustModelsTemplate(srcDirectory, modelName);
 
-            outputMessages.Add(string.Format(OutputText.GenerateInformationModelSuccess, modelFullName), string.Empty);
+            outputMessages.Add(string.Format(OutputText.GenerateInformationModelSuccess, opcuaAppName, modelFullName), string.Empty);
             OppoLogger.Info(LoggingText.GenerateInformationModelSuccess);
             return new CommandResult(true, outputMessages);            
         }

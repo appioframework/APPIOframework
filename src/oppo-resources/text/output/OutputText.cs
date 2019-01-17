@@ -45,11 +45,11 @@ namespace Oppo.Resources.text.output
         public const string ImportSampleInformationModelSuccess = "Sample information model '{0}' import success!";
 
         // generate information model <command>
-        public const string GenerateInformationModelSuccess = "Generate source code from information model '{0}' success!";
-        public const string GenerateInformationModelFailure = "Generate source code from information model '{0}' failure!";
-        public const string GenerateInformationModelFailureMissingModel = "Generate source code from information model '{0}' failure! Can't find model with path '{1}'!";
-        public const string GenerateInformationModelFailureInvalidModel = "Generate source code from information model failure! Invalid model extension '{0}'!";
-        public const string GenerateInformationModelFailureUnknownParam = "Generate source code from information model failure! Unknown command parameter '{0}'!";
-        public const string GenerateInformationModelFailureEmptyOpcuaAppName = "Generate source code from information model failure! Empty opcuaapp name!";
+        public const string GenerateInformationModelSuccess = "The opcuaapp with the name '{0}' was succesfully updated with the Information model '{1}'.";
+        public const string GenerateInformationModelFailure = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'.";
+        public const string GenerateInformationModelFailureMissingModel = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Can't find the model '{2}'!";
+        public const string GenerateInformationModelFailureInvalidModel = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Invalid model extension '{2}'!";
+        public const string GenerateInformationModelFailureUnknownParam = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Unknown command parameter '{2}'!";
+        public const string GenerateInformationModelFailureEmptyOpcuaAppName = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Empty opcuaapp name!";
     }
 }
