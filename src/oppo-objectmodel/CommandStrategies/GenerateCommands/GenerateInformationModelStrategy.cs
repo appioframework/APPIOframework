@@ -99,7 +99,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             }
 
             AdjustModelsTemplate(srcDirectory, modelName);
-            AdjustMainTamplate(srcDirectory, modelName);
+            //AdjustMainTamplate(srcDirectory, modelName);
 
             outputMessages.Add(string.Format(OutputText.GenerateInformationModelSuccess, opcuaAppName, modelFullName), string.Empty);
             OppoLogger.Info(LoggingText.GenerateInformationModelSuccess);

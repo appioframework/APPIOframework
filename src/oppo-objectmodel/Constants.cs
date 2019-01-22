@@ -81,10 +81,11 @@ namespace Oppo.ObjectModel
 
         public static class FileName
         {
-            public const string SourceCode_main_c = "main.c";
-            public const string SourceCode_models_c = "models.c";
-            public const string SourceCode_meson_build = "meson.build";
-            public const string SampleInformationModelFile = "OpcUaDiModel.xml";
+            public const string SourceCode_main_c               = "main.c";
+            public const string SourceCode_models_c             = "models.c";
+            public const string SourceCode_nodeSetFunctioncs_c  = "nodeSetFunctioncs.c";
+            public const string SourceCode_meson_build          = "meson.build";
+            public const string SampleInformationModelFile      = "OpcUaDiModel.xml";
         }
 
         public static class NewSlnCommandArguments

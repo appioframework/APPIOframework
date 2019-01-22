@@ -12,6 +12,8 @@
 
         public const string OppoOpcuaAppTemplateFileName_models_server_c = "Oppo.Resources.open62541.models-server.c";
 
+        public const string OppoOpcuaAppTemplateFileName_nodeSetFunctions_server_c = "Oppo.Resources.open62541.nodeSetFunctions-server.c";
+
         public const string OppoOpcuaAppTemplateFileName_meson_build = "Oppo.Resources.open62541.meson.build";
 
         public const string InstallerZipResourceName = "Oppo.Resources.installer.opcuaapp.oppo-opcuaapp.zip";
