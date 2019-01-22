@@ -125,6 +125,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                     sw.WriteLine(previousTextLine);
                 }
                 
+
                 sw.WriteLine(includeSnippet);
                 sw.Close();
                 sw.Dispose();
