@@ -83,7 +83,7 @@ namespace Oppo.ObjectModel
         {
             public const string SourceCode_main_c               = "main.c";
             public const string SourceCode_models_c             = "models.c";
-            public const string SourceCode_nodeSetFunctioncs_c  = "nodeSetFunctioncs.c";
+            public const string SourceCode_nodeSetFunctions_c   = "nodeSetFunctions.c";
             public const string SourceCode_meson_build          = "meson.build";
             public const string SampleInformationModelFile      = "OpcUaDiModel.xml";
         }

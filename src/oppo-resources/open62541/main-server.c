@@ -43,6 +43,8 @@ int main(void) {
     UA_ServerConfig *config = UA_ServerConfig_new_default();
     UA_Server *server = UA_Server_new(config);
 
+	callNodeSetFunctions(server);
+
     createTemperatureVariableNode(server);
 
     UA_StatusCode retval = UA_Server_run(server, &running);
