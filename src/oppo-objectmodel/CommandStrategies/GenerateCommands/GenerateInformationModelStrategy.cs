@@ -99,7 +99,6 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             }
 
             AdjustModelsTemplate(srcDirectory, modelName);
-            //AdjustMainTamplate(srcDirectory, modelName);
 
             outputMessages.Add(string.Format(OutputText.GenerateInformationModelSuccess, opcuaAppName, modelFullName), string.Empty);
             OppoLogger.Info(LoggingText.GenerateInformationModelSuccess);
@@ -135,34 +134,6 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 
             modelsFileStream.Close();
             modelsFileStream.Dispose();
-        }
-        private void AdjustMainTamplate(string srcDirectory, string functionName)
-        {
-            var functionSnippet = functionName + "(" + Constants.server + ")" + ";";
-            var mainFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_main_c));
-            var currentFileContentLineByLine = ReadFileContent(mainFileStream);
-
-            if (!currentFileContentLineByLine.Contains(functionSnippet))
-            {
-                var sw = new StreamWriter(mainFileStream);
-                foreach (var previousTextLine in currentFileContentLineByLine)
-                {
-                    sw.WriteLine(previousTextLine);
-
-                    if (previousTextLine.Contains("UA_Server *server")) 
-                    {
-                        sw.WriteLine();
-                        sw.WriteLine(functionSnippet);
-
-                    }
-
-                }
-                sw.Close();
-                sw.Dispose();
-
-            }
-            mainFileStream.Close();
-            mainFileStream.Dispose();
         }
 
         
