@@ -4,6 +4,7 @@ namespace Oppo.ObjectModel
     {
         public const string HelloString = "Hello from OPPO";
         public const string IncludeSnippet = "#include";
+        public const string server = "server";
 
         public static class FileExtension
         {
