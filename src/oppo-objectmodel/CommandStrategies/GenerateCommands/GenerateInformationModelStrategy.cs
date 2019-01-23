@@ -139,7 +139,8 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 
         private void AdjustNodeSetFunctionsTemplate(string srcDirectory, string functionName)
         {
-            var functionSnippet = functionName + "(" + Constants.server + ");";
+            var functionSnippet = string.Format(Constants.NodeSetFunctioncContent.FunctionSnippetPart1,functionName);
+            
 
             var nodeSetFunctioncsFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_nodeSetFunctions_c));
             var currentFileContentLineByLine = ReadFileContent(nodeSetFunctioncsFileStream).ToList<string>();
@@ -153,7 +154,11 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 if (lastFunctionLinePosition != -1)
                 {
                     currentFileContentLineByLine.Insert(lastFunctionLinePosition, string.Empty);
-                    currentFileContentLineByLine.Insert(lastFunctionLinePosition, functionSnippet);
+                    currentFileContentLineByLine.Insert(lastFunctionLinePosition, Constants.NodeSetFunctioncContent.FunctionSnippetPart5);
+                    currentFileContentLineByLine.Insert(lastFunctionLinePosition, Constants.NodeSetFunctioncContent.FunctionSnippetPart4);
+                    currentFileContentLineByLine.Insert(lastFunctionLinePosition,string.Format(Constants.NodeSetFunctioncContent.FunctionSnippetPart3,functionName));
+                    currentFileContentLineByLine.Insert(lastFunctionLinePosition, Constants.NodeSetFunctioncContent.FunctionSnippetPart2);
+                    currentFileContentLineByLine.Insert(lastFunctionLinePosition, string.Format(Constants.NodeSetFunctioncContent.FunctionSnippetPart1, functionName));
                 }
 
                 _fileSystem.WriteFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_nodeSetFunctions_c), currentFileContentLineByLine);
