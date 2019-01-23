@@ -1,4 +1,5 @@
 using System.IO;
+using System.Collections.Generic;
 
 namespace Oppo.ObjectModel
 {
@@ -27,5 +28,6 @@ namespace Oppo.ObjectModel
         string GetFileName(string path);
         string GetFileNameWithoutExtension(string path);
         Stream ReadFile(string path);
+        void WriteFile(string path, IEnumerable<string> content);
     }    
 }

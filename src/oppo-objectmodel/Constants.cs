@@ -172,5 +172,10 @@ namespace Oppo.ObjectModel
             public const string VerboseSample = "--sample";
 
         }
+
+        public static class NodeSetFunctioncContent
+        {
+            public const string ReturnLine = "return UA_STATUSCODE_GOOD;";
+        }
     }
 }

@@ -99,6 +99,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             }
 
             AdjustModelsTemplate(srcDirectory, modelName);
+            AdjustNodeSetFunctionsTemplate(srcDirectory, modelName);
 
             outputMessages.Add(string.Format(OutputText.GenerateInformationModelSuccess, opcuaAppName, modelFullName), string.Empty);
             OppoLogger.Info(LoggingText.GenerateInformationModelSuccess);
@@ -134,6 +135,29 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 
             modelsFileStream.Close();
             modelsFileStream.Dispose();
+        }
+
+        private void AdjustNodeSetFunctionsTemplate(string srcDirectory, string functionName)
+        {
+            var functionSnippet = functionName + "(" + Constants.server + ");";
+
+            var nodeSetFunctioncsFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_nodeSetFunctions_c));
+            var currentFileContentLineByLine = ReadFileContent(nodeSetFunctioncsFileStream).ToList<string>();
+
+            if (!currentFileContentLineByLine.Contains(functionSnippet))
+            {
+                var lastFunctionLinePosition = currentFileContentLineByLine.FindIndex(x => x.Contains(Constants.NodeSetFunctioncContent.ReturnLine));
+                if (lastFunctionLinePosition != -1)
+                {
+                    currentFileContentLineByLine.Insert(lastFunctionLinePosition, string.Empty);
+                    currentFileContentLineByLine.Insert(lastFunctionLinePosition, functionSnippet);
+                }
+
+                _fileSystem.WriteFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_nodeSetFunctions_c), currentFileContentLineByLine);
+            }
+
+            nodeSetFunctioncsFileStream.Close();
+            nodeSetFunctioncsFileStream.Dispose();
         }
 
         
