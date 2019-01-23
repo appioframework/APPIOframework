@@ -72,9 +72,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         private readonly string _srcDir = @"src\server";
         private readonly string _defaultModelsC = "/* \n* This is an automatically generated file.\n*/";
         private readonly string _defaultModelIncludeSnippet = "#include \"information-models/{0}.c\"";
-        private readonly string _defaultNodeSetFunctionsCPart1 = "UA_StatusCode callNodeSetFunctions(UA_Server* server)\n{\n";
-        private readonly string _defaultNodeSetFunctionsCPart2 = "\n\treturn UA_STATUSCODE_GOOD;\n}";
-        private readonly string _defaultNodeSetFunctionsSnippet = "{0}(server);";
+        private readonly string _defaultNodeSetFunctionsC = "UA_StatusCode callNodeSetFunctions(UA_Server* server)\n{\n\treturn UA_STATUSCODE_GOOD;\n}";
 
         [SetUp]
         public void SetUpTest()
@@ -160,7 +158,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
                 _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_models_c)).Returns(modelsFilePath);
                 _mockFileSystem.Setup(x => x.ReadFile(modelsFilePath)).Returns(memoryStream);
 
-                using (var nodeSetFunctionsMemoryStream = GenerateStreamFromString(_defaultNodeSetFunctionsCPart1 + string.Format(_defaultNodeSetFunctionsSnippet, modelName) + _defaultNodeSetFunctionsCPart2))
+                using (var nodeSetFunctionsMemoryStream = GenerateStreamFromString(_defaultNodeSetFunctionsC))
                 {
                     var nodeSetFunctionsFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_nodeSetFunctions_c);
                     _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_nodeSetFunctions_c)).Returns(nodeSetFunctionsFilePath);
@@ -179,7 +177,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
                     _loggerListenerMock.Verify(x => x.Info(LoggingText.GenerateInformationModelSuccess), Times.Once);
                     _mockFileSystem.Verify(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp), Times.Once);
                     _mockFileSystem.Verify(x => x.CreateDirectory(System.IO.Path.Combine(_srcDir, DirectoryName.InformationModels)), Times.Once);
-                    _mockFileSystem.Verify(x => x.WriteFile(nodeSetFunctionsFilePath, It.IsAny<IEnumerable<string>>()), Times.Never);
+                    _mockFileSystem.Verify(x => x.WriteFile(nodeSetFunctionsFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
                 }
             }            
         }
@@ -228,7 +226,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
                 _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_models_c)).Returns(modelsFilePath);
                 _mockFileSystem.Setup(x => x.ReadFile(modelsFilePath)).Returns(modelsMemoryStream);
 
-                using (var nodeSetFunctionsMemoryStream = GenerateStreamFromString(_defaultNodeSetFunctionsCPart1 + string.Format(_defaultNodeSetFunctionsSnippet, modelName) + _defaultNodeSetFunctionsCPart2))
+                using (var nodeSetFunctionsMemoryStream = GenerateStreamFromString(_defaultNodeSetFunctionsC))
                 {
                     var nodeSetFunctionsFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_nodeSetFunctions_c);
                     _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_nodeSetFunctions_c)).Returns(nodeSetFunctionsFilePath);
@@ -246,7 +244,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
                     _loggerListenerMock.Verify(x => x.Info(LoggingText.GenerateInformationModelSuccess), Times.Once);
                     _mockFileSystem.Verify(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp), Times.Once);
                     _mockFileSystem.Verify(x => x.CreateDirectory(System.IO.Path.Combine(_srcDir, DirectoryName.InformationModels)), Times.Never);
-                    _mockFileSystem.Verify(x => x.WriteFile(nodeSetFunctionsFilePath, It.IsAny<IEnumerable<string>>()), Times.Never);
+                    _mockFileSystem.Verify(x => x.WriteFile(nodeSetFunctionsFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
                 }
             }
         }
