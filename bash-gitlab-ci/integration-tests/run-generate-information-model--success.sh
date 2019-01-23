@@ -29,11 +29,16 @@ do
 
   ${VAR_COMMAND}
 
+  oppo build -n my-app
+
   check_for_exisiting_file_named "./my-app/src/server/information-models/minimumCompilableModel.c" \
                                  "information-model .c file does not exist ..."
 
   check_for_exisiting_file_named "./my-app/src/server/information-models/minimumCompilableModel.h" \
                                  "information-model .h file does not exist ..."
+
+  check_for_exisiting_file_named "./my-app/build/server-app" \
+								 "server-app file does not exist ..."
 
   check_for_exisiting_oppo_log_file
 

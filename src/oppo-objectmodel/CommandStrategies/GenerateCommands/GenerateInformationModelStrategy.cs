@@ -141,7 +141,6 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
         {
             var functionSnippet = string.Format(Constants.NodeSetFunctioncContent.FunctionSnippetPart1,functionName);
             
-
             var nodeSetFunctioncsFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_nodeSetFunctions_c));
             var currentFileContentLineByLine = ReadFileContent(nodeSetFunctioncsFileStream).ToList<string>();
             

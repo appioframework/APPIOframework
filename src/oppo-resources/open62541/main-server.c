@@ -47,7 +47,9 @@ int main(void) {
 
 	UA_StatusCode retval;
 	if (callNodeSetFunctions(server) == UA_STATUSCODE_GOOD)
+	{
 		retval = UA_Server_run(server, &running);
+	}
 
     UA_Server_delete(server);
     UA_ServerConfig_delete(config);
