@@ -178,8 +178,8 @@ namespace Oppo.ObjectModel
             public const string ReturnLine = "return UA_STATUSCODE_GOOD;";
             public const string FunctionSnippetPart1 = "\tif ({0}(server) != UA_STATUSCODE_GOOD)";
             public const string FunctionSnippetPart2 = "\t{";
-            public const string FunctionSnippetPart3 = "\t\tUA_LOG_ERROR(UA_Log_Stdout, UA_LOGCATEGORY_SERVER, \"Could not add the {0} nodeset. Check previous output for any error.\"";
-            public const string FunctionSnippetPart4 = "\t\treturn = UA_STATUSCODE_BADUNEXPECTEDERROR;";
+            public const string FunctionSnippetPart3 = "\t\tUA_LOG_ERROR(UA_Log_Stdout, UA_LOGCATEGORY_SERVER, \"Could not add the {0} nodeset. Check previous output for any error.\");";
+            public const string FunctionSnippetPart4 = "\t\treturn UA_STATUSCODE_BADUNEXPECTEDERROR;";
             public const string FunctionSnippetPart5 = "\t}";
                 
 
