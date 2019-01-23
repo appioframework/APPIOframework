@@ -143,6 +143,9 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 
             var nodeSetFunctioncsFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_nodeSetFunctions_c));
             var currentFileContentLineByLine = ReadFileContent(nodeSetFunctioncsFileStream).ToList<string>();
+            
+            nodeSetFunctioncsFileStream.Close();
+            nodeSetFunctioncsFileStream.Dispose();
 
             if (!currentFileContentLineByLine.Contains(functionSnippet))
             {
@@ -155,9 +158,6 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 
                 _fileSystem.WriteFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_nodeSetFunctions_c), currentFileContentLineByLine);
             }
-
-            nodeSetFunctioncsFileStream.Close();
-            nodeSetFunctioncsFileStream.Dispose();
         }
 
         
