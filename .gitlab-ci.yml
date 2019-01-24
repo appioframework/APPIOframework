@@ -67,7 +67,6 @@ run-integration-test:
     refs:
       - deliverable
   script:
-    - apt-get -y install python3-pip
     - /bin/bash bash-gitlab-ci/run-dpkg-install--open62541--v0.3.0.sh
     - /bin/bash bash-gitlab-ci/run-dpkg-install--oppo-terminal.sh
     - /bin/bash bash-gitlab-ci/run-integration-tests.sh
