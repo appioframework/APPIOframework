@@ -63,6 +63,17 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
                 new []{"--name", "testApp", "-m", "model.txt"},
                 new []{"--name", "testApp", "--model", "model.txt"},
             };
+
+
+        }
+        protected static string[][] ValidInputs_ExtraTypes()
+        {
+
+            return new[] {
+                new [] { "-n", "testApp", "-m", "model.xml","--types","types.bsd"},
+                new [] { "-n", "testApp", "-m", "model.xml", "-t","types.bsd"},
+            };
+
         }
 
         private Mock<IFileSystem> _mockFileSystem;
@@ -424,7 +435,49 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureEmptyOpcuaAppName, inputParams.ElementAtOrDefault(1), inputParams.ElementAtOrDefault(3)), firstMessageLine.Key);
+
+            Assert.AreEqual(string.Empty, firstMessageLine.Value);
+
+        }
+        [Test]
+        public void ShouldGenerateInformationModelWithExtraTypes([ValueSource(nameof(ValidInputs_ExtraTypes))] string[] inputParams)
+        {
+            //Arrange
+            _loggerListenerMock.Setup(x => x.Warn(LoggingText.GenerateInformationModelSuccess));
+            var nameFlag = inputParams.ElementAt(0);
+            var projectName = inputParams.ElementAt(1);
+            var modelFlag = inputParams.ElementAt(2);
+            var modelNameWithExtension = inputParams.ElementAt(3);
+            var typesFlag = inputParams.ElementAt(4);
+            var typesName = inputParams.ElementAt(5);
+            modelName = System.IO.Path.GetFileNameWithoutExtension(modelNameWithExtension);
+
+            _mockFileSystem.Setup(x => x.CombinePaths(projectName,Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp)).Returns(_srcDir);
+            _mockFileSystem.Setup(x => x.GetFileName(modelNameWithExtension)).Returns(modelName);
+
+            var calculatedModelFilePath = System.IO.Path.Combine(projectName, DirectoryName.Models,modelNameWithExtension);
+            _mockFileSystem.Setup(x => x.CombinePaths(projectName, DirectoryName.Models, modelNameWithExtension)).Returns(calculatedModelFilePath);
+
+            var modelTargetLocation = System.IO.Path.Combine(Constants.DirectoryName.InformationModels, modelNameWithExtension);
+            _mockFileSystem.Setup(x => x.CombinePaths(Constants.DirectoryName.InformationModels, modelName)).Returns(modelTargetLocation);
+            _mockFileSystem.Setup(x => x.FileExists(calculatedModelFilePath)).Returns(true);
+
+            var modelExtension = System.IO.Path.GetExtension(inputParams.ElementAt(3));
+            _mockFileSystem.Setup(x => x.GetExtension(inputParams.ElementAt(3)).Returns(modelExtension);
+            _mockFileSystem.Setup(x => x.GetFileNameWithoutExtension(inputParams.ElementAtOrDefault(3))).Returns(modelName);
+
+            var modelPath = System.IO.Path.Combine(Constants.DirectoryName.Models, inputParams.ElementAtOrDefault(3));
+            var sourceModelRelativePath = @"../../" + modelPath;
+            _mockFileSystem.Setup(x => x.CombinePaths(Constants.DirectoryName.Models, inputParams.ElementAtOrDefault(3))).Returns(modelPath);
+            //Act
+            var commandResult = _strategy.Execute(inputParams);
+            //Assert
+            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsNotNull(commandResult.OutputMessages);
+            var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
         }
     }
+        
+   
 }
