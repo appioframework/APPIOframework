@@ -38,6 +38,14 @@ namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
             var appClientPublishLocation = _fileSystem.CombinePaths(projectPublishDirectory, Constants.ExecutableName.AppClient);
             var appServerPublishLocation = _fileSystem.CombinePaths(projectPublishDirectory, Constants.ExecutableName.AppServer);
 
+            if (string.IsNullOrEmpty(appClientBuildLocation) || !_fileSystem.FileExists(appClientBuildLocation) ||
+                string.IsNullOrEmpty(appServerBuildLocation) || !_fileSystem.FileExists(appServerBuildLocation))
+            {
+                OppoLogger.Warn(LoggingText.MissingBuiltOpcuaAppFiles);
+                outputMessages.Add(OutputText.OpcuaappPublishFailure, string.Empty);
+                return new CommandResult(false, outputMessages);
+            }
+
             _fileSystem.CreateDirectory(projectPublishDirectory);
             _fileSystem.CopyFile(appClientBuildLocation, appClientPublishLocation);
             _fileSystem.CopyFile(appServerBuildLocation, appServerPublishLocation);

@@ -34,19 +34,13 @@ do
   check_for_exisiting_file_named "./my-app/src/client/main.c" \
                                  "any oppo project source file for the client application does not exist ..."
 
-  check_for_exisiting_file_named "./my-app/src/client/open62541.c" \
-                                 "any oppo project source file for the client application does not exist ..."
-
-  check_for_exisiting_file_named "./my-app/src/client/open62541.h" \
-                                 "any oppo project source file for the client application does not exist ..."
-
   check_for_exisiting_file_named "./my-app/src/server/main.c" \
                                  "any oppo project source file for the server application does not exist ..."
 
-  check_for_exisiting_file_named "./my-app/src/server/open62541.c" \
+  check_for_exisiting_file_named "./my-app/src/server/models.c" \
                                  "any oppo project source file for the server application does not exist ..."
 
-  check_for_exisiting_file_named "./my-app/src/server/open62541.h" \
+  check_for_exisiting_file_named "./my-app/src/server/nodeSetFunctions.c" \
                                  "any oppo project source file for the server application does not exist ..."
 
   cd ..

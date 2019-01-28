@@ -3,8 +3,7 @@
 !.vscode/tasks.json
 
 !bash-developer/
-!bash-developer/run-build-installer-local.sh
-!bash-developer/run-reinstall-oppo-local.sh
+!bash-developer/run-reinstall--oppo-terminal--local.sh
 !bash-developer/util-elevate.sh
 
 !bash-gitlab-ci/
@@ -13,6 +12,24 @@
 !bash-gitlab-ci/**/*.sh
 
 !installer/
+!installer/open62541--v0.3.0/
+!installer/open62541--v0.3.0/DEBIAN/
+!installer/open62541--v0.3.0/DEBIAN/conffiles
+!installer/open62541--v0.3.0/DEBIAN/control
+!installer/open62541--v0.3.0/DEBIAN/copyright
+!installer/open62541--v0.3.0/etc/
+!installer/open62541--v0.3.0/etc/oppo/
+!installer/open62541--v0.3.0/etc/oppo/tools/
+!installer/open62541--v0.3.0/etc/oppo/tools/open62541/
+!installer/open62541--v0.3.0/etc/oppo/tools/open62541/v0.3.0/
+!installer/open62541--v0.3.0/etc/oppo/tools/open62541/v0.3.0/existing-nodes/
+!installer/open62541--v0.3.0/etc/oppo/tools/open62541/v0.3.0/existing-nodes/Opc.Ua.NodeSet2.xml
+!installer/open62541--v0.3.0/etc/oppo/tools/open62541/v0.3.0/nodeset-compiler/
+!installer/open62541--v0.3.0/etc/oppo/tools/open62541/v0.3.0/nodeset-compiler/*.py
+!installer/open62541--v0.3.0/etc/oppo/tools/open62541/v0.3.0/nodeset-compiler/*.txt
+!installer/open62541--v0.3.0/etc/oppo/tools/open62541/v0.3.0/src/
+!installer/open62541--v0.3.0/etc/oppo/tools/open62541/v0.3.0/src/open62541.c
+!installer/open62541--v0.3.0/etc/oppo/tools/open62541/v0.3.0/src/open62541.h
 !installer/oppo-terminal/
 !installer/oppo-terminal/DEBIAN/
 !installer/oppo-terminal/DEBIAN/conffiles
@@ -42,6 +59,7 @@
 !src/oppo-objectmodel/CommandStrategies/VersionCommands/
 !src/oppo-objectmodel/CommandStrategies/DeployCommands/
 !src/oppo-objectmodel/CommandStrategies/ImportCommands/
+!src/oppo-objectmodel/CommandStrategies/GenerateCommands/
 
 !src/oppo-objectmodel.tests/
 !src/oppo-objectmodel.tests/oppo-objectmodel.tests.csproj
@@ -58,6 +76,7 @@
 !src/oppo-resources/open62541/
 !src/oppo-resources/open62541/*
 !src/oppo-resources/*.cs
+!src/oppo-resources/*.resx
 !src/oppo-resources/oppo-resources.csproj
 !src/oppo-resources/templates/
 !src/oppo-resources/templates/*
@@ -72,6 +91,7 @@
 !src/oppo-resources/installer/opcuaapp/oppo-opcuaapp.zip
 !src/oppo-resources/information_models/
 !src/oppo-resources/information_models/OpcUaDiModel.xml
+!src/oppo-resources/information_models/UANodeSet.xsd
 
 !src/oppo-terminal/
 !src/oppo-terminal/oppo-terminal.csproj

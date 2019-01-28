@@ -83,21 +83,15 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             const string projectFilePath       = "project-file-path";
             const string mesonBuildFilePath    = "meson-build-file-path";
             const string clientMainC           = "client-main-c-file";
-            const string clientOpen62541C      = "client-open62541-c-file";
-            const string clientOpen62541H      = "client-open62541-h-file";
             const string serverMainC           = "server-main-c-file";
-            const string serverOpen62541C      = "server-open62541-c-file";
-            const string serverOpen62541H      = "server-open62541-h-file";
+            const string serverModelsC         = "server-models-c-file";
             const string modelsDirectory       = "models";
 
             _fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, projectFileName)).Returns(projectFilePath);
             _fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.FileName.SourceCode_meson_build)).Returns(mesonBuildFilePath);
             _fileSystemMock.Setup(x => x.CombinePaths(clientSourceDirectory, Constants.FileName.SourceCode_main_c)).Returns(clientMainC);
-            _fileSystemMock.Setup(x => x.CombinePaths(clientSourceDirectory, Constants.FileName.SourceCode_open62541_c)).Returns(clientOpen62541C);
-            _fileSystemMock.Setup(x => x.CombinePaths(clientSourceDirectory, Constants.FileName.SourceCode_open62541_h)).Returns(clientOpen62541H);
             _fileSystemMock.Setup(x => x.CombinePaths(serverSourceDirectory, Constants.FileName.SourceCode_main_c)).Returns(serverMainC);
-            _fileSystemMock.Setup(x => x.CombinePaths(serverSourceDirectory, Constants.FileName.SourceCode_open62541_c)).Returns(serverOpen62541C);
-            _fileSystemMock.Setup(x => x.CombinePaths(serverSourceDirectory, Constants.FileName.SourceCode_open62541_h)).Returns(serverOpen62541H);
+            _fileSystemMock.Setup(x => x.CombinePaths(serverSourceDirectory, Constants.FileName.SourceCode_models_c)).Returns(serverModelsC);
             _fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.DirectoryName.Models)).Returns(modelsDirectory);
 
             // Act
@@ -117,18 +111,14 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _fileSystemMock.Verify(x => x.CreateFile(projectFilePath, It.IsAny<string>()), Times.Once);
             _fileSystemMock.Verify(x => x.CreateFile(mesonBuildFilePath, It.IsAny<string>()), Times.Once);
             _fileSystemMock.Verify(x => x.CreateFile(clientMainC, It.IsAny<string>()), Times.Once);
-            _fileSystemMock.Verify(x => x.CreateFile(clientOpen62541C, It.IsAny<string>()), Times.Once);
-            _fileSystemMock.Verify(x => x.CreateFile(clientOpen62541H, It.IsAny<string>()), Times.Once);
             _fileSystemMock.Verify(x => x.CreateFile(serverMainC, It.IsAny<string>()), Times.Once);
-            _fileSystemMock.Verify(x => x.CreateFile(serverOpen62541C, It.IsAny<string>()), Times.Once);
-            _fileSystemMock.Verify(x => x.CreateFile(serverOpen62541H, It.IsAny<string>()), Times.Once);
+            _fileSystemMock.Verify(x => x.CreateFile(serverModelsC, It.IsAny<string>()), Times.Once);
             
             _fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_oppoproject), Times.AtLeastOnce);
             _fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_main_client_c), Times.AtLeastOnce);
             _fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_main_server_c), Times.AtLeastOnce);
+            _fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_models_server_c), Times.AtLeastOnce);
             _fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_meson_build), Times.AtLeastOnce);
-            _fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_open62541_c), Times.AtLeastOnce);
-            _fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_open62541_h), Times.AtLeastOnce);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
 
@@ -155,7 +145,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandFailure, inputParams.ElementAt(1)), result.OutputMessages.First().Key);
             _fileSystemMock.Verify(x => x.CreateDirectory(It.IsAny<string>()), Times.Never);
             _fileSystemMock.Verify(x => x.CreateFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
-            _fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_oppoproject), Times.Never);
+            _fileSystemMock.Verify(x => x.LoadTemplateFile(It.IsAny<string>()), Times.Never);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
 
@@ -182,7 +172,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.AreEqual(OutputText.NewOpcuaappCommandFailureUnknownParam, result.OutputMessages.First().Key);
             _fileSystemMock.Verify(x => x.CreateDirectory(It.IsAny<string>()), Times.Never);
             _fileSystemMock.Verify(x => x.CreateFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
-            _fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_oppoproject), Times.Never);
+            _fileSystemMock.Verify(x => x.LoadTemplateFile(It.IsAny<string>()), Times.Never);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
 

@@ -22,7 +22,7 @@ build-and-test-dotnet-application:
     refs:
       - deliverable
   script:    
-    - /bin/bash bash-gitlab-ci/run-tests.sh
+    - /bin/bash bash-gitlab-ci/run-dotnet-tests.sh
     - /bin/bash bash-gitlab-ci/run-sonarscanner.sh
     
 publish-dotnet-application:
@@ -37,13 +37,14 @@ publish-dotnet-application:
     refs:
       - deliverable
   script:
-    - /bin/bash bash-gitlab-ci/run-publish.sh
+    - /bin/bash bash-gitlab-ci/run-dotnet-publish.sh
 
 debian-installer:
   dependencies: 
     - 'publish-dotnet-application'
   artifacts:
     paths:
+      -  'installer/open62541--v0.3.0.deb'
       -  'installer/oppo-terminal.deb'
   stage: 'installer'
   tags:
@@ -51,8 +52,9 @@ debian-installer:
   except:
     refs:
       - deliverable
-  script:    
-    - /bin/bash bash-gitlab-ci/run-build-installer.sh
+  script:
+    - /bin/bash bash-gitlab-ci/run-dpkg-build--open62541--v0.3.0.sh
+    - /bin/bash bash-gitlab-ci/run-dpkg-build--oppo-terminal.sh
 
 run-integration-test:
   dependencies: 
@@ -65,15 +67,16 @@ run-integration-test:
     refs:
       - deliverable
   script:
-    - /bin/bash bash-gitlab-ci/run-installer.sh
+    - /bin/bash bash-gitlab-ci/run-dpkg-install--open62541--v0.3.0.sh
+    - /bin/bash bash-gitlab-ci/run-dpkg-install--oppo-terminal.sh
     - /bin/bash bash-gitlab-ci/run-integration-tests.sh
 
 mark-repository-as-deliverable:
   stage: 'delivery'
   tags:
     - 'set-delivery-tag'
-  except:
+  only:
     refs:
-      - deliverable
+      - master
   script:
     - /bin/bash /utility/auto-tagging/run-auto-tagging.sh

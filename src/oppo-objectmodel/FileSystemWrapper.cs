@@ -5,6 +5,7 @@ using Oppo.Resources.text.logging;
 using System.IO.Compression;
 using System;
 using System.Reflection;
+using System.Collections.Generic;
 
 namespace Oppo.ObjectModel
 {
@@ -211,6 +212,45 @@ namespace Oppo.ObjectModel
             try
             {
                 return Path.GetFileName(path);
+            }
+            catch (Exception ex)
+            {
+                OppoLogger.Error(LoggingText.ExceptionOccured, ex);
+                throw;
+            }
+        }
+
+        public string GetFileNameWithoutExtension(string path)
+        {
+            try
+            {
+                return Path.GetFileNameWithoutExtension(path);
+            }
+            catch (Exception ex)
+            {
+                OppoLogger.Error(LoggingText.ExceptionOccured, ex);
+                throw;
+            }
+        }
+
+        public Stream ReadFile(string path)
+        {
+            try
+            {
+                return File.Open(path, FileMode.OpenOrCreate);
+            }
+            catch (Exception ex)
+            {
+                OppoLogger.Error(LoggingText.ExceptionOccured, ex);
+                throw;
+            }
+        }
+
+        public void WriteFile(string path, IEnumerable<string> content)
+        {
+            try
+            {
+                File.WriteAllLines(path, content, System.Text.Encoding.Default);
             }
             catch (Exception ex)
             {
