@@ -54,6 +54,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 return new CommandResult(false, outputMessages);
             }
 
+
             // check if model file exists
             var calculatedModelFilePath = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.Models, modelFullName);
             if (!_fileSystem.FileExists(calculatedModelFilePath))
