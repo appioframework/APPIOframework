@@ -73,10 +73,18 @@ namespace Oppo.ObjectModel
             public static readonly string CreateDebianInstallerArguments = "--build " + DirectoryName.OpcuaappInstaller;
             public const string OppoResourcesDll = "oppo-resources.dll";
 
-            public const string NodsetCompiler = @"python3";
+            public const string PythonScript = @"python3";
+            public const string GenerateDatatypesScriptPath = @"/etc/oppo/tools/open62541/v0.3.0/generate-datatypes/generate_datatypes.py";
+            public const string GenerateDatatypesTypeBsd = @" --type-bsd=";
+            public const string NodsetCompilerArguments = @"/etc/oppo/tools/open62541/v0.3.0/nodeset-compiler/nodeset_compiler.py --types-array=UA_TYPES --existing /etc/oppo/tools/open62541/v0.3.0/existing-nodes/Opc.Ua.NodeSet2.xml --xml {0} {1}";
+            public const string NodesetCompilerCompilerPath = @"/etc/oppo/tools/open62541/v0.3.0/nodeset-compiler/nodeset_compiler.py";
+            public const string NodesetCompilerTypesArray = @" --types-array=";
+            public const string NodesetCompilerBasicTypes = @"UA_TYPES";
+            public const string NodesetCompilerExisting = @" --existing ";
+            public const string NodesetCompilerBasicNodeset = @"/etc/oppo/tools/open62541/v0.3.0/existing-nodes/Opc.Ua.NodeSet2.xml";
             // 0 xml model source path
             // 1 output directory with name for generated files and method
-            public const string NodsetCompilerArguments = @"/etc/oppo/tools/open62541/v0.3.0/nodeset-compiler/nodeset_compiler.py --types-array=UA_TYPES --existing /etc/oppo/tools/open62541/v0.3.0/existing-nodes/Opc.Ua.NodeSet2.xml --xml {0} {1}";
+            public const string NodesetCompilerXml = @" --xml {0} {1}";
         }
 
         public static class FileName
