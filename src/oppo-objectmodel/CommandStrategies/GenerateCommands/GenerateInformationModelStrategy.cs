@@ -28,7 +28,6 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             var opcuaAppName = inputParamsList.ElementAtOrDefault(1);
             var modelFlag = inputParamsList.ElementAtOrDefault(2);
             var modelFullName = inputParamsList.ElementAtOrDefault(3);
-            
 
             var outputMessages = new MessageLines();
 
