@@ -137,7 +137,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 requiredTypesName = _fileSystem.GetFileNameWithoutExtension(requiredTypesFullName);
                 var requiredTypesTargetLocation = _fileSystem.CombinePaths(Constants.DirectoryName.InformationModels, requiredTypesName.ToLower());
 
-                var generatedTypesArgs = string.Format(Constants.ExecutableName.GenerateDatatypesScriptPath, requiredTypesSourceLocation, requiredTypesTargetLocation);
+                var generatedTypesArgs = Constants.ExecutableName.GenerateDatatypesScriptPath + string.Format(Constants.ExecutableName.GenerateDatatypesTypeBsd, requiredTypesSourceLocation) + " " + requiredTypesTargetLocation;
                 var generatedTypesResult = _fileSystem.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, generatedTypesArgs);
                 if (!generatedTypesResult)
                 {
@@ -147,7 +147,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 }
             }
             
-            var nodesetCompilerArgs = string.Format(Constants.ExecutableName.NodesetCompilerCompilerPath, Constants.ExecutableName.NodesetCompilerBasicTypes);
+            var nodesetCompilerArgs = Constants.ExecutableName.NodesetCompilerCompilerPath + Constants.ExecutableName.NodesetCompilerInternalHeaders + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes);
             if (requiredTypes)
             {
                 nodesetCompilerArgs += string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, requiredTypesName.ToUpper());
@@ -156,7 +156,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             {
                 nodesetCompilerArgs += string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes);
             }
-            nodesetCompilerArgs += Constants.ExecutableName.NodesetCompilerBasicNodeset + string.Format(Constants.ExecutableName.NodesetCompilerXml, sourceModelRelativePath, modelTargetLocation);
+            nodesetCompilerArgs += string.Format(Constants.ExecutableName.NodesetCompilerExisting, Constants.ExecutableName.NodesetCompilerBasicNodeset) + string.Format(Constants.ExecutableName.NodesetCompilerXml, sourceModelRelativePath, modelTargetLocation);
             var nodesetResult = _fileSystem.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, nodesetCompilerArgs);
             if (!nodesetResult)
             {
