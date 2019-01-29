@@ -51,8 +51,6 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 
             var requiredTypes = false;
             var requiredTypesFullName = string.Empty;
-            var requiredModel = false;
-            var requiredModelFullName = string.Empty;
             if (requiredFile1Flag == Constants.GenerateInformationModeCommandArguments.Types || requiredFile1Flag == Constants.GenerateInformationModeCommandArguments.VerboseTypes)
             {
                 requiredTypes = true;
@@ -60,8 +58,6 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             }
             else if (requiredFile1Flag == Constants.GenerateInformationModeCommandArguments.RequiredModel || requiredFile1Flag == Constants.GenerateInformationModeCommandArguments.VerboseRequiredModel)
             {
-                requiredModel = true;
-                requiredModelFullName = requiredFile1FullName;
             }
             else if (!string.IsNullOrEmpty(requiredFile1Flag))
             {
@@ -112,11 +108,11 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             // check if required types file is a *.bsd
             if (requiredTypes)
             {
-                var requiredTypesFileExtension = _fileSystem.GetExtension(requiredFile1FullName);
+                var requiredTypesFileExtension = _fileSystem.GetExtension(requiredTypesFullName);
                 if (requiredTypesFileExtension != Constants.FileExtension.ModelTypes)
                 {
-                    OppoLogger.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidFile, requiredFile1FullName));
-                    outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureInvalidFile, opcuaAppName, requiredFile1FullName, requiredTypesFileExtension), string.Empty);
+                    OppoLogger.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidFile, requiredTypesFullName));
+                    outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureInvalidFile, opcuaAppName, modelFullName, requiredTypesFullName), string.Empty);
                     return new CommandResult(false, outputMessages);
                 }
             }

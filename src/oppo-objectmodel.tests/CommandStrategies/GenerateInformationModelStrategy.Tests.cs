@@ -11,7 +11,7 @@ using static Oppo.ObjectModel.Constants;
 namespace Oppo.ObjectModel.Tests.CommandStrategies
 {
     public class GenerateInformationModelStrategyShould
-    {      
+    {
         protected static string[][] InvalidInputs_EmptyOpcuaAppName()
         {
             return new[]
@@ -72,6 +72,25 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             {
                 new [] { "-n", "testApp", "-m", "model.xml", "--types", "types.bsd"},
                 new [] { "-n", "testApp", "-m", "model.xml", "-t", "types.bsd"},
+            };
+        }
+        protected static string[][] InvalidInputs_UnknownTypesParam()
+        {
+            return new[]
+            {
+                new [] { "-n", "testApp", "-m", "model.xml", "-T", "types.bsd" },
+                new [] { "-n", "testApp", "-m", "model.xml", "--t", "types.bsd" },
+                new [] { "-n", "testApp", "-m", "model.xml", "-types", "types.bsd" },
+                new [] { "-n", "testApp", "-m", "model.xml", "--Types", "types.bsd" },
+            };
+        }
+
+        protected static string[][] InvalidInputs_InvalidTypesExtension()
+        {
+            return new[]
+            {
+                new [] { "-n", "testApp", "-m", "model.xml", "--types", "types.xml"},
+                new [] { "-n", "testApp", "-m", "model.xml", "-t", "types.txt"},
             };
         }
 
@@ -537,6 +556,126 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             typesMemoryStream.Dispose();
             modelsMemoryStream.Close();
             modelsMemoryStream.Dispose();
+        }
+
+        [Test]
+        public void FailOnGenerateInformationModelBecauseUknownTypesParam([ValueSource(nameof(InvalidInputs_UnknownTypesParam))] string[] inputParams)
+        {
+            // Arrange            
+            _loggerListenerMock.Setup(x => x.Warn(string.Format(LoggingText.GenerateInformationModelFailureUnknownParam, inputParams.ElementAtOrDefault(4))));
+
+            // Act
+            var commandResult = _strategy.Execute(inputParams);
+
+            // Assert
+            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsNotNull(commandResult.OutputMessages);
+            var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
+            Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, inputParams.ElementAtOrDefault(1), inputParams.ElementAtOrDefault(3), inputParams.ElementAtOrDefault(4)), firstMessageLine.Key);
+            Assert.AreEqual(string.Empty, firstMessageLine.Value);
+        }
+
+        [Test]
+        public void FailOnGenerateInformationModelBecauseTypesDoesntExist([ValueSource(nameof(ValidInputs_ExtraTypes))] string[] inputParams)
+        {
+            // Arrange            
+            _mockFileSystem.Setup(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp)).Returns(_srcDir);
+
+            var calculatedModelFilePath = System.IO.Path.Combine(inputParams.ElementAtOrDefault(1), DirectoryName.Models, inputParams.ElementAtOrDefault(3));
+            _mockFileSystem.Setup(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), DirectoryName.Models, inputParams.ElementAtOrDefault(3))).Returns(calculatedModelFilePath);
+            _mockFileSystem.Setup(x => x.FileExists(calculatedModelFilePath)).Returns(true);
+            var calculatedTypesFilePath = System.IO.Path.Combine(inputParams.ElementAtOrDefault(1), DirectoryName.Models, inputParams.ElementAtOrDefault(5));
+            _mockFileSystem.Setup(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), DirectoryName.Models, inputParams.ElementAtOrDefault(5))).Returns(calculatedTypesFilePath);
+            _mockFileSystem.Setup(x => x.FileExists(calculatedTypesFilePath)).Returns(false);
+            
+            _loggerListenerMock.Setup(x => x.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsMissingFile, calculatedTypesFilePath)));
+
+            // Act
+            var commandResult = _strategy.Execute(inputParams);
+
+            // Assert
+            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsNotNull(commandResult.OutputMessages);
+            var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
+            Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureMissingFile, inputParams.ElementAtOrDefault(1), inputParams.ElementAtOrDefault(3), calculatedTypesFilePath), firstMessageLine.Key);
+            Assert.AreEqual(string.Empty, firstMessageLine.Value);
+            _mockFileSystem.Verify(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), Constants.DirectoryName.Models, inputParams.ElementAtOrDefault(5)), Times.Once);
+        }
+
+        [Test]
+        public void FailOnGenerateInformationModelBecauseInvalidTypesExtension([ValueSource(nameof(InvalidInputs_InvalidTypesExtension))] string[] inputParams)
+        {
+            // Arrange            
+            _mockFileSystem.Setup(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp)).Returns(_srcDir);
+
+            var calculatedModelFilePath = System.IO.Path.Combine(inputParams.ElementAtOrDefault(1), DirectoryName.Models, inputParams.ElementAtOrDefault(3));
+            _mockFileSystem.Setup(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), DirectoryName.Models, inputParams.ElementAtOrDefault(3))).Returns(calculatedModelFilePath);
+            _mockFileSystem.Setup(x => x.FileExists(calculatedModelFilePath)).Returns(true);
+            var calculatedTypesFilePath = System.IO.Path.Combine(inputParams.ElementAtOrDefault(1), DirectoryName.Models, inputParams.ElementAtOrDefault(5));
+            _mockFileSystem.Setup(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), DirectoryName.Models, inputParams.ElementAtOrDefault(5))).Returns(calculatedTypesFilePath);
+            _mockFileSystem.Setup(x => x.FileExists(calculatedTypesFilePath)).Returns(true);
+
+            var modelExtension = System.IO.Path.GetExtension(inputParams.ElementAtOrDefault(3));
+            _mockFileSystem.Setup(x => x.GetExtension(inputParams.ElementAtOrDefault(3))).Returns(modelExtension);
+            var typesExtension = System.IO.Path.GetExtension(inputParams.ElementAtOrDefault(5));
+            _mockFileSystem.Setup(x => x.GetExtension(inputParams.ElementAtOrDefault(5))).Returns(typesExtension);
+
+            _loggerListenerMock.Setup(x => x.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidFile, inputParams.ElementAtOrDefault(5))));
+
+            // Act
+            var commandResult = _strategy.Execute(inputParams);
+
+            // Assert
+            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsNotNull(commandResult.OutputMessages);
+            var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
+            Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureInvalidFile, inputParams.ElementAtOrDefault(1), inputParams.ElementAtOrDefault(3), inputParams.ElementAtOrDefault(5)), firstMessageLine.Key);
+            Assert.AreEqual(string.Empty, firstMessageLine.Value);
+            _mockFileSystem.Verify(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), Constants.DirectoryName.Models, inputParams.ElementAtOrDefault(5)), Times.Once);
+        }
+
+        [Test]
+        public void FailOnGenerateInformationModelBecauseGenerateTypesCallFailure([ValueSource(nameof(ValidInputs_ExtraTypes))] string[] inputParams)
+        {
+            // Arrange
+
+            _mockFileSystem.Setup(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp)).Returns(_srcDir);
+
+            var modelName = System.IO.Path.GetFileName(inputParams.ElementAtOrDefault(3));
+            _mockFileSystem.Setup(x => x.GetFileName(inputParams.ElementAtOrDefault(3))).Returns(modelName);
+            var typesName = System.IO.Path.GetFileName(inputParams.ElementAtOrDefault(5));
+            _mockFileSystem.Setup(x => x.GetFileName(inputParams.ElementAtOrDefault(5))).Returns(typesName);
+
+            var calculatedModelFilePath = System.IO.Path.Combine(inputParams.ElementAtOrDefault(1), DirectoryName.Models, inputParams.ElementAtOrDefault(3));
+            _mockFileSystem.Setup(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), DirectoryName.Models, inputParams.ElementAtOrDefault(3))).Returns(calculatedModelFilePath);
+            _mockFileSystem.Setup(x => x.FileExists(calculatedModelFilePath)).Returns(true);
+            var calculatedTypesFilePath = System.IO.Path.Combine(inputParams.ElementAtOrDefault(1), DirectoryName.Models, inputParams.ElementAtOrDefault(5));
+            _mockFileSystem.Setup(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), DirectoryName.Models, inputParams.ElementAtOrDefault(5))).Returns(calculatedTypesFilePath);
+            _mockFileSystem.Setup(x => x.FileExists(calculatedTypesFilePath)).Returns(true);
+
+            var modelExtension = System.IO.Path.GetExtension(inputParams.ElementAtOrDefault(3));
+            _mockFileSystem.Setup(x => x.GetExtension(inputParams.ElementAtOrDefault(3))).Returns(modelExtension);
+            var typesExtension = System.IO.Path.GetExtension(inputParams.ElementAtOrDefault(5));
+            _mockFileSystem.Setup(x => x.GetExtension(inputParams.ElementAtOrDefault(5))).Returns(typesExtension);
+
+            _mockFileSystem.Setup(x => x.GetFileNameWithoutExtension(inputParams.ElementAtOrDefault(5))).Returns(typesName);
+
+            _modelValidatorMock.Setup(x => x.Validate(calculatedModelFilePath, It.IsAny<string>())).Returns(true);
+
+            var args = inputParams.ElementAtOrDefault(3) + " " + typesName;
+            _mockFileSystem.Setup(x => x.CallExecutable(Constants.ExecutableName.PythonScript, _srcDir, args)).Returns(false);
+
+            // Act
+            var commandResult = _strategy.Execute(inputParams);
+            
+            // Assert
+            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsNotNull(commandResult.OutputMessages);
+            var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
+            Assert.AreEqual(string.Format(OutputText.GenerateInformationModelGenerateTypesFailure, inputParams.ElementAtOrDefault(1), inputParams.ElementAtOrDefault(3), inputParams.ElementAtOrDefault(5)), firstMessageLine.Key);
+            Assert.AreEqual(string.Empty, firstMessageLine.Value);
+            _loggerListenerMock.Verify(x => x.Warn(LoggingText.GeneratedTypesExecutableFails), Times.Once);
+            _mockFileSystem.Verify(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp), Times.Once);
         }
     }
         
