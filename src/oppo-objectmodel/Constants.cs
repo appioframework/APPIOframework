@@ -75,7 +75,7 @@ namespace Oppo.ObjectModel
             public const string OppoResourcesDll = "oppo-resources.dll";
 
             public const string PythonScript = @"python3";
-            public const string GenerateDatatypesScriptPath = "/etc" + "/oppo" + "/tools" + "/open62541" + "/v0.3.0" + "/generate-datatypes" + "/generate_datatypes.py";
+            public const string GenerateDatatypesScriptPath = "/" + "etc" + "/" + "oppo" + "/" + "tools" + "/" + "open62541" + "/" + "v0.3.0" + "/" + "generate-datatypes" + "/" + "generate_datatypes.py";
             // 0 bsd types source path
             public const string GenerateDatatypesTypeBsd = @" --type-bsd={0}";
             public const string NodesetCompilerCompilerPath = @"/etc/oppo/tools/open62541/v0.3.0/nodeset-compiler/nodeset_compiler.py";

@@ -30,8 +30,6 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             var modelFullName = inputParamsList.ElementAtOrDefault(3);
             var requiredFile1Flag = inputParamsList.ElementAtOrDefault(4);
             var requiredFile1FullName = inputParamsList.ElementAtOrDefault(5);
-            var requiredFile2Flag = inputParamsList.ElementAtOrDefault(6);
-            var requiredFile2FullName = inputParamsList.ElementAtOrDefault(7);
 
             var outputMessages = new MessageLines();
 
