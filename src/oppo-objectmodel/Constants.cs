@@ -75,17 +75,17 @@ namespace Oppo.ObjectModel
             public const string OppoResourcesDll = "oppo-resources.dll";
 
             public const string PythonScript = @"python3";
-            public const string GenerateDatatypesScriptPath = "/" + "etc" + "/" + "oppo" + "/" + "tools" + "/" + "open62541" + "/" + "v0.3.0" + "/" + "generate-datatypes" + "/" + "generate_datatypes.py";
             // 0 bsd types source path
-            public const string GenerateDatatypesTypeBsd = @" --type-bsd={0}";
-            public const string NodesetCompilerCompilerPath = @"/etc/oppo/tools/open62541/v0.3.0/nodeset-compiler/nodeset_compiler.py";
-            public const string NodesetCompilerInternalHeaders = @" --internal-headers";
+            // 1 bsd types target path
+            public const string GenerateDatatypesScriptPath = "/etc/oppo/tools/open62541/v0.3.0/generate-datatypes/generate_datatypes.py --type-bsd={0} {1}";
+
+            public const string NodesetCompilerCompilerPath = @"/etc/oppo/tools/open62541/v0.3.0/nodeset-compiler/nodeset_compiler.py --internal-headers --types-array={0}";
             // 0 ua types
             public const string NodesetCompilerTypesArray = @" --types-array={0}";
             public const string NodesetCompilerBasicTypes = @"UA_TYPES";
             public const string NodesetCompilerExisting = @" --existing {0}";
             // 0 existing model xml source path
-            public const string NodesetCompilerBasicNodeset = @"/etc/oppo/tools/open62541/v0.3.0/existing-nodes/Opc.Ua.NodeSet2.xml";
+            public const string NodesetCompilerBasicNodeset = @" --existing /etc/oppo/tools/open62541/v0.3.0/existing-nodes/Opc.Ua.NodeSet2.xml";
             // 0 xml model source path
             // 1 output directory with name for generated files and method
             public const string NodesetCompilerXml = @" --xml {0} {1}";
