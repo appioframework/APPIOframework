@@ -28,6 +28,10 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             var opcuaAppName = inputParamsList.ElementAtOrDefault(1);
             var modelFlag = inputParamsList.ElementAtOrDefault(2);
             var modelFullName = inputParamsList.ElementAtOrDefault(3);
+            var requiredFile1Flag = inputParamsList.ElementAtOrDefault(4);
+            var requiredFile1FullName = inputParamsList.ElementAtOrDefault(5);
+            var requiredFile2Flag = inputParamsList.ElementAtOrDefault(6);
+            var requiredFile2FullName = inputParamsList.ElementAtOrDefault(7);
 
             var outputMessages = new MessageLines();
 
@@ -42,6 +46,27 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             {
                 OppoLogger.Warn(string.Format(LoggingText.GenerateInformationModelFailureUnknownParam, modelFlag));
                 outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, opcuaAppName, modelFullName, modelFlag), string.Empty);
+                return new CommandResult(false, outputMessages);
+            }
+
+            var requiredTypes = false;
+            var requiredTypesFullName = string.Empty;
+            var requiredModel = false;
+            var requiredModelFullName = string.Empty;
+            if (requiredFile1Flag == Constants.GenerateInformationModeCommandArguments.Types || requiredFile1Flag == Constants.GenerateInformationModeCommandArguments.VerboseTypes)
+            {
+                requiredTypes = true;
+                requiredTypesFullName = requiredFile1FullName;
+            }
+            else if (requiredFile1Flag == Constants.GenerateInformationModeCommandArguments.RequiredModel || requiredFile1Flag == Constants.GenerateInformationModeCommandArguments.VerboseRequiredModel)
+            {
+                requiredModel = true;
+                requiredModelFullName = requiredFile1FullName;
+            }
+            else if (!string.IsNullOrEmpty(requiredFile1Flag))
+            {
+                OppoLogger.Warn(string.Format(LoggingText.GenerateInformationModelFailureUnknownParam, requiredFile1Flag));
+                outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, opcuaAppName, modelFullName, requiredFile1Flag), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
 
@@ -63,6 +88,18 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 return new CommandResult(false, outputMessages);
             }
 
+            // check if required types file exists
+            if (requiredTypes)
+            {
+                var calculatedRequiredTypesPath = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.Models, requiredFile1FullName);
+                if (!_fileSystem.FileExists(calculatedRequiredTypesPath))
+                {
+                    OppoLogger.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsMissingFile, calculatedRequiredTypesPath));
+                    outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureMissingFile, opcuaAppName, modelFullName, calculatedRequiredTypesPath), string.Empty);
+                    return new CommandResult(false, outputMessages);
+                }
+            }
+
             // check if model file is an *.xml file
             var modelFileExtension = _fileSystem.GetExtension(modelFullName);
             if (modelFileExtension != Constants.FileExtension.InformationModel)
@@ -70,6 +107,18 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 OppoLogger.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidModelFile, modelFullName));
                 outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureInvalidModel, opcuaAppName, modelFullName, modelFileExtension), string.Empty);
                 return new CommandResult(false, outputMessages);
+            }
+
+            // check if required types file is a *.bsd
+            if (requiredTypes)
+            {
+                var requiredTypesFileExtension = _fileSystem.GetExtension(requiredFile1FullName);
+                if (requiredTypesFileExtension != Constants.FileExtension.ModelTypes)
+                {
+                    OppoLogger.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidFile, requiredFile1FullName));
+                    outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureInvalidFile, opcuaAppName, requiredFile1FullName, requiredTypesFileExtension), string.Empty);
+                    return new CommandResult(false, outputMessages);
+                }
             }
 
             // validate model
@@ -84,14 +133,41 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 
             // create inside src/server the information-models directory if it is not already created
             CreateNeededDirectories(srcDirectory);
-
+            
             var modelName = _fileSystem.GetFileNameWithoutExtension(modelFullName);
             var modelTargetLocation = _fileSystem.CombinePaths(Constants.DirectoryName.InformationModels, modelName);
             
             var sourceModelRelativePath = @"../../" + _fileSystem.CombinePaths(Constants.DirectoryName.Models, modelFullName);
 
-            var pythonResult = _fileSystem.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, string.Format(Constants.ExecutableName.NodsetCompilerArguments, sourceModelRelativePath, modelTargetLocation));
-            if (!pythonResult)
+            var requiredTypesName = string.Empty;
+            if (requiredTypes)
+            {
+                var requiredTypesSourceLocation = @"../../" + _fileSystem.CombinePaths(Constants.DirectoryName.Models, requiredTypesFullName);
+                requiredTypesName = _fileSystem.GetFileNameWithoutExtension(requiredTypesFullName);
+                var requiredTypesTargetLocation = _fileSystem.CombinePaths(Constants.DirectoryName.InformationModels, requiredTypesName.ToLower());
+
+                var generatedTypesArgs = Constants.ExecutableName.GenerateDatatypesScriptPath + string.Format(Constants.ExecutableName.GenerateDatatypesTypeBsd, requiredTypesSourceLocation) + " " + requiredTypesTargetLocation;
+                var generatedTypesResult = _fileSystem.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, generatedTypesArgs);
+                if (!generatedTypesResult)
+                {
+                    OppoLogger.Warn(LoggingText.GeneratedTypesExecutableFails);
+                    outputMessages.Add(string.Format(OutputText.GenerateInformationModelGenerateTypesFailure, opcuaAppName, modelFullName, requiredTypesFullName), string.Empty);
+                    return new CommandResult(false, outputMessages);
+                }
+            }
+            
+            var nodesetCompilerArgs = Constants.ExecutableName.NodesetCompilerCompilerPath + Constants.ExecutableName.NodesetCompilerInternalHeaders + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes);
+            if (requiredTypes)
+            {
+                nodesetCompilerArgs += string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, requiredTypesName.ToUpper());
+            }
+            else
+            {
+                nodesetCompilerArgs += string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes);
+            }
+            nodesetCompilerArgs += string.Format(Constants.ExecutableName.NodesetCompilerExisting, Constants.ExecutableName.NodesetCompilerBasicNodeset) + string.Format(Constants.ExecutableName.NodesetCompilerXml, sourceModelRelativePath, modelTargetLocation);
+            var nodesetResult = _fileSystem.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, nodesetCompilerArgs);
+            if (!nodesetResult)
             {
                 OppoLogger.Warn(LoggingText.NodesetCompilerExecutableFails);
                 outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailure, opcuaAppName, modelFullName), string.Empty);
@@ -99,11 +175,15 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             }
 
             AdjustModelsTemplate(srcDirectory, modelName);
+            if (requiredTypes)
+            {
+                AdjustModelsTemplate(srcDirectory, requiredTypesName.ToLower() + "_generated");
+            }
             AdjustNodeSetFunctionsTemplate(srcDirectory, modelName);
 
             outputMessages.Add(string.Format(OutputText.GenerateInformationModelSuccess, opcuaAppName, modelFullName), string.Empty);
             OppoLogger.Info(LoggingText.GenerateInformationModelSuccess);
-            return new CommandResult(true, outputMessages);            
+            return new CommandResult(true, outputMessages);           
         }
         
         /// <summary>
@@ -114,7 +194,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
         /// <param name="fileNameToInclude">Generated file name without extension to be included.</param>
         private void AdjustModelsTemplate(string srcDirectory, string fileNameToInclude)
         {
-            var includeSnippet = Constants.IncludeSnippet + "\"" + Constants.DirectoryName.InformationModels + "/" + fileNameToInclude + Constants.FileExtension.CFile + "\"";
+            var includeSnippet = Constants.IncludeSnippet + " \"" + Constants.DirectoryName.InformationModels + "/" + fileNameToInclude + Constants.FileExtension.CFile + "\"";
 
             var modelsFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_models_c));
             var currentFileContentLineByLine = ReadFileContent(modelsFileStream);

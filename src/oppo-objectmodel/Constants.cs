@@ -12,6 +12,7 @@ namespace Oppo.ObjectModel
             public const string OppoProject = ".oppoproj";
             public const string DebianInstaller = ".deb";
             public const string InformationModel = ".xml";
+            public const string ModelTypes = ".bsd";
             public const string CFile = ".c";
         }
 
@@ -74,13 +75,16 @@ namespace Oppo.ObjectModel
             public const string OppoResourcesDll = "oppo-resources.dll";
 
             public const string PythonScript = @"python3";
-            public const string GenerateDatatypesScriptPath = @"/etc/oppo/tools/open62541/v0.3.0/generate-datatypes/generate_datatypes.py";
-            public const string GenerateDatatypesTypeBsd = @" --type-bsd=";
-            public const string NodsetCompilerArguments = @"/etc/oppo/tools/open62541/v0.3.0/nodeset-compiler/nodeset_compiler.py --types-array=UA_TYPES --existing /etc/oppo/tools/open62541/v0.3.0/existing-nodes/Opc.Ua.NodeSet2.xml --xml {0} {1}";
+            public const string GenerateDatatypesScriptPath = "/etc" + "/oppo" + "/tools" + "/open62541" + "/v0.3.0" + "/generate-datatypes" + "/generate_datatypes.py";
+            // 0 bsd types source path
+            public const string GenerateDatatypesTypeBsd = @" --type-bsd={0}";
             public const string NodesetCompilerCompilerPath = @"/etc/oppo/tools/open62541/v0.3.0/nodeset-compiler/nodeset_compiler.py";
-            public const string NodesetCompilerTypesArray = @" --types-array=";
+            public const string NodesetCompilerInternalHeaders = @" --internal-headers";
+            // 0 ua types
+            public const string NodesetCompilerTypesArray = @" --types-array={0}";
             public const string NodesetCompilerBasicTypes = @"UA_TYPES";
-            public const string NodesetCompilerExisting = @" --existing ";
+            public const string NodesetCompilerExisting = @" --existing {0}";
+            // 0 existing model xml source path
             public const string NodesetCompilerBasicNodeset = @"/etc/oppo/tools/open62541/v0.3.0/existing-nodes/Opc.Ua.NodeSet2.xml";
             // 0 xml model source path
             // 1 output directory with name for generated files and method
@@ -147,6 +151,10 @@ namespace Oppo.ObjectModel
             public const string VerboseName = "--name";
             public const string Model = "-m";
             public const string VerboseModel = "--model";
+            public const string Types = "-t";
+            public const string VerboseTypes = "--types";
+            public const string RequiredModel = "-r";
+            public const string VerboseRequiredModel = "--requiredModel";
             public const string VerboseHelp = "--help";
             public const string Help = "-h";
         }

@@ -15,6 +15,7 @@
         public const string MesonExecutableFails = "Meson Failed!";
         public const string NinjaExecutableFails = "Ninja Failed!";
         public const string NodesetCompilerExecutableFails = "Nodeset compiler Failed!";
+        public const string GeneratedTypesExecutableFails = "Generate datatypes for NodeSet information-model Failed!";
         public const string BuildSuccess = "Build Success!";
         public const string CleanSuccess = "Clean Success!";
         public const string CleanFailure = "Clean Failure!";
@@ -30,7 +31,9 @@
         public const string OppoHelpForDeployCommandCalled = "Help for deploy <command> called";
         public const string GenerateInformationModelSuccess = "Generate information-model success!";
         public const string NodesetCompilerExecutableFailsMissingModelFile = "Generate information-model failure! Can't find model with path '{0}'!";
+        public const string NodesetCompilerExecutableFailsMissingFile = "Generate information-model failure! Can't find file with path '{0}'!";
         public const string NodesetCompilerExecutableFailsInvalidModelFile = "Generate information-model failure! Invalid model file extension '{0}'!";
+        public const string NodesetCompilerExecutableFailsInvalidFile = "Generate information-model failure! Invalid file extension '{0}'!";
 
         // generate command
         public const string GenerateInformationModelFailureUnknownParam = "Generate information-model failure! Unknown command parameter '{0}'!";
