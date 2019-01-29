@@ -56,9 +56,6 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 requiredTypes = true;
                 requiredTypesFullName = requiredFile1FullName;
             }
-            else if (requiredFile1Flag == Constants.GenerateInformationModeCommandArguments.RequiredModel || requiredFile1Flag == Constants.GenerateInformationModeCommandArguments.VerboseRequiredModel)
-            {
-            }
             else if (!string.IsNullOrEmpty(requiredFile1Flag))
             {
                 OppoLogger.Warn(string.Format(LoggingText.GenerateInformationModelFailureUnknownParam, requiredFile1Flag));
