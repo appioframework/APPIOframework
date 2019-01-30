@@ -42,7 +42,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             var outputMessages = new MessageLines();
 
             // check project flag and name
-            if (!CheckProjectName(ref argumentsCheckMesseges, nameFlag, opcuaAppName, modelFullName))
+            if (!ValidateProjectName(ref argumentsCheckMesseges, nameFlag, opcuaAppName, modelFullName))
             {
                 OppoLogger.Warn(argumentsCheckMesseges.loggerMessage);
                 outputMessages.Add(argumentsCheckMesseges.outputMessage, string.Empty);
@@ -50,7 +50,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             }
 
             // check model flag and file
-            if(!CheckModelFile(ref argumentsCheckMesseges, opcuaAppName, modelFlag, modelFullName))
+            if(!ValidateModelFile(ref argumentsCheckMesseges, opcuaAppName, modelFlag, modelFullName))
             {
                 OppoLogger.Warn(argumentsCheckMesseges.loggerMessage);
                 outputMessages.Add(argumentsCheckMesseges.outputMessage, string.Empty);
@@ -60,7 +60,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             // check types flag and file
             var typesRequired = false;
             var typesFullName = string.Empty;
-            if (!CheckTypesFile(ref argumentsCheckMesseges, ref typesRequired, ref typesFullName, opcuaAppName, modelFullName, requiredFile1Flag, requiredFile1FullName))
+            if (!ValidateTypesFile(ref argumentsCheckMesseges, ref typesRequired, ref typesFullName, opcuaAppName, modelFullName, requiredFile1Flag, requiredFile1FullName))
             {
                 OppoLogger.Warn(argumentsCheckMesseges.loggerMessage);
                 outputMessages.Add(argumentsCheckMesseges.outputMessage, string.Empty);
@@ -132,7 +132,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             return new CommandResult(true, outputMessages);           
         }
 
-        private bool CheckProjectName(ref ArgumentsCheckMessages messages, string nameFlag, string opcuaAppName, string modelFullName)
+        private bool ValidateProjectName(ref ArgumentsCheckMessages messages, string nameFlag, string opcuaAppName, string modelFullName)
         {
             // check project name flag
             if (nameFlag != Constants.GenerateInformationModeCommandArguments.Name && nameFlag != Constants.GenerateInformationModeCommandArguments.VerboseName)
@@ -153,7 +153,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             return true;
         }
 
-        private bool CheckModelFile(ref ArgumentsCheckMessages messages, string opcuaAppName, string modelFlag, string modelFullName)
+        private bool ValidateModelFile(ref ArgumentsCheckMessages messages, string opcuaAppName, string modelFlag, string modelFullName)
         {
             // check model flag
             if (modelFlag != Constants.GenerateInformationModeCommandArguments.Model && modelFlag != Constants.GenerateInformationModeCommandArguments.VerboseModel)
@@ -192,7 +192,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             return true;
         }
 
-        private bool CheckTypesFile(ref ArgumentsCheckMessages messages, ref bool requiredTypes, ref string requiredTypesFullName, string opcuaAppName, string modelFullName, string requiredFile1Flag, string requiredFile1FullName)
+        private bool ValidateTypesFile(ref ArgumentsCheckMessages messages, ref bool requiredTypes, ref string requiredTypesFullName, string opcuaAppName, string modelFullName, string requiredFile1Flag, string requiredFile1FullName)
         {
             //check types flags
             if (requiredFile1Flag == Constants.GenerateInformationModeCommandArguments.Types || requiredFile1Flag == Constants.GenerateInformationModeCommandArguments.VerboseTypes)

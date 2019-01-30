@@ -34,7 +34,7 @@
         public const string NodesetCompilerExecutableFailsMissingFile = "Generate information-model failure! Can't find file with path '{0}'!";
         public const string NodesetCompilerExecutableFailsInvalidModelFile = "Generate information-model failure! Invalid model file extension '{0}'!";
         public const string NodesetCompilerExecutableFailsInvalidFile = "Generate information-model failure! Invalid file extension '{0}'!";
-
+        public const string NodesetCompilerExecutableFailsRequiredModel = "Generate information-model failure! Can't use required model '{0}'!";
         // generate command
         public const string GenerateInformationModelFailureUnknownParam = "Generate information-model failure! Unknown command parameter '{0}'!";
         public const string GenerateInformationModelFailureEmptyOpcuaAppName = "Generate information-model failure! Empty opcuaapp name!";
