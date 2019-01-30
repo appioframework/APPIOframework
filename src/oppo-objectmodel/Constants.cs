@@ -75,17 +75,17 @@ namespace Oppo.ObjectModel
             public const string OppoResourcesDll = "oppo-resources.dll";
 
             public const string PythonScript = @"python3";
-            public static readonly string GenerateDatatypesScriptPath = System.IO.Path.Combine(new string[] { "etc", "oppo", "tools", "open62541", "v0.3.0", "generate-datatypes", "generate_datatypes.py" });
+            public static readonly string GenerateDatatypesScriptPath = @"\" + System.IO.Path.Combine(new string[] { "etc", "oppo", "tools", "open62541", "v0.3.0", "generate-datatypes", "generate_datatypes.py" });
             // 0 bsd types source path
             public const string GenerateDatatypesTypeBsd = @" --type-bsd={0}";
-            public static readonly string NodesetCompilerCompilerPath = System.IO.Path.Combine(new string[] { "etc", "oppo", "tools", "open62541", "v0.3.0", "nodeset-compiler", "nodeset_compiler.py" });
+            public static readonly string NodesetCompilerCompilerPath = @"\" + System.IO.Path.Combine(new string[] { "etc", "oppo", "tools", "open62541", "v0.3.0", "nodeset-compiler", "nodeset_compiler.py" });
             public const string NodesetCompilerInternalHeaders = @" --internal-headers";
             // 0 ua types
             public const string NodesetCompilerTypesArray = @" --types-array={0}";
             public const string NodesetCompilerBasicTypes = @"UA_TYPES";
             public const string NodesetCompilerExisting = @" --existing {0}";
             // 0 existing model xml source path
-            public static readonly string NodesetCompilerBasicNodeset = System.IO.Path.Combine(new string[] { "etc", "oppo", "tools", "open62541", "v0.3.0", "existing-nodes", "Opc.Ua.NodeSet2.xml" });
+            public static readonly string NodesetCompilerBasicNodeset = @"\" + System.IO.Path.Combine(new string[] { "etc", "oppo", "tools", "open62541", "v0.3.0", "existing-nodes", "Opc.Ua.NodeSet2.xml" });
             // 0 xml model source path
             // 1 output directory with name for generated files and method
             public const string NodesetCompilerXml = @" --xml {0} {1}";
