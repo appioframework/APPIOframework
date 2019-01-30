@@ -561,17 +561,22 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         [Test]
         public void FailOnGenerateInformationModelBecauseUknownTypesParam([ValueSource(nameof(InvalidInputs_UnknownTypesParam))] string[] inputParams)
         {
-            // Arrange            
-            _loggerListenerMock.Setup(x => x.Warn(string.Format(LoggingText.GenerateInformationModelFailureUnknownParam, inputParams.ElementAtOrDefault(4))));
-
-            var calculatedModelFilePath = System.IO.Path.Combine(inputParams.ElementAtOrDefault(1), DirectoryName.Models, inputParams.ElementAtOrDefault(3));
-            _mockFileSystem.Setup(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), DirectoryName.Models, inputParams.ElementAtOrDefault(3))).Returns(calculatedModelFilePath);
+            //Arrange
+            var opcuaAppName = inputParams.ElementAtOrDefault(1);
+            var modelFullName = inputParams.ElementAtOrDefault(3);
+            var typesFlag = inputParams.ElementAtOrDefault(4);
+                       
+            _loggerListenerMock.Setup(x => x.Warn(string.Format(LoggingText.GenerateInformationModelFailureUnknownParam, typesFlag)));
+          
+           // Arrange modelFile
+            var calculatedModelFilePath = System.IO.Path.Combine (opcuaAppName, DirectoryName.Models, modelFullName);
+            _mockFileSystem.Setup(x => x.CombinePaths(opcuaAppName, DirectoryName.Models, modelFullName)).Returns(calculatedModelFilePath);
             _mockFileSystem.Setup(x => x.FileExists(calculatedModelFilePath)).Returns(true);
 
-            var modelName = System.IO.Path.GetFileNameWithoutExtension(inputParams.ElementAtOrDefault(3));
-            var modelExtension = System.IO.Path.GetExtension(inputParams.ElementAtOrDefault(3));
-            _mockFileSystem.Setup(x => x.GetExtension(inputParams.ElementAtOrDefault(3))).Returns(modelExtension);
-            _mockFileSystem.Setup(x => x.GetFileNameWithoutExtension(inputParams.ElementAtOrDefault(3))).Returns(modelName);
+            var modelName = System.IO.Path.GetFileNameWithoutExtension(modelFullName);
+            var modelExtension = System.IO.Path.GetExtension(modelFullName);
+            _mockFileSystem.Setup(x => x.GetExtension(modelFullName)).Returns(modelExtension);
+            _mockFileSystem.Setup(x => x.GetFileNameWithoutExtension(modelFullName)).Returns(modelName);
 
             _modelValidatorMock.Setup(x => x.Validate(calculatedModelFilePath, It.IsAny<string>())).Returns(true);
 
@@ -582,29 +587,38 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsFalse(commandResult.Sucsess);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
-            Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, inputParams.ElementAtOrDefault(1), inputParams.ElementAtOrDefault(3), inputParams.ElementAtOrDefault(4)), firstMessageLine.Key);
+            Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, opcuaAppName, modelFullName, typesFlag), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
         }
 
         [Test]
         public void FailOnGenerateInformationModelBecauseTypesDoesntExist([ValueSource(nameof(ValidInputs_ExtraTypes))] string[] inputParams)
-        {
-            // Arrange            
-            _mockFileSystem.Setup(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp)).Returns(_srcDir);
+        {     
+            //Arrange
+            var opcuaAppName = inputParams.ElementAtOrDefault(1);
+            var modelFullName = inputParams.ElementAtOrDefault(3);
+            var typesFullName = inputParams.ElementAtOrDefault(5);
 
-            var calculatedModelFilePath = System.IO.Path.Combine(inputParams.ElementAtOrDefault(1), DirectoryName.Models, inputParams.ElementAtOrDefault(3));
-            _mockFileSystem.Setup(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), DirectoryName.Models, inputParams.ElementAtOrDefault(3))).Returns(calculatedModelFilePath);
+            // Arrange Opcua Application  
+            _mockFileSystem.Setup(x => x.CombinePaths(opcuaAppName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp)).Returns(_srcDir);
+
+            // Arrange Model
+            var calculatedModelFilePath = System.IO.Path.Combine(opcuaAppName, DirectoryName.Models, modelFullName);
+            _mockFileSystem.Setup(x => x.CombinePaths(opcuaAppName, DirectoryName.Models, modelFullName)).Returns(calculatedModelFilePath);
             _mockFileSystem.Setup(x => x.FileExists(calculatedModelFilePath)).Returns(true);
-            var calculatedTypesFilePath = System.IO.Path.Combine(inputParams.ElementAtOrDefault(1), DirectoryName.Models, inputParams.ElementAtOrDefault(5));
-            _mockFileSystem.Setup(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), DirectoryName.Models, inputParams.ElementAtOrDefault(5))).Returns(calculatedTypesFilePath);
-            _mockFileSystem.Setup(x => x.FileExists(calculatedTypesFilePath)).Returns(false);
 
-            var modelName = System.IO.Path.GetFileNameWithoutExtension(inputParams.ElementAtOrDefault(3));
-            var modelExtension = System.IO.Path.GetExtension(inputParams.ElementAtOrDefault(3));
-            _mockFileSystem.Setup(x => x.GetExtension(inputParams.ElementAtOrDefault(3))).Returns(modelExtension);
-            _mockFileSystem.Setup(x => x.GetFileNameWithoutExtension(inputParams.ElementAtOrDefault(3))).Returns(modelName);
+            var modelName = System.IO.Path.GetFileNameWithoutExtension(modelFullName);
+            _mockFileSystem.Setup(x => x.GetFileNameWithoutExtension(modelFullName)).Returns(modelName);
 
+            var modelExtension = System.IO.Path.GetExtension(modelFullName);
+            _mockFileSystem.Setup(x => x.GetExtension(modelFullName)).Returns(modelExtension);
+        
             _modelValidatorMock.Setup(x => x.Validate(calculatedModelFilePath, It.IsAny<string>())).Returns(true);
+     
+            //Arrange Types
+            var calculatedTypesFilePath = System.IO.Path.Combine(opcuaAppName, DirectoryName.Models, typesFullName);
+            _mockFileSystem.Setup(x => x.CombinePaths(opcuaAppName, DirectoryName.Models, typesFullName)).Returns(calculatedTypesFilePath);
+            _mockFileSystem.Setup(x => x.FileExists(calculatedTypesFilePath)).Returns(false);
 
             _loggerListenerMock.Setup(x => x.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsMissingFile, calculatedTypesFilePath)));
 
@@ -615,32 +629,41 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsFalse(commandResult.Sucsess);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
-            Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureMissingFile, inputParams.ElementAtOrDefault(1), inputParams.ElementAtOrDefault(3), calculatedTypesFilePath), firstMessageLine.Key);
+            Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureMissingFile, opcuaAppName, modelFullName, calculatedTypesFilePath), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
-            _mockFileSystem.Verify(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), Constants.DirectoryName.Models, inputParams.ElementAtOrDefault(5)), Times.Once);
+            _mockFileSystem.Verify(x => x.CombinePaths(opcuaAppName, Constants.DirectoryName.Models, typesFullName), Times.Once);
         }
 
         [Test]
         public void FailOnGenerateInformationModelBecauseInvalidTypesExtension([ValueSource(nameof(InvalidInputs_InvalidTypesExtension))] string[] inputParams)
         {
-            // Arrange            
-            _mockFileSystem.Setup(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp)).Returns(_srcDir);
+            //Arrange
+            var opcuaAppName = inputParams.ElementAtOrDefault(1);
+            var modelFullName = inputParams.ElementAtOrDefault(3);
+            var typesFullName = inputParams.ElementAtOrDefault(5);
 
-            var calculatedModelFilePath = System.IO.Path.Combine(inputParams.ElementAtOrDefault(1), DirectoryName.Models, inputParams.ElementAtOrDefault(3));
-            _mockFileSystem.Setup(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), DirectoryName.Models, inputParams.ElementAtOrDefault(3))).Returns(calculatedModelFilePath);
+            // Arrange Opcua Aplication            
+            _mockFileSystem.Setup(x => x.CombinePaths(opcuaAppName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp)).Returns(_srcDir);
+
+            //Arrange Model
+            var calculatedModelFilePath = System.IO.Path.Combine(opcuaAppName, DirectoryName.Models, modelFullName);
+            _mockFileSystem.Setup(x => x.CombinePaths(opcuaAppName, DirectoryName.Models, modelFullName)).Returns(calculatedModelFilePath);
             _mockFileSystem.Setup(x => x.FileExists(calculatedModelFilePath)).Returns(true);
-            var calculatedTypesFilePath = System.IO.Path.Combine(inputParams.ElementAtOrDefault(1), DirectoryName.Models, inputParams.ElementAtOrDefault(5));
-            _mockFileSystem.Setup(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), DirectoryName.Models, inputParams.ElementAtOrDefault(5))).Returns(calculatedTypesFilePath);
-            _mockFileSystem.Setup(x => x.FileExists(calculatedTypesFilePath)).Returns(true);
 
-            var modelExtension = System.IO.Path.GetExtension(inputParams.ElementAtOrDefault(3));
-            _mockFileSystem.Setup(x => x.GetExtension(inputParams.ElementAtOrDefault(3))).Returns(modelExtension);
-            var typesExtension = System.IO.Path.GetExtension(inputParams.ElementAtOrDefault(5));
-            _mockFileSystem.Setup(x => x.GetExtension(inputParams.ElementAtOrDefault(5))).Returns(typesExtension);
+            var modelExtension = System.IO.Path.GetExtension(modelFullName);
+            _mockFileSystem.Setup(x => x.GetExtension(modelFullName)).Returns(modelExtension);
 
             _modelValidatorMock.Setup(x => x.Validate(calculatedModelFilePath, It.IsAny<string>())).Returns(true);
 
-            _loggerListenerMock.Setup(x => x.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidFile, inputParams.ElementAtOrDefault(5))));
+            //Arrange Types
+            var calculatedTypesFilePath = System.IO.Path.Combine(opcuaAppName, DirectoryName.Models, typesFullName);
+            _mockFileSystem.Setup(x => x.CombinePaths(opcuaAppName, DirectoryName.Models, typesFullName)).Returns(calculatedTypesFilePath);
+            _mockFileSystem.Setup(x => x.FileExists(calculatedTypesFilePath)).Returns(true);
+
+            var typesExtension = System.IO.Path.GetExtension(typesFullName);
+            _mockFileSystem.Setup(x => x.GetExtension(typesFullName)).Returns(typesExtension);
+            
+            _loggerListenerMock.Setup(x => x.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidFile, typesFullName)));
 
             // Act
             var commandResult = _strategy.Execute(inputParams);
@@ -649,41 +672,46 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsFalse(commandResult.Sucsess);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
-            Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureInvalidFile, inputParams.ElementAtOrDefault(1), inputParams.ElementAtOrDefault(3), inputParams.ElementAtOrDefault(5)), firstMessageLine.Key);
+            Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureInvalidFile, opcuaAppName, modelFullName, typesFullName), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
-            _mockFileSystem.Verify(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), Constants.DirectoryName.Models, inputParams.ElementAtOrDefault(5)), Times.Once);
+            _mockFileSystem.Verify(x => x.CombinePaths(opcuaAppName, Constants.DirectoryName.Models, typesFullName), Times.Once);
         }
 
         [Test]
         public void FailOnGenerateInformationModelBecauseGenerateTypesCallFailure([ValueSource(nameof(ValidInputs_ExtraTypes))] string[] inputParams)
         {
             // Arrange
+            var opcuaAppName = inputParams.ElementAtOrDefault(1);
+            var modelFullName = inputParams.ElementAtOrDefault(3);
+            var typesFullName = inputParams.ElementAtOrDefault(5);
 
-            _mockFileSystem.Setup(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp)).Returns(_srcDir);
+            //Arrange Opcua Application
+            _mockFileSystem.Setup(x => x.CombinePaths(opcuaAppName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp)).Returns(_srcDir);
 
-            var modelName = System.IO.Path.GetFileName(inputParams.ElementAtOrDefault(3));
-            _mockFileSystem.Setup(x => x.GetFileName(inputParams.ElementAtOrDefault(3))).Returns(modelName);
-            var typesName = System.IO.Path.GetFileName(inputParams.ElementAtOrDefault(5));
-            _mockFileSystem.Setup(x => x.GetFileName(inputParams.ElementAtOrDefault(5))).Returns(typesName);
-
-            var calculatedModelFilePath = System.IO.Path.Combine(inputParams.ElementAtOrDefault(1), DirectoryName.Models, inputParams.ElementAtOrDefault(3));
-            _mockFileSystem.Setup(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), DirectoryName.Models, inputParams.ElementAtOrDefault(3))).Returns(calculatedModelFilePath);
+            //Arrange Model
+            var modelName = System.IO.Path.GetFileName(modelFullName);
+            _mockFileSystem.Setup(x => x.GetFileName(modelFullName)).Returns(modelName);
+            
+            var calculatedModelFilePath = System.IO.Path.Combine(opcuaAppName, DirectoryName.Models, modelFullName);
+            _mockFileSystem.Setup(x => x.CombinePaths(opcuaAppName, DirectoryName.Models, modelFullName)).Returns(calculatedModelFilePath);
             _mockFileSystem.Setup(x => x.FileExists(calculatedModelFilePath)).Returns(true);
-            var calculatedTypesFilePath = System.IO.Path.Combine(inputParams.ElementAtOrDefault(1), DirectoryName.Models, inputParams.ElementAtOrDefault(5));
-            _mockFileSystem.Setup(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), DirectoryName.Models, inputParams.ElementAtOrDefault(5))).Returns(calculatedTypesFilePath);
-            _mockFileSystem.Setup(x => x.FileExists(calculatedTypesFilePath)).Returns(true);
 
-            var modelExtension = System.IO.Path.GetExtension(inputParams.ElementAtOrDefault(3));
-            _mockFileSystem.Setup(x => x.GetExtension(inputParams.ElementAtOrDefault(3))).Returns(modelExtension);
-            var typesExtension = System.IO.Path.GetExtension(inputParams.ElementAtOrDefault(5));
-            _mockFileSystem.Setup(x => x.GetExtension(inputParams.ElementAtOrDefault(5))).Returns(typesExtension);
-
-            _mockFileSystem.Setup(x => x.GetFileNameWithoutExtension(inputParams.ElementAtOrDefault(5))).Returns(typesName);
+            var modelExtension = System.IO.Path.GetExtension(modelFullName);
+            _mockFileSystem.Setup(x => x.GetExtension(modelFullName)).Returns(modelExtension);
 
             _modelValidatorMock.Setup(x => x.Validate(calculatedModelFilePath, It.IsAny<string>())).Returns(true);
+            
+            //Arrange Types
+            var typesName = System.IO.Path.GetFileName(typesFullName);
+            _mockFileSystem.Setup(x => x.GetFileName(typesFullName)).Returns(typesName);
 
-            var args = inputParams.ElementAtOrDefault(3) + " " + typesName;
-            _mockFileSystem.Setup(x => x.CallExecutable(Constants.ExecutableName.PythonScript, _srcDir, args)).Returns(false);
+            var calculatedTypesFilePath = System.IO.Path.Combine(opcuaAppName, DirectoryName.Models, typesFullName);
+            _mockFileSystem.Setup(x => x.CombinePaths(opcuaAppName, DirectoryName.Models, typesFullName)).Returns(calculatedTypesFilePath);
+            _mockFileSystem.Setup(x => x.FileExists(calculatedTypesFilePath)).Returns(true);
+
+            var typesExtension = System.IO.Path.GetExtension(typesFullName);
+            _mockFileSystem.Setup(x => x.GetExtension(typesFullName)).Returns(typesExtension);
+            _mockFileSystem.Setup(x => x.GetFileNameWithoutExtension(typesFullName)).Returns(typesName);
 
             // Act
             var commandResult = _strategy.Execute(inputParams);
@@ -692,10 +720,12 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsFalse(commandResult.Sucsess);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
-            Assert.AreEqual(string.Format(OutputText.GenerateInformationModelGenerateTypesFailure, inputParams.ElementAtOrDefault(1), inputParams.ElementAtOrDefault(3), inputParams.ElementAtOrDefault(5)), firstMessageLine.Key);
+            Assert.AreEqual(string.Format(OutputText.GenerateInformationModelGenerateTypesFailure, opcuaAppName, modelFullName, typesFullName), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
             _loggerListenerMock.Verify(x => x.Warn(LoggingText.GeneratedTypesExecutableFails), Times.Once);
-            _mockFileSystem.Verify(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp), Times.Once);
+            _mockFileSystem.Verify(x => x.CombinePaths(opcuaAppName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp), Times.Once);
+
+            _mockFileSystem.Verify(x => x.CallExecutable(Constants.ExecutableName.PythonScript,_srcDir,It.IsAny<string>()),Times.Once);
         }
     }
         
