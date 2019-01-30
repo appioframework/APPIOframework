@@ -21,6 +21,12 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 
         public string Name { get; private set; }
 
+        private struct OutputMessages
+        {
+            public string outputMessage;
+            public string loggerMessage;
+        }
+
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
             var inputParamsList = inputParams.ToList();
@@ -33,90 +39,32 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 
             var outputMessages = new MessageLines();
 
-            if (nameFlag != Constants.GenerateInformationModeCommandArguments.Name && nameFlag != Constants.GenerateInformationModeCommandArguments.VerboseName)
+            // check project flag and name
+            OutputMessages projectNameCheckResult = CheckProjectName(nameFlag, opcuaAppName, modelFullName);
+            if (projectNameCheckResult.loggerMessage != string.Empty)
             {
-                OppoLogger.Warn(string.Format(LoggingText.GenerateInformationModelFailureUnknownParam, nameFlag));
-                outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, opcuaAppName, modelFullName, nameFlag), string.Empty);
+                OppoLogger.Warn(projectNameCheckResult.loggerMessage);
+                outputMessages.Add(projectNameCheckResult.outputMessage, string.Empty);
                 return new CommandResult(false, outputMessages);
             }
 
-            if (modelFlag != Constants.GenerateInformationModeCommandArguments.Model && modelFlag != Constants.GenerateInformationModeCommandArguments.VerboseModel)
+            // check model flag and file
+            OutputMessages modelCheckResult = CheckModelFile(opcuaAppName, modelFlag, modelFullName);
+            if (modelCheckResult.loggerMessage != string.Empty)
             {
-                OppoLogger.Warn(string.Format(LoggingText.GenerateInformationModelFailureUnknownParam, modelFlag));
-                outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, opcuaAppName, modelFullName, modelFlag), string.Empty);
+                OppoLogger.Warn(modelCheckResult.loggerMessage);
+                outputMessages.Add(modelCheckResult.outputMessage, string.Empty);
                 return new CommandResult(false, outputMessages);
             }
 
+            // check types flag and file
             var requiredTypes = false;
             var requiredTypesFullName = string.Empty;
-            if (requiredFile1Flag == Constants.GenerateInformationModeCommandArguments.Types || requiredFile1Flag == Constants.GenerateInformationModeCommandArguments.VerboseTypes)
+            OutputMessages typesCheckResult = CheckTypesFile(ref requiredTypes, ref requiredTypesFullName, opcuaAppName, modelFullName, requiredFile1Flag, requiredFile1FullName);
+            if (typesCheckResult.loggerMessage != string.Empty)
             {
-                requiredTypes = true;
-                requiredTypesFullName = requiredFile1FullName;
-            }
-            else if (!string.IsNullOrEmpty(requiredFile1Flag))
-            {
-                OppoLogger.Warn(string.Format(LoggingText.GenerateInformationModelFailureUnknownParam, requiredFile1Flag));
-                outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, opcuaAppName, modelFullName, requiredFile1Flag), string.Empty);
-                return new CommandResult(false, outputMessages);
-            }
-
-            if (string.IsNullOrEmpty(opcuaAppName))
-            {
-                OppoLogger.Warn(LoggingText.GenerateInformationModelFailureEmptyOpcuaAppName);
-                outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureEmptyOpcuaAppName, opcuaAppName, modelFullName), string.Empty);
-
-                return new CommandResult(false, outputMessages);
-            }
-
-
-            // check if model file exists
-            var calculatedModelFilePath = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.Models, modelFullName);
-            if (!_fileSystem.FileExists(calculatedModelFilePath))
-            {
-                OppoLogger.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsMissingModelFile, calculatedModelFilePath));
-                outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureMissingModel, opcuaAppName, modelFullName, calculatedModelFilePath), string.Empty);
-                return new CommandResult(false, outputMessages);
-            }
-
-            // check if required types file exists
-            if (requiredTypes)
-            {
-                var calculatedRequiredTypesPath = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.Models, requiredFile1FullName);
-                if (!_fileSystem.FileExists(calculatedRequiredTypesPath))
-                {
-                    OppoLogger.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsMissingFile, calculatedRequiredTypesPath));
-                    outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureMissingFile, opcuaAppName, modelFullName, calculatedRequiredTypesPath), string.Empty);
-                    return new CommandResult(false, outputMessages);
-                }
-            }
-
-            // check if model file is an *.xml file
-            var modelFileExtension = _fileSystem.GetExtension(modelFullName);
-            if (modelFileExtension != Constants.FileExtension.InformationModel)
-            {
-                OppoLogger.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidModelFile, modelFullName));
-                outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureInvalidModel, opcuaAppName, modelFullName, modelFileExtension), string.Empty);
-                return new CommandResult(false, outputMessages);
-            }
-
-            // check if required types file is a *.bsd
-            if (requiredTypes)
-            {
-                var requiredTypesFileExtension = _fileSystem.GetExtension(requiredTypesFullName);
-                if (requiredTypesFileExtension != Constants.FileExtension.ModelTypes)
-                {
-                    OppoLogger.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidFile, requiredTypesFullName));
-                    outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureInvalidFile, opcuaAppName, modelFullName, requiredTypesFullName), string.Empty);
-                    return new CommandResult(false, outputMessages);
-                }
-            }
-
-            // validate model
-            if (!_modelValidator.Validate(calculatedModelFilePath, Resources.Resources.UANodeSetXsdFileName))
-            {
-                OppoLogger.Warn(string.Format(LoggingText.GenerateInformationModelFailureValidatingModel, modelFullName));
-                outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureValidatingModel, modelFullName), string.Empty);
+                OppoLogger.Warn(typesCheckResult.loggerMessage);
+                outputMessages.Add(typesCheckResult.outputMessage, string.Empty);
                 return new CommandResult(false, outputMessages);
             }
 
@@ -175,6 +123,118 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             outputMessages.Add(string.Format(OutputText.GenerateInformationModelSuccess, opcuaAppName, modelFullName), string.Empty);
             OppoLogger.Info(LoggingText.GenerateInformationModelSuccess);
             return new CommandResult(true, outputMessages);           
+        }
+
+        private OutputMessages CheckProjectName(string nameFlag, string opcuaAppName, string modelFullName)
+        {
+            OutputMessages result = new OutputMessages();
+
+            // check project name flag
+            if (nameFlag != Constants.GenerateInformationModeCommandArguments.Name && nameFlag != Constants.GenerateInformationModeCommandArguments.VerboseName)
+            {
+                result.loggerMessage = string.Format(LoggingText.GenerateInformationModelFailureUnknownParam, nameFlag);
+                result.outputMessage = string.Format(OutputText.GenerateInformationModelFailureUnknownParam, opcuaAppName, modelFullName, nameFlag);
+                return result;
+            }
+
+            // check if project exists
+            if (string.IsNullOrEmpty(opcuaAppName))
+            {
+                result.loggerMessage = LoggingText.GenerateInformationModelFailureEmptyOpcuaAppName;
+                result.outputMessage = string.Format(OutputText.GenerateInformationModelFailureEmptyOpcuaAppName, opcuaAppName, modelFullName);
+                return result;
+            }
+
+            result.loggerMessage = string.Empty;
+            result.outputMessage = string.Empty;
+            return result;
+        }
+
+        private OutputMessages CheckModelFile(string opcuaAppName, string modelFlag, string modelFullName)
+        {
+            OutputMessages result = new OutputMessages();
+
+            // check model flag
+            if (modelFlag != Constants.GenerateInformationModeCommandArguments.Model && modelFlag != Constants.GenerateInformationModeCommandArguments.VerboseModel)
+            {
+                result.loggerMessage = string.Format(LoggingText.GenerateInformationModelFailureUnknownParam, modelFlag);
+                result.outputMessage = string.Format(OutputText.GenerateInformationModelFailureUnknownParam, opcuaAppName, modelFullName, modelFlag);
+                return result;
+            }
+
+            // check if model file exists
+            var calculatedModelFilePath = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.Models, modelFullName);
+            if (!_fileSystem.FileExists(calculatedModelFilePath))
+            {
+                result.loggerMessage = string.Format(LoggingText.NodesetCompilerExecutableFailsMissingModelFile, calculatedModelFilePath);
+                result.outputMessage = string.Format(OutputText.GenerateInformationModelFailureMissingModel, opcuaAppName, modelFullName, calculatedModelFilePath);
+                return result;
+            }
+
+            // check if model file is an *.xml file
+            var modelFileExtension = _fileSystem.GetExtension(modelFullName);
+            if (modelFileExtension != Constants.FileExtension.InformationModel)
+            {
+                result.loggerMessage = string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidModelFile, modelFullName);
+                result.outputMessage = string.Format(OutputText.GenerateInformationModelFailureInvalidModel, opcuaAppName, modelFullName, modelFileExtension);
+                return result;
+            }
+
+            // validate model
+            if (!_modelValidator.Validate(calculatedModelFilePath, Resources.Resources.UANodeSetXsdFileName))
+            {
+                result.loggerMessage = string.Format(LoggingText.GenerateInformationModelFailureValidatingModel, modelFullName);
+                result.outputMessage = string.Format(OutputText.GenerateInformationModelFailureValidatingModel, modelFullName);
+                return result;
+            }
+            
+            result.loggerMessage = string.Empty;
+            result.outputMessage = string.Empty;
+            return result;
+        }
+
+        private OutputMessages CheckTypesFile(ref bool requiredTypes, ref string requiredTypesFullName, string opcuaAppName, string modelFullName, string requiredFile1Flag, string requiredFile1FullName)
+        {
+            OutputMessages result = new OutputMessages();
+
+            //check types flags
+            if (requiredFile1Flag == Constants.GenerateInformationModeCommandArguments.Types || requiredFile1Flag == Constants.GenerateInformationModeCommandArguments.VerboseTypes)
+            {
+                requiredTypes = true;
+                requiredTypesFullName = requiredFile1FullName;
+            }
+            else if (!string.IsNullOrEmpty(requiredFile1Flag))
+            {
+                result.loggerMessage = string.Format(LoggingText.GenerateInformationModelFailureUnknownParam, requiredFile1Flag);
+                result.outputMessage = string.Format(OutputText.GenerateInformationModelFailureUnknownParam, opcuaAppName, modelFullName, requiredFile1Flag);
+                return result;
+            }
+
+            // proceed only if user defined required extra types
+            if (requiredTypes)
+            {
+                // check if types file exists
+                var calculatedRequiredTypesPath = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.Models, requiredFile1FullName);
+                if (!_fileSystem.FileExists(calculatedRequiredTypesPath))
+                {
+                    result.loggerMessage = string.Format(LoggingText.NodesetCompilerExecutableFailsMissingFile, calculatedRequiredTypesPath);
+                    result.outputMessage = string.Format(OutputText.GenerateInformationModelFailureMissingFile, opcuaAppName, modelFullName, calculatedRequiredTypesPath);
+                    return result;
+                }
+
+                // check if types file is a *.bsd
+                var requiredTypesFileExtension = _fileSystem.GetExtension(requiredTypesFullName);
+                if (requiredTypesFileExtension != Constants.FileExtension.ModelTypes)
+                {
+                    result.loggerMessage = string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidFile, requiredTypesFullName);
+                    result.outputMessage = string.Format(OutputText.GenerateInformationModelFailureInvalidFile, opcuaAppName, modelFullName, requiredTypesFullName);
+                    return result;
+                }
+            }
+
+            result.loggerMessage = string.Empty;
+            result.outputMessage = string.Empty;
+            return result;
         }
         
         /// <summary>
