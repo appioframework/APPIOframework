@@ -147,16 +147,16 @@ namespace Oppo.ObjectModel
 
         public static class GenerateInformationModeCommandArguments
         {
-            public const string Name = "-n";
-            public const string VerboseName = "--name";
-            public const string Model = "-m";
-            public const string VerboseModel = "--model";
-            public const string Types = "-t";
-            public const string VerboseTypes = "--types";
-            public const string RequiredModel = "-r";
-            public const string VerboseRequiredModel = "--requiredModel";
-            public const string VerboseHelp = "--help";
-            public const string Help = "-h";
+            public const string Name                    = "-n";
+            public const string VerboseName             = "--name";
+            public const string Model                   = "-m";
+            public const string VerboseModel            = "--model";
+            public const string Types                   = "-t";
+            public const string VerboseTypes            = "--types";
+            public const string RequiredModel           = "-r";
+            public const string VerboseRequiredModel    = "--requiredModel";
+            public const string VerboseHelp             = "--help";
+            public const string Help                    = "-h";
         }
 
         public static class GenerateCommandArguments

@@ -30,18 +30,21 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
             // encapsulate input parameters into variables with meaningful names
-            var inputParamsList         = inputParams.ToList();
+            var inputParamsList = inputParams.ToList();
+
             var nameFlag                = inputParamsList.ElementAtOrDefault(0);
             var opcuaAppName            = inputParamsList.ElementAtOrDefault(1);
             var modelFlag               = inputParamsList.ElementAtOrDefault(2);
             var modelFullName           = inputParamsList.ElementAtOrDefault(3);
             var requiredFile1Flag       = inputParamsList.ElementAtOrDefault(4);
             var requiredFile1FullName   = inputParamsList.ElementAtOrDefault(5);
+            var requiredFile2Flag       = inputParamsList.ElementAtOrDefault(6);
+            var requiredFile2FullName   = inputParamsList.ElementAtOrDefault(7);
 
             var argumentsCheckMesseges = new ArgumentsCheckMessages();
             var outputMessages = new MessageLines();
 
-            // check project flag and name
+            // validate project flag and name
             if (!ValidateProjectName(ref argumentsCheckMesseges, nameFlag, opcuaAppName, modelFullName))
             {
                 OppoLogger.Warn(argumentsCheckMesseges.loggerMessage);
@@ -49,23 +52,31 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 return new CommandResult(false, outputMessages);
             }
 
-            // check model flag and file
-            if(!ValidateModelFile(ref argumentsCheckMesseges, opcuaAppName, modelFlag, modelFullName))
+            // validate model flag and file
+            if (!ValidateModelFile(ref argumentsCheckMesseges, opcuaAppName, modelFlag, modelFullName))
             {
                 OppoLogger.Warn(argumentsCheckMesseges.loggerMessage);
                 outputMessages.Add(argumentsCheckMesseges.outputMessage, string.Empty);
                 return new CommandResult(false, outputMessages);
             }
 
-            // check types flag and file
+            // validate types / required model flag and file
             var typesRequired = false;
             var typesFullName = string.Empty;
-            if (!ValidateTypesFile(ref argumentsCheckMesseges, ref typesRequired, ref typesFullName, opcuaAppName, modelFullName, requiredFile1Flag, requiredFile1FullName))
+            var modelRequired = false;
+            var requiredModelFullName = string.Empty;
+            if (!ValidateRequiredFile1(ref argumentsCheckMesseges, ref typesRequired, ref typesFullName, ref modelRequired, ref requiredModelFullName, opcuaAppName, modelFullName, requiredFile1Flag, requiredFile1FullName))
             {
                 OppoLogger.Warn(argumentsCheckMesseges.loggerMessage);
                 outputMessages.Add(argumentsCheckMesseges.outputMessage, string.Empty);
                 return new CommandResult(false, outputMessages);
             }
+            /*if (!ValidateRequiredFile2())
+            {
+
+            }*/
+
+
 
             // prepare source location ./src/server 
             var srcDirectory = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp);
@@ -192,13 +203,22 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             return true;
         }
 
-        private bool ValidateTypesFile(ref ArgumentsCheckMessages messages, ref bool requiredTypes, ref string requiredTypesFullName, string opcuaAppName, string modelFullName, string requiredFile1Flag, string requiredFile1FullName)
+        private bool ValidateRequiredFile1(ref ArgumentsCheckMessages messages, ref bool typesRequired, ref string typesFullName, ref bool modelRequired, ref string requiredModelFullName, string opcuaAppName, string modelFullName, string requiredFile1Flag, string requiredFile1FullName)
         {
-            //check types flags
+            //check types / required model flags
             if (requiredFile1Flag == Constants.GenerateInformationModeCommandArguments.Types || requiredFile1Flag == Constants.GenerateInformationModeCommandArguments.VerboseTypes)
             {
-                requiredTypes = true;
-                requiredTypesFullName = requiredFile1FullName;
+                typesRequired           = true;
+                typesFullName           = requiredFile1FullName;
+                modelRequired           = false;
+                requiredModelFullName   = string.Empty;
+            }
+            else if (requiredFile1Flag == Constants.GenerateInformationModeCommandArguments.RequiredModel || requiredFile1Flag == Constants.GenerateInformationModeCommandArguments.VerboseRequiredModel)
+            {
+                typesRequired           = false;
+                typesFullName           = string.Empty;
+                modelRequired           = true;
+                requiredModelFullName   = requiredFile1FullName;
             }
             else if (!string.IsNullOrEmpty(requiredFile1Flag))
             {
@@ -208,7 +228,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             }
 
             // proceed only if user defined required extra types
-            if (requiredTypes)
+            if (typesRequired)
             {
                 // check if types file exists
                 var calculatedRequiredTypesPath = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.Models, requiredFile1FullName);
@@ -220,18 +240,36 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 }
 
                 // check if types file is a *.bsd
-                var requiredTypesFileExtension = _fileSystem.GetExtension(requiredTypesFullName);
+                var requiredTypesFileExtension = _fileSystem.GetExtension(typesFullName);
                 if (requiredTypesFileExtension != Constants.FileExtension.ModelTypes)
                 {
-                    messages.loggerMessage = string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidFile, requiredTypesFullName);
-                    messages.outputMessage = string.Format(OutputText.GenerateInformationModelFailureInvalidFile, opcuaAppName, modelFullName, requiredTypesFullName);
+                    messages.loggerMessage = string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidFile, typesFullName);
+                    messages.outputMessage = string.Format(OutputText.GenerateInformationModelFailureInvalidFile, opcuaAppName, modelFullName, typesFullName);
                     return false;
                 }
             }
             
             return true;
         }
-        
+
+        private bool ValidateRequiredFile2(ref ArgumentsCheckMessages messages, ref bool modelRequired, ref string requiredModelFullName, string opcuaAppName, string modelFullName, string requiredFile2Flag, string requiredFile2FullName)
+        {
+            //check types / required model flags
+            if (requiredFile2Flag == Constants.GenerateInformationModeCommandArguments.RequiredModel || requiredFile2Flag == Constants.GenerateInformationModeCommandArguments.VerboseRequiredModel)
+            {
+                modelRequired           = true;
+                requiredModelFullName   = requiredFile2FullName;
+            }
+            else if (!string.IsNullOrEmpty(requiredFile2Flag))
+            {
+                messages.loggerMessage = string.Format(LoggingText.GenerateInformationModelFailureUnknownParam, requiredFile2Flag);
+                messages.outputMessage = string.Format(OutputText.GenerateInformationModelFailureUnknownParam, opcuaAppName, modelFullName, requiredFile2Flag);
+                return false;
+            }
+
+            return true;
+        }
+
         /// <summary>
         /// Models.c template should have an #include line for-each generated information-model source code.
         /// Like for myModel.c, myModel.h -> #include "information-models/mmyModel.c".
