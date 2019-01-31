@@ -268,8 +268,29 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 messages.outputMessage = string.Format(OutputText.GenerateInformationModelFailureUnknownParam, opcuaAppName, modelFullName, requiredFile2Flag);
                 return false;
             }
+            if (modelRequired)
+            {
 
-            return true;
+                // check if required model file exists
+                var calculatedRequiredModelPath = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.Models, requiredModelFullName);
+                if (!_fileSystem.FileExists(calculatedRequiredModelPath))
+                {
+                    messages.loggerMessage = string.Format(LoggingText.NodesetCompilerExecutableFailsMissingFile, calculatedRequiredModelPath);
+                    messages.outputMessage = string.Format(OutputText.GenerateInformationModelFailureMissingFile, opcuaAppName, modelFullName, calculatedRequiredModelPath);
+                    return false;
+
+
+                }
+                // check if required model file is a *.xml
+                var requiredModelFileExtension = _fileSystem.GetExtension(requiredModelFullName);
+                if (requiredModelFileExtension != Constants.FileExtension.InformationModel)
+                {
+                    messages.loggerMessage = string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidFile, requiredModelFullName);
+                    messages.outputMessage = string.Format(OutputText.GenerateInformationModelFailureInvalidFile, opcuaAppName, modelFullName, requiredModelFullName);
+                    return false;
+                }
+            }
+                return true;
         }
 
         /// <summary>
