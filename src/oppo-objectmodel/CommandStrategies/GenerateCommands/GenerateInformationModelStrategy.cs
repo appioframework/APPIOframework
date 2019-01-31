@@ -71,10 +71,12 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 outputMessages.Add(argumentsCheckMesseges.outputMessage, string.Empty);
                 return new CommandResult(false, outputMessages);
             }
-            /*if (!ValidateRequiredFile2())
+            if (!ValidateRequiredFile2(ref argumentsCheckMesseges, ref modelRequired, ref requiredModelFullName, opcuaAppName, modelFullName, requiredFile2Flag, requiredFile2FullName))
             {
-
-            }*/
+                OppoLogger.Warn(argumentsCheckMesseges.loggerMessage);
+                outputMessages.Add(argumentsCheckMesseges.outputMessage, string.Empty);
+                return new CommandResult(false, outputMessages);
+            }
 
 
 

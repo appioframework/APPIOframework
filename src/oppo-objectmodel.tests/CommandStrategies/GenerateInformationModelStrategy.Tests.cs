@@ -12,12 +12,56 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 {
     public class GenerateInformationModelStrategyShould
     {
+        // Valid inputs
+
+        protected static string[][] ValidInputs()
+        {
+            return new[]
+            {
+                new [] { "-n", "testApp", "-m", "model.xml" },
+                new [] { "-n", "testApp", "--model", "model.xml" },
+                new [] { "--name", "testApp", "-m", "model.xml" },
+                new [] { "--name", "testApp", "--model", "model.xml" }
+            };
+        }
+
+        protected static string[][] ValidInputs_Types()
+        {
+            return new[]
+            {
+                new [] { "-n", "testApp", "-m", "model.xml", "--types", "types.bsd" },
+                new [] { "-n", "testApp", "-m", "model.xml", "-t", "types.bsd" }
+            };
+        }
+
+        protected static string[][] ValidInputs_RequiredModel()
+        {
+            return new[]
+            {
+                new [] { "-n", "testApp", "-m", "model.xml", "--requiredModel", "requiredModel.xml" },
+                new [] { "-n", "testApp", "-m", "model.xml", "-r", "requiredModel.xml" }
+            };
+        }
+
+        protected static string[][] ValidInputs_TypesAndRequiredModel()
+        {
+            return new[]
+            {
+                new [] { "-n", "testApp", "-m", "model.xml", "--types", "types.bsd", "--requiredModel", "requiredModel.xml" },
+                new [] { "-n", "testApp", "-m", "model.xml", "-t", "types.bsd", "--requiredModel", "requiredModel.xml" },
+                new [] { "-n", "testApp", "-m", "model.xml", "--types", "types.bsd", "-r", "requiredModel.xml" },
+                new [] { "-n", "testApp", "-m", "model.xml", "-t", "types.bsd", "-r", "requiredModel.xml" }
+            };
+        }
+
+        // Invalid input opcua app name
+
         protected static string[][] InvalidInputs_EmptyOpcuaAppName()
         {
             return new[]
             {
-                new []{"-n", "", "--model", "model.xml"},
-                new []{"--name", "", "-m", "model.xml"}
+                new [] { "-n", "", "--model", "model.xml" },
+                new [] { "--name", "", "-m", "model.xml" }
             };
         }
 
@@ -25,32 +69,23 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             return new[]
             {
-                new []{"-any string", "testApp", "-m", "model.txt"},
-                new []{"-N", "testApp", "-m", "model.txt"},
-                new []{"-name", "testApp", "-m", "model.txt"},
-                new []{"--nam", "testApp", "-m", "model.txt"}
+                new [] { "-any string", "testApp", "-m", "model.txt" },
+                new [] { "-N", "testApp", "-m", "model.txt" },
+                new [] { "-name", "testApp", "-m", "model.txt" },
+                new [] { "--nam", "testApp", "-m", "model.txt" }
             };
         }
+
+        // Invalid inputs model
 
         protected static string[][] InvalidInputs_UnknownModelParam()
         {
             return new[]
             {
-                new []{"-n", "testApp", "-any string", "model.txt"},
-                new []{"-n", "testApp", "-M", "model.txt"},
-                new []{"--name", "testApp", "-model", "model.txt"},
-                new []{"--name", "testApp", "--mod", "model.txt"}
-            };
-        }
-
-        protected static string[][] ValidInputs()
-        {
-            return new[]
-            {
-                new []{"-n", "testApp", "-m", "model.xml"},
-                new []{"-n", "testApp", "--model", "model.xml"},
-                new []{"--name", "testApp", "-m", "model.xml"},
-                new []{"--name", "testApp", "--model", "model.xml"},
+                new [] { "-n", "testApp", "-any string", "model.txt" },
+                new [] { "-n", "testApp", "-M", "model.txt" },
+                new [] { "--name", "testApp", "-model", "model.txt" },
+                new [] { "--name", "testApp", "--mod", "model.txt" }
             };
         }
 
@@ -58,22 +93,15 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             return new[]
             {
-                new []{"-n", "testApp", "-m", "model.txt"},
-                new []{"-n", "testApp", "--model", "model.txt"},
-                new []{"--name", "testApp", "-m", "model.txt"},
-                new []{"--name", "testApp", "--model", "model.txt"},
-            };
-
-
-        }
-        protected static string[][] ValidInputs_ExtraTypes()
-        {
-            return new[]
-            {
-                new [] { "-n", "testApp", "-m", "model.xml", "--types", "types.bsd"},
-                new [] { "-n", "testApp", "-m", "model.xml", "-t", "types.bsd"},
+                new [] { "-n", "testApp", "-m", "model.txt" },
+                new [] { "-n", "testApp", "--model", "model.txt" },
+                new [] { "--name", "testApp", "-m", "model.txt" },
+                new [] { "--name", "testApp", "--model", "model.txt" }
             };
         }
+
+        // Invalid inputs types
+
         protected static string[][] InvalidInputs_UnknownTypesParam()
         {
             return new[]
@@ -93,25 +121,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
                 new [] { "-n", "testApp", "-m", "model.xml", "-t", "types.txt"},
             };
         }
-        protected static string[][] ValidInputs_RequiredModel()
-        {
-            return new[]
-            {
-                new [] { "-n", "testApp", "-m", "model.xml", "--requiredModel", "requiredModel.xml"},
-                new [] { "-n", "testApp", "-m", "model.xml", "-r", "requiredModel.xml"},
-            };
-        }
 
-        protected static string[][] ValidInputs_RequiredTypesAndModel()
-        {
-            return new[]
-            {
-                new [] { "-n", "testApp", "-m", "model.xml", "-t", "types.xml", "-r", "requiredModel.xml"},
-                new [] { "-n", "testApp", "-m", "model.xml", "-t", "types.txt", "--requiredModel", "requiredModel.xml"},
-                new [] { "-n", "testApp", "-m", "model.xml", "--types", "types.xml", "-r", "requiredModel.xml"},
-                new [] { "-n", "testApp", "-m", "model.xml", "--types", "types.txt", "--requiredModel", "requiredModel.xml"},
-            };
-        }
+        // Invalid inputs required model
 
         protected static string[][] InvalidInputs_UnknownRequiredModelParam()
         {
@@ -121,6 +132,19 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
                 new [] { "-n", "testApp", "-m", "model.xml", "--r", "requiredModel.xml"},
                 new [] { "-n", "testApp", "-m", "model.xml", "--RequiredModel", "requiredModel.xml"},
                 new [] { "-n", "testApp", "-m", "model.xml", "-requiredModel", "requiredModel.xml"},
+            };
+        }
+
+        // Invalid inputs types and required model
+
+        protected static string[][] InvalidInputs_TypesAndUnknownRequiredModelParam()
+        {
+            return new[]
+            {
+                new [] { "-n", "testApp", "-m", "model.xml", "--types", "types.bsd", "--RequiredModel", "requiredModel.xml" },
+                new [] { "-n", "testApp", "-m", "model.xml", "-t", "types.bsd", "-requiredModel", "requiredModel.xml" },
+                new [] { "-n", "testApp", "-m", "model.xml", "--types", "types.bsd", "-R", "requiredModel.xml" },
+                new [] { "-n", "testApp", "-m", "model.xml", "-t", "types.bsd", "--r", "requiredModel.xml" }
             };
         }
 
@@ -493,7 +517,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
         }
         [Test]
-        public void GenerateInformationModelWithExtraTypes([ValueSource(nameof(ValidInputs_ExtraTypes))] string[] inputParams)
+        public void GenerateInformationModelWithExtraTypes([ValueSource(nameof(ValidInputs_Types))] string[] inputParams)
         {
             //Arrange
             _loggerListenerMock.Setup(x => x.Warn(LoggingText.GenerateInformationModelSuccess));
@@ -623,7 +647,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         }
 
         [Test]
-        public void FailOnGenerateInformationModelBecauseTypesDoesntExist([ValueSource(nameof(ValidInputs_ExtraTypes))] string[] inputParams)
+        public void FailOnGenerateInformationModelBecauseTypesDoesntExist([ValueSource(nameof(ValidInputs_Types))] string[] inputParams)
         {
             //Arrange
             var opcuaAppName = inputParams.ElementAtOrDefault(1);
@@ -709,7 +733,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         }
 
         [Test]
-        public void FailOnGenerateInformationModelBecauseGenerateTypesCallFailure([ValueSource(nameof(ValidInputs_ExtraTypes))] string[] inputParams)
+        public void FailOnGenerateInformationModelBecauseGenerateTypesCallFailure([ValueSource(nameof(ValidInputs_Types))] string[] inputParams)
         {
             // Arrange
             var opcuaAppName = inputParams.ElementAtOrDefault(1);
@@ -775,11 +799,58 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _mockFileSystem.Setup(x => x.FileExists(calculatedModelFilePath)).Returns(true);
 
             var modelName = System.IO.Path.GetFileNameWithoutExtension(modelFullName);
-            var modelExtension = System.IO.Path.GetExtension(modelFullName);
-            _mockFileSystem.Setup(x => x.GetExtension(modelFullName)).Returns(modelExtension);
             _mockFileSystem.Setup(x => x.GetFileNameWithoutExtension(modelFullName)).Returns(modelName);
 
+            var modelExtension = System.IO.Path.GetExtension(modelFullName);
+            _mockFileSystem.Setup(x => x.GetExtension(modelFullName)).Returns(modelExtension);
+
             _modelValidatorMock.Setup(x => x.Validate(calculatedModelFilePath, It.IsAny<string>())).Returns(true);
+
+            // Act
+            var commandResult = _strategy.Execute(inputParams);
+
+            // Assert
+            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsNotNull(commandResult.OutputMessages);
+            var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
+            Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, opcuaAppName, modelFullName, requiredModelFlag), firstMessageLine.Key);
+            Assert.AreEqual(string.Empty, firstMessageLine.Value);
+        }
+
+        [Test]
+        public void FailOnGenerateInformationModelBecauseUknownRequiredModelParamWithTypes([ValueSource(nameof(InvalidInputs_TypesAndUnknownRequiredModelParam))] string[] inputParams)
+        {
+            //Arrange
+            var opcuaAppName = inputParams.ElementAtOrDefault(1);
+            var modelFullName = inputParams.ElementAtOrDefault(3);
+            var typesFullName = inputParams.ElementAtOrDefault(5);
+            var requiredModelFlag = inputParams.ElementAtOrDefault(6);
+
+            _loggerListenerMock.Setup(x => x.Warn(string.Format(LoggingText.GenerateInformationModelFailureUnknownParam, requiredModelFlag)));
+
+            // Arrange model file
+            var calculatedModelFilePath = System.IO.Path.Combine(opcuaAppName, DirectoryName.Models, modelFullName);
+            _mockFileSystem.Setup(x => x.CombinePaths(opcuaAppName, DirectoryName.Models, modelFullName)).Returns(calculatedModelFilePath);
+            _mockFileSystem.Setup(x => x.FileExists(calculatedModelFilePath)).Returns(true);
+
+            var modelName = System.IO.Path.GetFileNameWithoutExtension(modelFullName);
+            _mockFileSystem.Setup(x => x.GetFileNameWithoutExtension(modelFullName)).Returns(modelName);
+
+            var modelExtension = System.IO.Path.GetExtension(modelFullName);
+            _mockFileSystem.Setup(x => x.GetExtension(modelFullName)).Returns(modelExtension);
+
+            _modelValidatorMock.Setup(x => x.Validate(calculatedModelFilePath, It.IsAny<string>())).Returns(true);
+
+            // Arrange types file
+            var calculatedTypesFilePath = System.IO.Path.Combine(opcuaAppName, DirectoryName.Models, typesFullName);
+            _mockFileSystem.Setup(x => x.CombinePaths(opcuaAppName, DirectoryName.Models, typesFullName)).Returns(calculatedTypesFilePath);
+            _mockFileSystem.Setup(x => x.FileExists(calculatedTypesFilePath)).Returns(true);
+
+            var typesName = System.IO.Path.GetFileNameWithoutExtension(typesFullName);
+            _mockFileSystem.Setup(x => x.GetFileNameWithoutExtension(typesFullName)).Returns(typesName);
+
+            var typesExtension = System.IO.Path.GetExtension(typesFullName);
+            _mockFileSystem.Setup(x => x.GetExtension(typesFullName)).Returns(typesExtension);
 
             // Act
             var commandResult = _strategy.Execute(inputParams);
