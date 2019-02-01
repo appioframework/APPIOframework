@@ -539,6 +539,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
 
         }
+
         [Test]
         public void GenerateInformationModelWithExtraTypes([ValueSource(nameof(ValidInputs_Types))] string[] inputParams)
         {
@@ -591,7 +592,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var typesTargetLocation = System.IO.Path.Combine(Constants.DirectoryName.InformationModels, modelName.ToLower());
             _mockFileSystem.Setup(x => x.CombinePaths(Constants.DirectoryName.InformationModels, modelName.ToLower())).Returns(typesTargetLocation);
 
-            //Arrange Executables
+            //Arrange executables
             var generateDatatypesArgs = Constants.ExecutableName.GenerateDatatypesScriptPath + string.Format(Constants.ExecutableName.GenerateDatatypesTypeBsd, sourceTypesRelativePath) + " " + typesTargetLocation;
             _mockFileSystem.Setup(x => x.CallExecutable(Constants.ExecutableName.PythonScript, _srcDir, generateDatatypesArgs)).Returns(true);
             var nodesetCompilerArgs = Constants.ExecutableName.NodesetCompilerCompilerPath + Constants.ExecutableName.NodesetCompilerInternalHeaders + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes) + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, modelName.ToUpper()) + string.Format(Constants.ExecutableName.NodesetCompilerExisting, Constants.ExecutableName.NodesetCompilerBasicNodeset) + string.Format(Constants.ExecutableName.NodesetCompilerXml, sourceModelRelativePath, modelTargetLocation);
@@ -965,7 +966,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var calculatedRequiredModelPath = System.IO.Path.Combine(opcuaAppName, DirectoryName.Models, requiredModelFullName);
             _mockFileSystem.Setup(x => x.CombinePaths(opcuaAppName, DirectoryName.Models, requiredModelFullName)).Returns(calculatedRequiredModelPath);
             _mockFileSystem.Setup(x => x.FileExists(calculatedRequiredModelPath)).Returns(true);
-            _mockFileSystem.Setup(x => x.ReadFile(calculatedRequiredModelPath)).Returns(GenerateStreamFromString("abc"));
+            _mockFileSystem.Setup(x => x.ReadFile(calculatedRequiredModelPath)).Returns(GenerateStreamFromString(string.Empty));
 
             var requiredModelExtension = System.IO.Path.GetExtension(requiredModelFullName);
             _mockFileSystem.Setup(x => x.GetExtension(requiredModelFullName)).Returns(requiredModelExtension);
@@ -975,15 +976,14 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandResult = _strategy.Execute(inputParams);
 
             // Assert
-            Assert.IsTrue(true);
-            /*Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Sucsess);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
-            Assert.AreEqual(string.Format(OutputText.GenerateInformationModelRequiredModelFailure, opcuaAppName, modelFullName, requiredModelFullName), firstMessageLine.Key);
+            Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailure, opcuaAppName, modelFullName), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
-            _loggerListenerMock.Verify(x => x.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsRequiredModel,requiredModelFullName)), Times.Once);
+            _loggerListenerMock.Verify(x => x.Warn(string.Format(LoggingText.NodesetCompilerExecutableFails)), Times.Once);
             _mockFileSystem.Verify(x => x.CombinePaths(opcuaAppName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp), Times.Once);
-            _mockFileSystem.Verify(x => x.CallExecutable(Constants.ExecutableName.PythonScript, _srcDir, It.IsAny<string>()), Times.Once);*/
+            _mockFileSystem.Verify(x => x.CallExecutable(Constants.ExecutableName.PythonScript, _srcDir, It.IsAny<string>()), Times.Once);
         }
 
         [Test]
@@ -1140,6 +1140,97 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureInvalidFile, opcuaAppName, modelFullName, requiredModelFullName), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
             _mockFileSystem.Verify(x => x.CombinePaths(opcuaAppName, Constants.DirectoryName.Models, requiredModelFullName), Times.Once);
+        }
+
+        [Test]
+        public void GenerateInformationModelWithRequiredModel([ValueSource(nameof(ValidInputs_RequiredModel))] string[] inputParams)
+        {
+            //Arrange
+            _loggerListenerMock.Setup(x => x.Warn(LoggingText.GenerateInformationModelSuccess));
+            var nameFlag = inputParams.ElementAtOrDefault(0);
+            var projectName = inputParams.ElementAtOrDefault(1);
+            var modelFlag = inputParams.ElementAtOrDefault(2);
+            var modelFullName = inputParams.ElementAtOrDefault(3);
+            var requiredModelFlag = inputParams.ElementAtOrDefault(4);
+            var requiredModelFullName = inputParams.ElementAtOrDefault(5);
+
+            _mockFileSystem.Setup(x => x.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp)).Returns(_srcDir);
+
+            //Arrange model file
+            var modelName = System.IO.Path.GetFileNameWithoutExtension(modelFullName);
+            _mockFileSystem.Setup(x => x.GetFileName(modelFullName)).Returns(modelFullName);
+
+            var calculatedModelFilePath = System.IO.Path.Combine(projectName, DirectoryName.Models, modelFullName);
+            _mockFileSystem.Setup(x => x.CombinePaths(projectName, DirectoryName.Models, modelFullName)).Returns(calculatedModelFilePath);
+
+            var modelTargetLocation = System.IO.Path.Combine(Constants.DirectoryName.InformationModels, modelName);
+            _mockFileSystem.Setup(x => x.CombinePaths(Constants.DirectoryName.InformationModels, modelName)).Returns(modelTargetLocation);
+            _mockFileSystem.Setup(x => x.FileExists(calculatedModelFilePath)).Returns(true);
+
+            var modelExtension = System.IO.Path.GetExtension(modelFullName);
+            _mockFileSystem.Setup(x => x.GetExtension(modelFullName)).Returns(modelExtension);
+            _mockFileSystem.Setup(x => x.GetFileNameWithoutExtension(modelFullName)).Returns(modelName);
+
+            var modelPath = System.IO.Path.Combine(Constants.DirectoryName.Models, modelFullName);
+            var sourceModelRelativePath = @"../../" + modelPath;
+            _mockFileSystem.Setup(x => x.CombinePaths(Constants.DirectoryName.Models, modelFullName)).Returns(modelPath);
+
+            _modelValidatorMock.Setup(x => x.Validate(calculatedModelFilePath, It.IsAny<string>())).Returns(true);
+
+            //Arrange required model file
+            var requiredModelName = System.IO.Path.GetFileNameWithoutExtension(requiredModelFullName);
+            _mockFileSystem.Setup(x => x.GetFileName(requiredModelFullName)).Returns(requiredModelFullName);
+            _mockFileSystem.Setup(x => x.GetFileNameWithoutExtension(requiredModelFullName)).Returns(requiredModelName);
+
+            var requiredModelExtension = System.IO.Path.GetExtension(requiredModelFullName);
+            _mockFileSystem.Setup(x => x.GetExtension(requiredModelFullName)).Returns(requiredModelExtension);
+
+            var calculatedRequiredModelFilePath = System.IO.Path.Combine(projectName, DirectoryName.Models, requiredModelFullName);
+            _mockFileSystem.Setup(x => x.CombinePaths(projectName, DirectoryName.Models, requiredModelFullName)).Returns(calculatedRequiredModelFilePath);
+            _mockFileSystem.Setup(x => x.FileExists(calculatedRequiredModelFilePath)).Returns(true);
+            _mockFileSystem.Setup(x => x.ReadFile(calculatedRequiredModelFilePath)).Returns(GenerateStreamFromString(Constants.definitionXmlElement));
+
+            var requiredModelPath = System.IO.Path.Combine(Constants.DirectoryName.Models, requiredModelFullName);
+            var sourceRequiredModelRelativePath = @"../../" + requiredModelPath;
+            _mockFileSystem.Setup(x => x.CombinePaths(Constants.DirectoryName.Models, requiredModelFullName)).Returns(requiredModelPath);
+
+            //Arrange executables
+            var nodesetCompilerArgs = Constants.ExecutableName.NodesetCompilerCompilerPath + Constants.ExecutableName.NodesetCompilerInternalHeaders + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes) + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, requiredModelName.ToUpper()) + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes) + string.Format(Constants.ExecutableName.NodesetCompilerExisting, Constants.ExecutableName.NodesetCompilerBasicNodeset) + string.Format(Constants.ExecutableName.NodesetCompilerExisting, sourceRequiredModelRelativePath) + string.Format(Constants.ExecutableName.NodesetCompilerXml, sourceModelRelativePath, modelTargetLocation);
+            _mockFileSystem.Setup(x => x.CallExecutable(Constants.ExecutableName.PythonScript, _srcDir, nodesetCompilerArgs)).Returns(true);
+
+            //Arrange models.c
+            var modelsFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_models_c);
+            _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_models_c)).Returns(modelsFilePath);
+
+            var modelsMemoryStream = GenerateStreamFromString(_defaultModelsC + "\n" + string.Format(_defaultModelIncludeSnippet, modelName));
+            _mockFileSystem.Setup(x => x.ReadFile(modelsFilePath)).Returns(modelsMemoryStream);
+
+            //Arrange nodeSetFunctioncs.c
+            var nodeSetFunctionsFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_nodeSetFunctions_c);
+            _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_nodeSetFunctions_c)).Returns(nodeSetFunctionsFilePath);
+
+            var nodeSetFunctionsMemoryStream = GenerateStreamFromString(_defaultNodeSetFunctionsC);
+            _mockFileSystem.Setup(x => x.ReadFile(nodeSetFunctionsFilePath)).Returns(nodeSetFunctionsMemoryStream);
+
+            // Act
+            var commandResult = _strategy.Execute(inputParams);
+
+            // Assert
+            Assert.IsTrue(commandResult.Sucsess);
+            Assert.IsNotNull(commandResult.OutputMessages);
+            var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
+            Assert.AreEqual(string.Format(OutputText.GenerateInformationModelSuccess, projectName, modelFullName), firstMessageLine.Key);
+            Assert.AreEqual(string.Empty, firstMessageLine.Value);
+            _loggerListenerMock.Verify(x => x.Info(LoggingText.GenerateInformationModelSuccess), Times.Once);
+            _mockFileSystem.Verify(x => x.CallExecutable(Constants.ExecutableName.PythonScript, _srcDir, nodesetCompilerArgs), Times.Once);
+            _mockFileSystem.Verify(x => x.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp), Times.Once);
+            _mockFileSystem.Verify(x => x.CreateDirectory(System.IO.Path.Combine(_srcDir, DirectoryName.InformationModels)), Times.Once);
+            _mockFileSystem.Verify(x => x.WriteFile(nodeSetFunctionsFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
+
+            nodeSetFunctionsMemoryStream.Close();
+            nodeSetFunctionsMemoryStream.Dispose();
+            modelsMemoryStream.Close();
+            modelsMemoryStream.Dispose();
         }
     }
 }
