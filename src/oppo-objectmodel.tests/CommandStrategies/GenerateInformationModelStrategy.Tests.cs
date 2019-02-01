@@ -966,7 +966,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var calculatedRequiredModelPath = System.IO.Path.Combine(opcuaAppName, DirectoryName.Models, requiredModelFullName);
             _mockFileSystem.Setup(x => x.CombinePaths(opcuaAppName, DirectoryName.Models, requiredModelFullName)).Returns(calculatedRequiredModelPath);
             _mockFileSystem.Setup(x => x.FileExists(calculatedRequiredModelPath)).Returns(true);
-            _mockFileSystem.Setup(x => x.ReadFile(calculatedRequiredModelPath)).Returns(GenerateStreamFromString(string.Empty));
+            _mockFileSystem.Setup(x => x.ReadFile(calculatedRequiredModelPath)).Returns(GenerateStreamFromString("anything"));
 
             var requiredModelExtension = System.IO.Path.GetExtension(requiredModelFullName);
             _mockFileSystem.Setup(x => x.GetExtension(requiredModelFullName)).Returns(requiredModelExtension);
