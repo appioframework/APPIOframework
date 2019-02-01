@@ -46,7 +46,7 @@ int main(void) {
     createTemperatureVariableNode(server);
 
 	UA_StatusCode retval;
-	if (callNodeSetFunctions(server) == UA_STATUSCODE_GOOD)
+	if (loadInformationModels(server) == UA_STATUSCODE_GOOD)
 	{
 		retval = UA_Server_run(server, &running);
 	}

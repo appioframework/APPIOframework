@@ -4,7 +4,7 @@
 
 #include "open62541.h"
 
-UA_StatusCode callNodeSetFunctions(UA_Server *server)
+UA_StatusCode loadInformationModels(UA_Server *server)
 {
 	return UA_STATUSCODE_GOOD;
 }

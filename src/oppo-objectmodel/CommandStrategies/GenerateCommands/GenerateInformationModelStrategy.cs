@@ -145,8 +145,8 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 AdjustModelsTemplate(srcDirectory, modelName.ToLower() + Constants.ModelsCContent._generated);
             }
 
-            // adjust nodeSetFunctions.c with new functions
-            AdjustNodeSetFunctionsTemplate(srcDirectory, modelName);
+            // adjust loadInformationModels.c with new functions
+            AdjustLoadInformationModelsTemplate(srcDirectory, modelName);
 
             outputMessages.Add(string.Format(OutputText.GenerateInformationModelSuccess, opcuaAppName, modelFullName), string.Empty);
             OppoLogger.Info(LoggingText.GenerateInformationModelSuccess);
@@ -397,30 +397,30 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             modelsFileStream.Dispose();
         }
 
-        private void AdjustNodeSetFunctionsTemplate(string srcDirectory, string functionName)
+        private void AdjustLoadInformationModelsTemplate(string srcDirectory, string functionName)
         {
-            var functionSnippet = string.Format(Constants.NodeSetFunctioncContent.FunctionSnippetPart1,functionName);
+            var functionSnippet = string.Format(Constants.LoadInformationModelsContent.FunctionSnippetPart1,functionName);
             
-            var nodeSetFunctioncsFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_nodeSetFunctions_c));
-            var currentFileContentLineByLine = ReadFileContent(nodeSetFunctioncsFileStream).ToList<string>();
-            
-            nodeSetFunctioncsFileStream.Close();
-            nodeSetFunctioncsFileStream.Dispose();
+            var loadInformationModelsFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_loadInformationModels_c));
+            var currentFileContentLineByLine = ReadFileContent(loadInformationModelsFileStream).ToList<string>();
+
+            loadInformationModelsFileStream.Close();
+            loadInformationModelsFileStream.Dispose();
 
             if (!currentFileContentLineByLine.Contains(functionSnippet))
             {
-                var lastFunctionLinePosition = currentFileContentLineByLine.FindIndex(x => x.Contains(Constants.NodeSetFunctioncContent.ReturnLine));
+                var lastFunctionLinePosition = currentFileContentLineByLine.FindIndex(x => x.Contains(Constants.LoadInformationModelsContent.ReturnLine));
                 if (lastFunctionLinePosition != -1)
                 {
                     currentFileContentLineByLine.Insert(lastFunctionLinePosition, string.Empty);
-                    currentFileContentLineByLine.Insert(lastFunctionLinePosition, Constants.NodeSetFunctioncContent.FunctionSnippetPart5);
-                    currentFileContentLineByLine.Insert(lastFunctionLinePosition, Constants.NodeSetFunctioncContent.FunctionSnippetPart4);
-                    currentFileContentLineByLine.Insert(lastFunctionLinePosition,string.Format(Constants.NodeSetFunctioncContent.FunctionSnippetPart3,functionName));
-                    currentFileContentLineByLine.Insert(lastFunctionLinePosition, Constants.NodeSetFunctioncContent.FunctionSnippetPart2);
-                    currentFileContentLineByLine.Insert(lastFunctionLinePosition, string.Format(Constants.NodeSetFunctioncContent.FunctionSnippetPart1, functionName));
+                    currentFileContentLineByLine.Insert(lastFunctionLinePosition, Constants.LoadInformationModelsContent.FunctionSnippetPart5);
+                    currentFileContentLineByLine.Insert(lastFunctionLinePosition, Constants.LoadInformationModelsContent.FunctionSnippetPart4);
+                    currentFileContentLineByLine.Insert(lastFunctionLinePosition,string.Format(Constants.LoadInformationModelsContent.FunctionSnippetPart3,functionName));
+                    currentFileContentLineByLine.Insert(lastFunctionLinePosition, Constants.LoadInformationModelsContent.FunctionSnippetPart2);
+                    currentFileContentLineByLine.Insert(lastFunctionLinePosition, string.Format(Constants.LoadInformationModelsContent.FunctionSnippetPart1, functionName));
                 }
 
-                _fileSystem.WriteFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_nodeSetFunctions_c), currentFileContentLineByLine);
+                _fileSystem.WriteFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_loadInformationModels_c), currentFileContentLineByLine);
             }
         }
 

@@ -180,7 +180,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         private readonly string _defaultModelsC = "/* \n* This is an automatically generated file.\n*/";
         private readonly string _defaultModelIncludeSnippet = "#include \"information-models/{0}.c\"";
         private readonly string _defaultTypesIncludeSnippet = "#include\"information-models/{0}_generated.c\"";
-        private readonly string _defaultNodeSetFunctionsC = "UA_StatusCode callNodeSetFunctions(UA_Server* server)\n{\n\treturn UA_STATUSCODE_GOOD;\n}";
+        private readonly string _defaultLoadInformationModelsC = "UA_StatusCode loadInformationModels(UA_Server* server)\n{\n\treturn UA_STATUSCODE_GOOD;\n}";
 
         [SetUp]
         public void SetUpTest()
@@ -267,11 +267,11 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
                 _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_models_c)).Returns(modelsFilePath);
                 _mockFileSystem.Setup(x => x.ReadFile(modelsFilePath)).Returns(memoryStream);
 
-                using (var nodeSetFunctionsMemoryStream = GenerateStreamFromString(_defaultNodeSetFunctionsC))
+                using (var loadInformationModelsMemoryStream = GenerateStreamFromString(_defaultLoadInformationModelsC))
                 {
-                    var nodeSetFunctionsFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_nodeSetFunctions_c);
-                    _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_nodeSetFunctions_c)).Returns(nodeSetFunctionsFilePath);
-                    _mockFileSystem.Setup(x => x.ReadFile(nodeSetFunctionsFilePath)).Returns(nodeSetFunctionsMemoryStream);
+                    var loadInformationModelsFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_loadInformationModels_c);
+                    _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_loadInformationModels_c)).Returns(loadInformationModelsFilePath);
+                    _mockFileSystem.Setup(x => x.ReadFile(loadInformationModelsFilePath)).Returns(loadInformationModelsMemoryStream);
 
 
                     // Act
@@ -286,7 +286,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
                     _loggerListenerMock.Verify(x => x.Info(LoggingText.GenerateInformationModelSuccess), Times.Once);
                     _mockFileSystem.Verify(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp), Times.Once);
                     _mockFileSystem.Verify(x => x.CreateDirectory(System.IO.Path.Combine(_srcDir, DirectoryName.InformationModels)), Times.Once);
-                    _mockFileSystem.Verify(x => x.WriteFile(nodeSetFunctionsFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
+                    _mockFileSystem.Verify(x => x.WriteFile(loadInformationModelsFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
                 }
             }
         }
@@ -336,11 +336,11 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
                 _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_models_c)).Returns(modelsFilePath);
                 _mockFileSystem.Setup(x => x.ReadFile(modelsFilePath)).Returns(modelsMemoryStream);
 
-                using (var nodeSetFunctionsMemoryStream = GenerateStreamFromString(_defaultNodeSetFunctionsC))
+                using (var loadInformationModelsMemoryStream = GenerateStreamFromString(_defaultLoadInformationModelsC))
                 {
-                    var nodeSetFunctionsFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_nodeSetFunctions_c);
-                    _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_nodeSetFunctions_c)).Returns(nodeSetFunctionsFilePath);
-                    _mockFileSystem.Setup(x => x.ReadFile(nodeSetFunctionsFilePath)).Returns(nodeSetFunctionsMemoryStream);
+                    var loadInformationModelsFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_loadInformationModels_c);
+                    _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_loadInformationModels_c)).Returns(loadInformationModelsFilePath);
+                    _mockFileSystem.Setup(x => x.ReadFile(loadInformationModelsFilePath)).Returns(loadInformationModelsMemoryStream);
 
                     // Act
                     var commandResult = _strategy.Execute(inputParams);
@@ -354,7 +354,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
                     _loggerListenerMock.Verify(x => x.Info(LoggingText.GenerateInformationModelSuccess), Times.Once);
                     _mockFileSystem.Verify(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp), Times.Once);
                     _mockFileSystem.Verify(x => x.CreateDirectory(System.IO.Path.Combine(_srcDir, DirectoryName.InformationModels)), Times.Never);
-                    _mockFileSystem.Verify(x => x.WriteFile(nodeSetFunctionsFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
+                    _mockFileSystem.Verify(x => x.WriteFile(loadInformationModelsFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
                 }
             }
         }
@@ -608,12 +608,12 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var typesMemoryStream = GenerateStreamFromString(_defaultModelsC + string.Format(_defaultModelIncludeSnippet, modelName) + "\n" + string.Format(_defaultTypesIncludeSnippet, typesName.ToLower()));
             _mockFileSystem.SetupSequence(x => x.ReadFile(modelsFilePath)).Returns(modelsMemoryStream).Returns(typesMemoryStream);
 
-            //Arrange nodeSetFunctioncs.c
-            var nodeSetFunctionsFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_nodeSetFunctions_c);
-            _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_nodeSetFunctions_c)).Returns(nodeSetFunctionsFilePath);
+            //Arrange loadInformationModels.c
+            var loadInformationModelsFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_loadInformationModels_c);
+            _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_loadInformationModels_c)).Returns(loadInformationModelsFilePath);
 
-            var nodeSetFunctionsMemoryStream = GenerateStreamFromString(_defaultNodeSetFunctionsC);
-            _mockFileSystem.Setup(x => x.ReadFile(nodeSetFunctionsFilePath)).Returns(nodeSetFunctionsMemoryStream);
+            var loadInformationModelsMemoryStream = GenerateStreamFromString(_defaultLoadInformationModelsC);
+            _mockFileSystem.Setup(x => x.ReadFile(loadInformationModelsFilePath)).Returns(loadInformationModelsMemoryStream);
 
             // Act
             var commandResult = _strategy.Execute(inputParams);
@@ -628,10 +628,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _mockFileSystem.Verify(x => x.CallExecutable(Constants.ExecutableName.PythonScript, _srcDir, generateDatatypesArgs), Times.Once);
             _mockFileSystem.Verify(x => x.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp), Times.Once);
             _mockFileSystem.Verify(x => x.CreateDirectory(System.IO.Path.Combine(_srcDir, DirectoryName.InformationModels)), Times.Once);
-            _mockFileSystem.Verify(x => x.WriteFile(nodeSetFunctionsFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
+            _mockFileSystem.Verify(x => x.WriteFile(loadInformationModelsFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
 
-            nodeSetFunctionsMemoryStream.Close();
-            nodeSetFunctionsMemoryStream.Dispose();
+            loadInformationModelsMemoryStream.Close();
+            loadInformationModelsMemoryStream.Dispose();
             typesMemoryStream.Close();
             typesMemoryStream.Dispose();
             modelsMemoryStream.Close();
@@ -1206,12 +1206,12 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var modelsMemoryStream = GenerateStreamFromString(_defaultModelsC + "\n" + string.Format(_defaultModelIncludeSnippet, modelName));
             _mockFileSystem.Setup(x => x.ReadFile(modelsFilePath)).Returns(modelsMemoryStream);
 
-            //Arrange nodeSetFunctioncs.c
-            var nodeSetFunctionsFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_nodeSetFunctions_c);
-            _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_nodeSetFunctions_c)).Returns(nodeSetFunctionsFilePath);
+            //Arrange loadInformationModels.c
+            var loadInformationModelsFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_loadInformationModels_c);
+            _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_loadInformationModels_c)).Returns(loadInformationModelsFilePath);
 
-            var nodeSetFunctionsMemoryStream = GenerateStreamFromString(_defaultNodeSetFunctionsC);
-            _mockFileSystem.Setup(x => x.ReadFile(nodeSetFunctionsFilePath)).Returns(nodeSetFunctionsMemoryStream);
+            var loadInformationModelsMemoryStream = GenerateStreamFromString(_defaultLoadInformationModelsC);
+            _mockFileSystem.Setup(x => x.ReadFile(loadInformationModelsFilePath)).Returns(loadInformationModelsMemoryStream);
 
             // Act
             var commandResult = _strategy.Execute(inputParams);
@@ -1226,10 +1226,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _mockFileSystem.Verify(x => x.CallExecutable(Constants.ExecutableName.PythonScript, _srcDir, nodesetCompilerArgs), Times.Once);
             _mockFileSystem.Verify(x => x.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp), Times.Once);
             _mockFileSystem.Verify(x => x.CreateDirectory(System.IO.Path.Combine(_srcDir, DirectoryName.InformationModels)), Times.Once);
-            _mockFileSystem.Verify(x => x.WriteFile(nodeSetFunctionsFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
+            _mockFileSystem.Verify(x => x.WriteFile(loadInformationModelsFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
 
-            nodeSetFunctionsMemoryStream.Close();
-            nodeSetFunctionsMemoryStream.Dispose();
+            loadInformationModelsMemoryStream.Close();
+            loadInformationModelsMemoryStream.Dispose();
             modelsMemoryStream.Close();
             modelsMemoryStream.Dispose();
         }
@@ -1322,12 +1322,12 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _mockFileSystem.SetupSequence(x => x.ReadFile(modelsFilePath)).Returns(modelsMemoryStream).Returns(typesMemoryStream);
 
 
-            //Arrange nodeSetFunctioncs.c
-            var nodeSetFunctionsFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_nodeSetFunctions_c);
-            _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_nodeSetFunctions_c)).Returns(nodeSetFunctionsFilePath);
+            //Arrange loadInformationModels.c
+            var loadInformationModelsFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_loadInformationModels_c);
+            _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_loadInformationModels_c)).Returns(loadInformationModelsFilePath);
 
-            var nodeSetFunctionsMemoryStream = GenerateStreamFromString(_defaultNodeSetFunctionsC);
-            _mockFileSystem.Setup(x => x.ReadFile(nodeSetFunctionsFilePath)).Returns(nodeSetFunctionsMemoryStream);
+            var loadInformationModelsMemoryStream = GenerateStreamFromString(_defaultLoadInformationModelsC);
+            _mockFileSystem.Setup(x => x.ReadFile(loadInformationModelsFilePath)).Returns(loadInformationModelsMemoryStream);
 
             // Act
             var commandResult = _strategy.Execute(inputParams);
@@ -1342,10 +1342,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _mockFileSystem.Verify(x => x.CallExecutable(Constants.ExecutableName.PythonScript, _srcDir, nodesetCompilerArgs), Times.Once);
             _mockFileSystem.Verify(x => x.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp), Times.Once);
             _mockFileSystem.Verify(x => x.CreateDirectory(System.IO.Path.Combine(_srcDir, DirectoryName.InformationModels)), Times.Once);
-            _mockFileSystem.Verify(x => x.WriteFile(nodeSetFunctionsFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
+            _mockFileSystem.Verify(x => x.WriteFile(loadInformationModelsFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
 
-            nodeSetFunctionsMemoryStream.Close();
-            nodeSetFunctionsMemoryStream.Dispose();
+            loadInformationModelsMemoryStream.Close();
+            loadInformationModelsMemoryStream.Dispose();
             modelsMemoryStream.Close();
             modelsMemoryStream.Dispose();
         }

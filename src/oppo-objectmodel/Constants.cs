@@ -94,11 +94,11 @@ namespace Oppo.ObjectModel
 
         public static class FileName
         {
-            public const string SourceCode_main_c               = "main.c";
-            public const string SourceCode_models_c             = "models.c";
-            public const string SourceCode_nodeSetFunctions_c   = "nodeSetFunctions.c";
-            public const string SourceCode_meson_build          = "meson.build";
-            public const string SampleInformationModelFile      = "OpcUaDiModel.xml";
+            public const string SourceCode_main_c                   = "main.c";
+            public const string SourceCode_models_c                 = "models.c";
+            public const string SourceCode_loadInformationModels_c  = "loadInformationModels.c";
+            public const string SourceCode_meson_build              = "meson.build";
+            public const string SampleInformationModelFile          = "OpcUaDiModel.xml";
         }
 
         public static class NewSlnCommandArguments
@@ -195,7 +195,7 @@ namespace Oppo.ObjectModel
             public const string _generated = "_generated";
         }
 
-        public static class NodeSetFunctioncContent
+        public static class LoadInformationModelsContent
         {
             public const string ReturnLine = "return UA_STATUSCODE_GOOD;";
             public const string FunctionSnippetPart1 = "\tif ({0}(server) != UA_STATUSCODE_GOOD)";
