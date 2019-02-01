@@ -33,7 +33,6 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             public string typesFullName;
             public bool modelRequired;
             public string modelFullName;
-            public string modelRequiredTypes;
         }
 
         public CommandResult Execute(IEnumerable<string> inputParams)
