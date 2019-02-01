@@ -33,6 +33,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             public string typesFullName;
             public bool modelRequired;
             public string modelFullName;
+            public string modelRequiredTypes;
         }
 
         public CommandResult Execute(IEnumerable<string> inputParams)
@@ -104,14 +105,13 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 
             // create inside src/server the information-models directory if it is not already created
             CreateNeededDirectories(srcDirectory);
-            
+
             // execute generate datatypes python script if external types are required
-            var typesName = string.Empty;
+            var modelName = System.IO.Path.GetFileNameWithoutExtension(modelFullName);
             if (requiredFiles.typesRequired)
             {
-                typesName = _fileSystem.GetFileNameWithoutExtension(requiredFiles.typesFullName);
                 var typesSourceLocation = @"../../" + _fileSystem.CombinePaths(Constants.DirectoryName.Models, requiredFiles.typesFullName);
-                var typesTargetLocation = _fileSystem.CombinePaths(Constants.DirectoryName.InformationModels, typesName.ToLower());
+                var typesTargetLocation = _fileSystem.CombinePaths(Constants.DirectoryName.InformationModels, modelName.ToLower());
 
                 var generatedTypesArgs = Constants.ExecutableName.GenerateDatatypesScriptPath + string.Format(Constants.ExecutableName.GenerateDatatypesTypeBsd, typesSourceLocation) + " " + typesTargetLocation;
                 var generatedTypesResult = _fileSystem.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, generatedTypesArgs);
@@ -124,21 +124,11 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             }
 
             // prepare model paths
-            var modelName = _fileSystem.GetFileNameWithoutExtension(modelFullName);
             var modelTargetLocation = _fileSystem.CombinePaths(Constants.DirectoryName.InformationModels, modelName);
             var sourceModelRelativePath = @"../../" + _fileSystem.CombinePaths(Constants.DirectoryName.Models, modelFullName);
 
             // prepare nodeset compiler call arguments
-            var nodesetCompilerArgs = Constants.ExecutableName.NodesetCompilerCompilerPath + Constants.ExecutableName.NodesetCompilerInternalHeaders + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes);
-            if (requiredFiles.typesRequired)
-            {
-                nodesetCompilerArgs += string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, typesName.ToUpper());
-            }
-            else
-            {
-                nodesetCompilerArgs += string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes);
-            }
-            nodesetCompilerArgs += string.Format(Constants.ExecutableName.NodesetCompilerExisting, Constants.ExecutableName.NodesetCompilerBasicNodeset) + string.Format(Constants.ExecutableName.NodesetCompilerXml, sourceModelRelativePath, modelTargetLocation);
+            var nodesetCompilerArgs = BuildNodesetCompilerArgs(requiredFiles, opcuaAppName, modelName, sourceModelRelativePath, modelTargetLocation);
 
             // execute nodeset compiler python script
             var nodesetResult = _fileSystem.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, nodesetCompilerArgs);
@@ -153,7 +143,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             AdjustModelsTemplate(srcDirectory, modelName);
             if (requiredFiles.typesRequired)
             {
-                AdjustModelsTemplate(srcDirectory, typesName.ToLower() + Constants.ModelsCContent._generated);
+                AdjustModelsTemplate(srcDirectory, modelName.ToLower() + Constants.ModelsCContent._generated);
             }
 
             // adjust nodeSetFunctions.c with new functions
@@ -320,6 +310,61 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             }
 
             return true;
+        }
+
+        private string BuildNodesetCompilerArgs(RequiredFiles requiredFiles, string opcuaAppName, string typesName, string modelSourceLocation, string modelTargetLocation)
+        {
+            var outputString = Constants.ExecutableName.NodesetCompilerCompilerPath + Constants.ExecutableName.NodesetCompilerInternalHeaders + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes);
+            if (requiredFiles.modelRequired)
+            {
+                var requiredModelPath = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.Models, requiredFiles.modelFullName);
+                if (CheckIfModelRequiresTypes(requiredModelPath))
+                {
+                    var requiredModelName = _fileSystem.GetFileNameWithoutExtension(requiredFiles.modelFullName);
+                    outputString += string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, requiredModelName.ToUpper());
+                }
+                else
+                {
+                    outputString += string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes);
+                }
+            }
+            if (requiredFiles.typesRequired)
+            {
+                outputString += string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, typesName.ToUpper());
+            }
+            else
+            {
+                outputString += string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes);
+            }
+            outputString += string.Format(Constants.ExecutableName.NodesetCompilerExisting, Constants.ExecutableName.NodesetCompilerBasicNodeset);
+            if (requiredFiles.modelRequired)
+            {
+                var requiredModelSourceLocation = @"../../" + _fileSystem.CombinePaths(Constants.DirectoryName.Models, requiredFiles.modelFullName);
+                outputString += string.Format(Constants.ExecutableName.NodesetCompilerExisting, requiredModelSourceLocation);
+            }
+            outputString += string.Format(Constants.ExecutableName.NodesetCompilerXml, modelSourceLocation, modelTargetLocation);
+
+            return outputString;
+        }
+
+        private bool CheckIfModelRequiresTypes(string modelPath)
+        {
+            var modelFileStream = _fileSystem.ReadFile(modelPath);
+            var currentFileContentLineByLine = ReadFileContent(modelFileStream).ToList();
+
+            foreach(var line in currentFileContentLineByLine)
+            {
+                if(line.Contains(Constants.definitionXmlElement))
+                {
+                    modelFileStream.Close();
+                    modelFileStream.Dispose();
+                    return true;
+                }
+            }
+
+            modelFileStream.Close();
+            modelFileStream.Dispose();
+            return false;
         }
 
         /// <summary>
