@@ -331,7 +331,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 if (CheckIfModelRequiresTypes(requiredModelPath))
                 {
                     var requiredModelName = _fileSystem.GetFileNameWithoutExtension(requiredFiles.modelFullName);
-                    outputString += string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, requiredModelName.ToUpper());
+                    outputString += string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, (requiredModelName + Constants.ModelsCContent.Types).ToUpper());
                 }
                 else
                 {
@@ -342,7 +342,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             // add model extra types
             if (requiredFiles.typesRequired)
             {
-                outputString += string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, typesName.ToUpper());
+                outputString += string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, (typesName + Constants.ModelsCContent.Types).ToUpper());
             }
             else
             {
