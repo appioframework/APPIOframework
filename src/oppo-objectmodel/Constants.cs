@@ -192,7 +192,8 @@ namespace Oppo.ObjectModel
 
         public static class ModelsCContent
         {
-            public const string _generated = "_generated";
+            public const string Types           = "_types";
+            public const string TypesGenerated  = "_types_generated";
         }
 
         public static class LoadInformationModelsContent
