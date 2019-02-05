@@ -4,13 +4,13 @@ project('simple-meson-example', 'c',
         default_options : [ 'warning_level=3', 'buildtype=debugoptimized', 'c_std=c11' ]
 )
 
-client_app_sources  = [ files('src/client/main.c', '/etc/oppo/tools/open62541/v0.3.0/src/open62541.c'),
+client_app_sources  = [ files('src/client/main.c'),
 ]
 
 client_app_inc      = [ include_directories('src/client'), include_directories('/etc/oppo/tools/open62541/v0.3.0/src')
 ]
 
-client_app_deps     = [ 
+client_app_deps     = [ meson.get_compiler('c').find_library('libopen62541')
 ]
 
 client_app_exe      = executable('client-app',
@@ -18,13 +18,13 @@ client_app_exe      = executable('client-app',
                           include_directories: client_app_inc,
                           dependencies:        client_app_deps)
 
-server_app_sources  = [ files('src/server/main.c', 'src/server/models.c', 'src/server/loadInformationModels.c' ,'/etc/oppo/tools/open62541/v0.3.0/src/open62541.c'),
+server_app_sources  = [ files('src/server/main.c', 'src/server/models.c', 'src/server/loadInformationModels.c'
 ]
 
 server_app_inc      = [ include_directories('src/server'), include_directories('/etc/oppo/tools/open62541/v0.3.0/src')
 ]
 
-server_app_deps     = [ 
+server_app_deps     = [ meson.get_compiler('c').find_library('libopen62541')
 ]
 
 server_app_exe      = executable('server-app',
