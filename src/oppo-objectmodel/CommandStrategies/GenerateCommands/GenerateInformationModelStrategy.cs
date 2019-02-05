@@ -112,7 +112,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 var typesSourceLocation = @"../../" + _fileSystem.CombinePaths(Constants.DirectoryName.Models, requiredFiles.typesFullName);
                 var typesTargetLocation = _fileSystem.CombinePaths(Constants.DirectoryName.InformationModels, modelName.ToLower());
 
-                var generatedTypesArgs = Constants.ExecutableName.GenerateDatatypesScriptPath + string.Format(Constants.ExecutableName.GenerateDatatypesTypeBsd, typesSourceLocation) + " " + typesTargetLocation + Constants.ModelsCContent.Types;
+                var generatedTypesArgs = Constants.ExecutableName.GenerateDatatypesScriptPath + string.Format(Constants.ExecutableName.GenerateDatatypesTypeBsd, typesSourceLocation) + " " + typesTargetLocation + Constants.InformationModelsName.Types;
                 var generatedTypesResult = _fileSystem.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, generatedTypesArgs);
                 if (!generatedTypesResult)
                 {
@@ -138,11 +138,11 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 return new CommandResult(false, outputMessages);
             }
 
-            // adjust models.c file with new libraries
-            AdjustModelsTemplate(srcDirectory, modelName);
+            // adjust server meson.build file with new libraries
+            AdjustServerMesonBuildTemplate(srcDirectory, modelName);
             if (requiredFiles.typesRequired)
             {
-                AdjustModelsTemplate(srcDirectory, modelName.ToLower() + Constants.ModelsCContent.TypesGenerated);
+                AdjustServerMesonBuildTemplate(srcDirectory, modelName.ToLower() + Constants.InformationModelsName.TypesGenerated);
             }
 
             // adjust loadInformationModels.c with new functions
@@ -331,7 +331,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 if (CheckIfModelRequiresTypes(requiredModelPath))
                 {
                     var requiredModelName = _fileSystem.GetFileNameWithoutExtension(requiredFiles.modelFullName);
-                    outputString += string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, (requiredModelName + Constants.ModelsCContent.Types).ToUpper());
+                    outputString += string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, (requiredModelName + Constants.InformationModelsName.Types).ToUpper());
                 }
                 else
                 {
@@ -342,7 +342,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             // add model extra types
             if (requiredFiles.typesRequired)
             {
-                outputString += string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, (typesName + Constants.ModelsCContent.Types).ToUpper());
+                outputString += string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, (typesName + Constants.InformationModelsName.Types).ToUpper());
             }
             else
             {
@@ -384,30 +384,32 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             modelFileStream.Dispose();
             return false;
         }
-
+        
         /// <summary>
-        /// Models.c template should have an #include line for-each generated information-model source code.
-        /// Like for myModel.c, myModel.h -> #include "information-models/mmyModel.c".
+        /// meson.build stored in src/server template should files('fileName') line for-each generated information-model source code.
+        /// Like for myModel.c, myModel.h -> "files('information-models/myModel.c'),".
         /// </summary>
         /// <param name="srcDirectory">Server source directory for current opcuaapp project.</param>
         /// <param name="fileNameToInclude">Generated file name without extension to be included.</param>
-        private void AdjustModelsTemplate(string srcDirectory, string fileNameToInclude)
+        private void AdjustServerMesonBuildTemplate(string srcDirectory, string fileNameToInclude)
         {
-            var includeSnippet = Constants.IncludeSnippet + " \"" + Constants.DirectoryName.InformationModels + "/" + fileNameToInclude + Constants.FileExtension.CFile + "\"";
-
-            var modelsFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_models_c));
+            var sourceFileSnippet = "files('" + Constants.DirectoryName.InformationModels + "/" + fileNameToInclude + Constants.FileExtension.CFile + "'),";
+            
+            var modelsFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_meson_build));
             var currentFileContentLineByLine = ReadFileContent(modelsFileStream);
 
-            if (!currentFileContentLineByLine.Contains(includeSnippet))
+            if (!currentFileContentLineByLine.Contains(sourceFileSnippet))
             {
                 var sw = new StreamWriter(modelsFileStream);
                 foreach (var previousTextLine in currentFileContentLineByLine)
                 {
+                    if(previousTextLine.Contains("]"))
+                    {
+                        sw.WriteLine(sourceFileSnippet);
+                    }
+
                     sw.WriteLine(previousTextLine);
                 }
-                
-
-                sw.WriteLine(includeSnippet);
                 sw.Close();
                 sw.Dispose();
             }

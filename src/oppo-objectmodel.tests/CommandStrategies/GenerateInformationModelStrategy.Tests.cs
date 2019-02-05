@@ -177,10 +177,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         private GenerateInformationModelStrategy _strategy;
         private Mock<ILoggerListener> _loggerListenerMock;
         private readonly string _srcDir = @"src\server";
-        private readonly string _defaultModelsC = "/* \n* This is an automatically generated file.\n*/";
-        private readonly string _defaultModelIncludeSnippet = "#include \"information-models/{0}.c\"";
-        private readonly string _defaultTypesIncludeSnippet = "#include\"information-models/{0}_generated.c\"";
-        private readonly string _defaultLoadInformationModelsC = "UA_StatusCode loadInformationModels(UA_Server* server)\n{\n\treturn UA_STATUSCODE_GOOD;\n}";
+        private readonly string _defaultServerMesonBuild        = "server_app_sources += [\n]";
+        private readonly string _defaultLoadInformationModelsC  = "UA_StatusCode loadInformationModels(UA_Server* server)\n{\n\treturn UA_STATUSCODE_GOOD;\n}";
 
         [SetUp]
         public void SetUpTest()
@@ -261,11 +259,11 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _mockFileSystem.Setup(x => x.CallExecutable(Constants.ExecutableName.PythonScript, _srcDir, nodesetCompilerArgs)).Returns(true);
             _modelValidatorMock.Setup(x => x.Validate(calculatedModelFilePath, It.IsAny<string>())).Returns(true);
 
-            using (var memoryStream = GenerateStreamFromString(_defaultModelsC))
+            using (var mesonBuildMemoryStream = GenerateStreamFromString(_defaultServerMesonBuild))
             {
-                var modelsFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_models_c);
-                _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_models_c)).Returns(modelsFilePath);
-                _mockFileSystem.Setup(x => x.ReadFile(modelsFilePath)).Returns(memoryStream);
+                var mesonBuildFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_meson_build);
+                _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_meson_build)).Returns(mesonBuildFilePath);
+                _mockFileSystem.Setup(x => x.ReadFile(mesonBuildFilePath)).Returns(mesonBuildMemoryStream);
 
                 using (var loadInformationModelsMemoryStream = GenerateStreamFromString(_defaultLoadInformationModelsC))
                 {
@@ -330,11 +328,11 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _mockFileSystem.Setup(x => x.DirectoryExists(System.IO.Path.Combine(_srcDir, DirectoryName.InformationModels))).Returns(true);
             _modelValidatorMock.Setup(x => x.Validate(calculatedModelFilePath, It.IsAny<string>())).Returns(true);
 
-            using (var modelsMemoryStream = GenerateStreamFromString(_defaultModelsC + "\n" + string.Format(_defaultModelIncludeSnippet, modelName)))
+            using (var mesonBuildMemoryStream = GenerateStreamFromString(_defaultServerMesonBuild))
             {
-                var modelsFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_models_c);
-                _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_models_c)).Returns(modelsFilePath);
-                _mockFileSystem.Setup(x => x.ReadFile(modelsFilePath)).Returns(modelsMemoryStream);
+                var mesonBuildFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_meson_build);
+                _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_meson_build)).Returns(mesonBuildFilePath);
+                _mockFileSystem.Setup(x => x.ReadFile(mesonBuildFilePath)).Returns(mesonBuildMemoryStream);
 
                 using (var loadInformationModelsMemoryStream = GenerateStreamFromString(_defaultLoadInformationModelsC))
                 {
@@ -595,18 +593,18 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _mockFileSystem.Setup(x => x.CombinePaths(Constants.DirectoryName.InformationModels, modelName.ToLower())).Returns(typesTargetLocation);
 
             //Arrange executables
-            var generateDatatypesArgs = Constants.ExecutableName.GenerateDatatypesScriptPath + string.Format(Constants.ExecutableName.GenerateDatatypesTypeBsd, sourceTypesRelativePath) + " " + typesTargetLocation + Constants.ModelsCContent.Types;
+            var generateDatatypesArgs = Constants.ExecutableName.GenerateDatatypesScriptPath + string.Format(Constants.ExecutableName.GenerateDatatypesTypeBsd, sourceTypesRelativePath) + " " + typesTargetLocation + Constants.InformationModelsName.Types;
             _mockFileSystem.Setup(x => x.CallExecutable(Constants.ExecutableName.PythonScript, _srcDir, generateDatatypesArgs)).Returns(true);
-            var nodesetCompilerArgs = Constants.ExecutableName.NodesetCompilerCompilerPath + Constants.ExecutableName.NodesetCompilerInternalHeaders + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes) + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, (modelName + Constants.ModelsCContent.Types).ToUpper()) + string.Format(Constants.ExecutableName.NodesetCompilerExisting, Constants.ExecutableName.NodesetCompilerBasicNodeset) + string.Format(Constants.ExecutableName.NodesetCompilerXml, sourceModelRelativePath, modelTargetLocation);
+            var nodesetCompilerArgs = Constants.ExecutableName.NodesetCompilerCompilerPath + Constants.ExecutableName.NodesetCompilerInternalHeaders + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes) + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, (modelName + Constants.InformationModelsName.Types).ToUpper()) + string.Format(Constants.ExecutableName.NodesetCompilerExisting, Constants.ExecutableName.NodesetCompilerBasicNodeset) + string.Format(Constants.ExecutableName.NodesetCompilerXml, sourceModelRelativePath, modelTargetLocation);
             _mockFileSystem.Setup(x => x.CallExecutable(Constants.ExecutableName.PythonScript, _srcDir, nodesetCompilerArgs)).Returns(true);
 
-            //Arrange models.c
-            var modelsFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_models_c);
-            _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_models_c)).Returns(modelsFilePath);
+            //Arrange server meson.build
+            var mesonBuildFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_meson_build);
+            _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_meson_build)).Returns(mesonBuildFilePath);
 
-            var modelsMemoryStream = GenerateStreamFromString(_defaultModelsC + "\n" + string.Format(_defaultModelIncludeSnippet, modelName));
-            var typesMemoryStream = GenerateStreamFromString(_defaultModelsC + string.Format(_defaultModelIncludeSnippet, modelName) + "\n" + string.Format(_defaultTypesIncludeSnippet, typesName.ToLower()));
-            _mockFileSystem.SetupSequence(x => x.ReadFile(modelsFilePath)).Returns(modelsMemoryStream).Returns(typesMemoryStream);
+            var mesonBuildMemoryStream = GenerateStreamFromString(_defaultServerMesonBuild);
+            var typesMemoryStream = GenerateStreamFromString(_defaultServerMesonBuild);
+            _mockFileSystem.SetupSequence(x => x.ReadFile(mesonBuildFilePath)).Returns(mesonBuildMemoryStream).Returns(typesMemoryStream);
 
             //Arrange loadInformationModels.c
             var loadInformationModelsFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_loadInformationModels_c);
@@ -634,8 +632,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             loadInformationModelsMemoryStream.Dispose();
             typesMemoryStream.Close();
             typesMemoryStream.Dispose();
-            modelsMemoryStream.Close();
-            modelsMemoryStream.Dispose();
+            mesonBuildMemoryStream.Close();
+            mesonBuildMemoryStream.Dispose();
         }
 
         [Test]
@@ -1200,15 +1198,15 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _modelValidatorMock.Setup(x => x.Validate(calculatedRequiredModelFilePath, It.IsAny<string>())).Returns(true);
 
             //Arrange executables
-            var nodesetCompilerArgs = Constants.ExecutableName.NodesetCompilerCompilerPath + Constants.ExecutableName.NodesetCompilerInternalHeaders + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes) + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, (requiredModelName + Constants.ModelsCContent.Types).ToUpper()) + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes) + string.Format(Constants.ExecutableName.NodesetCompilerExisting, Constants.ExecutableName.NodesetCompilerBasicNodeset) + string.Format(Constants.ExecutableName.NodesetCompilerExisting, sourceRequiredModelRelativePath) + string.Format(Constants.ExecutableName.NodesetCompilerXml, sourceModelRelativePath, modelTargetLocation);
+            var nodesetCompilerArgs = Constants.ExecutableName.NodesetCompilerCompilerPath + Constants.ExecutableName.NodesetCompilerInternalHeaders + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes) + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, (requiredModelName + Constants.InformationModelsName.Types).ToUpper()) + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes) + string.Format(Constants.ExecutableName.NodesetCompilerExisting, Constants.ExecutableName.NodesetCompilerBasicNodeset) + string.Format(Constants.ExecutableName.NodesetCompilerExisting, sourceRequiredModelRelativePath) + string.Format(Constants.ExecutableName.NodesetCompilerXml, sourceModelRelativePath, modelTargetLocation);
             _mockFileSystem.Setup(x => x.CallExecutable(Constants.ExecutableName.PythonScript, _srcDir, nodesetCompilerArgs)).Returns(true);
 
-            //Arrange models.c
-            var modelsFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_models_c);
-            _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_models_c)).Returns(modelsFilePath);
+            //Arrange server meson.build
+            var mesonBuildFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_meson_build);
+            _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_meson_build)).Returns(mesonBuildFilePath);
 
-            var modelsMemoryStream = GenerateStreamFromString(_defaultModelsC + "\n" + string.Format(_defaultModelIncludeSnippet, modelName));
-            _mockFileSystem.Setup(x => x.ReadFile(modelsFilePath)).Returns(modelsMemoryStream);
+            var mesonBuildMemoryStream = GenerateStreamFromString(_defaultServerMesonBuild);
+            _mockFileSystem.Setup(x => x.ReadFile(mesonBuildFilePath)).Returns(mesonBuildMemoryStream);
 
             //Arrange loadInformationModels.c
             var loadInformationModelsFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_loadInformationModels_c);
@@ -1234,8 +1232,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             loadInformationModelsMemoryStream.Close();
             loadInformationModelsMemoryStream.Dispose();
-            modelsMemoryStream.Close();
-            modelsMemoryStream.Dispose();
+            mesonBuildMemoryStream.Close();
+            mesonBuildMemoryStream.Dispose();
         }
 
         [Test]
@@ -1314,18 +1312,18 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _modelValidatorMock.Setup(x => x.Validate(calculatedRequiredModelFilePath, It.IsAny<string>())).Returns(true);
 
             //Arrange executables
-            var generateDatatypesArgs = Constants.ExecutableName.GenerateDatatypesScriptPath + string.Format(Constants.ExecutableName.GenerateDatatypesTypeBsd, sourceTypesRelativePath) + " " + typesTargetLocation + Constants.ModelsCContent.Types;
+            var generateDatatypesArgs = Constants.ExecutableName.GenerateDatatypesScriptPath + string.Format(Constants.ExecutableName.GenerateDatatypesTypeBsd, sourceTypesRelativePath) + " " + typesTargetLocation + Constants.InformationModelsName.Types;
             _mockFileSystem.Setup(x => x.CallExecutable(Constants.ExecutableName.PythonScript, _srcDir, generateDatatypesArgs)).Returns(true);
-            var nodesetCompilerArgs = Constants.ExecutableName.NodesetCompilerCompilerPath + Constants.ExecutableName.NodesetCompilerInternalHeaders + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes) + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, (requiredModelName + Constants.ModelsCContent.Types).ToUpper()) + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, (modelName + Constants.ModelsCContent.Types).ToUpper()) + string.Format(Constants.ExecutableName.NodesetCompilerExisting, Constants.ExecutableName.NodesetCompilerBasicNodeset) + string.Format(Constants.ExecutableName.NodesetCompilerExisting, sourceRequiredModelRelativePath) + string.Format(Constants.ExecutableName.NodesetCompilerXml, sourceModelRelativePath, modelTargetLocation);
+            var nodesetCompilerArgs = Constants.ExecutableName.NodesetCompilerCompilerPath + Constants.ExecutableName.NodesetCompilerInternalHeaders + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes) + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, (requiredModelName + Constants.InformationModelsName.Types).ToUpper()) + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, (modelName + Constants.InformationModelsName.Types).ToUpper()) + string.Format(Constants.ExecutableName.NodesetCompilerExisting, Constants.ExecutableName.NodesetCompilerBasicNodeset) + string.Format(Constants.ExecutableName.NodesetCompilerExisting, sourceRequiredModelRelativePath) + string.Format(Constants.ExecutableName.NodesetCompilerXml, sourceModelRelativePath, modelTargetLocation);
             _mockFileSystem.Setup(x => x.CallExecutable(Constants.ExecutableName.PythonScript, _srcDir, nodesetCompilerArgs)).Returns(true);
 
-            //Arrange models.c
-            var modelsFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_models_c);
-            _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_models_c)).Returns(modelsFilePath);
+            //Arrange server meson.build
+            var mesonBuildFilePath = System.IO.Path.Combine(_srcDir, Constants.FileName.SourceCode_meson_build);
+            _mockFileSystem.Setup(x => x.CombinePaths(_srcDir, Constants.FileName.SourceCode_meson_build)).Returns(mesonBuildFilePath);
 
-            var modelsMemoryStream = GenerateStreamFromString(_defaultModelsC + "\n" + string.Format(_defaultModelIncludeSnippet, modelName));
-            var typesMemoryStream = GenerateStreamFromString(_defaultModelsC + string.Format(_defaultModelIncludeSnippet, modelName) + "\n" + string.Format(_defaultTypesIncludeSnippet, typesName.ToLower()));
-            _mockFileSystem.SetupSequence(x => x.ReadFile(modelsFilePath)).Returns(modelsMemoryStream).Returns(typesMemoryStream);
+            var mesonBuildMemoryStream = GenerateStreamFromString(_defaultServerMesonBuild);
+            var typesMemoryStream = GenerateStreamFromString(_defaultServerMesonBuild);
+            _mockFileSystem.SetupSequence(x => x.ReadFile(mesonBuildFilePath)).Returns(mesonBuildMemoryStream).Returns(typesMemoryStream);
 
 
             //Arrange loadInformationModels.c
@@ -1352,8 +1350,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             loadInformationModelsMemoryStream.Close();
             loadInformationModelsMemoryStream.Dispose();
-            modelsMemoryStream.Close();
-            modelsMemoryStream.Dispose();
+            mesonBuildMemoryStream.Close();
+            mesonBuildMemoryStream.Dispose();
         }
 
         [Test]

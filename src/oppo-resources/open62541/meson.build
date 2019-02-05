@@ -18,8 +18,10 @@ client_app_exe      = executable('client-app',
                           include_directories: client_app_inc,
                           dependencies:        client_app_deps)
 
-server_app_sources  = [ files('src/server/main.c', 'src/server/models.c', 'src/server/loadInformationModels.c')
+server_app_sources  = [ files('src/server/main.c', 'src/server/loadInformationModels.c')
 ]
+
+subdir('src/server')
 
 server_app_inc      = [ include_directories('src/server'), include_directories('/etc/oppo/tools/open62541/v0.3.0/src')
 ]

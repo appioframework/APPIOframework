@@ -9,8 +9,8 @@
         public const string OppoOpcuaAppTemplateFileName_main_client_c = "Oppo.Resources.open62541.main-client.c";
 
         public const string OppoOpcuaAppTemplateFileName_main_server_c = "Oppo.Resources.open62541.main-server.c";
-
-        public const string OppoOpcuaAppTemplateFileName_models_server_c = "Oppo.Resources.open62541.models-server.c";
+        
+        public const string OppoOpcuaAppTemplateFileName_meson_server_build = "Oppo.Resources.open62541.meson-server.build";
 
         public const string OppoOpcuaAppTemplateFileName_loadInformationModels_server_c = "Oppo.Resources.open62541.loadInformationModels-server.c";
 
