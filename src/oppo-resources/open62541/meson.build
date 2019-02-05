@@ -10,7 +10,7 @@ client_app_sources  = [ files('src/client/main.c')
 client_app_inc      = [ include_directories('src/client'), include_directories('/etc/oppo/tools/open62541/v0.3.0/src')
 ]
 
-client_app_deps     = [ meson.get_compiler('c').find_library('/etc/oppo/tools/open62541/v0.3.0/srclibopen62541')
+client_app_deps     = [ meson.get_compiler('c').find_library('/etc/oppo/tools/open62541/v0.3.0/src/libopen62541')
 ]
 
 client_app_exe      = executable('client-app',
@@ -24,7 +24,7 @@ server_app_sources  = [ files('src/server/main.c', 'src/server/models.c', 'src/s
 server_app_inc      = [ include_directories('src/server'), include_directories('/etc/oppo/tools/open62541/v0.3.0/src')
 ]
 
-server_app_deps     = [ meson.get_compiler('c').find_library('/etc/oppo/tools/open62541/v0.3.0/srclibopen62541')
+server_app_deps     = [ meson.get_compiler('c').find_library('/etc/oppo/tools/open62541/v0.3.0/src/libopen62541')
 ]
 
 server_app_exe      = executable('server-app',
