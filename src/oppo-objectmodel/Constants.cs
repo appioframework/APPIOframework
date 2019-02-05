@@ -191,6 +191,7 @@ namespace Oppo.ObjectModel
 
         public static class InformationModelsName
         {
+            public const string FileSnippet     = "files(information-models/{0}.c'),";
             public const string Types           = "_types";
             public const string TypesGenerated  = "_types_generated";
         }

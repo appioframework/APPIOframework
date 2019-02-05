@@ -393,7 +393,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
         /// <param name="fileNameToInclude">Generated file name without extension to be included.</param>
         private void AdjustServerMesonBuildTemplate(string srcDirectory, string fileNameToInclude)
         {
-            var sourceFileSnippet = "files('" + Constants.DirectoryName.InformationModels + "/" + fileNameToInclude + Constants.FileExtension.CFile + "'),";
+            var sourceFileSnippet = string.Format(Constants.InformationModelsName.FileSnippet, fileNameToInclude);
             
             var modelsFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_meson_build));
             var currentFileContentLineByLine = ReadFileContent(modelsFileStream);
