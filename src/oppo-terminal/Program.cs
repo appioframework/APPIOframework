@@ -7,7 +7,7 @@ namespace Oppo.Terminal
     internal static class Program
     {
         internal static int Main(string[] args)
-        {          
+        {
             SetupOppoLogger();
 
             var objectModel = new ObjectModel.ObjectModel(ObjectModel.ObjectModel.CreateCommandFactory(new ReflectionWrapper()));
