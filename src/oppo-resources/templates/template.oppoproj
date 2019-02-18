@@ -1,10 +1,6 @@
 {
-   "opcuaapp": {
-      "version": "1.0",
-      "name": "",
-      "information-model": {
-         "source": "models",
-         "models": ""
-      }
-   }
+  "name": "",
+  "path": "",
+  "type": "",
+  "url": null
 }

@@ -68,7 +68,7 @@ namespace Oppo.ObjectModel.Tests
             // Arrange
             var solutionAsJson = "" +
                 "{" +
-                    "\"Projects\": []" +
+                    "\"projects\": []" +
                 "}";
 
             // Act
@@ -80,10 +80,10 @@ namespace Oppo.ObjectModel.Tests
         }
 
         [Test]
-        public void ContainOneProjectAndBeDeSerializableFromJson()
+        public void ContainOneProjectAndBeDeserializableFromJson()
         {
             // Arrange
-            var solutionAsJson = "{ \"Projects\":[{\"Name\":\"mvpSmartPump\",\"Path\":\"mvpSmartPump/mvpSmartPump.oppoproj\"}]}";           
+            var solutionAsJson = "{ \"projects\":[{\"name\":\"mvpSmartPump\",\"path\":\"mvpSmartPump/mvpSmartPump.oppoproj\"}]}";           
 
             // Act
             ISolution solution = JsonConvert.DeserializeObject<Solution>(solutionAsJson);
@@ -97,8 +97,8 @@ namespace Oppo.ObjectModel.Tests
         public void ContainTwoProjectAndBeDeSerializableFromJson()
         {
             // Arrange          
-            var solutionAsJson = "{ \"Projects\":[{\"Name\":\"mvpSmartPump\",\"Path\":\"mvpSmartPump/mvpSmartPump.oppoproj\"}," +
-                "{\"Name\":\"mvpSmartLiterSensor\",\"Path\":\"mvpSmartLiterSensor/mvpSmartLiterSensor.oppoproj\"}]}";
+            var solutionAsJson = "{ \"projects\":[{\"name\":\"mvpSmartPump\",\"path\":\"mvpSmartPump/mvpSmartPump.oppoproj\"}," +
+                "{\"name\":\"mvpSmartLiterSensor\",\"path\":\"mvpSmartLiterSensor/mvpSmartLiterSensor.oppoproj\"}]}";
             
             ISolution solution = JsonConvert.DeserializeObject<Solution>(solutionAsJson);
 
