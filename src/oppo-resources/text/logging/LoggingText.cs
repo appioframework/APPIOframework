@@ -46,17 +46,17 @@
 
 
         // sln add command
-        public const string SlnAddSuccess					= "Opcuaapp project file successfullt added to sln.";
-        public const string SlnAddUknownCommandParam		= "Unknown sln add command parameter!";
-        public const string SlnAddOpposlnFileNotFound		= "Missing solution file!";
+        public const string SlnAddSuccess				    = "Opcuaapp project file successfullt added to sln.";
+        public const string SlnUnknownCommandParam		    = "Unknown sln add command parameter!";
+        public const string SlnOpposlnFileNotFound		    = "Missing solution file!";
         public const string SlnAddOppoprojFileNotFound		= "Missing project file!";
         public const string SlnAddCouldntDeserliazeSln		= "Couldn't deserialize sln file!";
         public const string SlnAddCouldntDeserliazeOpcuaapp	= "Couldn't deserialize oppoproj file!";
         public const string SlnAddContainsOpcuaapp			= "The solution already contains the opcuaapp project.";
 		public const string OppoHelpForSlnCommand			= "Help for sln <command> called";
+        public const string SlnRemoveOppoprojNameEmpty      = "Empty project name!";
 
-
-		public const string DirectoryIOException = "Directory IOException detected!";
+        public const string DirectoryIOException = "Directory IOException detected!";
         public const string DirectoryNotFoundException = "Directory DirectoryNotFoundException detected!";
         public const string PathTooLongException = "Directory PathTooLongException detected!";
 

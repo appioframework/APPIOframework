@@ -60,11 +60,12 @@ namespace Oppo.Resources.text.output
         // sln add <command>
         public const string SlnAddSuccess                   = "The opcuaapp with the name '{0}' was successfully added to solution '{1}'.";
         public const string SlnAddOpcuaappAlreadyExist      = "The opcuaapp with the name '{0}' is already a part of the solution '{1}'.";
-        public const string SlnAddSlnNotFound               = "The solution file '{0}' not found!";
+        public const string SlnOppoSlnNotFound              = "The solution file '{0}' not found!";
         public const string SlnAddOpcuaappNotFound          = "The opcuaapp project file '{0}' not found!";
-        public const string SlnAddUnknownParameter          = "Uknown command parameter '{0}'!";
+        public const string SlnUnknownParameter             = "Uknown command parameter '{0}'!";
         public const string SlnAddCouldntDeserliazeSln      = "The solution file '{0}' has invalid content!";
         public const string SlnAddCouldntDeserliazeOpcuaapp = "The opcuaapp project file '{0}' has invalid content!";
         public const string SlnAddContainsOpcuaapp          = "The solution '{0}' already contains the opcuaapp '{1}'";
+        public const string SlnRemoveOpcuaappNameEmpty      = "The opcuaapp project name empty!";
     }
 }

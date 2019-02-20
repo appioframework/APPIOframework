@@ -34,8 +34,8 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
             // check if solutionNameFlag is valid
             if(solutionNameFlag != Constants.SlnAddCommandArguments.Solution && solutionNameFlag != Constants.SlnAddCommandArguments.VerboseSolution)
 			{
-				OppoLogger.Warn(LoggingText.SlnAddUknownCommandParam);
-				outputMessages.Add(string.Format(OutputText.SlnAddUnknownParameter, solutionNameFlag), string.Empty);
+				OppoLogger.Warn(LoggingText.SlnUnknownCommandParam);
+				outputMessages.Add(string.Format(OutputText.SlnUnknownParameter, solutionNameFlag), string.Empty);
 				return new CommandResult(false, outputMessages);
 			}
 
@@ -43,16 +43,16 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 			var solutionFullName = _fileSystem.CombinePaths(solutionName + Constants.FileExtension.OppoSln);
 			if (string.IsNullOrEmpty(solutionName) || !_fileSystem.FileExists(solutionFullName))
 			{
-				OppoLogger.Warn(LoggingText.SlnAddOpposlnFileNotFound);
-				outputMessages.Add(string.Format(OutputText.SlnAddSlnNotFound, solutionFullName), string.Empty);
+				OppoLogger.Warn(LoggingText.SlnOpposlnFileNotFound);
+				outputMessages.Add(string.Format(OutputText.SlnOppoSlnNotFound, solutionFullName), string.Empty);
 				return new CommandResult(false, outputMessages);
 			}
 
 			// check if projectNameFlag is valid
 			if (projectNameFlag != Constants.SlnAddCommandArguments.Project && projectNameFlag != Constants.SlnAddCommandArguments.VerboseProject)
             {
-                OppoLogger.Warn(LoggingText.SlnAddUknownCommandParam);
-                outputMessages.Add(string.Format(OutputText.SlnAddUnknownParameter, projectNameFlag), string.Empty);
+                OppoLogger.Warn(LoggingText.SlnUnknownCommandParam);
+                outputMessages.Add(string.Format(OutputText.SlnUnknownParameter, projectNameFlag), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
 

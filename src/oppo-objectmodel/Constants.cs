@@ -114,17 +114,7 @@ namespace Oppo.ObjectModel
             public const string Name = "-n";
             public const string VerboseName = "--name";
         }
-
-        public static class SlnAddCommandArguments
-        {
-			public const string Help			= "-h";
-			public const string VerboseHelp		= "--help";
-            public const string Solution        = "-s";
-            public const string VerboseSolution = "--solution";
-            public const string Project         = "-p";
-            public const string VerboseProject	= "--project";
-        }
-
+        
         public static class NewOpcuaAppCommandArguments
         {
             public const string Name = "-n";
@@ -224,5 +214,27 @@ namespace Oppo.ObjectModel
             public const string FunctionSnippetPart4 = "\t\treturn UA_STATUSCODE_BADUNEXPECTEDERROR;";
             public const string FunctionSnippetPart5 = "\t}";
         }
+
+        public static class SlnAddCommandArguments
+        {
+            public const string Help = "-h";
+            public const string VerboseHelp = "--help";
+            public const string Solution = "-s";
+            public const string VerboseSolution = "--solution";
+            public const string Project = "-p";
+            public const string VerboseProject = "--project";
+            
+        }
+        public static class SlnRemoveCommandArguments
+        {
+            public const string Help = "-h";
+            public const string VerboseHelp = "--help";
+            public const string Solution = "-s";
+            public const string VerboseSolution = "--solution";
+            public const string Project = "-p";
+            public const string VerboseProject = "--project";
+
+        }
+
     }
 }
