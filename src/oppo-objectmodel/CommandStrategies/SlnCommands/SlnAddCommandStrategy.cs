@@ -18,11 +18,6 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
         }
 
         public string Name => Constants.SlnCommandName.Add;
-        
-        private static IEnumerable<string> SingleStringAsEnumerable(string text)
-        {
-            yield return text;
-        }
 
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
@@ -118,7 +113,7 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
                 
                 // serialize and write sln
                 var slnNewContent = JsonConvert.SerializeObject(oppoSolution, Formatting.Indented);
-                _fileSystem.WriteFile(solutionFullName, SingleStringAsEnumerable(slnNewContent));
+				_fileSystem.WriteFile(solutionFullName, slnNewContent.Cast<string>());
             }
             else
             {

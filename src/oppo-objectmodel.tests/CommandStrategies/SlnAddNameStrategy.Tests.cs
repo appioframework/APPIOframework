@@ -47,7 +47,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         private Mock<IFileSystem> _fileSystemMock;
         private SlnAddCommandStrategy _objectUnderTest;
 
-        private readonly string _defaultOpposlnContent = "{\"projects\": [{}]}";
+        private readonly string _defaultOpposlnContent = "{\"projects\": []}";
         private readonly string _sampleOpposlnContent = "{\"projects\": [{\"name\":\"testApp\",\"path\":\"testApp.oppoproj\",\"type\":\"ClientServer\",\"url\":\"opc.tcp://127.0.0.1:4840/\"}]}";
         private readonly string _sampleOppoprojContent1 = "{\"name\":\"testApp\",\"path\":\"testApp.oppoproj\",\"type\":\"ClientServer\",\"url\":\"opc.tcp://127.0.0.1:4840/\"}";
         private readonly string _sampleOppoprojContent2 = "{\"name\":\"myApp\",\"path\":\"myApp.oppoproj\",\"type\":\"Server\",\"url\":\"opc.tcp://127.0.0.1:4841/\"}";
