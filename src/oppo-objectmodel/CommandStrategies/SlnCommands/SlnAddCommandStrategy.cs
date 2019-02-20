@@ -77,7 +77,7 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
                 oppoSolution = JsonConvert.DeserializeObject<Solution>(slnContent);
 				if (oppoSolution == null)
 				{
-					throw new ArgumentNullException("oppoSolution");
+					throw null;
 				}
             }
             catch(Exception)
@@ -99,7 +99,7 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
                 oppoProj = JsonConvert.DeserializeObject<Opcuaapp>(opcuaappContent);
 				if (oppoProj == null)
 				{
-					throw new ArgumentNullException("oppoProj");
+					throw null;
 				}
 			}
             catch(Exception)
