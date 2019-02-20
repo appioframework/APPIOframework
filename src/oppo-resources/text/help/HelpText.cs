@@ -66,6 +66,9 @@
 
         //Version command
 
+        //Sln command
+        public const string SlnCommand = "Some help text.";
+
         //Commands description
         public const string BuildHelpArgumentCommandDescription = "Build help";
         public const string BuildNameArgumentCommandDescription = "Project name";
@@ -78,7 +81,9 @@
         public const string PublishHelpArgumentCommandDescription = "Publish help";
         public const string PublishNameArgumentCommandDescription = "Project name";
         public const string ImportSamplesArgumentCommandDescription = "Import Samples";
-        public const string GenerateHelpArgumentCommandDescription = "Generate help";               
+        public const string GenerateHelpArgumentCommandDescription = "Generate help";
+        public const string SlnHelpArgumentCommandDescription = "Sln help";
+        public const string SlnNameArgumentCommandDescription = "Project name";
 
     }
 }

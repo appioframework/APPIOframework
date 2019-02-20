@@ -12,6 +12,7 @@ using Oppo.ObjectModel.CommandStrategies.NewCommands;
 using Oppo.ObjectModel.CommandStrategies.PublishCommands;
 using Oppo.ObjectModel.CommandStrategies.VersionCommands;
 using Oppo.ObjectModel.CommandStrategies.GenerateCommands;
+using Oppo.ObjectModel.CommandStrategies.SlnCommands;
 
 namespace Oppo.ObjectModel
 {
@@ -86,6 +87,9 @@ namespace Oppo.ObjectModel
 
             var generateStrategy = CreateGenerateStrategy(fileSystem);
             commands.Add(generateStrategy);
+
+			var slnStrategy = CreateSlnStrategy(fileSystem);
+			commands.Add(slnStrategy);
 
             var factory = new CommandFactory<ObjectModel>(commands, Constants.CommandName.Help);
 
@@ -442,6 +446,42 @@ namespace Oppo.ObjectModel
 
             return new GenerateStrategy(generateStrategyCommandFactory);
         }
+
+		private static SlnStrategy CreateSlnStrategy(IFileSystem fileSystem)
+		{
+			var slnHelpStrategyHelpText = new MessageLines
+			{
+				{ string.Empty, Resources.text.help.HelpTextValues.SlnCommand },
+			};
+
+			var slnHelpStrategyData = new HelpData
+			{
+				CommandName = Constants.SlnAddCommandArguments.Help,
+				HelpTextFirstLine = slnHelpStrategyHelpText,
+				LogMessage = LoggingText.OppoHelpForSlnCommand,
+				HelpText = Resources.text.help.HelpTextValues.SlnHelpArgumentCommandDescription,
+			};
+
+			var slnHelpStrategy = new HelpStrategy<SlnStrategy>(slnHelpStrategyData);
+
+			slnHelpStrategyData.CommandName = Constants.SlnCommandName.VerboseHelp;
+
+			var slnHelpVerboseStrategy = new HelpStrategy<SlnStrategy>(slnHelpStrategyData);
+
+			var slnStrategies = new ICommand<SlnStrategy>[]
+			{
+				new SlnAddCommandStrategy(fileSystem),
+				slnHelpStrategy,
+				slnHelpVerboseStrategy,
+			};
+
+			var slnStrategyCommandFactory = new CommandFactory<SlnStrategy>(slnStrategies, Constants.NewCommandName.Help);
+			slnHelpStrategy.CommandFactory = slnStrategyCommandFactory;
+			slnHelpVerboseStrategy.CommandFactory = slnStrategyCommandFactory;
+
+			return new SlnStrategy(slnStrategyCommandFactory);
+
+		}
 
         public string PrepareCommandFailureOutputText(string[] args)
         {

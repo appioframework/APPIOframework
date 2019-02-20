@@ -56,5 +56,15 @@ namespace Oppo.Resources.text.output
         public const string GenerateInformationModelFailureEmptyOpcuaAppName = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Empty opcuaapp name!";
         public const string GenerateInformationModelFailureValidatingModel = "It was not possible to validate the model '{0}' against known opc-ua 'UANodeSet.xsd'!";
         public const string GenerateInformationModelRequiredModelFailure = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Can't use required model '{2}'!";
+
+        // sln add <command>
+        public const string SlnAddSuccess                   = "The opcuaapp with the name '{0}' was successfully added to solution '{1}'.";
+        public const string SlnAddOpcuaappAlreadyExist      = "The opcuaapp with the name '{0}' is already a part of the solution '{1}'.";
+        public const string SlnAddSlnNotFound               = "The solution file '{0}' not found!";
+        public const string SlnAddOpcuaappNotFound          = "The opcuaapp project file '{0}' not found!";
+        public const string SlnAddUnknownParameter          = "Uknown command parameter '{0}'!";
+        public const string SlnAddCouldntDeserliazeSln      = "The solution file '{0}' has invalid content!";
+        public const string SlnAddCouldntDeserliazeOpcuaapp = "The opcuaapp project file '{0}' has invalid content!";
+        public const string SlnAddContainsOpcuaapp          = "The solution '{0}' already contains the opcuaapp '{1}'";
     }
 }

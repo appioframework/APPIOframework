@@ -33,6 +33,7 @@ namespace Oppo.ObjectModel
             public const string Import = "import";
             public const string Generate = "generate";
             public const string GenerateInformationModel = "information-model";
+            public const string Sln = "sln";
         }
 
         public static class CommandResults
@@ -47,6 +48,14 @@ namespace Oppo.ObjectModel
             public const string VerboseHelp = "--help";
             public const string Sln = "sln";
             public const string OpcuaApp = "opcuaapp";
+        }
+
+        public static class SlnCommandName
+        {
+            public const string Help = "-h";
+            public const string VerboseHelp = "--help";
+            public const string Add = "add";
+            public const string Remove = "remove";
         }
 
         public static class DirectoryName
@@ -104,6 +113,16 @@ namespace Oppo.ObjectModel
         {
             public const string Name = "-n";
             public const string VerboseName = "--name";
+        }
+
+        public static class SlnAddCommandArguments
+        {
+			public const string Help			= "-h";
+			public const string VerboseHelp		= "--help";
+            public const string Solution        = "-s";
+            public const string VerboseSolution = "--solution";
+            public const string Project         = "-p";
+            public const string VerboseProject	= "--project";
         }
 
         public static class NewOpcuaAppCommandArguments

@@ -12,15 +12,14 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
         {
             _factory = factory;
         }
-
         
         public string Name => Constants.CommandName.New;
 
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
-            var inputsParamsArray = inputParams.ToArray();
-            var commandName = inputsParamsArray.FirstOrDefault();
-            var commandParams = inputsParamsArray.Skip(1).ToArray();
+            var inputParamsArray = inputParams.ToArray();
+            var commandName = inputParamsArray.FirstOrDefault();
+            var commandParams = inputParamsArray.Skip(1).ToArray();
             var strategy = _factory.GetCommand(commandName);
             var result = strategy.Execute(commandParams);
             return result;
