@@ -44,7 +44,7 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 			if (string.IsNullOrEmpty(solutionName) || !_fileSystem.FileExists(solutionFullName))
 			{
 				OppoLogger.Warn(LoggingText.SlnOpposlnFileNotFound);
-				outputMessages.Add(string.Format(OutputText.SlnOppoSlnNotFound, solutionFullName), string.Empty);
+				outputMessages.Add(string.Format(OutputText.SlnOpposlnNotFound, solutionFullName), string.Empty);
 				return new CommandResult(false, outputMessages);
 			}
 
@@ -117,7 +117,7 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
             if (!oppoSolution.Projects.Any(x => x.Name == oppoProj.Name))
             {
                 // add opcuaapp to sln
-                oppoSolution.Projects.Add(oppoProj);
+                oppoSolution.Projects.Add(new OpcuaappForSln(oppoProj, oppoprojFilePath));
 
 				// serialize and write sln
 				var slnNewContent = JsonConvert.SerializeObject(oppoSolution, Formatting.Indented);

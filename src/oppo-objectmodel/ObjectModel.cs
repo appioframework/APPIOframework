@@ -456,7 +456,7 @@ namespace Oppo.ObjectModel
 
 			var slnHelpStrategyData = new HelpData
 			{
-				CommandName = Constants.SlnAddCommandArguments.Help,
+				CommandName = Constants.SlnCommandName.Help,
 				HelpTextFirstLine = slnHelpStrategyHelpText,
 				LogMessage = LoggingText.OppoHelpForSlnCommand,
 				HelpText = Resources.text.help.HelpTextValues.SlnHelpArgumentCommandDescription,

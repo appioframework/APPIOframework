@@ -4,18 +4,19 @@ using System.Linq;
 
 namespace Oppo.ObjectModel.Tests
 {
-    public class OpcuaappShould
+    public class OpcuaappForSlnShould
     {
-        private Opcuaapp _defaultopcuaApp, _opcuaapp;
+        private OpcuaappForSln _defaultopcuaAppForSln, _opcuaappForSln;
         private string _name = "mvpSmartPump";
+        private string _path = "mvpSmartPump/mvpSmartPump.oppoproj";
         private string _url = "opc.tcp://127.0.1.1:4840";
         private OpcuaappType _type = OpcuaappType.Server;
 
         [SetUp]
         public void SetupTest()
         {
-            _defaultopcuaApp = new Opcuaapp();
-            _opcuaapp = new Opcuaapp(_name, _type, _url);   
+            _defaultopcuaAppForSln = new OpcuaappForSln();
+            _opcuaappForSln = new OpcuaappForSln(new Opcuaapp(_name, _type, _url), _path);   
         }
 
         [TearDown]
@@ -31,7 +32,7 @@ namespace Oppo.ObjectModel.Tests
             // Act
             
             // Assert
-            Assert.AreEqual(OpcuaappType.ClientServer, _defaultopcuaApp.Type);
+            Assert.AreEqual(OpcuaappType.ClientServer, _defaultopcuaAppForSln.Type);
         }
 
         [Test]
@@ -42,9 +43,10 @@ namespace Oppo.ObjectModel.Tests
             // Act
 
             // Assert
-            Assert.AreEqual(_name, _opcuaapp.Name);
-            Assert.AreEqual(_type, _opcuaapp.Type);
-            Assert.AreEqual(_url, _opcuaapp.Url);
+            Assert.AreEqual(_name, _opcuaappForSln.Name);
+            Assert.AreEqual(_path, _opcuaappForSln.Path);
+            Assert.AreEqual(_type, _opcuaappForSln.Type);
+            Assert.AreEqual(_url, _opcuaappForSln.Url);
         }
 
         [Test]
@@ -53,7 +55,7 @@ namespace Oppo.ObjectModel.Tests
             // Arrange
 
             // Act
-            var opcuaappAsJson = JsonConvert.SerializeObject(_opcuaapp, Formatting.Indented);
+            var opcuaappAsJson = JsonConvert.SerializeObject(_opcuaappForSln, Formatting.Indented);
             
             // Assert
             Assert.IsNotNull(opcuaappAsJson);
@@ -66,31 +68,34 @@ namespace Oppo.ObjectModel.Tests
             // Arrange
 
             // Act
-            var opcuaappAsJson = JsonConvert.SerializeObject(_opcuaapp, Formatting.Indented);
+            var opcuaappAsJson = JsonConvert.SerializeObject(_opcuaappForSln, Formatting.Indented);
 
             // Assert
             Assert.IsNotNull(opcuaappAsJson);
             Assert.AreNotEqual(string.Empty, opcuaappAsJson);
             Assert.IsTrue(opcuaappAsJson.Contains(_name)); // don't care where
+            Assert.IsTrue(opcuaappAsJson.Contains(_path)); // don't care where
         }
 
         [Test]
         public void BeDeSerializableFromJson()
         {
             // Arrange
-            var opcuaappAsJson = "" +
+            var opcuaappForSlnAsJson = "" +
                 "{" +    
                     "\"Name\": \"" + _name + "\"," +
+                    "\"Path\": \"" + _path + "\"," +
                     "\"Type\": \"" +  _type.ToString() + "\"," +
                     "\"Url\": \"" + _url + "\"" +
                 "}";
 
             // Act
-            Opcuaapp opcuaappForSln = JsonConvert.DeserializeObject<Opcuaapp>(opcuaappAsJson);
+            OpcuaappForSln opcuaappForSln = JsonConvert.DeserializeObject<OpcuaappForSln>(opcuaappForSlnAsJson);
 
             // Assert
             Assert.IsNotNull(opcuaappForSln);
             Assert.AreEqual(_name, opcuaappForSln.Name);
+            Assert.AreEqual(_path, opcuaappForSln.Path);
             Assert.AreEqual(_type, opcuaappForSln.Type);
             Assert.AreEqual(_url, opcuaappForSln.Url);
         }
@@ -99,37 +104,41 @@ namespace Oppo.ObjectModel.Tests
         public void BeOfTypeClientAndDontHaveUrlAndBeSerializableFromJson()
         {
             // Arrange
-            var opcuaappAsJson = "" +
+            var opcuaappForSlnAsJson = "" +
                 "{" +
                     "\"Name\": \"" + _name + "\"," +
+                    "\"Path\": \"" + _path + "\"," +
                     "\"Type\": \"" + OpcuaappType.Client.ToString() + "\"" +
                 "}";
 
 			// Act
-			Opcuaapp opcuaapp = JsonConvert.DeserializeObject<Opcuaapp>(opcuaappAsJson);
+			OpcuaappForSln opcuaappForSln = JsonConvert.DeserializeObject<OpcuaappForSln>(opcuaappForSlnAsJson);
 
             // Assert
-            Assert.IsNotNull(opcuaapp);
-            Assert.AreEqual(_name, opcuaapp.Name);
-            Assert.AreEqual(OpcuaappType.Client, opcuaapp.Type);
-            Assert.IsNull(opcuaapp.Url);
+            Assert.IsNotNull(opcuaappForSln);
+            Assert.AreEqual(_name, opcuaappForSln.Name);
+            Assert.AreEqual(_path, opcuaappForSln.Path);
+            Assert.AreEqual(OpcuaappType.Client, opcuaappForSln.Type);
+            Assert.IsNull(opcuaappForSln.Url);
         }
 
         [Test]
         public void BeOfTypeClientAndDontHaveUrlAndBeDeSerializableToJson()
         {
 			// Arrange
-			_opcuaapp.Name = _name;
-			_opcuaapp.Type = OpcuaappType.Client;
-			_opcuaapp.Url = null;
+			_opcuaappForSln.Name = _name;
+			_opcuaappForSln.Path = _path;
+			_opcuaappForSln.Type = OpcuaappType.Client;
+			_opcuaappForSln.Url = null;
 
             // Act
-            var opcuaappAsJson = JsonConvert.SerializeObject(_opcuaapp, Formatting.Indented);
+            var opcuaappAsJson = JsonConvert.SerializeObject(_opcuaappForSln, Formatting.Indented);
 
             // Assert
             Assert.IsNotNull(opcuaappAsJson);
             Assert.AreNotEqual(string.Empty, opcuaappAsJson);
             Assert.IsTrue(opcuaappAsJson.Contains(_name)); // don't care where
+            Assert.IsTrue(opcuaappAsJson.Contains(_path)); // don't care where
             Assert.IsTrue(opcuaappAsJson.Contains("\"url\": null")); // don't care where
         }
 

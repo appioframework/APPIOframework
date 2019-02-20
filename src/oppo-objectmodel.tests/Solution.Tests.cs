@@ -50,7 +50,7 @@ namespace Oppo.ObjectModel.Tests
             // Arrange
             var projectName = "mvpSmartPump";
             var projectPath = "mvpSmartPump/mvpSmartPump.oppoproj";
-            _solution.Projects.Add(new Opcuaapp() { Name = projectName, Path = projectPath });
+            _solution.Projects.Add(new OpcuaappForSln() { Name = projectName, Path = projectPath });
             
             // Act
             var solutionAsJson = JsonConvert.SerializeObject(_solution, Formatting.Indented);

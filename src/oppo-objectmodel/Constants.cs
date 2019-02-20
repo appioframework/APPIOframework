@@ -217,8 +217,6 @@ namespace Oppo.ObjectModel
 
         public static class SlnAddCommandArguments
         {
-            public const string Help = "-h";
-            public const string VerboseHelp = "--help";
             public const string Solution = "-s";
             public const string VerboseSolution = "--solution";
             public const string Project = "-p";
@@ -227,8 +225,6 @@ namespace Oppo.ObjectModel
         }
         public static class SlnRemoveCommandArguments
         {
-            public const string Help = "-h";
-            public const string VerboseHelp = "--help";
             public const string Solution = "-s";
             public const string VerboseSolution = "--solution";
             public const string Project = "-p";

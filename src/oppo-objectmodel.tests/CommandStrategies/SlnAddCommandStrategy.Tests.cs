@@ -60,7 +60,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         }
 
         [Test]
-        public void ImplementICommandOfCleanStrategy()
+        public void ImplementICommandOfSlnAddStrategy()
         {
             // Arrange
 
@@ -141,7 +141,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             OppoLogger.RemoveListener(loggerListenerMock.Object);
             loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.SlnOpposlnFileNotFound), Times.Once);
-            Assert.AreEqual(string.Format(OutputText.SlnOppoSlnNotFound, oppoSlnPath), firstMessageLine.Key);
+            Assert.AreEqual(string.Format(OutputText.SlnOpposlnNotFound, oppoSlnPath), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
             _fileSystemMock.Verify(x => x.CombinePaths(solutionName + Constants.FileExtension.OppoSln), Times.Once);
             _fileSystemMock.Verify(x => x.FileExists(oppoSlnPath), Times.Once);

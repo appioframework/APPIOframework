@@ -49,7 +49,7 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
             if (string.IsNullOrEmpty(solutionName) || !_fileSystem.FileExists(solutionFullName))
             {
                 OppoLogger.Warn(LoggingText.SlnOpposlnFileNotFound);
-                outputMessages.Add(string.Format(OutputText.SlnOppoSlnNotFound, solutionFullName), string.Empty);
+                outputMessages.Add(string.Format(OutputText.SlnOpposlnNotFound, solutionFullName), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
 

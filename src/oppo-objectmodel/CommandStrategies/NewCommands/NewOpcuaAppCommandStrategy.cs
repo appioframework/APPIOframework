@@ -2,6 +2,7 @@
 using Oppo.Resources.text.output;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 {
@@ -79,9 +80,13 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
         private void DeployTemplateOpcuaApp(string opcuaAppName)
         {
             _fileSystem.CreateDirectory(opcuaAppName);
-            var projectFilePath = _fileSystem.CombinePaths(opcuaAppName, $"{opcuaAppName}{Constants.FileExtension.OppoProject}");
-            _fileSystem.CreateFile(projectFilePath, _fileSystem.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_oppoproject));
-            var mesonFilePath = _fileSystem.CombinePaths(opcuaAppName, Constants.FileName.SourceCode_meson_build);
+			var projectFilePath = _fileSystem.CombinePaths(opcuaAppName, $"{opcuaAppName}{Constants.FileExtension.OppoProject}");
+			
+			Opcuaapp opcuaapp = new Opcuaapp() { Name = opcuaAppName };
+			var opcuaappAsJson = JsonConvert.SerializeObject(opcuaapp, Formatting.Indented);
+			_fileSystem.CreateFile(projectFilePath, opcuaappAsJson);
+			
+			var mesonFilePath = _fileSystem.CombinePaths(opcuaAppName, Constants.FileName.SourceCode_meson_build);
             _fileSystem.CreateFile(mesonFilePath, _fileSystem.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_meson_build));
         }
 
