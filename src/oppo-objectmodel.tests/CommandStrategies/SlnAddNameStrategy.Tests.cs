@@ -228,7 +228,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			_fileSystemMock.Setup(x => x.FileExists(oppoSlnPath)).Returns(true);
 
 			var solutionFullName = Path.Combine(solutionName + Constants.FileExtension.OppoSln);
-			Stream slnMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes("anything"));
+			Stream slnMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(string.Empty));
             _fileSystemMock.Setup(x => x.ReadFile(solutionFullName)).Returns(slnMemoryStream);
 
             // Arrange oppoproj file
@@ -279,7 +279,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _fileSystemMock.Setup(x => x.CombinePaths(opcuaappName, opcuaappName + Constants.FileExtension.OppoProject)).Returns(oppoProjPath);
             _fileSystemMock.Setup(x => x.FileExists(oppoProjPath)).Returns(true);
 
-            Stream opcuaappMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes("anything"));
+            Stream opcuaappMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(string.Empty));
             _fileSystemMock.Setup(x => x.ReadFile(oppoProjPath)).Returns(opcuaappMemoryStream);
 
 
