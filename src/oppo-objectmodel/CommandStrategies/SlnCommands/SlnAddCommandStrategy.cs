@@ -75,6 +75,10 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
             try
             {
                 oppoSolution = JsonConvert.DeserializeObject<Solution>(slnContent);
+				if (oppoSolution == null)
+				{
+					throw new System.ArgumentNullException();
+				}
             }
             catch(Exception)
             {
@@ -110,10 +114,10 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
             {
                 // add opcuaapp to sln
                 oppoSolution.Projects.Add(oppoProj);
-                
-                // serialize and write sln
-                var slnNewContent = JsonConvert.SerializeObject(oppoSolution, Formatting.Indented);
-				_fileSystem.WriteFile(solutionFullName, slnNewContent.Cast<string>());
+
+				// serialize and write sln
+				var slnNewContent = JsonConvert.SerializeObject(oppoSolution, Formatting.Indented);
+				_fileSystem.WriteFile(solutionFullName, new List<string> { slnNewContent });
             }
             else
             {
