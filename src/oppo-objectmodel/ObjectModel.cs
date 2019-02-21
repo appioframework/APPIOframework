@@ -451,7 +451,16 @@ namespace Oppo.ObjectModel
 		{
 			var slnHelpStrategyHelpText = new MessageLines
 			{
-				{ string.Empty, Resources.text.help.HelpTextValues.SlnCommand },
+				{ string.Empty, Resources.text.help.HelpTextValues.SlnFirstLine },
+				{ string.Empty, string.Empty },
+				{ string.Empty, Resources.text.help.HelpTextValues.GeneralUsage },
+				{ string.Empty, Resources.text.help.HelpTextValues.SlnCallDescription },
+				{ string.Empty, string.Empty },
+				{ string.Empty, Resources.text.help.HelpTextValues.GeneralArguments },
+				{ string.Empty, Resources.text.help.HelpTextValues.SlnArgumentAdd },
+				{ string.Empty, Resources.text.help.HelpTextValues.SlnArgumentRemove },
+				{ string.Empty, string.Empty },
+				{ string.Empty, Resources.text.help.HelpTextValues.GeneralOptions },
 			};
 
 			var slnHelpStrategyData = new HelpData

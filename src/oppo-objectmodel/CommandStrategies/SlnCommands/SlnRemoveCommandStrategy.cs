@@ -29,21 +29,22 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 
             var outputMessages = new MessageLines();
 
-            // validate flags
+            // validate solution name flag
             if (solutionNameFlag != Constants.SlnRemoveCommandArguments.Solution && solutionNameFlag != Constants.SlnRemoveCommandArguments.VerboseSolution)
             {
                 OppoLogger.Warn(LoggingText.SlnUnknownCommandParam);
                 outputMessages.Add(string.Format(OutputText.SlnUnknownParameter, solutionNameFlag), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
+
+			// validate project name flag
             if (projectNameFlag != Constants.SlnRemoveCommandArguments.Project && projectNameFlag != Constants.SlnRemoveCommandArguments.VerboseProject)
             {
                 OppoLogger.Warn(LoggingText.SlnUnknownCommandParam);
                 outputMessages.Add(string.Format(OutputText.SlnUnknownParameter, projectNameFlag), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
-
-
+			
             // check if solution file is existing
             var solutionFullName = _fileSystem.CombinePaths(solutionName + Constants.FileExtension.OppoSln);
             if (string.IsNullOrEmpty(solutionName) || !_fileSystem.FileExists(solutionFullName))
@@ -101,9 +102,10 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
                 outputMessages.Add(string.Format(OutputText.SlnRemoveOpcuaappIsNotInSln, projectName, solutionName), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
-   
-            // exit method with success
 
+   
+
+            // exit method with success
             OppoLogger.Info(LoggingText.SlnRemoveSuccess);                        
             outputMessages.Add(string.Format(OutputText.SlnRemoveSuccess, projectName, solutionName), string.Empty);
             return new CommandResult(true, outputMessages);
@@ -111,7 +113,7 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 
         public string GetHelpText()
         {
-            return Resources.text.help.HelpTextValues.CleanNameArgumentCommandDescription;
+            return Resources.text.help.HelpTextValues.SlnRemoveNameArgumentCommandDescription;
         }
         
     }

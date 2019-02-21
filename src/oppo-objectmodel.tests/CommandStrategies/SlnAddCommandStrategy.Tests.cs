@@ -91,7 +91,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var helpText = _objectUnderTest.GetHelpText();
 
             // Assert
-            Assert.AreEqual(Resources.text.help.HelpTextValues.SlnNameArgumentCommandDescription, helpText);
+            Assert.AreEqual(Resources.text.help.HelpTextValues.SlnAddNameArgumentCommandDescription, helpText);
         }
 
         [Test]

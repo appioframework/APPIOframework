@@ -140,7 +140,7 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 
         public string GetHelpText()
         {
-            return Resources.text.help.HelpTextValues.CleanNameArgumentCommandDescription;
+            return Resources.text.help.HelpTextValues.SlnAddNameArgumentCommandDescription;
         }
     }
 }

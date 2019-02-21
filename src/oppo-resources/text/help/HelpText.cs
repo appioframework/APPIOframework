@@ -26,8 +26,9 @@
         public const string CleanCommand = "Clean a oppo project.";
         public const string DeployStrategy = "Generate an installer containing the opcua-app.";
         public const string ImportStrategy = "Import an external ressources.";
+		public const string SlnCommand = "Adds and removes opcuaapp projects from solution.";
 
-        public const string HelpEndCommand = "Run \"oppo [command] --help\" for more information about a command.";
+		public const string HelpEndCommand = "Run \"oppo [command] --help\" for more information about a command.";
 
         //Build command
         public const string BuildFirstLine = "Build an oppo project.";
@@ -64,13 +65,16 @@
         public const string GenerateArguments = "information-model";
         public const string GenerateInformationModelCommandDescription = "Generates information-model code from ...";
 
-        //Version command
+		//Version command
 
-        //Sln command
-        public const string SlnCommand = "Some help text.";
+		//Sln command
+		public const string SlnFirstLine = "The command is used to manage projects in solution file. There are two possible arguments which allows to add and remove projects from solution.";
+		public const string SlnCallDescription = "oppo sln <Arguments> <Options>";
+		public const string SlnArgumentAdd = "add";
+		public const string SlnArgumentRemove = "remove";
 
-        //Commands description
-        public const string BuildHelpArgumentCommandDescription = "Build help";
+		//Commands description
+		public const string BuildHelpArgumentCommandDescription = "Build help";
         public const string BuildNameArgumentCommandDescription = "Project name";
         public const string CleanHelpArgumentCommandDescription = "Clean help";
         public const string CleanNameArgumentCommandDescription = "Project name";
@@ -83,7 +87,8 @@
         public const string ImportSamplesArgumentCommandDescription = "Import Samples";
         public const string GenerateHelpArgumentCommandDescription = "Generate help";
         public const string SlnHelpArgumentCommandDescription = "Sln help";
-        public const string SlnNameArgumentCommandDescription = "Project name";
+        public const string SlnAddNameArgumentCommandDescription = "Add project to solution";
+		public const string SlnRemoveNameArgumentCommandDescription = "Remove project from solution";
 
-    }
+	}
 }
