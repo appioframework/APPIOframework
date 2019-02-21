@@ -45,18 +45,23 @@
         public const string ValidationError = "Validation error \n {0}";
 
 
-        // sln add command
-        public const string SlnAddSuccess				    = "Opcuaapp project file successfullt added to sln.";
-        public const string SlnUnknownCommandParam		    = "Unknown sln add command parameter!";
-        public const string SlnOpposlnFileNotFound		    = "Missing solution file!";
+		// sln common
+		public const string SlnUnknownCommandParam	= "Unknown sln add command parameter!";
+		public const string SlnOpposlnFileNotFound	= "Missing solution file!";
+		public const string SlnCouldntDeserliazeSln	= "Couldn't deserialize sln file!";
+		public const string OppoHelpForSlnCommand	= "Help for sln <command> called";
+		// sln add command
+		public const string SlnAddSuccess				    = "Opcuaapp project file successfully added to sln.";
         public const string SlnAddOppoprojFileNotFound		= "Missing project file!";
-        public const string SlnCouldntDeserliazeSln		    = "Couldn't deserialize sln file!";
         public const string SlnCouldntDeserliazeOpcuaapp	= "Couldn't deserialize oppoproj file!";
         public const string SlnContainsOpcuaapp			    = "The solution already contains the opcuaapp project.";
-		public const string OppoHelpForSlnCommand			= "Help for sln <command> called";
-        public const string SlnRemoveOppoprojNameEmpty      = "Empty project name!";
+		// sln remove command
+		public const string SlnRemoveSuccess			= "Opcuaapp project was successfully removed from sln.";
+		public const string SlnRemoveOppoprojNameEmpty	= "Empty project name!";
+		public const string SlnOpcuaappIsNotInSln		= "Opcuaapp is not a part of the soluton!";
 
-        public const string DirectoryIOException = "Directory IOException detected!";
+
+		public const string DirectoryIOException = "Directory IOException detected!";
         public const string DirectoryNotFoundException = "Directory DirectoryNotFoundException detected!";
         public const string PathTooLongException = "Directory PathTooLongException detected!";
 

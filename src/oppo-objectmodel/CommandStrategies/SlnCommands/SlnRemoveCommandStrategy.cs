@@ -55,7 +55,6 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
             }
 
             // check if project name is empty 
-            
             if (string.IsNullOrEmpty(projectName))
             {
                 OppoLogger.Warn(LoggingText.SlnRemoveOppoprojNameEmpty);
@@ -90,7 +89,7 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
             var oppoProj = oppoSolution.Projects.SingleOrDefault(x => x.Name == projectName);
             if (oppoProj != null)
             {
-                // remove opcuaapp to sln
+                // remove opcuaapp from sln
                 oppoSolution.Projects.Remove(oppoProj);
 
                 // serialize and write sln
@@ -99,15 +98,15 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
             }
             else
             {
-                OppoLogger.Info(LoggingText.SlnContainsOpcuaapp);
-                outputMessages.Add(string.Format(OutputText.SlnContainsOpcuaapp, solutionName, projectName), string.Empty);
+                OppoLogger.Info(LoggingText.SlnOpcuaappIsNotInSln);
+                outputMessages.Add(string.Format(OutputText.SlnOpcuaappIsNotInSln, projectName, solutionName), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
    
             // exit method with success
 
-            OppoLogger.Info(LoggingText.SlnAddSuccess);                        
-            outputMessages.Add(string.Format(OutputText.SlnAddSuccess, projectName, solutionName), string.Empty);
+            OppoLogger.Info(LoggingText.SlnRemoveSuccess);                        
+            outputMessages.Add(string.Format(OutputText.SlnRemoveSuccess, projectName, solutionName), string.Empty);
             return new CommandResult(true, outputMessages);
         }
 

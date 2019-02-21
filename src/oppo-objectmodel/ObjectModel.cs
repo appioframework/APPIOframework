@@ -471,6 +471,7 @@ namespace Oppo.ObjectModel
 			var slnStrategies = new ICommand<SlnStrategy>[]
 			{
 				new SlnAddCommandStrategy(fileSystem),
+				new SlnRemoveCommandStrategy(fileSystem),
 				slnHelpStrategy,
 				slnHelpVerboseStrategy,
 			};
