@@ -5,10 +5,10 @@ set -uo pipefail
 source bash-gitlab-ci/util-integration-tests.sh
 
 VAR_COMMANDS[0]="oppo sln add -n solutionName -p projectName"
-VAR_COMMANDS[0]="oppo sln add -s solutionName -n projectName"
-VAR_COMMANDS[0]="oppo sln add -p solutionName -s projectName"
-VAR_COMMANDS[0]="oppo sln add -s solutionName"
-VAR_COMMANDS[0]="oppo sln add -p projectName"
+VAR_COMMANDS[1]="oppo sln add -s solutionName -n projectName"
+VAR_COMMANDS[2]="oppo sln add -p solutionName -s projectName"
+VAR_COMMANDS[3]="oppo sln add -s solutionName"
+VAR_COMMANDS[4]="oppo sln add -p projectName"
 
 
 for INDEX in "${!VAR_COMMANDS[@]}";

@@ -106,3 +106,5 @@ echo "Testing sln-help--success"
 /bin/bash bash-gitlab-ci/integration-tests/run-sln-help--success.sh
 echo "Testing sln-add--failure"
 /bin/bash bash-gitlab-ci/integration-tests/run-sln-add--failure.sh
+echo "Testing sln-add--success"
+/bin/bash bash-gitlab-ci/integration-tests/run-sln-add-success.sh
