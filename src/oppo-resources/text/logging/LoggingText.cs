@@ -53,8 +53,8 @@
 		// sln add command
 		public const string SlnAddSuccess				    = "Opcuaapp project file successfully added to sln.";
         public const string SlnAddOppoprojFileNotFound		= "Missing project file!";
-        public const string SlnCouldntDeserliazeOpcuaapp	= "Couldn't deserialize oppoproj file!";
-        public const string SlnContainsOpcuaapp			    = "The solution already contains the opcuaapp project.";
+        public const string SlnAddCouldntDeserliazeOpcuaapp	= "Couldn't deserialize oppoproj file!";
+        public const string SlnAddContainsOpcuaapp			= "The solution already contains the opcuaapp project.";
 		// sln remove command
 		public const string SlnRemoveSuccess			= "Opcuaapp project was successfully removed from sln.";
 		public const string SlnRemoveOppoprojNameEmpty	= "Empty project name!";

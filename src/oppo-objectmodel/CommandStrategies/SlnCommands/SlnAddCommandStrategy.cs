@@ -1,10 +1,10 @@
 ﻿using Oppo.Resources.text.logging;
 using Oppo.Resources.text.output;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using Newtonsoft.Json;
-using System;
 
 namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 {
@@ -67,30 +67,17 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 
 
 
-            // deserialize *.opposln file
-            var slnMemoryStream = _fileSystem.ReadFile(solutionFullName);
-            StreamReader readerSln = new StreamReader(slnMemoryStream);
-            var slnContent = readerSln.ReadToEnd();
-            Solution oppoSolution;
-            try
-            {
-                oppoSolution = JsonConvert.DeserializeObject<Solution>(slnContent);
-				if (oppoSolution == null)
-				{
-					throw null;
-				}
-            }
-            catch(Exception)
-            {
-                OppoLogger.Warn(LoggingText.SlnCouldntDeserliazeSln);
-                outputMessages.Add(string.Format(OutputText.SlnCouldntDeserliazeSln, solutionName), string.Empty);
-                return new CommandResult(false, outputMessages);
-            }
-			slnMemoryStream.Close();
-			slnMemoryStream.Dispose();
+			// deserialize *.opposln file
+			Solution oppoSolution = SlnStrategy.DeserializeSolutionFile(solutionFullName, _fileSystem);
+			if (oppoSolution == null)
+			{
+				OppoLogger.Warn(LoggingText.SlnCouldntDeserliazeSln);
+				outputMessages.Add(string.Format(OutputText.SlnCouldntDeserliazeSln, solutionName), string.Empty);
+				return new CommandResult(false, outputMessages);
+			}
 
-            // deserialize *.oppoproj file
-            var opcuaappMemoryStream = _fileSystem.ReadFile(oppoprojFilePath);
+			// deserialize *.oppoproj file
+			var opcuaappMemoryStream = _fileSystem.ReadFile(oppoprojFilePath);
             StreamReader readerOpcuaapp = new StreamReader(opcuaappMemoryStream);
             var opcuaappContent = readerOpcuaapp.ReadToEnd();
             Opcuaapp oppoProj;
@@ -104,8 +91,8 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 			}
             catch(Exception)
             {
-                OppoLogger.Warn(LoggingText.SlnCouldntDeserliazeOpcuaapp);
-                outputMessages.Add(string.Format(OutputText.SlnCouldntDeserliazeOpcuaapp, projectName), string.Empty);
+                OppoLogger.Warn(LoggingText.SlnAddCouldntDeserliazeOpcuaapp);
+                outputMessages.Add(string.Format(OutputText.SlnAddCouldntDeserliazeOpcuaapp, projectName), string.Empty);
                 return new CommandResult(false, outputMessages);
 			}
 			opcuaappMemoryStream.Close();
@@ -125,8 +112,8 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
             }
             else
             {
-                OppoLogger.Info(LoggingText.SlnContainsOpcuaapp);
-                outputMessages.Add(string.Format(OutputText.SlnContainsOpcuaapp, solutionName, projectName), string.Empty);
+                OppoLogger.Info(LoggingText.SlnAddContainsOpcuaapp);
+                outputMessages.Add(string.Format(OutputText.SlnAddContainsOpcuaapp, solutionName, projectName), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
 
