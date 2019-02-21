@@ -110,3 +110,5 @@ echo "Testing sln-add--success"
 /bin/bash bash-gitlab-ci/integration-tests/run-sln-add--success.sh
 echo "Testing sln-remove--failure"
 /bin/bash bash-gitlab-ci/integration-tests/run-sln-remove--failure.sh
+echo "Testing sln-remove--success"
+/bin/bash bash-gitlab-ci/integration-tests/run-sln-remove--success.sh
