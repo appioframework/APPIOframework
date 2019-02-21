@@ -246,8 +246,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             OppoLogger.RemoveListener(loggerListenerMock.Object);
-            loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.SlnAddCouldntDeserliazeSln), Times.Once);
-            Assert.AreEqual(string.Format(OutputText.SlnAddCouldntDeserliazeSln, solutionName), firstMessageLine.Key);
+            loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.SlnCouldntDeserliazeSln), Times.Once);
+            Assert.AreEqual(string.Format(OutputText.SlnCouldntDeserliazeSln, solutionName), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
             _fileSystemMock.Verify(x => x.ReadFile(solutionFullName), Times.Once);
 
@@ -292,8 +292,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             OppoLogger.RemoveListener(loggerListenerMock.Object);
-            loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.SlnAddCouldntDeserliazeOpcuaapp), Times.Once);
-            Assert.AreEqual(string.Format(OutputText.SlnAddCouldntDeserliazeOpcuaapp, opcuaappName), firstMessageLine.Key);
+            loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.SlnCouldntDeserliazeOpcuaapp), Times.Once);
+            Assert.AreEqual(string.Format(OutputText.SlnCouldntDeserliazeOpcuaapp, opcuaappName), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
             _fileSystemMock.Verify(x => x.ReadFile(oppoProjPath), Times.Once);
 
@@ -340,8 +340,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             OppoLogger.RemoveListener(loggerListenerMock.Object);
-            loggerListenerMock.Verify(x => x.Info(Resources.text.logging.LoggingText.SlnAddContainsOpcuaapp), Times.Once);
-            Assert.AreEqual(string.Format(OutputText.SlnAddContainsOpcuaapp, solutionName, opcuaappName), firstMessageLine.Key);
+            loggerListenerMock.Verify(x => x.Info(Resources.text.logging.LoggingText.SlnContainsOpcuaapp), Times.Once);
+            Assert.AreEqual(string.Format(OutputText.SlnContainsOpcuaapp, solutionName, opcuaappName), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
 
 			slnMemoryStream.Close();

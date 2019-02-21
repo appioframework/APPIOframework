@@ -50,9 +50,9 @@
         public const string SlnUnknownCommandParam		    = "Unknown sln add command parameter!";
         public const string SlnOpposlnFileNotFound		    = "Missing solution file!";
         public const string SlnAddOppoprojFileNotFound		= "Missing project file!";
-        public const string SlnAddCouldntDeserliazeSln		= "Couldn't deserialize sln file!";
-        public const string SlnAddCouldntDeserliazeOpcuaapp	= "Couldn't deserialize oppoproj file!";
-        public const string SlnAddContainsOpcuaapp			= "The solution already contains the opcuaapp project.";
+        public const string SlnCouldntDeserliazeSln		    = "Couldn't deserialize sln file!";
+        public const string SlnCouldntDeserliazeOpcuaapp	= "Couldn't deserialize oppoproj file!";
+        public const string SlnContainsOpcuaapp			    = "The solution already contains the opcuaapp project.";
 		public const string OppoHelpForSlnCommand			= "Help for sln <command> called";
         public const string SlnRemoveOppoprojNameEmpty      = "Empty project name!";
 

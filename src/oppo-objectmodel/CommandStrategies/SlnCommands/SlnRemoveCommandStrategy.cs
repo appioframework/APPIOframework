@@ -11,6 +11,7 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
     public class SlnRemoveCommandStrategy : ICommand<SlnStrategy>
     {
         private readonly IFileSystem _fileSystem;
+        private string oppoprojFilePath;
 
         public SlnRemoveCommandStrategy(IFileSystem fileSystem)
         {
@@ -64,11 +65,45 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 
 
             // deserialise solution file
+            var slnMemoryStream = _fileSystem.ReadFile(solutionFullName);
+            StreamReader readerSln = new StreamReader(slnMemoryStream);
+            var slnContent = readerSln.ReadToEnd();
+            Solution oppoSolution;
+            try
+            {
+                oppoSolution = JsonConvert.DeserializeObject<Solution>(slnContent);
+                if (oppoSolution == null)
+                {
+                    throw null;
+                }
+            }
+            catch (Exception)
+            {
+                OppoLogger.Warn(LoggingText.SlnCouldntDeserliazeSln);
+                outputMessages.Add(string.Format(OutputText.SlnCouldntDeserliazeSln, solutionName), string.Empty);
+                return new CommandResult(false, outputMessages);
+            }
+            slnMemoryStream.Close();
+            slnMemoryStream.Dispose();
 
             // check if the project to remove is part of the solution
+            var oppoProj = oppoSolution.Projects.SingleOrDefault(x => x.Name == projectName);
+            if (oppoProj != null)
+            {
+                // remove opcuaapp to sln
+                oppoSolution.Projects.Remove(oppoProj);
 
-            // remove the project
-
+                // serialize and write sln
+                var slnNewContent = JsonConvert.SerializeObject(oppoSolution, Formatting.Indented);
+                _fileSystem.WriteFile(solutionFullName, new List<string> { slnNewContent });
+            }
+            else
+            {
+                OppoLogger.Info(LoggingText.SlnContainsOpcuaapp);
+                outputMessages.Add(string.Format(OutputText.SlnContainsOpcuaapp, solutionName, projectName), string.Empty);
+                return new CommandResult(false, outputMessages);
+            }
+   
             // exit method with success
 
             OppoLogger.Info(LoggingText.SlnAddSuccess);                        

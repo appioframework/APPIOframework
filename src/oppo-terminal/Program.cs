@@ -8,7 +8,9 @@ namespace Oppo.Terminal
     {
         internal static int Main(string[] args)
         {
+            args = new string[] { "new","opcuaapp","-n","MyProj" };
             SetupOppoLogger();
+
 
             var objectModel = new ObjectModel.ObjectModel(ObjectModel.ObjectModel.CreateCommandFactory(new ReflectionWrapper()));
 
@@ -22,7 +24,7 @@ namespace Oppo.Terminal
             {
                 writer.Write(commandResult.OutputMessages);
             }
-
+            System.Console.ReadKey();
             var commandResultSucces = commandResult.Sucsess;
             return commandResultSucces ? 0 : 1;
         }

@@ -82,8 +82,8 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
             }
             catch(Exception)
             {
-                OppoLogger.Warn(LoggingText.SlnAddCouldntDeserliazeSln);
-                outputMessages.Add(string.Format(OutputText.SlnAddCouldntDeserliazeSln, solutionName), string.Empty);
+                OppoLogger.Warn(LoggingText.SlnCouldntDeserliazeSln);
+                outputMessages.Add(string.Format(OutputText.SlnCouldntDeserliazeSln, solutionName), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
 			slnMemoryStream.Close();
@@ -104,8 +104,8 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 			}
             catch(Exception)
             {
-                OppoLogger.Warn(LoggingText.SlnAddCouldntDeserliazeOpcuaapp);
-                outputMessages.Add(string.Format(OutputText.SlnAddCouldntDeserliazeOpcuaapp, projectName), string.Empty);
+                OppoLogger.Warn(LoggingText.SlnCouldntDeserliazeOpcuaapp);
+                outputMessages.Add(string.Format(OutputText.SlnCouldntDeserliazeOpcuaapp, projectName), string.Empty);
                 return new CommandResult(false, outputMessages);
 			}
 			opcuaappMemoryStream.Close();
@@ -125,8 +125,8 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
             }
             else
             {
-                OppoLogger.Info(LoggingText.SlnAddContainsOpcuaapp);
-                outputMessages.Add(string.Format(OutputText.SlnAddContainsOpcuaapp, solutionName, projectName), string.Empty);
+                OppoLogger.Info(LoggingText.SlnContainsOpcuaapp);
+                outputMessages.Add(string.Format(OutputText.SlnContainsOpcuaapp, solutionName, projectName), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
 
