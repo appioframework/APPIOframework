@@ -103,4 +103,4 @@ echo "Testing generate-information-model--success"
 /bin/bash bash-gitlab-ci/integration-tests/run-generate-information-model--success.sh
 
 echo "Testing sln-help--success"
-/bin/bash bash-gitlab-ci/integration-tests/run-sln-help-success.sh
+/bin/bash bash-gitlab-ci/integration-tests/run-sln-help--success.sh
