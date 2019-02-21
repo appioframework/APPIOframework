@@ -58,7 +58,7 @@
 		// sln remove command
 		public const string SlnRemoveSuccess			= "Opcuaapp project was successfully removed from sln.";
 		public const string SlnRemoveOppoprojNameEmpty	= "Empty project name!";
-		public const string SlnOpcuaappIsNotInSln		= "Opcuaapp is not a part of the soluton!";
+		public const string SlnRemoveOpcuaappIsNotInSln = "Opcuaapp is not a part of the soluton!";
 
 
 		public const string DirectoryIOException = "Directory IOException detected!";

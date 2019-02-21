@@ -5,7 +5,6 @@ using Oppo.ObjectModel.CommandStrategies.SlnCommands;
 using Oppo.Resources.text.output;
 using System.Text;
 using System.IO;
-using System.Collections.Generic;
 
 namespace Oppo.ObjectModel.Tests.CommandStrategies
 {
@@ -61,7 +60,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         private readonly string _defaultOpposlnContent = "{\"projects\": []}";
         private readonly string _sampleOpposlnContent = "{\"projects\": [{\"name\":\"testApp\",\"path\":\"testApp.oppoproj\",\"type\":\"ClientServer\",\"url\":\"opc.tcp://127.0.0.1:4840/\"}]}";
         private readonly string _sampleOppoprojContent1 = "{\"name\":\"testApp\",\"path\":\"testApp.oppoproj\",\"type\":\"ClientServer\",\"url\":\"opc.tcp://127.0.0.1:4840/\"}";
-        private readonly string _sampleOppoprojContent2 = "{\"name\":\"myApp\",\"path\":\"myApp.oppoproj\",\"type\":\"Server\",\"url\":\"opc.tcp://127.0.0.1:4841/\"}";
 
         [SetUp]
         public void SetUp_ObjectUnderTest()
@@ -148,6 +146,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.AreEqual(string.Format(OutputText.SlnUnknownParameter, projectNameFlag), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
         }
+
         [Test]
         public void FailBecauseOfMissingOpposlnFile([ValueSource(nameof(ValidInputs))] string[] inputParams)
         {
@@ -252,8 +251,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             slnMemoryStream.Dispose();
 
         }
+
         [Test]
-        public void FailOnSlnAlreadyContainsOpcuaapp([ValueSource(nameof(ValidInputs))] string[] inputParams)
+        public void FailOnSlnDoesNotContainOpcuaapp([ValueSource(nameof(ValidInputs))] string[] inputParams)
         {
             // Arrage
             var solutionName = inputParams.ElementAtOrDefault(1);
@@ -268,18 +268,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _fileSystemMock.Setup(x => x.FileExists(oppoSlnPath)).Returns(true);
 
             var solutionFullName = Path.Combine(solutionName + Constants.FileExtension.OppoSln);
-            Stream slnMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpposlnContent));
+            Stream slnMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(_defaultOpposlnContent));
             _fileSystemMock.Setup(x => x.ReadFile(solutionFullName)).Returns(slnMemoryStream);
-
-            // Arrange oppoproj file
-            var oppoProjPath = Path.Combine(opcuaappName, opcuaappName + Constants.FileExtension.OppoProject);
-            _fileSystemMock.Setup(x => x.CombinePaths(opcuaappName, opcuaappName + Constants.FileExtension.OppoProject)).Returns(oppoProjPath);
-            _fileSystemMock.Setup(x => x.FileExists(oppoProjPath)).Returns(true);
-
-            Stream opcuaappMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOppoprojContent1));
-            _fileSystemMock.Setup(x => x.ReadFile(oppoProjPath)).Returns(opcuaappMemoryStream);
-
-
+			
             // Act
             var commandResult = _objectUnderTest.Execute(inputParams);
 
@@ -289,16 +280,13 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             OppoLogger.RemoveListener(loggerListenerMock.Object);
-            loggerListenerMock.Verify(x => x.Info(Resources.text.logging.LoggingText.SlnContainsOpcuaapp), Times.Once);
-            Assert.AreEqual(string.Format(OutputText.SlnContainsOpcuaapp, solutionName, opcuaappName), firstMessageLine.Key);
+            loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.SlnRemoveOpcuaappIsNotInSln), Times.Once);
+            Assert.AreEqual(string.Format(OutputText.SlnRemoveOpcuaappIsNotInSln, opcuaappName, solutionName), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
 
             slnMemoryStream.Close();
             slnMemoryStream.Dispose();
-            opcuaappMemoryStream.Close();
-            opcuaappMemoryStream.Dispose();
         }
     }
-
 }
 

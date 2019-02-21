@@ -98,8 +98,8 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
             }
             else
             {
-                OppoLogger.Info(LoggingText.SlnOpcuaappIsNotInSln);
-                outputMessages.Add(string.Format(OutputText.SlnOpcuaappIsNotInSln, projectName, solutionName), string.Empty);
+                OppoLogger.Warn(LoggingText.SlnRemoveOpcuaappIsNotInSln);
+                outputMessages.Add(string.Format(OutputText.SlnRemoveOpcuaappIsNotInSln, projectName, solutionName), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
    

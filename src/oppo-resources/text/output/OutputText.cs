@@ -70,6 +70,6 @@ namespace Oppo.Resources.text.output
 		// sln remove <command>
 		public const string SlnRemoveSuccess			= "The opcuaapp with the name '{0}' was successfully removed from the solution '{1}'.";
 		public const string SlnRemoveOpcuaappNameEmpty	= "The opcuaapp project name empty!";
-		public const string SlnOpcuaappIsNotInSln		= "The opcuaapp project '{0}' is not a part of the solution '{1}'!";
+		public const string SlnRemoveOpcuaappIsNotInSln = "The opcuaapp project '{0}' is not a part of the solution '{1}'!";
 	}
 }
