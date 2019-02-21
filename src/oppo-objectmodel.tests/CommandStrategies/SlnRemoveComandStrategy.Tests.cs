@@ -58,8 +58,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         private SlnRemoveCommandStrategy _objectUnderTest;
 
         private readonly string _defaultOpposlnContent = "{\"projects\": []}";
-        private readonly string _sampleOpposlnContent = "{\"projects\": [{\"name\":\"testApp\",\"path\":\"testApp.oppoproj\",\"type\":\"ClientServer\",\"url\":\"opc.tcp://127.0.0.1:4840/\"}]}";
-        private readonly string _sampleOppoprojContent1 = "{\"name\":\"testApp\",\"path\":\"testApp.oppoproj\",\"type\":\"ClientServer\",\"url\":\"opc.tcp://127.0.0.1:4840/\"}";
+        private readonly string _sampleOpposlnContent = "{\"projects\": [{\"name\":\"testProj\",\"path\":\"testProj.oppoproj\",\"type\":\"ClientServer\",\"url\":\"opc.tcp://127.0.0.1:4840/\"}]}";
+       
 
         [SetUp]
         public void SetUp_ObjectUnderTest()
@@ -282,6 +282,41 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             OppoLogger.RemoveListener(loggerListenerMock.Object);
             loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.SlnRemoveOpcuaappIsNotInSln), Times.Once);
             Assert.AreEqual(string.Format(OutputText.SlnRemoveOpcuaappIsNotInSln, opcuaappName, solutionName), firstMessageLine.Key);
+            Assert.AreEqual(string.Empty, firstMessageLine.Value);
+
+            slnMemoryStream.Close();
+            slnMemoryStream.Dispose();
+        }
+        [Test]
+        public void RemoveOpcuaappFormSln([ValueSource(nameof(ValidInputs))] string[] inputParams)
+        {
+            // Arrage
+            var solutionName = inputParams.ElementAtOrDefault(1);
+            var opcuaappName = inputParams.ElementAtOrDefault(3);
+
+            var loggerListenerMock = new Mock<ILoggerListener>();
+            OppoLogger.RegisterListener(loggerListenerMock.Object);
+
+            // Arrange opposln file
+            var oppoSlnPath = Path.Combine(solutionName + Constants.FileExtension.OppoSln);
+            _fileSystemMock.Setup(x => x.CombinePaths(solutionName + Constants.FileExtension.OppoSln)).Returns(oppoSlnPath);
+            _fileSystemMock.Setup(x => x.FileExists(oppoSlnPath)).Returns(true);
+
+            var solutionFullName = Path.Combine(solutionName + Constants.FileExtension.OppoSln);
+            Stream slnMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpposlnContent));
+            _fileSystemMock.Setup(x => x.ReadFile(solutionFullName)).Returns(slnMemoryStream);
+
+            // Act
+            var commandResult = _objectUnderTest.Execute(inputParams);
+
+
+            // Assert
+            Assert.IsTrue(commandResult.Sucsess);
+            Assert.IsNotNull(commandResult.OutputMessages);
+            var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
+            OppoLogger.RemoveListener(loggerListenerMock.Object);
+            loggerListenerMock.Verify(x => x.Info(Resources.text.logging.LoggingText.SlnRemoveSuccess), Times.Once);
+            Assert.AreEqual(string.Format(OutputText.SlnRemoveSuccess, opcuaappName, solutionName), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
 
             slnMemoryStream.Close();

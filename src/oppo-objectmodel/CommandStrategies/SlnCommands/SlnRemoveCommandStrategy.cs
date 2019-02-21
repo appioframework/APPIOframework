@@ -11,7 +11,6 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
     public class SlnRemoveCommandStrategy : ICommand<SlnStrategy>
     {
         private readonly IFileSystem _fileSystem;
-        private string oppoprojFilePath;
 
         public SlnRemoveCommandStrategy(IFileSystem fileSystem)
         {
