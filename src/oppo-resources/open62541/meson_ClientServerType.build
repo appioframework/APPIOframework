@@ -1,4 +1,3 @@
-
 project('simple-meson-example', 'c',
         version : '1.0',
         default_options : [ 'warning_level=3', 'buildtype=debugoptimized', 'c_std=c11' ]
