@@ -68,7 +68,7 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 
 
 			// deserialize *.opposln file
-			Solution oppoSolution = SlnStrategy.DeserializeSolutionFile(solutionFullName, _fileSystem);
+			Solution oppoSolution = SlnUtility.DeserializeSolutionFile(solutionFullName, _fileSystem);
 			if (oppoSolution == null)
 			{
 				OppoLogger.Warn(LoggingText.SlnCouldntDeserliazeSln);

@@ -2,9 +2,7 @@
 using Oppo.Resources.text.output;
 using System.Collections.Generic;
 using System.Linq;
-using System.IO;
 using Newtonsoft.Json;
-using System;
 
 namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 {
@@ -64,7 +62,7 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 
 
 			// deserialise solution file
-			Solution oppoSolution = SlnStrategy.DeserializeSolutionFile(solutionFullName, _fileSystem);
+			Solution oppoSolution = SlnUtility.DeserializeSolutionFile(solutionFullName, _fileSystem);
 			if (oppoSolution == null)
 			{
 				OppoLogger.Warn(LoggingText.SlnCouldntDeserliazeSln);
