@@ -80,10 +80,10 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 			var opcuaappMemoryStream = _fileSystem.ReadFile(oppoprojFilePath);
             StreamReader readerOpcuaapp = new StreamReader(opcuaappMemoryStream);
             var opcuaappContent = readerOpcuaapp.ReadToEnd();
-            Opcuaapp oppoProj;
+            IOpcuaapp oppoProj;
             try
             {
-                oppoProj = JsonConvert.DeserializeObject<Opcuaapp>(opcuaappContent);
+                oppoProj = JsonConvert.DeserializeObject<IOpcuaapp>(opcuaappContent);
 				if (oppoProj == null)
 				{
 					throw null;
@@ -98,13 +98,11 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 			opcuaappMemoryStream.Close();
 			opcuaappMemoryStream.Dispose();
 
-
-
             // check if sln does not contain opcuaapp yet
             if (!oppoSolution.Projects.Any(x => x.Name == oppoProj.Name))
             {
                 // add opcuaapp to sln
-                oppoSolution.Projects.Add(new OpcuaappForSln(oppoProj, oppoprojFilePath));
+                oppoSolution.Projects.Add(oppoProj);
 
 				// serialize and write sln
 				var slnNewContent = JsonConvert.SerializeObject(oppoSolution, Formatting.Indented);
@@ -116,8 +114,6 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
                 outputMessages.Add(string.Format(OutputText.SlnAddContainsOpcuaapp, solutionName, projectName), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
-
-
 
 			// exit method with success
             OppoLogger.Info(LoggingText.SlnAddSuccess);                        

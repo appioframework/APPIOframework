@@ -25,15 +25,8 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 			var typeFlag = inputParamsArray.ElementAtOrDefault(2);
 			var applicationType = inputParamsArray.ElementAtOrDefault(3);
 
-			applicationType = string.IsNullOrEmpty(applicationType) ? string.Empty : applicationType;
-			var appTypeDict = new Dictionary<string, OpcuaappType>
-			{
-				{ string.Empty,     OpcuaappType.ClientServer },
-				{ "ClientServer",   OpcuaappType.ClientServer },
-				{ "Client",         OpcuaappType.Client },
-				{ "Server",         OpcuaappType.Server }
-			};
-
+			applicationType = string.IsNullOrEmpty(applicationType) ? "ClientServer" : applicationType;
+			
 			var outputMessages = new MessageLines();
 
 			if (nameFlag != Constants.NewOpcuaAppCommandArguments.Name && nameFlag != Constants.NewOpcuaAppCommandArguments.VerboseName)
@@ -82,20 +75,20 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 			}
 
 			// deploy files depends on chosen type
-			DeployTemplateOpcuaApp(opcuaAppName, appTypeDict[applicationType]);
+			DeployTemplateOpcuaApp(opcuaAppName, applicationType);
 
 			var sourceDirectory = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.SourceCode);
 			_fileSystem.CreateDirectory(sourceDirectory);
 
-			if (appTypeDict[applicationType] == OpcuaappType.Client)
-			{
+			if (applicationType == "Client")
+            {
 				DeployTemplateOpcuaClientSourceFiles(sourceDirectory);
 
 				OppoLogger.Info(string.Format("An opcuaapp '{0}' of Client type was successfully created!", opcuaAppName));
 				outputMessages.Add(string.Format("An opcuaapp '{0}' of Client type was successfully created!", opcuaAppName), string.Empty);
 			}
-			else if (appTypeDict[applicationType] == OpcuaappType.Server)
-			{
+			else if (applicationType == "Server")
+            {
 				CreateModelsDirectory(opcuaAppName);
 				DeployTemplateOpcuaServerSourceFiles(sourceDirectory);
 
@@ -115,28 +108,33 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 			return new CommandResult(true, outputMessages);
 		}
 
-		private void DeployTemplateOpcuaApp(string opcuaAppName, OpcuaappType applicatonType)
+		private void DeployTemplateOpcuaApp(string opcuaAppName, string applicatonType)
 		{
 			_fileSystem.CreateDirectory(opcuaAppName);
 			var projectFilePath = _fileSystem.CombinePaths(opcuaAppName, $"{opcuaAppName}{Constants.FileExtension.OppoProject}");
+            var mesonFilePath = _fileSystem.CombinePaths(opcuaAppName, Constants.FileName.SourceCode_meson_build);
 
-			Opcuaapp opcuaapp = new Opcuaapp() { Name = opcuaAppName, Type = applicatonType };
+            IOpcuaapp opcuaapp = null;
+            if (applicatonType == "Server")
+            {
+                opcuaapp = new OpcuaServerApp(opcuaAppName, string.Empty);
+                _fileSystem.CreateFile(mesonFilePath, _fileSystem.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_meson_ServerType_build));
+            }
+
+            if (applicatonType == "Client")
+            {
+                opcuaapp = new OpcuaClientApp(opcuaAppName);
+                _fileSystem.CreateFile(mesonFilePath, _fileSystem.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_meson_ClientType_build));
+            }
+
+            if (applicatonType == "ClientServer")
+            {
+                opcuaapp = new OpcuaClientServerApp(opcuaAppName, string.Empty);
+                _fileSystem.CreateFile(mesonFilePath, _fileSystem.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_meson_ClientServerType_build));
+            }
+            
 			var opcuaappAsJson = JsonConvert.SerializeObject(opcuaapp, Formatting.Indented);
 			_fileSystem.CreateFile(projectFilePath, opcuaappAsJson);
-
-			var mesonFilePath = _fileSystem.CombinePaths(opcuaAppName, Constants.FileName.SourceCode_meson_build);
-			if (applicatonType == OpcuaappType.Client)
-			{
-				_fileSystem.CreateFile(mesonFilePath, _fileSystem.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_meson_ClientType_build));
-			}
-			else if (applicatonType == OpcuaappType.Server)
-			{
-				_fileSystem.CreateFile(mesonFilePath, _fileSystem.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_meson_ServerType_build));
-			}
-			else
-			{
-				_fileSystem.CreateFile(mesonFilePath, _fileSystem.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_meson_ClientServerType_build));
-			}
 		}
 
 		private void CreateModelsDirectory(string opcuaAppName)

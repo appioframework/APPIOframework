@@ -50,6 +50,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         private readonly string _defaultOpposlnContent = "{\"projects\": []}";
         private readonly string _sampleOpposlnContent = "{\"projects\": [{\"name\":\"testApp\",\"path\":\"testApp.oppoproj\",\"type\":\"ClientServer\",\"url\":\"opc.tcp://127.0.0.1:4840/\"}]}";
         private readonly string _sampleOppoprojContent1 = "{\"name\":\"testApp\",\"path\":\"testApp.oppoproj\",\"type\":\"ClientServer\",\"url\":\"opc.tcp://127.0.0.1:4840/\"}";
+        private readonly string _sampleOppoClientprojContent = "{\"name\":\"testApp\",\"type\":\"ClientServer\"}";
         private readonly string _sampleOppoprojContent2 = "{\"name\":\"myApp\",\"path\":\"myApp.oppoproj\",\"type\":\"Server\",\"url\":\"opc.tcp://127.0.0.1:4841/\"}";
 
         [SetUp]
@@ -351,7 +352,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		}
 
         [Test]
-        public void AddOpcuaappToDefaultSln([ValueSource(nameof(ValidInputs))] string[] inputParams)
+        public void AddOpcuaClientAppToDefaultSln([ValueSource(nameof(ValidInputs))] string[] inputParams)
         {
 			// Arrange
 			var solutionName = inputParams.ElementAtOrDefault(1);
@@ -374,7 +375,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _fileSystemMock.Setup(x => x.CombinePaths(opcuaappName, opcuaappName + Constants.FileExtension.OppoProject)).Returns(oppoProjPath);
             _fileSystemMock.Setup(x => x.FileExists(oppoProjPath)).Returns(true);
             
-            Stream opcuaappMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOppoprojContent1));
+            Stream opcuaappMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOppoClientprojContent));
             _fileSystemMock.Setup(x => x.ReadFile(oppoProjPath)).Returns(opcuaappMemoryStream);
 
 

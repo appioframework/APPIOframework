@@ -6,6 +6,6 @@ namespace Oppo.ObjectModel
     public class Solution : ISolution
     {
         [JsonProperty("projects")]
-        public List<OpcuaappForSln> Projects { get; private set; } = new List<OpcuaappForSln>();
+        public List<IOpcuaapp> Projects { get; private set; } = new List<IOpcuaapp>();
     }
 }

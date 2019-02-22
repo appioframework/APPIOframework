@@ -3,16 +3,15 @@ using Newtonsoft.Json.Converters;
 
 namespace Oppo.ObjectModel
 {
-    public class Opcuaapp
+    public class OpcuaServerApp : IOpcuaServerApp
     {
-        public Opcuaapp()
+        public OpcuaServerApp()
         {
         }
 
-        public Opcuaapp(string name, OpcuaappType type, string url)
+        public OpcuaServerApp(string name, string url)
         {
             Name = name;
-            Type = type;
             Url = url;
         }
 
@@ -20,10 +19,10 @@ namespace Oppo.ObjectModel
         public string Name { get; set; } = string.Empty;
 
         [JsonProperty("type")]
-        [JsonConverter(typeof(StringEnumConverter))]
-        public OpcuaappType Type { get; set; } = OpcuaappType.ClientServer;
+        public string Type { get; } ="server";
 
         [JsonProperty("url")]
-        public string Url { get; set; }
+        public string Url { get; set; } = string.Empty;
+        
     }
 }
