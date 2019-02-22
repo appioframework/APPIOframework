@@ -4,8 +4,12 @@ set -euo pipefail
 
 source bash-gitlab-ci/util-integration-tests.sh
 
-VAR_COMMANDS[0]="oppo new opcuaapp --name my-app"
-VAR_COMMANDS[1]="oppo new opcuaapp -n     my-app"
+VAR_COMMANDS[0]="oppo new opcuaapp -n my-app"
+VAR_COMMANDS[1]="oppo new opcuaapp -n my-app -t ClientServer"
+VAR_COMMANDS[2]="oppo new opcuaapp -n my-app --type ClientServer"
+VAR_COMMANDS[3]="oppo new opcuaapp --name my-app"
+VAR_COMMANDS[4]="oppo new opcuaapp --name my-app -t ClientServer"
+VAR_COMMANDS[5]="oppo new opcuaapp --name my-app --type ClientServer"
 
 for INDEX in "${!VAR_COMMANDS[@]}";
 do
@@ -13,8 +17,8 @@ do
   
   echo "Testing command '${VAR_COMMAND}' ..."
 
-  mkdir new-opcuaapp--success
-  cd    new-opcuaapp--success
+  mkdir new-opcuaapp-ClientServer--success
+  cd    new-opcuaapp-ClientServer--success
 
   precondition_oppo_log_file_is_not_existent
 
@@ -44,7 +48,7 @@ do
                                  "any oppo project source file for the server application does not exist ..."
 
   cd ..
-  rm -rf new-opcuaapp--success
+  rm -rf new-opcuaapp-ClientServer--success
 
   echo "Testing command '${VAR_COMMAND}' ... done"
 done

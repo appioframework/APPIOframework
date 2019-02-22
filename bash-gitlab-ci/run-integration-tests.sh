@@ -51,10 +51,10 @@ echo "Testing new-help--success -"
 echo "Testing new-help--success verbose"
 /bin/bash bash-gitlab-ci/integration-tests/run-new-help--success.sh verbose
 
-echo "Testing new-opcuaapp--success -"
-/bin/bash bash-gitlab-ci/integration-tests/run-new-opcuaapp--success.sh -
-echo "Testing new-opcuaapp--success verbose"
-/bin/bash bash-gitlab-ci/integration-tests/run-new-opcuaapp--success.sh verbose
+echo "Testing new-opcuaapp-ClientServer--success -"
+/bin/bash bash-gitlab-ci/integration-tests/run-new-opcuaapp-ClientServer--success.sh -
+echo "Testing new-opcuaapp-ClientServer--success verbose"
+/bin/bash bash-gitlab-ci/integration-tests/run-new-opcuaapp-ClientServer--success.sh verbose
 echo "Testing new-opcuaapp-Client--success"
 /bin/bash bash-gitlab-ci/integration-tests/run-new-opcuaapp-Client--success.sh
 echo "Testing new-opcuaapp-Server--success"
