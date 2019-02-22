@@ -28,8 +28,7 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
             var projectName         = inputParamsArray.ElementAtOrDefault(3);
 
             var outputMessages = new MessageLines();
-
-
+			
 
             // check if solutionNameFlag is valid
             if(solutionNameFlag != Constants.SlnAddCommandArguments.Solution && solutionNameFlag != Constants.SlnAddCommandArguments.VerboseSolution)
@@ -64,11 +63,10 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
                 outputMessages.Add(string.Format(OutputText.SlnAddOpcuaappNotFound, oppoprojFilePath), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
-
-
+			
 
 			// deserialize *.opposln file
-			Solution oppoSolution = SlnUtility.DeserializeSolutionFile(solutionFullName, _fileSystem);
+			Solution oppoSolution = SlnUtility.DeserializeFile<Solution>(solutionFullName, _fileSystem);
 			if (oppoSolution == null)
 			{
 				OppoLogger.Warn(LoggingText.SlnCouldntDeserliazeSln);
@@ -77,26 +75,14 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 			}
 
 			// deserialize *.oppoproj file
-			var opcuaappMemoryStream = _fileSystem.ReadFile(oppoprojFilePath);
-            StreamReader readerOpcuaapp = new StreamReader(opcuaappMemoryStream);
-            var opcuaappContent = readerOpcuaapp.ReadToEnd();
-            IOpcuaapp oppoProj;
-            try
-            {
-                oppoProj = JsonConvert.DeserializeObject<IOpcuaapp>(opcuaappContent);
-				if (oppoProj == null)
-				{
-					throw null;
-				}
-			}
-            catch(Exception)
+			IOpcuaapp oppoProj = SlnUtility.DeserializeFile<IOpcuaapp>(oppoprojFilePath, _fileSystem);
+            if (oppoProj == null)
             {
                 OppoLogger.Warn(LoggingText.SlnAddCouldntDeserliazeOpcuaapp);
                 outputMessages.Add(string.Format(OutputText.SlnAddCouldntDeserliazeOpcuaapp, projectName), string.Empty);
                 return new CommandResult(false, outputMessages);
 			}
-			opcuaappMemoryStream.Close();
-			opcuaappMemoryStream.Dispose();
+
 
             // check if sln does not contain opcuaapp yet
             if (!oppoSolution.Projects.Any(x => x.Name == oppoProj.Name))
@@ -114,6 +100,7 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
                 outputMessages.Add(string.Format(OutputText.SlnAddContainsOpcuaapp, solutionName, projectName), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
+
 
 			// exit method with success
             OppoLogger.Info(LoggingText.SlnAddSuccess);                        

@@ -19,7 +19,7 @@ namespace Oppo.ObjectModel
         public string Name { get; set; } = string.Empty;
 
         [JsonProperty("type")]
-        public string Type { get; } ="server";
+        public string Type { get; } = Constants.ApplicationType.Server;
 
         [JsonProperty("url")]
         public string Url { get; set; } = string.Empty;

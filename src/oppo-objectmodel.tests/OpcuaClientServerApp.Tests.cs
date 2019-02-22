@@ -4,18 +4,18 @@ using System.Linq;
 
 namespace Oppo.ObjectModel.Tests
 {
-    public class OpcuaServerAppShould
+    public class OpcuaClientServerAppShould
     {
-        private IOpcuaServerApp _defaultopcuaApp, _opcuaapp;
+        private IOpcuaClientServerApp _defaultopcuaApp, _opcuaapp;
         private string _name = "mvpSmartPump";
-        private string _type = "Server";
+        private string _type = "ClientServer";
         private string _url = "localhost:4848";
 
         [SetUp]
         public void SetupTest()
         {
-            _defaultopcuaApp = new OpcuaServerApp();
-            _opcuaapp = new OpcuaServerApp(_name, _url);   
+            _defaultopcuaApp = new OpcuaClientServerApp();
+            _opcuaapp = new OpcuaClientServerApp(_name, _url);   
         }
 
         [TearDown]
@@ -24,7 +24,7 @@ namespace Oppo.ObjectModel.Tests
         }
 
         [Test]
-        public void BeAsDefaultOfServeType()
+        public void BeAsDefaultOfClientServeType()
         {
             // Arrange
 
@@ -62,7 +62,7 @@ namespace Oppo.ObjectModel.Tests
         }
 
         [Test]
-        public void BeDeSerializableFromJson()
+        public void BeDeserializableFromJson()
         {
             // Arrange
             var opcuaappAsJson = "" +
@@ -73,7 +73,7 @@ namespace Oppo.ObjectModel.Tests
                 "}";
 
             // Act
-            var opcuaapp = JsonConvert.DeserializeObject<OpcuaServerApp>(opcuaappAsJson);
+            var opcuaapp = JsonConvert.DeserializeObject<OpcuaClientServerApp>(opcuaappAsJson);
 
             // Assert
             Assert.IsNotNull(opcuaapp);

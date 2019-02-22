@@ -6,29 +6,30 @@ namespace Oppo.ObjectModel
 {
     public static class SlnUtility
     {
-		static public Solution DeserializeSolutionFile(string solutionFullName, IFileSystem fileSystem)
+		static public TDependance DeserializeFile<TDependance>(string jsonFileFullName, IFileSystem fileSystem) where TDependance : class
 		{
-			var slnMemoryStream = fileSystem.ReadFile(solutionFullName);
-			StreamReader readerSln = new StreamReader(slnMemoryStream);
-			var slnContent = readerSln.ReadToEnd();
+			TDependance deserializedData;
 
-			Solution oppoSolution;
-			try
+			using (var memoryStream = fileSystem.ReadFile(jsonFileFullName))
 			{
-				oppoSolution = JsonConvert.DeserializeObject<Solution>(slnContent);
-				if (oppoSolution == null)
+				StreamReader reader = new StreamReader(memoryStream);
+				var jsonFileContent = reader.ReadToEnd();
+
+				try
 				{
-					throw null;
+					deserializedData = JsonConvert.DeserializeObject<TDependance>(jsonFileContent);
+					if (deserializedData == null)
+					{
+						throw null;
+					}
+				}
+				catch (Exception)
+				{
+					return null;
 				}
 			}
-			catch (Exception)
-			{
-				return null;
-			}
-			slnMemoryStream.Close();
-			slnMemoryStream.Dispose();
 
-			return oppoSolution;
+			return deserializedData;
 		}
 	}
 }

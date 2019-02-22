@@ -3,6 +3,7 @@ using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies.NewCommands;
 using Oppo.Resources.text.output;
+using Oppo.Resources.text.logging;
 
 namespace Oppo.ObjectModel.Tests.CommandStrategies
 {
@@ -56,11 +57,13 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		{
 			return new[]
 			{
-				new[] {"-n", ""},
+				new[] {"--n", "any-name"},
+				new[] {"-N", "any-name"},
+				new[] {"-name", "any-name"},
+				new[] {"--Name", "any-name"},
 				new[] {"-N", "ab/yx"},
 				new[] {"", ""},
 				new[] {""},
-				new[] {"-n"},
 				new string[] { }
 			};
 		}
@@ -159,7 +162,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			// Assert
 			Assert.IsTrue(warnWrittenOut);
 			Assert.IsFalse(result.Sucsess);
-			Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandFailure, inputParams.ElementAt(1)), result.OutputMessages.First().Key);
+			Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandFailureInvalidProjectName, inputParams.ElementAt(1)), result.OutputMessages.First().Key);
 			_fileSystemMock.Verify(x => x.CreateDirectory(It.IsAny<string>()), Times.Never);
 			_fileSystemMock.Verify(x => x.CreateFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
 			_fileSystemMock.Verify(x => x.LoadTemplateFile(It.IsAny<string>()), Times.Never);
@@ -170,6 +173,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		public void NewOpcuaAppCommandStrategy_Should_IgnoreInput_UnknownParams([ValueSource(nameof(InvalidInputsFistParam))] string[] inputParams)
 		{
 			// Arrange
+			var nameFlag = inputParams.ElementAtOrDefault(0);
+
 			var loggerListenerMock = new Mock<ILoggerListener>();
 			var warnWrittenOut = false;
 			loggerListenerMock.Setup(listener => listener.Warn(It.IsAny<string>())).Callback(delegate { warnWrittenOut = true; });
@@ -186,7 +191,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			// Assert
 			Assert.IsTrue(warnWrittenOut);
 			Assert.IsFalse(result.Sucsess);
-			Assert.AreEqual(OutputText.NewOpcuaappCommandFailureUnknownParam, result.OutputMessages.First().Key);
+			Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandFailureUnknownParam, nameFlag), result.OutputMessages.First().Key);
 			_fileSystemMock.Verify(x => x.CreateDirectory(It.IsAny<string>()), Times.Never);
 			_fileSystemMock.Verify(x => x.CreateFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
 			_fileSystemMock.Verify(x => x.LoadTemplateFile(It.IsAny<string>()), Times.Never);
@@ -207,9 +212,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
 			// Assert
 			Assert.IsFalse(result.Sucsess);
-			Assert.AreEqual(string.Format("Unknown command parameter '{0}'!", typeFlag), result.OutputMessages.First().Key);
+			Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandFailureUnknownParam, typeFlag), result.OutputMessages.First().Key);
 			OppoLogger.RemoveListener(loggerListenerMock.Object);
-			loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.UnknownNewOpcuaappCommandParam), Times.Once);
+			loggerListenerMock.Verify(x => x.Warn(LoggingText.UnknownNewOpcuaappCommandParam), Times.Once);
 		}
 
 		[Test]
@@ -226,9 +231,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
 			// Assert
 			Assert.IsFalse(result.Sucsess);
-			Assert.AreEqual(string.Format("Unknown opcua application type '{0}'!", applicationType), result.OutputMessages.First().Key);
+			Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandFailureUnknownProjectType, applicationType), result.OutputMessages.First().Key);
 			OppoLogger.RemoveListener(loggerListenerMock.Object);
-			loggerListenerMock.Verify(x => x.Warn("Unknown opcua application type!"), Times.Once);
+			loggerListenerMock.Verify(x => x.Warn(LoggingText.InvalidOpcuaappType), Times.Once);
 		}
 
 		[Test]
@@ -271,9 +276,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
 			// Assert
 			Assert.IsTrue(result.Sucsess);
-			Assert.AreEqual(string.Format("An opcuaapp '{0}' of ClientServer type was successfully created!", projectName), result.OutputMessages.First().Key);
+			Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandSuccess, projectName), result.OutputMessages.First().Key);
 			OppoLogger.RemoveListener(loggerListenerMock.Object);
-			loggerListenerMock.Verify(x => x.Info(string.Format("An opcuaapp '{0}' of ClientServer type was successfully created!", projectName)), Times.Once);
+			loggerListenerMock.Verify(x => x.Info(string.Format(LoggingText.NewOpcuaappCommandSuccess, projectName)), Times.Once);
 
 			_fileSystemMock.Verify(x => x.CreateDirectory(projectDirectory), Times.AtLeastOnce);
 			_fileSystemMock.Verify(x => x.CreateDirectory(sourceCodeDirectory), Times.AtLeastOnce);
@@ -338,9 +343,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
 			// Assert
 			Assert.IsTrue(result.Sucsess);
-			Assert.AreEqual(string.Format("An opcuaapp '{0}' of Client type was successfully created!", projectName), result.OutputMessages.First().Key);
+			Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandSuccess, projectName), result.OutputMessages.First().Key);
 			OppoLogger.RemoveListener(loggerListenerMock.Object);
-			loggerListenerMock.Verify(x => x.Info(string.Format("An opcuaapp '{0}' of Client type was successfully created!", projectName)), Times.Once);
+			loggerListenerMock.Verify(x => x.Info(string.Format(LoggingText.NewOpcuaappCommandSuccess, projectName)), Times.Once);
 
 			_fileSystemMock.Verify(x => x.CreateDirectory(projectDirectory), Times.Once);
 			_fileSystemMock.Verify(x => x.CreateDirectory(sourceCodeDirectory), Times.Once);
@@ -405,9 +410,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
 			// Assert
 			Assert.IsTrue(result.Sucsess);
-			Assert.AreEqual(string.Format("An opcuaapp '{0}' of Server type was successfully created!", projectName), result.OutputMessages.First().Key);
+			Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandSuccess, projectName), result.OutputMessages.First().Key);
 			OppoLogger.RemoveListener(loggerListenerMock.Object);
-			loggerListenerMock.Verify(x => x.Info(string.Format("An opcuaapp '{0}' of Server type was successfully created!", projectName)), Times.Once);
+			loggerListenerMock.Verify(x => x.Info(string.Format(LoggingText.NewOpcuaappCommandSuccess, projectName)), Times.Once);
 
 			_fileSystemMock.Verify(x => x.CreateDirectory(projectDirectory), Times.Once);
 			_fileSystemMock.Verify(x => x.CreateDirectory(sourceCodeDirectory), Times.Once);

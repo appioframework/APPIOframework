@@ -119,6 +119,8 @@ namespace Oppo.ObjectModel
         {
             public const string Name = "-n";
             public const string VerboseName = "--name";
+			public const string Type = "-t";
+			public const string VerboseType = "--type";
         }
 
 
@@ -232,5 +234,11 @@ namespace Oppo.ObjectModel
 
         }
 
+		public static class ApplicationType
+		{
+			public const string Client = "Client";
+			public const string Server = "Server";
+			public const string ClientServer = "ClientServer";
+		}
     }
 }

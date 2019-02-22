@@ -80,7 +80,7 @@ namespace Oppo.ObjectModel.Tests
         }
 
         [Test]
-        public void ContainOneProjectAndBeDeserializableFromJson()
+        public void ContainOneProjectAndBedeserializableFromJson()
         {
             // Arrange
             var solutionAsJson = "{ \"projects\":[{\"name\":\"mvpSmartPump\",\"path\":\"mvpSmartPump/mvpSmartPump.oppoproj\"}]}";           
