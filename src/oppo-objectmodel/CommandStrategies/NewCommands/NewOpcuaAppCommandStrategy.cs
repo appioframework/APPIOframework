@@ -82,9 +82,7 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 			}
 
 			// deploy files depends on chosen type
-
 			DeployTemplateOpcuaApp(opcuaAppName, appTypeDict[applicationType]);
-			CreateModelsDirectory(opcuaAppName);
 
 			var sourceDirectory = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.SourceCode);
 			_fileSystem.CreateDirectory(sourceDirectory);
@@ -92,19 +90,24 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 			if (appTypeDict[applicationType] == OpcuaappType.Client)
 			{
 				DeployTemplateOpcuaClientSourceFiles(sourceDirectory);
+
 				OppoLogger.Info(string.Format("An opcuaapp '{0}' of Client type was successfully created!", opcuaAppName));
 				outputMessages.Add(string.Format("An opcuaapp '{0}' of Client type was successfully created!", opcuaAppName), string.Empty);
 			}
 			else if (appTypeDict[applicationType] == OpcuaappType.Server)
 			{
+				CreateModelsDirectory(opcuaAppName);
 				DeployTemplateOpcuaServerSourceFiles(sourceDirectory);
+
 				OppoLogger.Info(string.Format("An opcuaapp '{0}' of Server type was successfully created!", opcuaAppName));
 				outputMessages.Add(string.Format("An opcuaapp '{0}' of Server type was successfully created!", opcuaAppName), string.Empty);
 			}
 			else
 			{
+				CreateModelsDirectory(opcuaAppName);
 				DeployTemplateOpcuaClientSourceFiles(sourceDirectory);
 				DeployTemplateOpcuaServerSourceFiles(sourceDirectory);
+
 				OppoLogger.Info(string.Format("An opcuaapp '{0}' of ClientServer type was successfully created!", opcuaAppName));
 				outputMessages.Add(string.Format("An opcuaapp '{0}' of ClientServer type was successfully created!", opcuaAppName), string.Empty);
 			}

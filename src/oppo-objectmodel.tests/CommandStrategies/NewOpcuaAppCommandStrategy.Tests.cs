@@ -346,7 +346,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			_fileSystemMock.Verify(x => x.CreateDirectory(sourceCodeDirectory), Times.Once);
 			_fileSystemMock.Verify(x => x.CreateDirectory(clientSourceDirectory), Times.Once);
 			_fileSystemMock.Verify(x => x.CreateDirectory(serverSourceDirectory), Times.Never);
-			_fileSystemMock.Verify(x => x.CreateDirectory(modelsDirectory), Times.Once);
+			_fileSystemMock.Verify(x => x.CreateDirectory(modelsDirectory), Times.Never);
 
 			_fileSystemMock.Verify(x => x.CreateFile(projectFilePath, It.IsAny<string>()), Times.Once);
 			_fileSystemMock.Verify(x => x.CreateFile(mesonBuildFilePath, It.IsAny<string>()), Times.Once);
