@@ -9,24 +9,23 @@ namespace Oppo.ObjectModel
     public class OpcuaappConverter : JsonConverter
     {
         public override bool CanWrite => false;
+
         public override bool CanRead => true;
+
         public override bool CanConvert(Type objectType)
         {
             return objectType == typeof(List<IOpcuaapp>);
         }
-        public override void WriteJson(JsonWriter writer,
-            object value, JsonSerializer serializer)
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            throw new InvalidOperationException("Use default serialization.");
+            throw new InvalidOperationException(Constants.opcuaappConverterSerializationException);
         }
 
-        public override object ReadJson(JsonReader reader,
-            Type objectType, object existingValue,
-            JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-			var jA = JArray.Load(reader);
-			return jA.Select(jl => serializer.Deserialize<OpcuaappReference>(new JTokenReader(jl))).Cast<IOpcuaapp>().ToList();
-
+			var array = JArray.Load(reader);
+			return array.Select(x => serializer.Deserialize<OpcuaappReference>(new JTokenReader(x))).Cast<IOpcuaapp>().ToList();
 		}
 	}
 }

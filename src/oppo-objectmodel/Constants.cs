@@ -6,6 +6,7 @@ namespace Oppo.ObjectModel
         public const string IncludeSnippet = "#include";
         public const string server = "server";
         public const string definitionXmlElement = "<Definition";
+		public const string opcuaappConverterSerializationException = "Use default serialization.";
 
         public static class FileExtension
         {
