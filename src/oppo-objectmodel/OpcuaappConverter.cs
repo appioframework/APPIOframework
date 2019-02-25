@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Oppo.ObjectModel
 {
@@ -23,25 +24,9 @@ namespace Oppo.ObjectModel
             Type objectType, object existingValue,
             JsonSerializer serializer)
         {
-            var jsonObject = JObject.Load(reader);
-            var profession = default(IOpcuaapp);
-            switch (jsonObject["Type"].Value<string>())
-            {
-                case "Server":
-                    profession = new OpcuaServerApp();
-                    break;
-                case "Client":
-                    profession = new OpcuaClientApp();
-                    break;
-                case "ClientServer":
-                    profession = new OpcuaClientServerApp();
-                    break;
-                case null:
-                    profession = new OpcuaappReference();
-                    break;
-            }
-            serializer.Populate(jsonObject.CreateReader(), profession);
-            return profession;
-        }
-    }
+			var jA = JArray.Load(reader);
+			return jA.Select(jl => serializer.Deserialize<OpcuaappReference>(new JTokenReader(jl))).Cast<IOpcuaapp>().ToList();
+
+		}
+	}
 }

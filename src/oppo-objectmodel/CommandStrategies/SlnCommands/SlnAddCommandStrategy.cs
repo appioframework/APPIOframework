@@ -75,7 +75,7 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 			}
 
 			// deserialize *.oppoproj file
-			IOpcuaapp oppoProj = SlnUtility.DeserializeFile<IOpcuaapp>(oppoprojFilePath, _fileSystem);
+			OpcuaappReference oppoProj = SlnUtility.DeserializeFile<OpcuaappReference>(oppoprojFilePath, _fileSystem);
             if (oppoProj == null)
             {
                 OppoLogger.Warn(LoggingText.SlnAddCouldntDeserliazeOpcuaapp);
