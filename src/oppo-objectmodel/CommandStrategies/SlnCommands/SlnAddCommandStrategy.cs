@@ -87,8 +87,9 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
             // check if sln does not contain opcuaapp yet
             if (!oppoSolution.Projects.Any(x => x.Name == oppoProj.Name))
             {
-                // add opcuaapp to sln
-                oppoSolution.Projects.Add(oppoProj);
+				// add opcuaapp to sln
+				oppoProj.Path = oppoprojFilePath;
+				oppoSolution.Projects.Add(oppoProj);
 
 				// serialize and write sln
 				var slnNewContent = JsonConvert.SerializeObject(oppoSolution, Formatting.Indented);
