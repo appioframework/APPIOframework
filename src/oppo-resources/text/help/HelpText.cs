@@ -27,6 +27,7 @@
         public const string DeployStrategy = "Generate an installer containing the opcua-app.";
         public const string ImportStrategy = "Import an external ressources.";
 		public const string SlnCommand = "Adds and removes opcuaapp projects from solution.";
+        public const string ReferenceCommand = "Reference client adds and removes server reference from client";
 
 		public const string HelpEndCommand = "Run \"oppo [command] --help\" for more information about a command.";
 
@@ -72,6 +73,8 @@
 		public const string SlnCallDescription = "oppo sln <Arguments> <Options>";
 		public const string SlnArgumentAdd = "add";
 		public const string SlnArgumentRemove = "remove";
+
+       
 
 		//Commands description
 		public const string BuildHelpArgumentCommandDescription = "Build help";

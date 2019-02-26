@@ -35,6 +35,7 @@ namespace Oppo.ObjectModel
             public const string Generate = "generate";
             public const string GenerateInformationModel = "information-model";
             public const string Sln = "sln";
+            public const string Reference = "reference";
         }
 
         public static class CommandResults
