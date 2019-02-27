@@ -18,7 +18,7 @@ do
   mkdir sln-add--success
   cd    sln-add--success
 
-  oppo new opcuaapp -n "testProj"
+  oppo new opcuaapp -n "testProj" -t "Client"
   oppo new sln -n "testSln"
   rm --force "./oppo.log"
 

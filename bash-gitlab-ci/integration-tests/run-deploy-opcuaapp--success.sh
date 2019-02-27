@@ -16,7 +16,7 @@ do
   mkdir deploy-opcuaapp--success
   cd    deploy-opcuaapp--success
 
-  oppo new opcuaapp --name "my-app"
+  oppo new opcuaapp --name "my-app" -t "Client"
   oppo build        --name "my-app"
   oppo publish      --name "my-app"
   rm --force "./oppo.log"

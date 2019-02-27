@@ -18,7 +18,7 @@ do
   mkdir build-opcuaapp--failure--extended
   cd    build-opcuaapp--failure--extended
 
-  oppo new opcuaapp --name my-app
+  oppo new opcuaapp --name my-app -t Client
   oppo build        --name my-app
   oppo publish      --name my-app
   rm --force "./oppo.log"

@@ -16,7 +16,7 @@ do
   mkdir clean-opcuaapp--success
   cd    clean-opcuaapp--success
 
-  oppo new opcuaapp -n "my-app"
+  oppo new opcuaapp -n "my-app" -t "Client"
   oppo build        -n "my-app"
   rm --force "./oppo.log"
 
