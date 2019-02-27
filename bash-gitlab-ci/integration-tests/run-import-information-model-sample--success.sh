@@ -18,7 +18,7 @@ do
   mkdir import-information-model--success
   cd    import-information-model--success
 
-  oppo new opcuaapp -n "my-app" -t "Client"
+  oppo new opcuaapp -n "my-app" -t "ClientServer" -u "127.0.0.1" -p "4840"
   rm --force "./oppo.log"
 
   precondition_oppo_log_file_is_not_existent

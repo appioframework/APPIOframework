@@ -18,9 +18,9 @@ do
   mkdir build-opcuaapp--failure--extended
   cd    build-opcuaapp--failure--extended
 
-  oppo new opcuaapp --name my-app -t Client
-  oppo build        --name my-app
-  oppo publish      --name my-app
+  oppo new opcuaapp --name "my-app" -t "ClientServer" -u "127.0.0.1" -p "4840"
+  oppo build        --name "my-app"
+  oppo publish      --name "my-app"
   rm --force "./oppo.log"
 
   mv "./my-app/publish/server-app" "./my-app/publish/server-app.bak"
