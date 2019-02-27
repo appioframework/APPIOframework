@@ -123,6 +123,10 @@ namespace Oppo.ObjectModel
             public const string VerboseName = "--name";
 			public const string Type = "-t";
 			public const string VerboseType = "--type";
+			public const string Url = "-u";
+			public const string VerboseUrl = "--url";
+			public const string Port = "-p";
+			public const string VerbosePort = "--port";
         }
 
 

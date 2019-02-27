@@ -9,7 +9,9 @@
         public const string NewSlnCommandSuccess = "Solution with name {0} was successfully created";
         public const string UnknownNewOpcuaappCommandParam = "Unknown new opcuaapp <command> parameter!";
 		public const string InvalidOpcuaappType = "Unknown opcua application type!";
-        public const string NewOpcuaappCommandSuccess = "opcuaapp with name {0} was successfully created";
+		public const string InvalidServerUrl = "Invalid opcua server app url!";
+		public const string InvalidServerPort = "Invalid opcua server app port!";
+		public const string NewOpcuaappCommandSuccess = "opcuaapp with name {0} was successfully created";
         public const string ImportInforamtionModelCommandSuccess = "Information model '{0}' imported successfully";
         public const string EmptyOpcuaappName = "Empty opcuaapp name!";
         public const string InvalidOpcuaappName = "Invalid opcuaapp name!";

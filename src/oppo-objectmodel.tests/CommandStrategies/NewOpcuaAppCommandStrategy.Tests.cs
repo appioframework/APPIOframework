@@ -13,12 +13,22 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		{
 			return new[]
 			{
-				new[] { "-n", "anyName" },
-				new[] { "-n", "anyName", "-t", "ClientServer" },
-				new[] { "-n", "anyName", "--type", "ClientServer" },
-				new[] { "--name", "anyName" },
-				new[] { "--name", "anyName", "-t", "ClientServer" },
-				new[] { "--name", "anyName", "--type", "ClientServer" },
+				new[] { "-n", "anyName",	 "-t", "ClientServer",	   "-u", "127.0.0.1",    "-p", "4840" },
+				new[] { "-n", "anyName",	 "-t", "ClientServer",	   "-u", "127.0.0.1",	 "--port", "4840" },
+				new[] { "-n", "anyName",	 "-t", "ClientServer",	   "--url", "127.0.0.1", "-p", "4840" },
+				new[] { "-n", "anyName",	 "-t", "ClientServer",	   "--url", "127.0.0.1", "--port", "4840"  },
+				new[] { "-n", "anyName",	 "--type", "ClientServer", "-u", "127.0.0.1",	 "-p", "4840" },
+				new[] { "-n", "anyName",	 "--type", "ClientServer", "-u", "127.0.0.1",    "--port", "4840" },
+				new[] { "-n", "anyName",	 "--type", "ClientServer", "--url", "127.0.0.1", "-p", "4840" },
+				new[] { "-n", "anyName",	 "--type", "ClientServer", "--url", "127.0.0.1", "--port", "4840"  },
+				new[] { "--name", "anyName", "-t", "ClientServer",	   "-u", "127.0.0.1",    "-p", "4840" },
+				new[] { "--name", "anyName", "-t", "ClientServer",	   "-u", "127.0.0.1",    "--port", "4840" },
+				new[] { "--name", "anyName", "-t", "ClientServer",	   "--url", "127.0.0.1", "-p", "4840" },
+				new[] { "--name", "anyName", "-t", "ClientServer",	   "--url", "127.0.0.1", "--port", "4840"  },
+				new[] { "--name", "anyName", "--type", "ClientServer", "-u", "127.0.0.1",	 "-p", "4840" },
+				new[] { "--name", "anyName", "--type", "ClientServer", "-u", "127.0.0.1",	 "--port", "4840" },
+				new[] { "--name", "anyName", "--type", "ClientServer", "--url", "127.0.0.1", "-p", "4840" },
+				new[] { "--name", "anyName", "--type", "ClientServer", "--url", "127.0.0.1", "--port", "4840"  },
 			};
 		}
 
@@ -37,19 +47,22 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		{
 			return new[]
 			{
-				new[] { "-n", "anyName", "-t", "Server" },
-				new[] { "-n", "anyName", "--type", "Server" },
-				new[] { "--name", "anyName", "-t", "Server" },
-				new[] { "--name", "anyName", "--type", "Server" },
-			};
-		}
-
-		private static string[][] InvalidInputsSecondParam()
-		{
-			return new[]
-			{
-				new[] {"-n", "ab/yx"},
-				new[] {"-n", "ab\\yx"}
+				new[] { "-n", "anyName",	 "-t", "Server",	 "-u", "127.0.0.1",	   "-p", "4840" },
+				new[] { "-n", "anyName",	 "-t", "Server",	 "-u", "127.0.0.1",	   "--port", "4840" },
+				new[] { "-n", "anyName",	 "-t", "Server",	 "--url", "127.0.0.1", "-p", "4840" },
+				new[] { "-n", "anyName",	 "-t", "Server",	 "--url", "127.0.0.1", "--port", "4840"  },
+				new[] { "-n", "anyName",	 "--type", "Server", "-u", "127.0.0.1",	   "-p", "4840" },
+				new[] { "-n", "anyName",	 "--type", "Server", "-u", "127.0.0.1",	   "--port", "4840" },
+				new[] { "-n", "anyName",	 "--type", "Server", "--url", "127.0.0.1", "-p", "4840" },
+				new[] { "-n", "anyName",	 "--type", "Server", "--url", "127.0.0.1", "--port", "4840"  },
+				new[] { "--name", "anyName", "-t", "Server",	 "-u", "127.0.0.1",	   "-p", "4840" },
+				new[] { "--name", "anyName", "-t", "Server",	 "-u", "127.0.0.1",	   "--port", "4840" },
+				new[] { "--name", "anyName", "-t", "Server",	 "--url", "127.0.0.1", "-p", "4840" },
+				new[] { "--name", "anyName", "-t", "Server",	 "--url", "127.0.0.1", "--port", "4840"  },
+				new[] { "--name", "anyName", "--type", "Server", "-u", "127.0.0.1",	   "-p", "4840" },
+				new[] { "--name", "anyName", "--type", "Server", "-u", "127.0.0.1",	   "--port", "4840" },
+				new[] { "--name", "anyName", "--type", "Server", "--url", "127.0.0.1", "-p", "4840" },
+				new[] { "--name", "anyName", "--type", "Server", "--url", "127.0.0.1", "--port", "4840"  },
 			};
 		}
 
@@ -65,6 +78,15 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				new[] {"", ""},
 				new[] {""},
 				new string[] { }
+			};
+		}
+
+		private static string[][] InvalidInputsSecondParam()
+		{
+			return new[]
+			{
+				new[] {"-n", "ab/yx"},
+				new[] {"-n", "ab\\yx"}
 			};
 		}
 
@@ -96,6 +118,74 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				new[] { "-n", "anyName", "-t", null },
 			};
 		}
+
+		private static string[][] InvalidInputs_UnknownUrlParam()
+		{
+			return new[]
+			{
+				new[] { "-n", "anyName", "-t", "Server", "--u", "127.0.0.1", "-p", "4840" },
+				new[] { "-n", "anyName", "-t", "Server", "-U", "127.0.0.1", "-p", "4840" },
+				new[] { "-n", "anyName", "-t", "Server", "-url", "127.0.0.1", "-p", "4840" },
+				new[] { "-n", "anyName", "-t", "Server", "--Url", "127.0.0.1", "-p", "4840" },
+				new[] { "-n", "anyName", "-t", "ClientServer", "--u", "127.0.0.1", "-p", "4840" },
+				new[] { "-n", "anyName", "-t", "ClientServer", "-U", "127.0.0.1", "-p", "4840" },
+				new[] { "-n", "anyName", "-t", "ClientServer", "-url", "127.0.0.1", "-p", "4840" },
+				new[] { "-n", "anyName", "-t", "ClientServer", "--Url", "127.0.0.1", "-p", "4840" },
+			};
+		}
+
+		private static string[][] InvalidInputs_UnknownUrlValue()
+		{
+			return new[]
+			{
+				new[] { "-n", "anyName", "-t", "Server", "-u", "u r l", "-p", "4840" },
+				new[] { "-n", "anyName", "-t", "Server", "-u", "url\turl", "-p", "4840" },
+				new[] { "-n", "anyName", "-t", "Server", "-u", "url\nurl", "-p", "4840" },
+				new[] { "-n", "anyName", "-t", "Server", "-u", "url\rurl", "-p", "4840" },
+				new[] { "-n", "anyName", "-t", "Server", "-u", "", "-p", "4840" },
+				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "u r l", "-p", "4840" },
+				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "url\turl", "-p", "4840" },
+				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "url\nurl", "-p", "4840" },
+				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "url\rurl", "-p", "4840" },
+				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "", "-p", "4840" },
+			};
+		}
+
+		private static string[][] InvalidInputs_UnknownPortParam()
+		{
+			return new[]
+			{
+				new[] { "-n", "anyName", "-t", "Server", "-u", "127.0.0.1", "--p", "4840" },
+				new[] { "-n", "anyName", "-t", "Server", "-u", "127.0.0.1", "-P", "4840" },
+				new[] { "-n", "anyName", "-t", "Server", "-u", "127.0.0.1", "-port", "4840" },
+				new[] { "-n", "anyName", "-t", "Server", "-u", "127.0.0.1", "--Port", "4840" },
+				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "127.0.0.1", "--p", "4840" },
+				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "127.0.0.1", "-P", "4840" },
+				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "127.0.0.1", "-port", "4840" },
+				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "127.0.0.1", "--Port", "4840" },
+			};
+		}
+
+		private static string[][] InvalidInputs_UnknownPortValue()
+		{
+			return new[]
+			{
+				new[] { "-n", "anyName", "-t", "Server", "-u", "127.0.0.1", "-p", "PortCanContainOnlyDigits" },
+				new[] { "-n", "anyName", "-t", "Server", "-u", "127.0.0.1", "-p", "-1" },
+				new[] { "-n", "anyName", "-t", "Server", "-u", "127.0.0.1", "-p", "65536" },
+				new[] { "-n", "anyName", "-t", "Server", "-u", "127.0.0.1", "-p", "1 2 3" },
+				new[] { "-n", "anyName", "-t", "Server", "-u", "127.0.0.1", "-p", "" },
+				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "127.0.0.1", "-p", "PortCanContainOnlyDigits" },
+				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "127.0.0.1", "-p", "-1" },
+				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "127.0.0.1", "-p", "65536" },
+				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "127.0.0.1", "-p", "1 2 3" },
+				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "127.0.0.1", "-p", "" },
+			};
+		}
+
+		private readonly string _clientOppoprojFileContent = "{\r\n  \"name\": \"anyName\",\r\n  \"type\": \"Client\"\r\n}";
+		private readonly string _serverOppoprojFileContent = "{\r\n  \"name\": \"anyName\",\r\n  \"type\": \"Server\",\r\n  \"url\": \"127.0.0.1\",\r\n  \"port\": \"4840\"\r\n}";
+		private readonly string _clientServerOppoprojFileContent = "{\r\n  \"name\": \"anyName\",\r\n  \"type\": \"ClientServer\",\r\n  \"url\": \"127.0.0.1\",\r\n  \"port\": \"4840\"\r\n}";
 
 		private Mock<IFileSystem> _fileSystemMock;
 		private NewOpcuaAppCommandStrategy _objectUnderTest;
@@ -237,6 +327,82 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		}
 
 		[Test]
+		public void NewOpcuaAppCommandStrategy_Should_FailOnInvalidUrlParameter([ValueSource(nameof(InvalidInputs_UnknownUrlParam))] string[] inputParam)
+		{
+			// Arrange
+			var urlFlag = inputParam.ElementAtOrDefault(4);
+
+			var loggerListenerMock = new Mock<ILoggerListener>();
+			OppoLogger.RegisterListener(loggerListenerMock.Object);
+
+			// Act
+			var result = _objectUnderTest.Execute(inputParam);
+
+			// Assert
+			Assert.IsFalse(result.Sucsess);
+			Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandFailureUnknownParam, urlFlag), result.OutputMessages.First().Key);
+			OppoLogger.RemoveListener(loggerListenerMock.Object);
+			loggerListenerMock.Verify(x => x.Warn(LoggingText.UnknownNewOpcuaappCommandParam), Times.Once);
+		}
+
+		[Test]
+		public void NewOpcuaAppCommandStrategy_Should_FailOnInvalidUrlValue([ValueSource(nameof(InvalidInputs_UnknownUrlValue))] string[] inputParam)
+		{
+			// Arrange
+			var url = inputParam.ElementAtOrDefault(5);
+
+			var loggerListenerMock = new Mock<ILoggerListener>();
+			OppoLogger.RegisterListener(loggerListenerMock.Object);
+
+			// Act
+			var result = _objectUnderTest.Execute(inputParam);
+
+			// Assert
+			Assert.IsFalse(result.Sucsess);
+			Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandFailureInvalidServerUrl, url), result.OutputMessages.First().Key);
+			OppoLogger.RemoveListener(loggerListenerMock.Object);
+			loggerListenerMock.Verify(x => x.Warn(LoggingText.InvalidServerUrl), Times.Once);
+		}
+
+		[Test]
+		public void NewOpcuaAppCommandStrategy_Should_FailOnInvalidPortParameter([ValueSource(nameof(InvalidInputs_UnknownPortParam))] string[] inputParam)
+		{
+			// Arrange
+			var portFlag = inputParam.ElementAtOrDefault(6);
+
+			var loggerListenerMock = new Mock<ILoggerListener>();
+			OppoLogger.RegisterListener(loggerListenerMock.Object);
+
+			// Act
+			var result = _objectUnderTest.Execute(inputParam);
+
+			// Assert
+			Assert.IsFalse(result.Sucsess);
+			Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandFailureUnknownParam, portFlag), result.OutputMessages.First().Key);
+			OppoLogger.RemoveListener(loggerListenerMock.Object);
+			loggerListenerMock.Verify(x => x.Warn(LoggingText.UnknownNewOpcuaappCommandParam), Times.Once);
+		}
+
+		[Test]
+		public void NewOpcuaAppCommandStrategy_Should_FailOnInvalidPortValue([ValueSource(nameof(InvalidInputs_UnknownPortValue))] string[] inputParam)
+		{
+			// Arrange
+			var port = inputParam.ElementAtOrDefault(7);
+
+			var loggerListenerMock = new Mock<ILoggerListener>();
+			OppoLogger.RegisterListener(loggerListenerMock.Object);
+
+			// Act
+			var result = _objectUnderTest.Execute(inputParam);
+
+			// Assert
+			Assert.IsFalse(result.Sucsess);
+			Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandFailureInvalidServerPort, port), result.OutputMessages.First().Key);
+			OppoLogger.RemoveListener(loggerListenerMock.Object);
+			loggerListenerMock.Verify(x => x.Warn(LoggingText.InvalidServerPort), Times.Once);
+		}
+
+		[Test]
 		public void NewOpcuaAppCommandStrategy_Should_CreateFilesForClientServerApp([ValueSource(nameof(ValidInputs_ClientServerAppType))] string[] inputParam)
 		{
 			// Arrange
@@ -286,7 +452,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			_fileSystemMock.Verify(x => x.CreateDirectory(serverSourceDirectory), Times.AtLeastOnce);
 			_fileSystemMock.Verify(x => x.CreateDirectory(modelsDirectory), Times.Once);
 
-			_fileSystemMock.Verify(x => x.CreateFile(projectFilePath, It.IsAny<string>()), Times.Once);
+			_fileSystemMock.Verify(x => x.CreateFile(projectFilePath, _clientServerOppoprojFileContent), Times.Once);
 			_fileSystemMock.Verify(x => x.CreateFile(mesonBuildFilePath, It.IsAny<string>()), Times.Once);
 			_fileSystemMock.Verify(x => x.CreateFile(clientMainC, It.IsAny<string>()), Times.Once);
 			_fileSystemMock.Verify(x => x.CreateFile(serverMainC, It.IsAny<string>()), Times.Once);
@@ -353,7 +519,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			_fileSystemMock.Verify(x => x.CreateDirectory(serverSourceDirectory), Times.Never);
 			_fileSystemMock.Verify(x => x.CreateDirectory(modelsDirectory), Times.Never);
 
-			_fileSystemMock.Verify(x => x.CreateFile(projectFilePath, It.IsAny<string>()), Times.Once);
+			_fileSystemMock.Verify(x => x.CreateFile(projectFilePath, _clientOppoprojFileContent), Times.Once);
 			_fileSystemMock.Verify(x => x.CreateFile(mesonBuildFilePath, It.IsAny<string>()), Times.Once);
 			_fileSystemMock.Verify(x => x.CreateFile(clientMainC, It.IsAny<string>()), Times.Once);
 			_fileSystemMock.Verify(x => x.CreateFile(serverMainC, It.IsAny<string>()), Times.Never);
@@ -420,7 +586,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			_fileSystemMock.Verify(x => x.CreateDirectory(serverSourceDirectory), Times.Once);
 			_fileSystemMock.Verify(x => x.CreateDirectory(modelsDirectory), Times.Once);
 
-			_fileSystemMock.Verify(x => x.CreateFile(projectFilePath, It.IsAny<string>()), Times.Once);
+			_fileSystemMock.Verify(x => x.CreateFile(projectFilePath, _serverOppoprojFileContent), Times.Once);
 			_fileSystemMock.Verify(x => x.CreateFile(mesonBuildFilePath, It.IsAny<string>()), Times.Once);
 			_fileSystemMock.Verify(x => x.CreateFile(clientMainC, It.IsAny<string>()), Times.Never);
 			_fileSystemMock.Verify(x => x.CreateFile(serverMainC, It.IsAny<string>()), Times.Once);

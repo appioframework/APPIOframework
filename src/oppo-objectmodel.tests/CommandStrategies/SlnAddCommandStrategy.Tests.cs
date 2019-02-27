@@ -48,12 +48,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         private SlnAddCommandStrategy _objectUnderTest;
 
         private readonly string _defaultOpposlnContent = "{\"projects\": []}";
-        private readonly string _sampleOpposlnContent = "{\"projects\": [{\"name\":\"testApp\",\"path\":\"testApp.oppoproj\"}]}";
+        private readonly string _sampleOpposlnContent = "{\"projects\": [{\"name\":\"clientApp\",\"path\":\"clientApp/clientApp.oppoproj\"}]}";
 
-        private readonly string _sampleOpcuaClientAppContent = "{\"name\":\"testApp\",\"type\":\"Client\"}";
-		private readonly string _sampleOpcuaServerAppContent = "{\"name\":\"testApp\",\"type\":\"Server\",\"url\":\"opc.tcp://127.0.0.1:4841/\"}";
-		private readonly string _sampleOpcuaClientServerAppContent = "{\"name\":\"testApp\",\"type\":\"ClientServer\",\"url\":\"opc.tcp://127.0.0.1:4841/\"}";
-		private readonly string _sampleOppoprojContent2 = "{\"name\":\"myApp\",\"path\":\"myApp.oppoproj\",\"type\":\"Server\",\"url\":\"opc.tcp://127.0.0.1:4841/\"}";
+        private readonly string _sampleOpcuaClientAppContent = "{\"name\":\"clientApp\",\"type\":\"Client\"}";
+		private readonly string _sampleOpcuaServerAppContent = "{\"name\":\"serverApp\",\"type\":\"Server\"}";
 
         [SetUp]
         public void SetUp_ObjectUnderTest()
@@ -425,7 +423,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _fileSystemMock.Setup(x => x.CombinePaths(opcuaappName, opcuaappName + Constants.FileExtension.OppoProject)).Returns(oppoProjPath);
             _fileSystemMock.Setup(x => x.FileExists(oppoProjPath)).Returns(true);
 
-            Stream opcuaappMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOppoprojContent2));
+            Stream opcuaappMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpcuaServerAppContent));
             _fileSystemMock.Setup(x => x.ReadFile(oppoProjPath)).Returns(opcuaappMemoryStream);
 
 

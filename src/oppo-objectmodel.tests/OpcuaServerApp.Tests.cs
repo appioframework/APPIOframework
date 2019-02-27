@@ -9,13 +9,15 @@ namespace Oppo.ObjectModel.Tests
         private IOpcuaServerApp _defaultopcuaApp, _opcuaapp;
         private string _name = "mvpSmartPump";
         private string _type = "Server";
-        private string _url = "localhost:4848";
+        private string _url = "localhost";
+		private string _port = "4840";
+
 
         [SetUp]
         public void SetupTest()
         {
             _defaultopcuaApp = new OpcuaServerApp();
-            _opcuaapp = new OpcuaServerApp(_name, _url);   
+            _opcuaapp = new OpcuaServerApp(_name, _url, _port);   
         }
 
         [TearDown]
@@ -59,7 +61,8 @@ namespace Oppo.ObjectModel.Tests
             Assert.AreNotEqual(string.Empty, opcuaappAsJson);
             Assert.IsTrue(opcuaappAsJson.Contains(_name)); // don't care where
             Assert.IsTrue(opcuaappAsJson.Contains(_url)); // don't care where
-        }
+			Assert.IsTrue(opcuaappAsJson.Contains(_port)); // don't care where
+		}
 
         [Test]
         public void BeDeSerializableFromJson()
@@ -69,7 +72,8 @@ namespace Oppo.ObjectModel.Tests
                 "{" +    
                     "\"name\": \"" + _name + "\"," +
                     "\"type\": \"" +  _type + "\"," +
-                    "\"url\": \"" + _url + "\"" +
+                    "\"url\": \"" + _url + "\"," +
+					"\"port\": \"" + _port + "\"" +
                 "}";
 
             // Act
@@ -80,6 +84,7 @@ namespace Oppo.ObjectModel.Tests
             Assert.AreEqual(_name, opcuaapp.Name);
             Assert.AreEqual(_type, opcuaapp.Type);
 			Assert.AreEqual(_url, opcuaapp.Url);
+			Assert.AreEqual(_port, opcuaapp.Port);
 		}
     }
 }

@@ -4,12 +4,22 @@ set -euo pipefail
 
 source bash-gitlab-ci/util-integration-tests.sh
 
-VAR_COMMANDS[0]="oppo new opcuaapp -n my-app"
-VAR_COMMANDS[1]="oppo new opcuaapp -n my-app -t ClientServer"
-VAR_COMMANDS[2]="oppo new opcuaapp -n my-app --type ClientServer"
-VAR_COMMANDS[3]="oppo new opcuaapp --name my-app"
-VAR_COMMANDS[4]="oppo new opcuaapp --name my-app -t ClientServer"
-VAR_COMMANDS[5]="oppo new opcuaapp --name my-app --type ClientServer"
+VAR_COMMANDS[0] ="oppo new opcuaapp -n my-app -t ClientServer -u 127.0.0.1 -p 4840"
+VAR_COMMANDS[1] ="oppo new opcuaapp -n my-app -t ClientServer -u 127.0.0.1 --port 4840"
+VAR_COMMANDS[2] ="oppo new opcuaapp -n my-app -t ClientServer --url 127.0.0.1 -p 4840"
+VAR_COMMANDS[3] ="oppo new opcuaapp -n my-app -t ClientServer --url 127.0.0.1 --port 4840"
+VAR_COMMANDS[4] ="oppo new opcuaapp -n my-app --type ClientServer -u 127.0.0.1 -p 4840"
+VAR_COMMANDS[5] ="oppo new opcuaapp -n my-app --type ClientServer -u 127.0.0.1 --port 4840"
+VAR_COMMANDS[6] ="oppo new opcuaapp -n my-app --type ClientServer --url 127.0.0.1 -p 4840"
+VAR_COMMANDS[7] ="oppo new opcuaapp -n my-app --type ClientServer --url 127.0.0.1 --port 4840"
+VAR_COMMANDS[8] ="oppo new opcuaapp --name my-app -t ClientServer -u 127.0.0.1 -p 4840"
+VAR_COMMANDS[9] ="oppo new opcuaapp --name my-app -t ClientServer -u 127.0.0.1 --port 4840"
+VAR_COMMANDS[10]="oppo new opcuaapp --name my-app -t ClientServer --url 127.0.0.1 -p 4840"
+VAR_COMMANDS[11]="oppo new opcuaapp --name my-app -t ClientServer --url 127.0.0.1 --port 4840"
+VAR_COMMANDS[12]="oppo new opcuaapp --name my-app --type ClientServer -u 127.0.0.1 -p 4840"
+VAR_COMMANDS[13]="oppo new opcuaapp --name my-app --type ClientServer -u 127.0.0.1 --port 4840"
+VAR_COMMANDS[14]="oppo new opcuaapp --name my-app --type ClientServer --url 127.0.0.1 -p 4840"
+VAR_COMMANDS[15]="oppo new opcuaapp --name my-app --type ClientServer --url 127.0.0.1 --port 4840"
 
 for INDEX in "${!VAR_COMMANDS[@]}";
 do

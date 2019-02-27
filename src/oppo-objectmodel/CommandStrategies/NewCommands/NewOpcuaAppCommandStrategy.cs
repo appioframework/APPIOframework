@@ -15,6 +15,12 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 			_fileSystem = fileSystem;
 		}
 
+		private struct Messages
+		{
+			public string outputMessage;
+			public string loggerMessage;
+		}
+
 		public string Name => Constants.NewCommandName.OpcuaApp;
 
 		public CommandResult Execute(IEnumerable<string> inputParams)
@@ -24,10 +30,15 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 			var opcuaAppName	 = inputParamsArray.ElementAtOrDefault(1);
 			var typeFlag		 = inputParamsArray.ElementAtOrDefault(2);
 			var applicationType	 = inputParamsArray.ElementAtOrDefault(3);
+			var urlFlag			 = inputParamsArray.ElementAtOrDefault(4);
+			var url				 = inputParamsArray.ElementAtOrDefault(5);
+			var portFlag		 = inputParamsArray.ElementAtOrDefault(6);
+			var port			 = inputParamsArray.ElementAtOrDefault(7);
 
 			applicationType = string.IsNullOrEmpty(typeFlag) ? Constants.ApplicationType.ClientServer : applicationType;
 			
 			var outputMessages = new MessageLines();
+			var messages = new Messages();
 
 			// validate opcuaapp name flag
 			if (nameFlag != Constants.NewOpcuaAppCommandArguments.Name && nameFlag != Constants.NewOpcuaAppCommandArguments.VerboseName)
@@ -45,23 +56,12 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 				return new CommandResult(false, outputMessages);
 			}
 
-			if (!string.IsNullOrEmpty(typeFlag))
+			// validate opcuaapp type
+			if (!ValidateApplicationType(ref messages, typeFlag, applicationType, urlFlag, url, portFlag, port))
 			{
-				// validate opcuaapp type flag
-				if (typeFlag != Constants.NewOpcuaAppCommandArguments.Type && typeFlag != Constants.NewOpcuaAppCommandArguments.VerboseType)
-				{
-					OppoLogger.Warn(LoggingText.UnknownNewOpcuaappCommandParam);
-					outputMessages.Add(string.Format(OutputText.NewOpcuaappCommandFailureUnknownParam, typeFlag), string.Empty);
-					return new CommandResult(false, outputMessages);
-				}
-
-				// validate opcuaapp type
-				else if (applicationType != Constants.ApplicationType.Client && applicationType != Constants.ApplicationType.Server && applicationType != Constants.ApplicationType.ClientServer)
-				{
-					OppoLogger.Warn(LoggingText.InvalidOpcuaappType);
-					outputMessages.Add(string.Format(OutputText.NewOpcuaappCommandFailureUnknownProjectType, applicationType), string.Empty);
-					return new CommandResult(false, outputMessages);
-				}
+				OppoLogger.Warn(messages.loggerMessage);
+				outputMessages.Add(messages.outputMessage, string.Empty);
+				return new CommandResult(false, outputMessages);
 			}
 
 			// combine project file paths
@@ -86,7 +86,7 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 			// deploy files for opcuaapp Server
 			else if (applicationType == Constants.ApplicationType.Server)
 			{
-				opcuaapp = new OpcuaServerApp(opcuaAppName, string.Empty);
+				opcuaapp = new OpcuaServerApp(opcuaAppName, url, port);
 				_fileSystem.CreateFile(mesonFilePath, _fileSystem.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_meson_ServerType_build));
 				
 				CreateModelsDirectory(opcuaAppName);
@@ -95,7 +95,7 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 			// deploy files for opcuaapp ClientServer
 			else if (applicationType == Constants.ApplicationType.ClientServer)
 			{
-				opcuaapp = new OpcuaClientServerApp(opcuaAppName, string.Empty);
+				opcuaapp = new OpcuaClientServerApp(opcuaAppName, url, port);
 				_fileSystem.CreateFile(mesonFilePath, _fileSystem.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_meson_ClientServerType_build));
 
 				CreateModelsDirectory(opcuaAppName);
@@ -132,6 +132,58 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 			_fileSystem.CreateFile(_fileSystem.CombinePaths(appSourceDirectory, Constants.FileName.SourceCode_main_c), _fileSystem.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_main_server_c));
 			_fileSystem.CreateFile(_fileSystem.CombinePaths(appSourceDirectory, Constants.FileName.SourceCode_meson_build), _fileSystem.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_meson_server_build));
 			_fileSystem.CreateFile(_fileSystem.CombinePaths(appSourceDirectory, Constants.FileName.SourceCode_loadInformationModels_c), _fileSystem.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_loadInformationModels_server_c));
+		}
+
+		private bool ValidateApplicationType(ref Messages messages, string typeFlag, string applicationType, string urlFlag, string url, string portFlag, string port)
+		{
+			// validate opcuaapp type flag
+			if (typeFlag != Constants.NewOpcuaAppCommandArguments.Type && typeFlag != Constants.NewOpcuaAppCommandArguments.VerboseType)
+			{
+				messages.loggerMessage = LoggingText.UnknownNewOpcuaappCommandParam;
+				messages.outputMessage = string.Format(OutputText.NewOpcuaappCommandFailureUnknownParam, typeFlag);
+				return false;
+			}
+			// validate opcuaapp type
+			else if (applicationType != Constants.ApplicationType.Client && applicationType != Constants.ApplicationType.Server && applicationType != Constants.ApplicationType.ClientServer)
+			{
+				messages.loggerMessage = LoggingText.InvalidOpcuaappType;
+				messages.outputMessage = string.Format(OutputText.NewOpcuaappCommandFailureUnknownProjectType, applicationType);
+				return false;
+			}
+			else if (applicationType == Constants.ApplicationType.Server || applicationType == Constants.ApplicationType.ClientServer)
+			{
+				// validate server url flag
+				if (urlFlag != Constants.NewOpcuaAppCommandArguments.Url && urlFlag != Constants.NewOpcuaAppCommandArguments.VerboseUrl)
+				{
+					messages.loggerMessage = LoggingText.UnknownNewOpcuaappCommandParam;
+					messages.outputMessage = string.Format(OutputText.NewOpcuaappCommandFailureUnknownParam, urlFlag);
+					return false;
+				}
+				// validate server url
+				else if (string.IsNullOrEmpty(url) || url.Any(x => char.IsWhiteSpace(x)))
+				{
+					messages.loggerMessage = LoggingText.InvalidServerUrl;
+					messages.outputMessage = string.Format(OutputText.NewOpcuaappCommandFailureInvalidServerUrl, url);
+					return false;
+				}
+
+				// validate server port flag
+				if (portFlag != Constants.NewOpcuaAppCommandArguments.Port && portFlag != Constants.NewOpcuaAppCommandArguments.VerbosePort)
+				{
+					messages.loggerMessage = LoggingText.UnknownNewOpcuaappCommandParam;
+					messages.outputMessage = string.Format(OutputText.NewOpcuaappCommandFailureUnknownParam, portFlag);
+					return false;
+				}
+				// validate server port
+				else if (string.IsNullOrEmpty(port) || !(port.All(x => char.IsDigit(x)) && Enumerable.Range(0, 65535).Contains(int.Parse(port))))
+				{
+					messages.loggerMessage = LoggingText.InvalidServerPort;
+					messages.outputMessage = string.Format(OutputText.NewOpcuaappCommandFailureInvalidServerPort, port);
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 		public string GetHelpText()

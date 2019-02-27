@@ -13,6 +13,8 @@ VAR_COMMANDS[7] ="oppo new opcuaapp -n my-app --t Server"
 VAR_COMMANDS[8] ="oppo new opcuaapp -p my-app -t ClientServer"
 VAR_COMMANDS[9] ="oppo new opcuaapp -n my-app -t"
 VAR_COMMANDS[10]="oppo new opcuaapp -n my-app --type"
+VAR_COMMANDS[11]="oppo new opcuaapp -n my-app"
+VAR_COMMANDS[12]="oppo new opcuaapp --name my-app"
 
 for INDEX in "${!VAR_COMMANDS[@]}";
 do

@@ -21,6 +21,8 @@ namespace Oppo.Resources.text.output
         public const string NewOpcuaappCommandFailureUnknownParam = "Unknown command parameter '{0}'!";
 		public const string NewOpcuaappCommandFailureInvalidProjectName = "Invalid opcuaapp name '{0}'!";
 		public const string NewOpcuaappCommandFailureUnknownProjectType = "Unknown opcua application type '{0}'!";
+		public const string NewOpcuaappCommandFailureInvalidServerUrl = "Invalid server url '{0}'!";
+		public const string NewOpcuaappCommandFailureInvalidServerPort = "Invalid server port '{0}'!";
 		public const string NewSlnCommandSuccess = "A solution with name '{0}' was successfully created!";
         public const string NewSlnCommandFailure = "Creating solution with name '{0}' failed!";
         public const string NewSlnCommandFailureUnknownParam = "Creating solution failed!";
