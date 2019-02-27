@@ -160,7 +160,7 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 					return false;
 				}
 				// validate server url
-				else if (string.IsNullOrEmpty(url) || url.Any(x => char.IsWhiteSpace(x)))
+				else if (ValidateUrl(url))
 				{
 					messages.loggerMessage = LoggingText.InvalidServerUrl;
 					messages.outputMessage = string.Format(OutputText.NewOpcuaappCommandFailureInvalidServerUrl, url);
@@ -175,7 +175,7 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 					return false;
 				}
 				// validate server port
-				else if (string.IsNullOrEmpty(port) || !(port.All(x => char.IsDigit(x)) && Enumerable.Range(0, 65535).Contains(int.Parse(port))))
+				else if (ValidatePort(port))
 				{
 					messages.loggerMessage = LoggingText.InvalidServerPort;
 					messages.outputMessage = string.Format(OutputText.NewOpcuaappCommandFailureInvalidServerPort, port);
@@ -184,6 +184,16 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 			}
 
 			return true;
+		}
+
+		private bool ValidateUrl(string url)
+		{
+			return string.IsNullOrEmpty(url) || url.Any(x => char.IsWhiteSpace(x));
+		}
+
+		private bool ValidatePort(string port)
+		{
+			return string.IsNullOrEmpty(port) || !(port.All(x => char.IsDigit(x)) && Enumerable.Range(0, 65535).Contains(int.Parse(port)));
 		}
 
 		public string GetHelpText()
