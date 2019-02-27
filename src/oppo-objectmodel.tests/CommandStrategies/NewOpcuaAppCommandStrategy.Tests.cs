@@ -183,10 +183,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			};
 		}
 
-		private readonly string _clientOppoprojFileContent = "{\r\n  \"name\": \"anyName\",\r\n  \"type\": \"Client\"\r\n}";
-		private readonly string _serverOppoprojFileContent = "{\r\n  \"name\": \"anyName\",\r\n  \"type\": \"Server\",\r\n  \"url\": \"127.0.0.1\",\r\n  \"port\": \"4840\"\r\n}";
-		private readonly string _clientServerOppoprojFileContent = "{\r\n  \"name\": \"anyName\",\r\n  \"type\": \"ClientServer\",\r\n  \"url\": \"127.0.0.1\",\r\n  \"port\": \"4840\"\r\n}";
-
 		private Mock<IFileSystem> _fileSystemMock;
 		private NewOpcuaAppCommandStrategy _objectUnderTest;
 
@@ -452,7 +448,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			_fileSystemMock.Verify(x => x.CreateDirectory(serverSourceDirectory), Times.AtLeastOnce);
 			_fileSystemMock.Verify(x => x.CreateDirectory(modelsDirectory), Times.Once);
 
-			_fileSystemMock.Verify(x => x.CreateFile(projectFilePath, _clientServerOppoprojFileContent), Times.Once);
+			_fileSystemMock.Verify(x => x.CreateFile(projectFilePath, It.IsAny<string>()), Times.Once);
 			_fileSystemMock.Verify(x => x.CreateFile(mesonBuildFilePath, It.IsAny<string>()), Times.Once);
 			_fileSystemMock.Verify(x => x.CreateFile(clientMainC, It.IsAny<string>()), Times.Once);
 			_fileSystemMock.Verify(x => x.CreateFile(serverMainC, It.IsAny<string>()), Times.Once);
@@ -519,7 +515,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			_fileSystemMock.Verify(x => x.CreateDirectory(serverSourceDirectory), Times.Never);
 			_fileSystemMock.Verify(x => x.CreateDirectory(modelsDirectory), Times.Never);
 
-			_fileSystemMock.Verify(x => x.CreateFile(projectFilePath, _clientOppoprojFileContent), Times.Once);
+			_fileSystemMock.Verify(x => x.CreateFile(projectFilePath, It.IsAny<string>()), Times.Once);
 			_fileSystemMock.Verify(x => x.CreateFile(mesonBuildFilePath, It.IsAny<string>()), Times.Once);
 			_fileSystemMock.Verify(x => x.CreateFile(clientMainC, It.IsAny<string>()), Times.Once);
 			_fileSystemMock.Verify(x => x.CreateFile(serverMainC, It.IsAny<string>()), Times.Never);
@@ -586,7 +582,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			_fileSystemMock.Verify(x => x.CreateDirectory(serverSourceDirectory), Times.Once);
 			_fileSystemMock.Verify(x => x.CreateDirectory(modelsDirectory), Times.Once);
 
-			_fileSystemMock.Verify(x => x.CreateFile(projectFilePath, _serverOppoprojFileContent), Times.Once);
+			_fileSystemMock.Verify(x => x.CreateFile(projectFilePath, It.IsAny<string>()), Times.Once);
 			_fileSystemMock.Verify(x => x.CreateFile(mesonBuildFilePath, It.IsAny<string>()), Times.Once);
 			_fileSystemMock.Verify(x => x.CreateFile(clientMainC, It.IsAny<string>()), Times.Never);
 			_fileSystemMock.Verify(x => x.CreateFile(serverMainC, It.IsAny<string>()), Times.Once);
