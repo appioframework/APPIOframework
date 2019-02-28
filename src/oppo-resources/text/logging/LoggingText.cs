@@ -64,6 +64,8 @@
 		public const string SlnRemoveOpcuaappIsNotInSln = "Opcuaapp is not a part of the soluton!";
         // reference add command
         public const string ReferenceUnknownCommandParam = "Unknown reference add command parameter!";
+		public const string CouldntDeserliazeServer 	 = "Couldn't deserialize server file!";
+
         // reference common 
         public const string OppoServerFileNotFound       = "Server not found!";
         public const string ClientUnknownCommandParam    = "Unknown client add command parameter!";

@@ -63,6 +63,16 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
                 outputMessages.Add(string.Format(OutputText.ClientNotFound, ClientFullName), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
+
+            // deserialize server file
+            OpcuaServerApp oppoServer = SlnUtility.DeserializeFile<OpcuaServerApp>(ServerFullName, _fileSystem);
+            if (oppoServer == null)
+            {
+                OppoLogger.Warn(LoggingText.CouldntDeserliazeServer);
+                outputMessages.Add(string.Format(OutputText.CouldntDeserliazeServer, ServerFullName), string.Empty);
+                return new CommandResult(false, outputMessages);
+            }
+
             return new CommandResult(false, outputMessages);
         }
             
