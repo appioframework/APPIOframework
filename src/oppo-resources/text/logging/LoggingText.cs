@@ -65,6 +65,7 @@
         // reference add command
         public const string ReferenceUnknownCommandParam = "Unknown reference add command parameter!";
 		public const string CouldntDeserliazeServer 	 = "Couldn't deserialize server file!";
+        public const string CouldntDeserliazeClient      = "Couldn't deserialize client file!";
 
         // reference common 
         public const string OppoServerFileNotFound       = "Server not found!";

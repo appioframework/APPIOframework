@@ -241,6 +241,48 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             serverMemoryStream.Close();
             serverMemoryStream.Dispose();
         }
+        [Test]
+        public void FailOnClientDeserialization([ValueSource(nameof(ValidInputs))] string[] inputParams)
+        {
+            // Arrage
+            var serverName = inputParams.ElementAtOrDefault(1);
+            var clientName = inputParams.ElementAtOrDefault(3);
+
+            var loggerListenerMock = new Mock<ILoggerListener>();
+            OppoLogger.RegisterListener(loggerListenerMock.Object);
+
+            var oppoClientPath = Path.Combine(clientName, clientName + Constants.FileExtension.OppoProject);
+            _fileSystemMock.Setup(x => x.CombinePaths(clientName, clientName + Constants.FileExtension.OppoProject)).Returns(oppoClientPath);
+            _fileSystemMock.Setup(x => x.FileExists(oppoClientPath)).Returns(true);
+            var oppoServerPath = Path.Combine(serverName, serverName + Constants.FileExtension.OppoProject);
+            _fileSystemMock.Setup(x => x.CombinePaths(serverName, serverName + Constants.FileExtension.OppoProject)).Returns(oppoServerPath);
+            _fileSystemMock.Setup(x => x.FileExists(oppoServerPath)).Returns(true);
+
+            Stream emptyMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(string.Empty));
+            _fileSystemMock.Setup(x => x.ReadFile(oppoClientPath)).Returns(emptyMemoryStream);
+            Stream serverMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpcuaServerAppContent));
+            _fileSystemMock.Setup(x => x.ReadFile(oppoServerPath)).Returns(serverMemoryStream);
+            
+
+            // Act
+            var commandResult = _objectUnderTest.Execute(inputParams);
+
+
+            // Assert
+            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsNotNull(commandResult.OutputMessages);
+            var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
+            OppoLogger.RemoveListener(loggerListenerMock.Object);
+            loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.CouldntDeserliazeClient), Times.Once);
+            Assert.AreEqual(string.Format(OutputText.CouldntDeserliazeClient, oppoClientPath), firstMessageLine.Key);
+            Assert.AreEqual(string.Empty, firstMessageLine.Value);
+            _fileSystemMock.Verify(x => x.ReadFile(oppoClientPath), Times.Once);
+
+            emptyMemoryStream.Close();
+            emptyMemoryStream.Dispose();
+            serverMemoryStream.Close();
+            serverMemoryStream.Dispose();
+        }
     }
 
 }

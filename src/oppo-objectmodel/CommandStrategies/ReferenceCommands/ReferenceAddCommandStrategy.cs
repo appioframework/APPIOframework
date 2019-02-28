@@ -73,6 +73,15 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
                 return new CommandResult(false, outputMessages);
             }
 
+            // deserialize client file
+            OpcuaClientApp opcuaClient = SlnUtility.DeserializeFile<OpcuaClientApp>(ClientFullName, _fileSystem);
+            if (opcuaClient == null)
+            {
+                OppoLogger.Warn(LoggingText.CouldntDeserliazeClient);
+                outputMessages.Add(string.Format(OutputText.CouldntDeserliazeClient, ClientFullName), string.Empty);
+                return new CommandResult(false, outputMessages);
+            }
+
             return new CommandResult(false, outputMessages);
         }
             

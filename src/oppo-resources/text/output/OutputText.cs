@@ -82,5 +82,6 @@ namespace Oppo.Resources.text.output
         public const string ServerNotFound                  = "The server file '{0}' not found!";
         public const string ClientNotFound                  = "The client file '{0}' not found!";
         public const string CouldntDeserliazeServer         = "The server file '{0}' has invalid content!";
+        public const string CouldntDeserliazeClient         = "The client file '{0}' has invalid content!";
     }
 }
