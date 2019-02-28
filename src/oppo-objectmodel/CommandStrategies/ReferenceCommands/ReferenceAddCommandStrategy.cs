@@ -46,14 +46,23 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
                 return new CommandResult(false, outputMessages);
             }
 
-          /*  //Check if server file exists
+           //Check if server file exists
             var ServerFullName = _fileSystem.CombinePaths(serverName, serverName + Constants.FileExtension.OppoProject);
             if (string.IsNullOrEmpty(serverName) || !_fileSystem.FileExists(ServerFullName))
             {
                 OppoLogger.Warn(LoggingText.OppoServerFileNotFound);
                 outputMessages.Add(string.Format(OutputText.ServerNotFound, ServerFullName), string.Empty);
                 return new CommandResult(false, outputMessages);
-            }*/
+            }
+
+            //Check if client file exists
+            var ClientFullName = _fileSystem.CombinePaths(clientName, clientName + Constants.FileExtension.OppoProject);
+            if (string.IsNullOrEmpty(clientName) || !_fileSystem.FileExists(ClientFullName))
+            {
+                OppoLogger.Warn(LoggingText.OppoClientFileNotFound);
+                outputMessages.Add(string.Format(OutputText.ClientNotFound, ClientFullName), string.Empty);
+                return new CommandResult(false, outputMessages);
+            }
             return new CommandResult(false, outputMessages);
         }
             

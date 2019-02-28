@@ -139,7 +139,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
         }
        
-      /*  [Test]
+        [Test]
         public void FailBecauseOfMissingServerFile([ValueSource(nameof(ValidInputs))] string[] inputParams)
         {
             // Arrange
@@ -148,7 +148,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var loggerListenerMock = new Mock<ILoggerListener>();
             OppoLogger.RegisterListener(loggerListenerMock.Object);
 
-            // Arrange opposln file
+            // Arrange server file
             var oppoProjectPath = Path.Combine(serverName, serverName + Constants.FileExtension.OppoProject);
             _fileSystemMock.Setup(x => x.CombinePaths(serverName, serverName + Constants.FileExtension.OppoProject)).Returns(oppoProjectPath);
             _fileSystemMock.Setup(x => x.FileExists(oppoProjectPath)).Returns(false);
@@ -168,8 +168,41 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
             _fileSystemMock.Verify(x => x.CombinePaths(serverName, serverName + Constants.FileExtension.OppoProject), Times.Once);
             _fileSystemMock.Verify(x => x.FileExists(oppoProjectPath), Times.Once);
-        }*/
+        }
 
+        [Test]
+        public void FailBecauseOfMissingClientFile([ValueSource(nameof(ValidInputs))] string[] inputParams)
+        {
+            // Arrange
+            var serverName = inputParams.ElementAtOrDefault(1);
+            var clientName = inputParams.ElementAtOrDefault(3);
+
+            var loggerListenerMock = new Mock<ILoggerListener>();
+            OppoLogger.RegisterListener(loggerListenerMock.Object);
+
+            // Arrange client file
+            var oppoProjectPath = Path.Combine(clientName, clientName + Constants.FileExtension.OppoProject);
+            _fileSystemMock.Setup(x => x.CombinePaths(clientName, clientName + Constants.FileExtension.OppoProject)).Returns(oppoProjectPath);
+            _fileSystemMock.Setup(x => x.FileExists(oppoProjectPath)).Returns(false);
+            var oppoServerPath = Path.Combine(serverName, serverName + Constants.FileExtension.OppoProject);
+            _fileSystemMock.Setup(x => x.CombinePaths(serverName, serverName + Constants.FileExtension.OppoProject)).Returns(oppoServerPath);
+            _fileSystemMock.Setup(x => x.FileExists(oppoServerPath)).Returns(true);
+
+            // Act
+            var commandResult = _objectUnderTest.Execute(inputParams);
+
+
+            // Assert
+            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsNotNull(commandResult.OutputMessages);
+            var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
+            OppoLogger.RemoveListener(loggerListenerMock.Object);
+            loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.OppoClientFileNotFound), Times.Once);
+            Assert.AreEqual(string.Format(OutputText.ClientNotFound, oppoProjectPath), firstMessageLine.Key);
+            Assert.AreEqual(string.Empty, firstMessageLine.Value);
+            _fileSystemMock.Verify(x => x.CombinePaths(clientName, clientName + Constants.FileExtension.OppoProject), Times.Once);
+            _fileSystemMock.Verify(x => x.FileExists(oppoProjectPath), Times.Once);
+        }
     }
 
 }

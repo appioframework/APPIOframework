@@ -67,6 +67,7 @@
         // reference common 
         public const string OppoServerFileNotFound       = "Server not found!";
         public const string ClientUnknownCommandParam    = "Unknown client add command parameter!";
+        public const string OppoClientFileNotFound       = "Client not found!";
 
         public const string DirectoryIOException = "Directory IOException detected!";
         public const string DirectoryNotFoundException = "Directory DirectoryNotFoundException detected!";

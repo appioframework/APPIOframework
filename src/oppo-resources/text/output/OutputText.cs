@@ -80,5 +80,6 @@ namespace Oppo.Resources.text.output
         public const string ClientUnknownParameter          = "Unknown client parameter '{0}'!";
         // reference common <command>
         public const string ServerNotFound                  = "The server file '{0}' not found!";
+        public const string ClientNotFound                  = "The client file '{0}' not found!";
     }
 }
