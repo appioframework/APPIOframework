@@ -29,6 +29,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 
             var outputMessages = new MessageLines();
 
+
             // check if serverNameFlag is valid
             if (serverNameFlag != Constants.ReferenceAddCommandArguments.Server && serverNameFlag != Constants.ReferenceAddCommandArguments.VerboseServer)
             {
