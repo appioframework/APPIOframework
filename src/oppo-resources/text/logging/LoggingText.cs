@@ -62,17 +62,9 @@
 		public const string SlnRemoveSuccess			= "Opcuaapp project was successfully removed from sln.";
 		public const string SlnRemoveOppoprojNameEmpty	= "Empty project name!";
 		public const string SlnRemoveOpcuaappIsNotInSln = "Opcuaapp is not a part of the soluton!";
-        // reference add command
-        public const string ReferenceUnknownCommandParam = "Unknown reference add command parameter!";
-		public const string CouldntDeserliazeServer 	 = "Couldn't deserialize server file!";
-        public const string CouldntDeserliazeClient      = "Couldn't deserialize client file!";
 
-        // reference common 
-        public const string OppoServerFileNotFound       = "Server not found!";
-        public const string ClientUnknownCommandParam    = "Unknown client add command parameter!";
-        public const string OppoClientFileNotFound       = "Client not found!";
 
-        public const string DirectoryIOException = "Directory IOException detected!";
+		public const string DirectoryIOException = "Directory IOException detected!";
         public const string DirectoryNotFoundException = "Directory DirectoryNotFoundException detected!";
         public const string PathTooLongException = "Directory PathTooLongException detected!";
 

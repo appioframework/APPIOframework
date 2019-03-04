@@ -60,15 +60,6 @@ namespace Oppo.ObjectModel
             public const string Remove = "remove";
         }
 
-        public static class ReferenceCommandName
-        {
-            public const string Help = "-h";
-            public const string VerboseHelp = "--help";
-            public const string Add = "add";
-            public const string Remove = "remove";
-        }
-
-
         public static class DirectoryName
         {
             public const string SourceCode = "src";
@@ -239,15 +230,6 @@ namespace Oppo.ObjectModel
             public const string Project = "-p";
             public const string VerboseProject = "--project";
             
-        }
-
-        public static class ReferenceAddCommandArguments
-        {
-            public const string Server = "-S";
-            public const string VerboseServer = "--server";
-            public const string Client = "-C";
-            public const string VerboseClient = "--client";
-
         }
         public static class SlnRemoveCommandArguments
         {

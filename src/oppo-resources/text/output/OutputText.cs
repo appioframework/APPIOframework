@@ -75,13 +75,5 @@ namespace Oppo.Resources.text.output
 		public const string SlnRemoveSuccess				= "The opcuaapp with the name '{0}' was successfully removed from the solution '{1}'.";
 		public const string SlnRemoveOpcuaappNameEmpty		= "The opcuaapp project name empty!";
 		public const string SlnRemoveOpcuaappIsNotInSln		= "The opcuaapp project '{0}' is not a part of the solution '{1}'!";
-        // reference add <command>
-        public const string ReferenceUnknownParameter       = "Unknown reference command parameter '{0}'!";
-        public const string ClientUnknownParameter          = "Unknown client parameter '{0}'!";
-        // reference common <command>
-        public const string ServerNotFound                  = "The server file '{0}' not found!";
-        public const string ClientNotFound                  = "The client file '{0}' not found!";
-        public const string CouldntDeserliazeServer         = "The server file '{0}' has invalid content!";
-        public const string CouldntDeserliazeClient         = "The client file '{0}' has invalid content!";
-    }
+	}
 }
