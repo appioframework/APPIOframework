@@ -2,6 +2,7 @@
 using System.Linq;
 using Oppo.Resources.text.output;
 using Oppo.Resources.text.logging;
+using Newtonsoft.Json;
 
 namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 {
@@ -31,7 +32,9 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
                 return new CommandResult(false, outputMessages);
             }
 
-            var buildDirectory = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.MesonBuild);
+			setServerHostnameAndPort(projectName);
+
+			var buildDirectory = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.MesonBuild);
             var mesonResult = _fileSystem.CallExecutable(Constants.ExecutableName.Meson, projectName, Constants.DirectoryName.MesonBuild);
             if (!mesonResult)
             {
@@ -52,6 +55,21 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
             outputMessages.Add(string.Format(OutputText.OpcuaappBuildSuccess, projectName), string.Empty);
             return new CommandResult(true, outputMessages);
         }
+
+		private void setServerHostnameAndPort(string projectName)
+		{
+			var oppoprojFilePath = _fileSystem.CombinePaths(projectName, projectName + Constants.FileExtension.OppoProject);
+
+			var oppoProjOpcuaapp = SlnUtility.DeserializeFile<OpcuaServerApp>(oppoprojFilePath, _fileSystem);
+
+			if(oppoProjOpcuaapp.Type == Constants.ApplicationType.Server || oppoProjOpcuaapp.Type == Constants.ApplicationType.ClientServer)
+			{
+				var serverConstantsFilePath = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp, Constants.FileName.SourceCode_constants_h);
+
+				var constantsFileContent = Constants.ServerConstants.ServerAppHostname + " = \"" + oppoProjOpcuaapp.Url + "\";\n" + Constants.ServerConstants.ServerAppPort + " = " + oppoProjOpcuaapp.Port + ";";
+				_fileSystem.WriteFile(serverConstantsFilePath, new List<string> { constantsFileContent });
+			}
+		}
 
         public string GetHelpText()
         {

@@ -21,7 +21,7 @@ namespace Oppo.ObjectModel
         public string Name { get; set; } = string.Empty;
 
         [JsonProperty("type")]
-        public string Type { get; } = Constants.ApplicationType.ClientServer;
+        public string Type { get; set;  } = Constants.ApplicationType.ClientServer;
                 
         [JsonIgnore]
         public List<IOpcuaServerApp> ServerReferences { get; set; } = new List<IOpcuaServerApp>();

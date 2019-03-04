@@ -14,6 +14,10 @@
 
 		public const string OppoOpcuaAppTemplateFileName_loadInformationModels_server_c = "Oppo.Resources.open62541.loadInformationModels-server.c";
 
+		public const string OppoOpcuaAppTemplateFileName_constants_server_h = "Oppo.Resources.open62541.constants-server.h";
+
+		public const string OppoOpcuaAppTemplateFileName_mainCallbacks_c = "Oppo.Resources.open62541.mainCallbacks-server.c";
+
 		public const string OppoOpcuaAppTemplateFileName_meson_ClientServerType_build = "Oppo.Resources.open62541.meson_ClientServerType.build";
 
 		public const string OppoOpcuaAppTemplateFileName_meson_ClientType_build = "Oppo.Resources.open62541.meson_ClientType.build";

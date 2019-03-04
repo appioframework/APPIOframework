@@ -107,6 +107,8 @@ namespace Oppo.ObjectModel
         {
             public const string SourceCode_main_c                   = "main.c";
             public const string SourceCode_loadInformationModels_c  = "loadInformationModels.c";
+			public const string SourceCode_constants_h				= "constants.h";
+			public const string SourceCode_mainCallbacks_c			= "mainCallbacks.c";
             public const string SourceCode_meson_build              = "meson.build";
             public const string SampleInformationModelFile          = "OpcUaDiModel.xml";
         }
@@ -245,6 +247,12 @@ namespace Oppo.ObjectModel
 			public const string Client = "Client";
 			public const string Server = "Server";
 			public const string ClientServer = "ClientServer";
+		}
+
+		public static class ServerConstants
+		{
+			public const string ServerAppHostname = "const char* SERVER_APP_HOSTNAME";
+			public const string ServerAppPort = "const UA_UInt16 SERVER_APP_PORT";
 		}
     }
 }

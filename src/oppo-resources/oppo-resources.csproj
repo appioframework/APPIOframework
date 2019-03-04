@@ -9,8 +9,10 @@
     <None Remove="information_models\OpcUaDiModel.xml" />
     <None Remove="information_models\UANodeSet.xsd" />
     <None Remove="installer\opcuaapp\oppo-opcuaapp.zip" />
+    <None Remove="open62541\constants-server.h" />
     <None Remove="open62541\loadInformationModels-server.c" />
     <None Remove="open62541\main-client.c" />
+    <None Remove="open62541\mainCallbacks-server.c" />
     <None Remove="open62541\meson-server.build" />
     <None Remove="open62541\meson_ClientServerType.build" />
     <None Remove="open62541\meson_ClientType.build" />
@@ -22,7 +24,9 @@
     <EmbeddedResource Include="information_models\OpcUaDiModel.xml" />
     <EmbeddedResource Include="information_models\UANodeSet.xsd" />
     <EmbeddedResource Include="installer\opcuaapp\oppo-opcuaapp.zip" />
+    <EmbeddedResource Include="open62541\mainCallbacks-server.c" />
     <EmbeddedResource Include="open62541\main-client.c" />
+    <EmbeddedResource Include="open62541\constants-server.h" />
     <EmbeddedResource Include="open62541\main-server.c" />
     <EmbeddedResource Include="open62541\meson_ClientType.build" />
     <EmbeddedResource Include="open62541\meson_ServerType.build" />

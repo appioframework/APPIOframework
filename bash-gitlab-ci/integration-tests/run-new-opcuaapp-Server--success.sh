@@ -54,6 +54,12 @@ do
   check_for_exisiting_file_named "./my-app/src/server/loadInformationModels.c" \
                                  "any oppo project source file for the server application does not exist ..."
 
+  check_for_exisiting_file_named "./my-app/src/server/constants.h" \
+                                 "any oppo project source file for the server application does not exist ..."
+
+  check_for_exisiting_file_named "./my-app/src/server/mainCallbacks.h" \
+                                 "any oppo project source file for the server application does not exist ..."
+
   cd ..
   rm -rf new-opcuaapp-Server--success
 

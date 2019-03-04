@@ -19,8 +19,8 @@ namespace Oppo.ObjectModel
         [JsonProperty("name")]
         public string Name { get; set; } = string.Empty;
 
-        [JsonProperty("type")]
-        public string Type { get; } = Constants.ApplicationType.Server;
+		[JsonProperty("type")]
+		public string Type { get; set;  } = Constants.ApplicationType.Server;
 
         [JsonProperty("url")]
         public string Url { get; set; } = string.Empty;
