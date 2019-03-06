@@ -5,6 +5,7 @@ using Oppo.Resources.text.logging;
 using System;
 using System.IO;
 using System.Xml;
+using System.Text;
 
 namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 {
@@ -508,22 +509,24 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 			// foreach found UA_Method generate callback function call in "addCallbacks" function and add to some buffer
 			// avoid duplications
 
-			List<string> currentFileContentLineByLine = new List<string>();
+			List<string> currentFileContentLineByLine = null;
 			using (var mainCallbacksFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_mainCallbacks_c)))
 			{
 				currentFileContentLineByLine = ReadFileContent(mainCallbacksFileStream).ToList<string>();
 
-				string uaMethodFunctionBodies = string.Empty;
-				string uaMethodFunctionCalls = string.Empty;
+				var uaMethodFunctionBodiesStringBuilder = new StringBuilder();
+				var uaMethodFunctionCallsStringBuilder = new StringBuilder();
 				foreach (var uaMethod in uaMethodCollection)
 				{
 					var lastUAMethodLinePosition = currentFileContentLineByLine.FindIndex(x => x.Contains(string.Format(Constants.UAMethodCallback.FunctionName, uaMethod.NamespaceId, uaMethod.NodeId)));
 					if (lastUAMethodLinePosition == -1)
 					{
-						uaMethodFunctionBodies += string.Format(Constants.UAMethodCallback.FunctionBody, uaMethod.BrowseName, uaMethod.NamespaceId, uaMethod.NodeId);
-						uaMethodFunctionCalls += string.Format(Constants.UAMethodCallback.FunctionCall, uaMethod.BrowseName, uaMethod.NamespaceId, uaMethod.NodeId);
+						uaMethodFunctionBodiesStringBuilder.Append(string.Format(Constants.UAMethodCallback.FunctionBody, uaMethod.BrowseName, uaMethod.NamespaceId, uaMethod.NodeId));
+						uaMethodFunctionCallsStringBuilder.Append(string.Format(Constants.UAMethodCallback.FunctionCall, uaMethod.BrowseName, uaMethod.NamespaceId, uaMethod.NodeId));
 					}
 				}
+				var uaMethodFunctionBodies = uaMethodFunctionBodiesStringBuilder.ToString();
+				var uaMethodFunctionCalls = uaMethodFunctionCallsStringBuilder.ToString();
 
 				// add first buffer to mainCallbacks.c
 				var addCallbacksFunctionLinePosition = currentFileContentLineByLine.FindIndex(x => x.Contains(Constants.UAMethodCallback.AddCallbacks));

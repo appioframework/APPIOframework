@@ -257,14 +257,14 @@ namespace Oppo.ObjectModel
 		
 		public static class UAMethodCallback
 		{
-			public static string UAMethod = "UAMethod";
-			public static string BrowseName = "BrowseName";
-			public static string NodeId = "NodeId";
-			public static string AddCallbacks = "addCallbacks";
-			public static string FunctionName = "ns{0}_i{1}_Callback";
-			public static string FunctionBody = "// callback function of {0} UAMethod\nUA_MethodCallback ns{1}_i{2}_Callback(UA_Server* server, const UA_NodeId* sessionId, void* sessionContext, const UA_NodeId* methodId, void* methodContext, const UA_NodeId* objectId, void* objectContext, size_t inputSize, const UA_Variant* input, size_t outputSize, UA_Variant* output)\n{{\n\t/* TODO: place your code here */\n\treturn UA_STATUSCODE_GOOD;\n}}\n\n";
-			public static string FunctionCall = "\t// {0} UAMethod\n\tif(UA_Server_setMethodNode_callback(server, UA_NODEID_NUMERIC({1}, {2}), ns{1}_i{2}_Callback) != UA_STATUSCODE_GOOD)\n\t{{\n\t\treturn UA_STATUSCODE_BADUNEXPECTEDERROR;\n\t}}\n\n";
-			public static string ReturnLine = "return UA_STATUSCODE_GOOD;";
+			public const string UAMethod = "UAMethod";
+			public const string BrowseName = "BrowseName";
+			public const string NodeId = "NodeId";
+			public const string AddCallbacks = "addCallbacks";
+			public const string FunctionName = "ns{0}_i{1}_Callback";
+			public const string FunctionBody = "// callback function of {0} UAMethod\nUA_MethodCallback ns{1}_i{2}_Callback(UA_Server* server, const UA_NodeId* sessionId, void* sessionContext, const UA_NodeId* methodId, void* methodContext, const UA_NodeId* objectId, void* objectContext, size_t inputSize, const UA_Variant* input, size_t outputSize, UA_Variant* output)\n{{\n\t/* TODO: place your code here */\n\treturn UA_STATUSCODE_GOOD;\n}}\n\n";
+			public const string FunctionCall = "\t// {0} UAMethod\n\tif(UA_Server_setMethodNode_callback(server, UA_NODEID_NUMERIC({1}, {2}), ns{1}_i{2}_Callback) != UA_STATUSCODE_GOOD)\n\t{{\n\t\treturn UA_STATUSCODE_BADUNEXPECTEDERROR;\n\t}}\n\n";
+			public const string ReturnLine = "return UA_STATUSCODE_GOOD;";
 		}
     }
 }
