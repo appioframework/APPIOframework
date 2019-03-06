@@ -509,32 +509,31 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 			List<string> currentFileContentLineByLine = null;
 			using (var mainCallbacksFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_mainCallbacks_c)))
 			{
-				currentFileContentLineByLine = ReadFileContent(mainCallbacksFileStream).ToList<string>();
-					
-				foreach (var uaMethod in uaMethodCollection)
+				currentFileContentLineByLine = ReadFileContent(mainCallbacksFileStream).ToList();
+			}
+			foreach (var uaMethod in uaMethodCollection)
+			{
+				var lastUAMethodLinePosition = currentFileContentLineByLine.FindIndex(x => x.Contains(string.Format(Constants.UAMethodCallback.FunctionName, uaMethod.NamespaceId, uaMethod.NodeId)));
+				if (lastUAMethodLinePosition == -1)
 				{
-					var lastUAMethodLinePosition = currentFileContentLineByLine.FindIndex(x => x.Contains(string.Format(Constants.UAMethodCallback.FunctionName, uaMethod.NamespaceId, uaMethod.NodeId)));
-					if (lastUAMethodLinePosition == -1)
+					// add callback function
+					var addCallbacksFunctionLinePosition = currentFileContentLineByLine.FindIndex(x => x.Contains(Constants.UAMethodCallback.AddCallbacks));
+					if (addCallbacksFunctionLinePosition != -1)
 					{
-						// add callback function
-						var addCallbacksFunctionLinePosition = currentFileContentLineByLine.FindIndex(x => x.Contains(Constants.UAMethodCallback.AddCallbacks));
-						if (addCallbacksFunctionLinePosition != -1)
-						{
-							currentFileContentLineByLine.Insert(addCallbacksFunctionLinePosition, string.Format(Constants.UAMethodCallback.FunctionBody, uaMethod.BrowseName, uaMethod.NamespaceId, uaMethod.NodeId));
-						}
+						currentFileContentLineByLine.Insert(addCallbacksFunctionLinePosition, string.Format(Constants.UAMethodCallback.FunctionBody, uaMethod.BrowseName, uaMethod.NamespaceId, uaMethod.NodeId));
+					}
 
-						// call callback function in addCallbacks function
-						var addCallbacksReturnLinePosition = currentFileContentLineByLine.FindLastIndex(x => x.Contains(Constants.UAMethodCallback.ReturnLine));
-						if (addCallbacksReturnLinePosition != -1)
-						{
-							currentFileContentLineByLine.Insert(addCallbacksReturnLinePosition, string.Format(Constants.UAMethodCallback.FunctionCall, uaMethod.BrowseName, uaMethod.NamespaceId, uaMethod.NodeId));
-						}
+					// call callback function in addCallbacks function
+					var addCallbacksReturnLinePosition = currentFileContentLineByLine.FindLastIndex(x => x.Contains(Constants.UAMethodCallback.ReturnLine));
+					if (addCallbacksReturnLinePosition != -1)
+					{
+						currentFileContentLineByLine.Insert(addCallbacksReturnLinePosition, string.Format(Constants.UAMethodCallback.FunctionCall, uaMethod.BrowseName, uaMethod.NamespaceId, uaMethod.NodeId));
 					}
 				}
-
-				// write file
-				_fileSystem.WriteFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_mainCallbacks_c), currentFileContentLineByLine);
 			}
+
+			// write file
+			_fileSystem.WriteFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_mainCallbacks_c), currentFileContentLineByLine);
 		}
 
 		public string GetHelpText()
