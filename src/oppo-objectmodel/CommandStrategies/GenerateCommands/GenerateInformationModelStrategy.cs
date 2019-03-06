@@ -4,6 +4,7 @@ using Oppo.Resources.text.output;
 using Oppo.Resources.text.logging;
 using System;
 using System.IO;
+using System.Xml;
 
 namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 {
@@ -138,8 +139,11 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 return new CommandResult(false, outputMessages);
             }
 
-            // adjust server meson.build file with new libraries
-            AdjustServerMesonBuildTemplate(srcDirectory, modelName);
+			// generate UA_Method callbacks
+			CreateUAMethodCallbacks(srcDirectory, opcuaAppName, modelFullName);
+
+			// adjust server meson.build file with new libraries
+			AdjustServerMesonBuildTemplate(srcDirectory, modelName);
             if (requiredFiles.typesRequired)
             {
                 AdjustServerMesonBuildTemplate(srcDirectory, modelName.ToLower() + Constants.InformationModelsName.TypesGenerated);
@@ -469,7 +473,80 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             }            
         }
 
-        public string GetHelpText()
+		private struct UAMethod
+		{
+			public string BrowseName;
+			public int NamespaceId;
+			public int NodeId;
+		}
+
+		private void CreateUAMethodCallbacks(string srcDirectory, string opcuaAppName, string modelFullName)
+		{
+			// find all UA_Methods in generated nodeset
+			List<UAMethod> uaMethodCollection = new List<UAMethod>();
+			var nodesetFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.Models, modelFullName));
+			using (XmlReader reader = XmlReader.Create(nodesetFileStream))
+			{
+				reader.MoveToContent();
+				while (reader.Read())
+				{
+					if (reader.Name == Constants.UAMethodCallback.UAMethod && reader.IsStartElement() && reader.AttributeCount > 0)
+					{
+						var uaMethod = new UAMethod();
+
+						uaMethod.BrowseName = reader.GetAttribute(Constants.UAMethodCallback.BrowseName);
+						var idValues = reader.GetAttribute(Constants.UAMethodCallback.NodeId).Split(';');
+						uaMethod.NamespaceId = int.Parse(string.Concat(idValues[0].Where(char.IsDigit)));
+						uaMethod.NodeId = int.Parse(string.Concat(idValues[1].Where(char.IsDigit)));
+
+						uaMethodCollection.Add(uaMethod);
+					}
+				}
+			}
+
+			// foreach found UA_Method generate callback function and add to some buffer
+			// foreach found UA_Method generate callback function call in "addCallbacks" function and add to some buffer
+			// avoid duplications
+
+			List<string> currentFileContentLineByLine = new List<string>();
+			using (var mainCallbacksFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_mainCallbacks_c)))
+			{
+				currentFileContentLineByLine = ReadFileContent(mainCallbacksFileStream).ToList<string>();
+
+				string uaMethodFunctionBodies = string.Empty;
+				string uaMethodFunctionCalls = string.Empty;
+				foreach (var uaMethod in uaMethodCollection)
+				{
+					var lastUAMethodLinePosition = currentFileContentLineByLine.FindIndex(x => x.Contains(string.Format(Constants.UAMethodCallback.FunctionName, uaMethod.NamespaceId, uaMethod.NodeId)));
+					if (lastUAMethodLinePosition == -1)
+					{
+						uaMethodFunctionBodies += string.Format(Constants.UAMethodCallback.FunctionBody, uaMethod.BrowseName, uaMethod.NamespaceId, uaMethod.NodeId);
+						uaMethodFunctionCalls += string.Format(Constants.UAMethodCallback.FunctionCall, uaMethod.BrowseName, uaMethod.NamespaceId, uaMethod.NodeId);
+					}
+				}
+
+				// add first buffer to mainCallbacks.c
+				var addCallbacksFunctionLinePosition = currentFileContentLineByLine.FindIndex(x => x.Contains(Constants.UAMethodCallback.AddCallbacks));
+				if (addCallbacksFunctionLinePosition != -1)
+				{
+					uaMethodFunctionBodies = uaMethodFunctionBodies.Remove(uaMethodFunctionBodies.Length - 1, 1);
+					currentFileContentLineByLine.Insert(addCallbacksFunctionLinePosition, uaMethodFunctionBodies);
+				}
+
+				// add second buffer to mainCallbacks.c
+				var addCallbacksReturnLinePosition = currentFileContentLineByLine.FindLastIndex(x => x.Contains(Constants.UAMethodCallback.ReturnLine));
+				if (addCallbacksReturnLinePosition != -1)
+				{
+					uaMethodFunctionCalls = uaMethodFunctionCalls.Remove(uaMethodFunctionCalls.Length - 1, 1);
+					currentFileContentLineByLine.Insert(addCallbacksReturnLinePosition, uaMethodFunctionCalls);
+				}
+			}
+
+			// write file
+			_fileSystem.WriteFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_mainCallbacks_c), currentFileContentLineByLine);
+		}
+
+		public string GetHelpText()
         {
             return Resources.text.help.HelpTextValues.GenerateInformationModelCommandDescription;
         }
