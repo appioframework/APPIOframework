@@ -300,7 +300,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				_mockFileSystem.Verify(x => x.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp), Times.Once);
 				_mockFileSystem.Verify(x => x.CreateDirectory(System.IO.Path.Combine(_srcDir, DirectoryName.InformationModels)), Times.Once);
 				_mockFileSystem.Verify(x => x.WriteFile(loadInformationModelsFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
-				_mockFileSystem.Verify(x => x.WriteFile(mainCallbacksFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
 			}
         }
 
@@ -377,7 +376,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				_mockFileSystem.Verify(x => x.CombinePaths(inputParams.ElementAtOrDefault(1), Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp), Times.Once);
 				_mockFileSystem.Verify(x => x.CreateDirectory(Path.Combine(_srcDir, DirectoryName.InformationModels)), Times.Never);
 				_mockFileSystem.Verify(x => x.WriteFile(loadInformationModelsFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
-				_mockFileSystem.Verify(x => x.WriteFile(mainCallbacksFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
 			}
         }
 
@@ -658,7 +656,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				_mockFileSystem.Verify(x => x.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp), Times.Once);
 				_mockFileSystem.Verify(x => x.CreateDirectory(Path.Combine(_srcDir, DirectoryName.InformationModels)), Times.Once);
 				_mockFileSystem.Verify(x => x.WriteFile(loadInformationModelsFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
-				_mockFileSystem.Verify(x => x.WriteFile(mainCallbacksFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
 			}
         }
 
@@ -1262,7 +1259,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				_mockFileSystem.Verify(x => x.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp), Times.Once);
 				_mockFileSystem.Verify(x => x.CreateDirectory(Path.Combine(_srcDir, DirectoryName.InformationModels)), Times.Once);
 				_mockFileSystem.Verify(x => x.WriteFile(loadInformationModelsFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
-				_mockFileSystem.Verify(x => x.WriteFile(mainCallbacksFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
 			}
         }
 
@@ -1383,7 +1379,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				_mockFileSystem.Verify(x => x.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp), Times.Once);
 				_mockFileSystem.Verify(x => x.CreateDirectory(Path.Combine(_srcDir, DirectoryName.InformationModels)), Times.Once);
 				_mockFileSystem.Verify(x => x.WriteFile(loadInformationModelsFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
-				_mockFileSystem.Verify(x => x.WriteFile(mainCallbacksFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
 			}
         }
 

@@ -532,8 +532,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 				}
 			}
 
-			// write file
-			_fileSystem.WriteFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_mainCallbacks_c), currentFileContentLineByLine);
+			// write mainCallbacks.c file skipped for not due to problems with UAMethod namespace. Write command should be placed here.
 		}
 
 		public string GetHelpText()
