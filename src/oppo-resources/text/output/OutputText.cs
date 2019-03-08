@@ -9,7 +9,8 @@ namespace Oppo.Resources.text.output
 
         // publish <command>
         public const string OpcuaappPublishFailure = "Publish failure!";
-        public const string OpcuaappPublishSuccess = "Publish '{0}' success!";
+		public const string OpcuaappPublishFailureMissingExecutables = "Publish '{0}' failure! Missing client and server executable files";
+		public const string OpcuaappPublishSuccess = "Publish '{0}' success!";
 
         // build <command>
         public const string OpcuaappBuildFailure = "Build failure!";
