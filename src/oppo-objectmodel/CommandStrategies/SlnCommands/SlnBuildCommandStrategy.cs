@@ -28,8 +28,8 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 			// validate solution name
 			if (!SlnUtility.ValidateSolution(ref validationMessages, solutionNameFlag, solutionName, _fileSystem))
 			{
-				OppoLogger.Warn(validationMessages.getLoggerMessage);
-				outputMessages.Add(validationMessages.getOutputMessage, string.Empty);
+				OppoLogger.Warn(validationMessages.LoggerMessage);
+				outputMessages.Add(validationMessages.OutputMessage, string.Empty);
 				return new CommandResult(false, outputMessages);
 			}
 
