@@ -121,4 +121,4 @@ echo "Testing sln-build--failure"
 echo "Testing sln-build--failure--extended"
 /bin/bash bash-gitlab-ci/integration-tests/run-sln-build--failure--extended.sh
 echo "Testing sln-build--success"
-/bin/bash bash-gitlab-ci/integration-tests/run-sln-build-success.sh
+/bin/bash bash-gitlab-ci/integration-tests/run-sln-build--success.sh
