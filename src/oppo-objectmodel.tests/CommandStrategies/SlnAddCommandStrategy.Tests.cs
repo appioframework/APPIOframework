@@ -144,7 +144,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.SlnOpposlnFileNotFound), Times.Once);
             Assert.AreEqual(string.Format(OutputText.SlnOpposlnNotFound, oppoSlnPath), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
-            _fileSystemMock.Verify(x => x.CombinePaths(solutionName + Constants.FileExtension.OppoSln), Times.Once);
             _fileSystemMock.Verify(x => x.FileExists(oppoSlnPath), Times.Once);
         }
 

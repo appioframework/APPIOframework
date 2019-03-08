@@ -23,26 +23,18 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
             var solutionName        = inputParamsArray.ElementAtOrDefault(1);
 
             var outputMessages = new MessageLines();
+			var validationMessages = new SlnUtility.ResultMessages();
 			
-
-            // check if solutionNameFlag is valid
-            if(solutionNameFlag != Constants.SlnAddCommandArguments.Solution && solutionNameFlag != Constants.SlnAddCommandArguments.VerboseSolution)
+			// validate solution name
+			if (!SlnUtility.ValidateSolution(ref validationMessages, solutionNameFlag, solutionName, _fileSystem))
 			{
-				OppoLogger.Warn(LoggingText.SlnUnknownCommandParam);
-				outputMessages.Add(string.Format(OutputText.SlnUnknownParameter, solutionNameFlag), string.Empty);
-				return new CommandResult(false, outputMessages);
-			}
-
-			// check if *.opposln file exists
-			var solutionFullName = _fileSystem.CombinePaths(solutionName + Constants.FileExtension.OppoSln);
-			if (string.IsNullOrEmpty(solutionName) || !_fileSystem.FileExists(solutionFullName))
-			{
-				OppoLogger.Warn(LoggingText.SlnOpposlnFileNotFound);
-				outputMessages.Add(string.Format(OutputText.SlnOpposlnNotFound, solutionFullName), string.Empty);
+				OppoLogger.Warn(validationMessages.loggerMessage);
+				outputMessages.Add(validationMessages.outputMessage, string.Empty);
 				return new CommandResult(false, outputMessages);
 			}
 
 			// deserialize *.opposln file
+			var solutionFullName = solutionName + Constants.FileExtension.OppoSln;
 			Solution oppoSolution = SlnUtility.DeserializeFile<Solution>(solutionFullName, _fileSystem);
 			if (oppoSolution == null)
 			{

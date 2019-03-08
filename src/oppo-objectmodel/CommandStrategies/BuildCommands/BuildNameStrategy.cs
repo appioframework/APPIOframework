@@ -24,18 +24,12 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
             var projectName = inputParamsArray.ElementAtOrDefault(0);
             var outputMessages = new MessageLines();
 
-            if (string.IsNullOrEmpty(projectName))
+            if (string.IsNullOrEmpty(projectName) || !_fileSystem.DirectoryExists(projectName))
             {
                 OppoLogger.Warn(LoggingText.BuildProjectDoesNotExist);
                 outputMessages.Add(string.Format(OutputText.OpcuaappBuildFailureProjectDoesNotExist, projectName), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
-			else if (!_fileSystem.DirectoryExists(projectName))
-			{
-				OppoLogger.Warn(LoggingText.BuildProjectDoesNotExist);
-				outputMessages.Add(string.Format(OutputText.OpcuaappBuildFailureProjectDoesNotExist, projectName), string.Empty);
-				return new CommandResult(false, outputMessages);
-			}
 
 			setServerHostnameAndPort(projectName);
 
