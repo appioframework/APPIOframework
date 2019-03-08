@@ -10,8 +10,13 @@ namespace Oppo.ObjectModel
 	{
 		public struct ResultMessages
 		{
-			public string loggerMessage;
-			public string outputMessage;
+			private string loggerMessage;
+			public string setLoggerMessage { set { getLoggerMessage = value; } }
+			public string getLoggerMessage { get; private set; }
+		
+			private string outputMessage;
+			public string setOutputMessage { set { getOutputMessage = value; } }
+			public string getOutputMessage { get; private set; }
 		};
 
 		static public TDependance DeserializeFile<TDependance>(string jsonFileFullName, IFileSystem fileSystem) where TDependance : class
@@ -45,8 +50,8 @@ namespace Oppo.ObjectModel
 			// check if solutionNameFlag is valid
 			if (solutionNameFlag != Constants.SlnAddCommandArguments.Solution && solutionNameFlag != Constants.SlnAddCommandArguments.VerboseSolution)
 			{
-				messages.loggerMessage = LoggingText.SlnUnknownCommandParam;
-				messages.outputMessage = string.Format(OutputText.SlnUnknownParameter, solutionNameFlag);
+				messages.setLoggerMessage = LoggingText.SlnUnknownCommandParam;
+				messages.setOutputMessage = string.Format(OutputText.SlnUnknownParameter, solutionNameFlag);
 				return false;
 			}
 
@@ -54,8 +59,8 @@ namespace Oppo.ObjectModel
 			var solutionFullName = solutionName + Constants.FileExtension.OppoSln;
 			if (string.IsNullOrEmpty(solutionName) || !fileSystem.FileExists(solutionFullName))
 			{
-				messages.loggerMessage = LoggingText.SlnOpposlnFileNotFound;
-				messages.outputMessage = string.Format(OutputText.SlnOpposlnNotFound, solutionFullName);
+				messages.setLoggerMessage = LoggingText.SlnOpposlnFileNotFound;
+				messages.setOutputMessage = string.Format(OutputText.SlnOpposlnNotFound, solutionFullName);
 				return false;
 			}
 
