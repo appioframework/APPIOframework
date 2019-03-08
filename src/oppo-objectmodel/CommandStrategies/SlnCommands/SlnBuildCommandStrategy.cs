@@ -50,6 +50,7 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 				outputMessages.Add(string.Format(OutputText.SlnCouldntDeserliazeSln, solutionName), string.Empty);
 				return new CommandResult(false, outputMessages);
 			}
+			// build projects that are part of solution
 			else
 			{
 				var buildCommandStrategy = new BuildCommands.BuildNameStrategy(Constants.CommandName.Build, _fileSystem);

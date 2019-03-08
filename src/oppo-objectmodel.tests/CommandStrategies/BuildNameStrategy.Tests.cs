@@ -84,7 +84,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         [Test]
         public void ShouldExecuteStrategy_Fail_MissingParameter([ValueSource(nameof(InvalidInputs))] string[] inputParams)
         {
-            // Arrange
+			// Arrange
+			var projectName = inputParams.ElementAtOrDefault(0);
+
             var fileSystemMock = new Mock<IFileSystem>();
             var loggerListenerMock = new Mock<ILoggerListener>();
             loggerListenerMock.Setup(y => y.Warn(It.IsAny<string>()));
@@ -96,7 +98,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             // Assert
             Assert.IsFalse(strategyResult.Sucsess);
-            Assert.AreEqual(OutputText.OpcuaappBuildFailure, strategyResult.OutputMessages.First().Key);
+            Assert.AreEqual(string.Format(OutputText.OpcuaappBuildFailureProjectDoesNotExist, projectName), strategyResult.OutputMessages.First().Key);
             loggerListenerMock.Verify(y => y.Warn(It.IsAny<string>()),Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
