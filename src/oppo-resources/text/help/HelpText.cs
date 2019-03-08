@@ -72,6 +72,7 @@
 		public const string SlnFirstLine = "The command is used to manage projects in solution file. There are two possible arguments which allows to add and remove projects from solution.";
 		public const string SlnCallDescription = "oppo sln <Arguments> <Options>";
 		public const string SlnArgumentAdd = "add";
+		public const string SlnArgumentBuild = "build";
 		public const string SlnArgumentRemove = "remove";
 
        

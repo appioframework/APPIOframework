@@ -458,6 +458,7 @@ namespace Oppo.ObjectModel
 				{ string.Empty, string.Empty },
 				{ string.Empty, Resources.text.help.HelpTextValues.GeneralArguments },
 				{ string.Empty, Resources.text.help.HelpTextValues.SlnArgumentAdd },
+				{ string.Empty, Resources.text.help.HelpTextValues.SlnArgumentBuild },
 				{ string.Empty, Resources.text.help.HelpTextValues.SlnArgumentRemove },
 				{ string.Empty, string.Empty },
 				{ string.Empty, Resources.text.help.HelpTextValues.GeneralOptions },
@@ -480,6 +481,7 @@ namespace Oppo.ObjectModel
 			var slnStrategies = new ICommand<SlnStrategy>[]
 			{
 				new SlnAddCommandStrategy(fileSystem),
+				new SlnBuildCommandStrategy(fileSystem),
 				new SlnRemoveCommandStrategy(fileSystem),
 				slnHelpStrategy,
 				slnHelpVerboseStrategy,
@@ -490,7 +492,6 @@ namespace Oppo.ObjectModel
 			slnHelpVerboseStrategy.CommandFactory = slnStrategyCommandFactory;
 
 			return new SlnStrategy(slnStrategyCommandFactory);
-
 		}
 
         public string PrepareCommandFailureOutputText(string[] args)
