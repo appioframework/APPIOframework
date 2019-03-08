@@ -26,11 +26,16 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 
             if (string.IsNullOrEmpty(projectName))
             {
-                OppoLogger.Warn(LoggingText.InvalidOpcuaappName);
-                outputMessages.Add(OutputText.OpcuaappBuildFailure, string.Empty);
-
+                OppoLogger.Warn(LoggingText.BuildProjectDoesNotExist);
+                outputMessages.Add(string.Format(OutputText.OpcuaappBuildFailure, projectName), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
+			else if (!_fileSystem.DirectoryExists(projectName))
+			{
+				OppoLogger.Warn(LoggingText.BuildProjectDoesNotExist);
+				outputMessages.Add(string.Format(OutputText.OpcuaappBuildFailureProjectDoesNotExist, projectName), string.Empty);
+				return new CommandResult(false, outputMessages);
+			}
 
 			setServerHostnameAndPort(projectName);
 

@@ -20,6 +20,7 @@
         public const string NodesetCompilerExecutableFails = "Nodeset compiler Failed!";
         public const string GeneratedTypesExecutableFails = "Generate datatypes for NodeSet information-model Failed!";
         public const string BuildSuccess = "Build Success!";
+		public const string BuildProjectDoesNotExist = "Build failed! Project does not exist!";
         public const string CleanSuccess = "Clean Success!";
         public const string CleanFailure = "Clean Failure!";
         public const string OpcuaappPublishedSuccess = "Publish Success!";
@@ -62,6 +63,8 @@
 		public const string SlnRemoveSuccess			= "Opcuaapp project was successfully removed from sln.";
 		public const string SlnRemoveOppoprojNameEmpty	= "Empty project name!";
 		public const string SlnRemoveOpcuaappIsNotInSln = "Opcuaapp is not a part of the soluton!";
+		//sln build command
+		public const string SlnBuildSuccess = "Projects that are part of solution were successfully built.";
 
 
 		public const string DirectoryIOException = "Directory IOException detected!";

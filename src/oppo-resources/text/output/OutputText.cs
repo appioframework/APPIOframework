@@ -13,7 +13,8 @@ namespace Oppo.Resources.text.output
 
         // build <command>
         public const string OpcuaappBuildFailure = "Build failure!";
-        public const string OpcuaappBuildSuccess = "Build '{0}' success!";
+		public const string OpcuaappBuildFailureProjectDoesNotExist = "Build failed! Project '{0}' does not exist!";
+		public const string OpcuaappBuildSuccess = "Build '{0}' success!";
 
         // new <command>
         public const string NewOpcuaappCommandSuccess = "An opcuaapp with name '{0}' was successfully created!";
@@ -75,5 +76,7 @@ namespace Oppo.Resources.text.output
 		public const string SlnRemoveSuccess				= "The opcuaapp with the name '{0}' was successfully removed from the solution '{1}'.";
 		public const string SlnRemoveOpcuaappNameEmpty		= "The opcuaapp project name empty!";
 		public const string SlnRemoveOpcuaappIsNotInSln		= "The opcuaapp project '{0}' is not a part of the solution '{1}'!";
+		// sln build <command>
+		public const string SlnBuildSuccess = "Projects that are part of solution '{0}' were successfully built.";
 	}
 }

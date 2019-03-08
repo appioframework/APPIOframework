@@ -58,6 +58,7 @@ namespace Oppo.ObjectModel
             public const string VerboseHelp = "--help";
             public const string Add = "add";
             public const string Remove = "remove";
+			public const string Build = "build";
         }
 
         public static class DirectoryName

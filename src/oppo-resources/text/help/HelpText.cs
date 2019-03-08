@@ -92,6 +92,7 @@
         public const string SlnHelpArgumentCommandDescription = "Sln help";
         public const string SlnAddNameArgumentCommandDescription = "Add project to solution";
 		public const string SlnRemoveNameArgumentCommandDescription = "Remove project from solution";
+		public const string SlnBuildNameArgumentCommandDescription = "Build all solution's projects";
 
 	}
 }
