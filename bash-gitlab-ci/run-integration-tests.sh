@@ -128,3 +128,9 @@ echo "Testing sln-publish--failure--extended"
 /bin/bash bash-gitlab-ci/integration-tests/run-sln-publish--failure--extended.sh
 echo "Testing sln-publish--success"
 /bin/bash bash-gitlab-ci/integration-tests/run-sln-publish--success.sh
+echo "Testing sln-deploy-failure"
+/bin/bash bash-gitlab-ci/integration-tests/run-sln-deploy--failure.sh
+echo "Testing sln-deploy--failure--extended"
+/bin/bash bash-gitlab-ci/integration-tests/run-sln-deploy--failure--extended.sh
+echo "Testing sln-deploy--success"
+/bin/bash bash-gitlab-ci/integration-tests/run-sln-deploy--success.sh
