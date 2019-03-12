@@ -16,6 +16,7 @@ namespace Oppo.ObjectModel
             public const string InformationModel = ".xml";
             public const string ModelTypes = ".bsd";
             public const string CFile = ".c";
+			public const string ZipFile = ".zip";
         }
 
         public static class CommandName
