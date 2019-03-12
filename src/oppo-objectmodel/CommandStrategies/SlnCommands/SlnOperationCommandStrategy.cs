@@ -9,7 +9,7 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 	{
 		public string Name { get; }
 		private readonly IFileSystem _fileSystem;
-		private ICommand _subcommand;
+		private readonly ICommand _subcommand;
 		public string SuccessLoggerMessage { get; }
 		public string SuccessOutputMessage { get; }
 		public string HelpText { get; }
