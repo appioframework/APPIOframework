@@ -174,6 +174,40 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         }
 
 		[Test]
+		public void FailOnBuildingNotExisitingProject([ValueSource(nameof(ValidInputs))] string[] inputParams)
+		{
+			// Arrange
+			var solutionName = inputParams.ElementAtOrDefault(1);
+
+			var loggerListenerMock = new Mock<ILoggerListener>();
+			OppoLogger.RegisterListener(loggerListenerMock.Object);
+
+			// Arrange opposln file
+			var oppoSlnPath = Path.Combine(solutionName + Constants.FileExtension.OppoSln);
+			_fileSystemMock.Setup(x => x.CombinePaths(solutionName + Constants.FileExtension.OppoSln)).Returns(oppoSlnPath);
+			_fileSystemMock.Setup(x => x.FileExists(oppoSlnPath)).Returns(true);
+
+			var solutionFullName = Path.Combine(solutionName + Constants.FileExtension.OppoSln);
+			using (Stream slnMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpposlnContentWithOneProject)))
+			using (var oppoprojMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpcuaClientAppContent)))
+			{
+				_fileSystemMock.Setup(x => x.ReadFile(solutionFullName)).Returns(slnMemoryStream);
+
+				// Act
+				var commandResult = _objectUnderTest.Execute(inputParams);
+
+				// Assert
+				Assert.IsFalse(commandResult.Sucsess);
+				Assert.IsNotNull(commandResult.OutputMessages);
+				var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
+				OppoLogger.RemoveListener(loggerListenerMock.Object);
+				loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.BuildProjectDoesNotExist), Times.Once);
+				Assert.AreEqual(string.Format(OutputText.OpcuaappBuildFailureProjectDoesNotExist, _sampleOpcuaClientAppName), firstMessageLine.Key);
+				Assert.AreEqual(string.Empty, firstMessageLine.Value);
+			}
+		}
+
+		[Test]
 		public void PassThroughEmptySolution([ValueSource(nameof(ValidInputs))] string[] inputParams)
 		{
 			// Arrange

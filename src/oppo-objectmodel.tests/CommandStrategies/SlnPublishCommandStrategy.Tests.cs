@@ -40,11 +40,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 																			"{\"name\":\"" + _sampleOpcuaServerAppName + "\",\"path\":\"" + _sampleOpcuaServerAppName + "/" + _sampleOpcuaServerAppName + ".oppoproj\"}]}";
 
 		private const string _sampleOpcuaClientAppName = "clientApp";
-		private readonly string _sampleOpcuaClientAppContent = "{\"name\":\"" + _sampleOpcuaClientAppName + "\",\"type\":\"Client\"}";
-
 		private const string _sampleOpcuaServerAppName = "serverApp";
-		private readonly string _sampleOpcuaServerAppContent = "{\"name\":\"" + _sampleOpcuaServerAppName + "\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"4000\"}";
-
+		
 		[SetUp]
         public void SetUp_ObjectUnderTest()
         {
@@ -171,7 +168,40 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				Assert.AreEqual(string.Empty, firstMessageLine.Value);
 				_fileSystemMock.Verify(x => x.ReadFile(solutionFullName), Times.Once);
 			}
-        }
+		}
+
+		[Test]
+		public void FailOnPublishingNotExisitingProject([ValueSource(nameof(ValidInputs))] string[] inputParams)
+		{
+			// Arrange
+			var solutionName = inputParams.ElementAtOrDefault(1);
+
+			var loggerListenerMock = new Mock<ILoggerListener>();
+			OppoLogger.RegisterListener(loggerListenerMock.Object);
+
+			// Arrange opposln file
+			var oppoSlnPath = Path.Combine(solutionName + Constants.FileExtension.OppoSln);
+			_fileSystemMock.Setup(x => x.CombinePaths(solutionName + Constants.FileExtension.OppoSln)).Returns(oppoSlnPath);
+			_fileSystemMock.Setup(x => x.FileExists(oppoSlnPath)).Returns(true);
+
+			var solutionFullName = Path.Combine(solutionName + Constants.FileExtension.OppoSln);
+			using (Stream slnMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpposlnContentWithOneProject)))
+			{
+				_fileSystemMock.Setup(x => x.ReadFile(solutionFullName)).Returns(slnMemoryStream);
+
+				// Act
+				var commandResult = _objectUnderTest.Execute(inputParams);
+
+				// Assert
+				Assert.IsFalse(commandResult.Sucsess);
+				Assert.IsNotNull(commandResult.OutputMessages);
+				var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
+				OppoLogger.RemoveListener(loggerListenerMock.Object);
+				loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.MissingBuiltOpcuaAppFiles), Times.Once);
+				Assert.AreEqual(string.Format(OutputText.OpcuaappPublishFailureMissingExecutables, _sampleOpcuaClientAppName), firstMessageLine.Key);
+				Assert.AreEqual(string.Empty, firstMessageLine.Value);
+			}
+		}
 
 		[Test]
 		public void PassThroughEmptySolution([ValueSource(nameof(ValidInputs))] string[] inputParams)

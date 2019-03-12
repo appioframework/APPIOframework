@@ -25,35 +25,23 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
             var outputMessages = new MessageLines();
 			var validationMessages = new SlnUtility.ResultMessages();
 			
-			// validate solution name
-			if (!SlnUtility.ValidateSolution(ref validationMessages, solutionNameFlag, solutionName, _fileSystem))
+			// validate solution name and deserialize *.opposln file
+			Solution oppoSolution = null;
+			if(!SlnUtility.DeserializeSolution(ref validationMessages, ref oppoSolution, solutionNameFlag, solutionName, _fileSystem))
 			{
 				OppoLogger.Warn(validationMessages.LoggerMessage);
 				outputMessages.Add(validationMessages.OutputMessage, string.Empty);
 				return new CommandResult(false, outputMessages);
 			}
 
-			// deserialize *.opposln file
-			var solutionFullName = solutionName + Constants.FileExtension.OppoSln;
-			Solution oppoSolution = SlnUtility.DeserializeFile<Solution>(solutionFullName, _fileSystem);
-			if (oppoSolution == null)
-			{
-				OppoLogger.Warn(LoggingText.SlnCouldntDeserliazeSln);
-				outputMessages.Add(string.Format(OutputText.SlnCouldntDeserliazeSln, solutionName), string.Empty);
-				return new CommandResult(false, outputMessages);
-			}
-
 			// publish projects that are part of solution
-			else
+			var publishCommandStrategy = new PublishCommands.PublishNameStrategy(Constants.CommandName.Publish, _fileSystem);
+			foreach (var project in oppoSolution.Projects)
 			{
-				var publishCommandStrategy = new PublishCommands.PublishNameStrategy(Constants.CommandName.Publish, _fileSystem);
-				foreach (var project in oppoSolution.Projects)
+				var commandResult = publishCommandStrategy.Execute(new string[] { project.Name });
+				if(!commandResult.Sucsess)
 				{
-					var commandResult = publishCommandStrategy.Execute(new string[] { project.Name });
-					if(!commandResult.Sucsess)
-					{
-						return commandResult;
-					}
+					return commandResult;
 				}
 			}
 
