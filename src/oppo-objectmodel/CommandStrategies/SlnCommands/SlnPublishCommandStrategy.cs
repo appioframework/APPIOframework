@@ -23,14 +23,14 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
             var solutionName        = inputParamsArray.ElementAtOrDefault(1);
 
             var outputMessages = new MessageLines();
-			var validationMessages = new SlnUtility.ResultMessages();
+			var deserializationMessages = new SlnUtility.ResultMessages();
 			
 			// validate solution name and deserialize *.opposln file
 			Solution oppoSolution = null;
-			if(!SlnUtility.DeserializeSolution(ref validationMessages, ref oppoSolution, solutionNameFlag, solutionName, _fileSystem))
+			if(!SlnUtility.DeserializeSolution(ref deserializationMessages, ref oppoSolution, solutionNameFlag, solutionName, _fileSystem))
 			{
-				OppoLogger.Warn(validationMessages.LoggerMessage);
-				outputMessages.Add(validationMessages.OutputMessage, string.Empty);
+				OppoLogger.Warn(deserializationMessages.LoggerMessage);
+				outputMessages.Add(deserializationMessages.OutputMessage, string.Empty);
 				return new CommandResult(false, outputMessages);
 			}
 
