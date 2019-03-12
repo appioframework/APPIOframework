@@ -8,7 +8,7 @@ using System.IO;
 
 namespace Oppo.ObjectModel.Tests.CommandStrategies
 {
-    public class SlnDeployNameStrategyTestsShould
+    public class SlnBuildNameStrategyTestsShould
     {
         protected static string[][] ValidInputs()
         {
@@ -31,7 +31,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         }
 
         private Mock<IFileSystem> _fileSystemMock;
-        private SlnDeployCommandStrategy _objectUnderTest;
+		private Mock<ICommand> _commandMock;
+		private SlnOperationData _operationData;
+        private SlnOperationCommandStrategy _objectUnderTest;
 
         private readonly string _defaultOpposlnContent = "{\"projects\": []}";
 		private readonly string _sampleOpposlnContentWithOneProject = "{\"projects\": [{\"name\":\"" + _sampleOpcuaClientAppName + "\",\"path\":\"" + _sampleOpcuaClientAppName + "/" + _sampleOpcuaClientAppName + ".oppoproj\"}]}";
@@ -40,14 +42,27 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 																			"{\"name\":\"" + _sampleOpcuaServerAppName + "\",\"path\":\"" + _sampleOpcuaServerAppName + "/" + _sampleOpcuaServerAppName + ".oppoproj\"}]}";
 
 		private const string _sampleOpcuaClientAppName = "clientApp";
+		private readonly string _sampleOpcuaClientAppContent = "{\"name\":\"" + _sampleOpcuaClientAppName + "\",\"type\":\"Client\"}";
+
 		private const string _sampleOpcuaServerAppName = "serverApp";
-		
+		private readonly string _sampleOpcuaServerAppContent = "{\"name\":\"" + _sampleOpcuaServerAppName + "\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"4000\"}";
+
 		[SetUp]
         public void SetUp_ObjectUnderTest()
         {
             _fileSystemMock = new Mock<IFileSystem>();
-            _objectUnderTest = new SlnDeployCommandStrategy(_fileSystemMock.Object);
-        }
+			_commandMock = new Mock<ICommand>();
+
+			_operationData.CommandName			= "anyName";
+			_operationData.FileSystem			= _fileSystemMock.Object;
+			_operationData.Subcommand			= _commandMock.Object;
+			_operationData.SuccessLoggerMessage = "anyText";
+			_operationData.SuccessOutputMessage = "anyText";
+			_operationData.HelpText				= "anyText";
+
+			_objectUnderTest = new SlnOperationCommandStrategy(_operationData);
+
+		}
 
         [Test]
         public void ImplementICommandOfSlnAddStrategy()
@@ -69,7 +84,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var name = _objectUnderTest.Name;
 
             // Assert
-            Assert.AreEqual(Constants.SlnCommandName.Deploy, name);
+            Assert.AreEqual(_operationData.CommandName, name);
         }
 
         [Test]
@@ -81,7 +96,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var helpText = _objectUnderTest.GetHelpText();
 
             // Assert
-            Assert.AreEqual(Resources.text.help.HelpTextValues.SlnDeployNameArgumentCommandDescription, helpText);
+            Assert.AreEqual(_operationData.HelpText, helpText);
         }
 
         [Test]
@@ -101,7 +116,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             OppoLogger.RemoveListener(loggerListenerMock.Object);
-            loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.SlnUnknownCommandParam), Times.Once);
             Assert.AreEqual(string.Format(OutputText.SlnUnknownParameter, solutionNameFlag), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
         }
@@ -130,7 +144,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             OppoLogger.RemoveListener(loggerListenerMock.Object);
-            loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.SlnOpposlnFileNotFound), Times.Once);
             Assert.AreEqual(string.Format(OutputText.SlnOpposlnNotFound, oppoSlnPath), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
             _fileSystemMock.Verify(x => x.FileExists(oppoSlnPath), Times.Once);
@@ -163,21 +176,22 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				Assert.IsNotNull(commandResult.OutputMessages);
 				var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
 				OppoLogger.RemoveListener(loggerListenerMock.Object);
-				loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.SlnCouldntDeserliazeSln), Times.Once);
 				Assert.AreEqual(string.Format(OutputText.SlnCouldntDeserliazeSln, solutionName), firstMessageLine.Key);
 				Assert.AreEqual(string.Empty, firstMessageLine.Value);
 				_fileSystemMock.Verify(x => x.ReadFile(solutionFullName), Times.Once);
 			}
-		}
+        }
 
 		[Test]
-		public void FailOnDeployingNotExisitingProject([ValueSource(nameof(ValidInputs))] string[] inputParams)
+		public void FailOnBuildingNotExisitingProject([ValueSource(nameof(ValidInputs))] string[] inputParams)
 		{
 			// Arrange
 			var solutionName = inputParams.ElementAtOrDefault(1);
 
 			var loggerListenerMock = new Mock<ILoggerListener>();
 			OppoLogger.RegisterListener(loggerListenerMock.Object);
+			
+			_commandMock.Setup(x => x.Execute(It.IsAny<string[]>())).Returns(new CommandResult(false, new MessageLines()));
 
 			// Arrange opposln file
 			var oppoSlnPath = Path.Combine(solutionName + Constants.FileExtension.OppoSln);
@@ -186,6 +200,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
 			var solutionFullName = Path.Combine(solutionName + Constants.FileExtension.OppoSln);
 			using (Stream slnMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpposlnContentWithOneProject)))
+			using (var oppoprojMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpcuaClientAppContent)))
 			{
 				_fileSystemMock.Setup(x => x.ReadFile(solutionFullName)).Returns(slnMemoryStream);
 
@@ -197,9 +212,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				Assert.IsNotNull(commandResult.OutputMessages);
 				var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
 				OppoLogger.RemoveListener(loggerListenerMock.Object);
-				loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.MissingPublishedOpcuaAppFiles), Times.Once);
-				Assert.AreEqual(string.Format(OutputText.OpcuaappDeployWithNameFailure, _sampleOpcuaClientAppName), firstMessageLine.Key);
-				Assert.AreEqual(string.Empty, firstMessageLine.Value);
 			}
 		}
 
@@ -231,20 +243,21 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				Assert.IsNotNull(commandResult.OutputMessages);
 				var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
 				OppoLogger.RemoveListener(loggerListenerMock.Object);
-				loggerListenerMock.Verify(x => x.Info(Resources.text.logging.LoggingText.SlnDeploySuccess), Times.Once);
-				Assert.AreEqual(string.Format(OutputText.SlnDeploySuccess, solutionName), firstMessageLine.Key);
+				Assert.AreEqual(_operationData.SuccessOutputMessage, firstMessageLine.Key);
 				Assert.AreEqual(string.Empty, firstMessageLine.Value);
 			}
 		}
 		
         [Test]
-        public void DeployAllSolutionsProjects([ValueSource(nameof(ValidInputs))] string[] inputParams)
+        public void BuildAllSolutionsProjects([ValueSource(nameof(ValidInputs))] string[] inputParams)
         {
 			// Arrange
 			var solutionName = inputParams.ElementAtOrDefault(1);
 
             var loggerListenerMock = new Mock<ILoggerListener>();
             OppoLogger.RegisterListener(loggerListenerMock.Object);
+
+			_commandMock.Setup(x => x.Execute(It.IsAny<string[]>())).Returns(new CommandResult(true, new MessageLines()));
 
 			// Arrange opposln file
 			var oppoSlnPath = Path.Combine(solutionName + Constants.FileExtension.OppoSln);
@@ -254,36 +267,20 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			var solutionFullName = Path.Combine(solutionName + Constants.FileExtension.OppoSln);
 
 			using (var slnMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpposlnContentWithTwoProjects)))
+			using (var clientOppoprojMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpcuaClientAppContent)))
+			using (var serverOppoprojMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpcuaServerAppContent)))
 			{
 				_fileSystemMock.Setup(x => x.ReadFile(solutionFullName)).Returns(slnMemoryStream);
-
-				_fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.CreateDebianInstaller, It.IsAny<string>(), Constants.ExecutableName.CreateDebianInstallerArguments)).Returns(true);
-
-				// Arrange clientApp publish command
-				var clientAppPublishDirectory = Path.Combine(_sampleOpcuaClientAppName, Constants.DirectoryName.Publish);
-				_fileSystemMock.Setup(x => x.CombinePaths(_sampleOpcuaClientAppName, Constants.DirectoryName.Publish)).Returns(clientAppPublishDirectory);
-				var clientAppPublishLocation = Path.Combine(clientAppPublishDirectory, Constants.ExecutableName.AppClient);
-				_fileSystemMock.Setup(x => x.CombinePaths(clientAppPublishDirectory, Constants.ExecutableName.AppClient)).Returns(clientAppPublishLocation);
-				_fileSystemMock.Setup(x => x.FileExists(clientAppPublishLocation)).Returns(true);
-				
-				// Arrange serverApp publish command
-				var serverAppPublishDirectory = Path.Combine(_sampleOpcuaServerAppName, Constants.DirectoryName.Publish);
-				_fileSystemMock.Setup(x => x.CombinePaths(_sampleOpcuaServerAppName, Constants.DirectoryName.Publish)).Returns(serverAppPublishDirectory);
-				var serverAppPublishLocation = Path.Combine(serverAppPublishDirectory, Constants.ExecutableName.AppClient);
-				_fileSystemMock.Setup(x => x.CombinePaths(serverAppPublishDirectory, Constants.ExecutableName.AppClient)).Returns(serverAppPublishLocation);
-				_fileSystemMock.Setup(x => x.FileExists(serverAppPublishLocation)).Returns(true);
 				
 				// Act
 				var commandResult = _objectUnderTest.Execute(inputParams);
-
-
+				
 				// Assert
 				Assert.IsTrue(commandResult.Sucsess);
 				Assert.IsNotNull(commandResult.OutputMessages);
 				var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
 				OppoLogger.RemoveListener(loggerListenerMock.Object);
-				loggerListenerMock.Verify(x => x.Info(Resources.text.logging.LoggingText.SlnDeploySuccess), Times.Once);
-				Assert.AreEqual(string.Format(OutputText.SlnDeploySuccess, solutionName), firstMessageLine.Key);
+				Assert.AreEqual(_operationData.SuccessOutputMessage, firstMessageLine.Key);
 				Assert.AreEqual(string.Empty, firstMessageLine.Value);
 			}
 		}

@@ -40,27 +40,6 @@ namespace Oppo.ObjectModel
 			return deserializedData;
 		}
 
-		static public bool DeserializeSolution(ref ResultMessages messages, ref Solution solution, string solutionNameFlag, string solutionName, IFileSystem fileSystem)
-		{
-			// validate solution name
-			if (!ValidateSolution(ref messages, solutionNameFlag, solutionName, fileSystem))
-			{
-				return false;
-			}
-
-			// deserialize *.opposln file
-			var solutionFullName = solutionName + Constants.FileExtension.OppoSln;
-			solution = DeserializeFile<Solution>(solutionFullName, fileSystem);
-			if (solution == null)
-			{
-				messages.LoggerMessage = LoggingText.SlnCouldntDeserliazeSln;
-				messages.OutputMessage = string.Format(OutputText.SlnCouldntDeserliazeSln, solutionName);
-				return false;
-			}
-
-			return true;
-		}
-
 		static public bool ValidateSolution(ref ResultMessages messages, string solutionNameFlag, string solutionName, IFileSystem fileSystem)
 		{
 			// check if solutionNameFlag is valid

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using Oppo.Resources.text.logging;
+using Oppo.Resources.text.output;
 using Oppo.ObjectModel.CommandStrategies.BuildCommands;
 using Oppo.ObjectModel.CommandStrategies.CleanCommands;
 using Oppo.ObjectModel.CommandStrategies.DeployCommands;
@@ -480,13 +481,36 @@ namespace Oppo.ObjectModel
 
 			var slnHelpVerboseStrategy = new HelpStrategy<SlnStrategy>(slnHelpStrategyData);
 
+			var SlnBuildCommandData					 = new SlnOperationData();
+			SlnBuildCommandData.CommandName			 = Constants.CommandName.Build;
+			SlnBuildCommandData.FileSystem			 = fileSystem;
+			SlnBuildCommandData.Subcommand			 = new BuildNameStrategy(Constants.CommandName.Build, fileSystem);
+			SlnBuildCommandData.SuccessLoggerMessage = LoggingText.SlnBuildSuccess;
+			SlnBuildCommandData.SuccessOutputMessage = OutputText.SlnBuildSuccess;
+			SlnBuildCommandData.HelpText			 = Resources.text.help.HelpTextValues.SlnBuildNameArgumentCommandDescription;
+
+			var SlnDeployCommandData				  = new SlnOperationData();
+			SlnDeployCommandData.CommandName		  = Constants.CommandName.Deploy;
+			SlnDeployCommandData.FileSystem			  = fileSystem;
+			SlnDeployCommandData.Subcommand			  = new DeployNameStrategy(Constants.CommandName.Deploy, fileSystem);
+			SlnDeployCommandData.SuccessLoggerMessage = LoggingText.SlnDeploySuccess;
+			SlnDeployCommandData.SuccessOutputMessage = OutputText.SlnDeploySuccess;
+			SlnDeployCommandData.HelpText			  = Resources.text.help.HelpTextValues.SlnDeployNameArgumentCommandDescription;
+
+			var SlnPublishCommandData				   = new SlnOperationData();
+			SlnPublishCommandData.CommandName		   = Constants.CommandName.Publish;
+			SlnPublishCommandData.FileSystem		   = fileSystem;
+			SlnPublishCommandData.Subcommand		   = new PublishNameStrategy(Constants.CommandName.Publish, fileSystem);
+			SlnPublishCommandData.SuccessLoggerMessage = LoggingText.SlnPublishSuccess;
+			SlnPublishCommandData.SuccessOutputMessage = OutputText.SlnPublishSuccess;
+			SlnPublishCommandData.HelpText             = Resources.text.help.HelpTextValues.SlnPublishNameArgumentCommandDescription;
+
 			var slnStrategies = new ICommand<SlnStrategy>[]
 			{
 				new SlnAddCommandStrategy(fileSystem),
-				new SlnBuildCommandStrategy(fileSystem),
-
-				new SlnDeployCommandStrategy(fileSystem),
-				new SlnPublishCommandStrategy(fileSystem),
+				new SlnOperationCommandStrategy(SlnBuildCommandData),
+				new SlnOperationCommandStrategy(SlnDeployCommandData),
+				new SlnOperationCommandStrategy(SlnPublishCommandData),
 				new SlnRemoveCommandStrategy(fileSystem),
 				slnHelpStrategy,
 				slnHelpVerboseStrategy,
@@ -501,7 +525,7 @@ namespace Oppo.ObjectModel
 
         public string PrepareCommandFailureOutputText(string[] args)
         {
-            return string.Format(Resources.text.output.OutputText.GeneralCommandExecutionFailure, string.Join(' ', args));
+            return string.Format(OutputText.GeneralCommandExecutionFailure, string.Join(' ', args));
         }
     }
 }
