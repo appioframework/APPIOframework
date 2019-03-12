@@ -22,7 +22,8 @@ do
   oppo build        --name "my-app"
   oppo publish      --name "my-app"
   rm --force "./oppo.log"
-
+  
+  mv "./my-app/publish/client-app" "./my-app/publish/client-app.bak"
   mv "./my-app/publish/server-app" "./my-app/publish/server-app.bak"
 
   precondition_oppo_log_file_is_not_existent
