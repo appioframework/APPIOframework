@@ -459,6 +459,7 @@ namespace Oppo.ObjectModel
 				{ string.Empty, Resources.text.help.HelpTextValues.GeneralArguments },
 				{ string.Empty, Resources.text.help.HelpTextValues.SlnArgumentAdd },
 				{ string.Empty, Resources.text.help.HelpTextValues.SlnArgumentBuild },
+				{ string.Empty, Resources.text.help.HelpTextValues.SlnArgumentPublish },
 				{ string.Empty, Resources.text.help.HelpTextValues.SlnArgumentRemove },
 				{ string.Empty, string.Empty },
 				{ string.Empty, Resources.text.help.HelpTextValues.GeneralOptions },
@@ -482,6 +483,7 @@ namespace Oppo.ObjectModel
 			{
 				new SlnAddCommandStrategy(fileSystem),
 				new SlnBuildCommandStrategy(fileSystem),
+				new SlnPublishCommandStrategy(fileSystem),
 				new SlnRemoveCommandStrategy(fileSystem),
 				slnHelpStrategy,
 				slnHelpVerboseStrategy,

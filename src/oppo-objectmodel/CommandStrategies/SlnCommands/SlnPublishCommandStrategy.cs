@@ -5,16 +5,16 @@ using System.Linq;
 
 namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 {
-    public class SlnBuildCommandStrategy : ICommand<SlnStrategy>
+    public class SlnPublishCommandStrategy : ICommand<SlnStrategy>
     {
         private readonly IFileSystem _fileSystem;
 
-        public SlnBuildCommandStrategy(IFileSystem fileSystem)
+        public SlnPublishCommandStrategy(IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
         }
 
-        public string Name => Constants.SlnCommandName.Build;
+        public string Name => Constants.SlnCommandName.Publish;
 
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
@@ -43,13 +43,13 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 				return new CommandResult(false, outputMessages);
 			}
 
-			// build projects that are part of solution
+			// publish projects that are part of solution
 			else
 			{
-				var buildCommandStrategy = new BuildCommands.BuildNameStrategy(Constants.CommandName.Build, _fileSystem);
+				var publishCommandStrategy = new PublishCommands.PublishNameStrategy(Constants.CommandName.Publish, _fileSystem);
 				foreach (var project in oppoSolution.Projects)
 				{
-					var commandResult = buildCommandStrategy.Execute(new string[] { project.Name });
+					var commandResult = publishCommandStrategy.Execute(new string[] { project.Name });
 					if(!commandResult.Sucsess)
 					{
 						return commandResult;
@@ -59,13 +59,13 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 
 
 			// exit method with success
-            OppoLogger.Info(LoggingText.SlnBuildSuccess);                        
-            outputMessages.Add(string.Format(OutputText.SlnBuildSuccess, solutionName), string.Empty);
+            OppoLogger.Info(LoggingText.SlnPublishSuccess);                        
+            outputMessages.Add(string.Format(OutputText.SlnPublishSuccess, solutionName), string.Empty);
             return new CommandResult(true, outputMessages);
         }
         public string GetHelpText()
         {
-            return Resources.text.help.HelpTextValues.SlnBuildNameArgumentCommandDescription;
+            return Resources.text.help.HelpTextValues.SlnPublishNameArgumentCommandDescription;
         }
     }
 }

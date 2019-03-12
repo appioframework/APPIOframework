@@ -8,7 +8,7 @@ using System.IO;
 
 namespace Oppo.ObjectModel.Tests.CommandStrategies
 {
-    public class SlnBuildNameStrategyTestsShould
+    public class SlnPublishNameStrategyTestsShould
     {
         protected static string[][] ValidInputs()
         {
@@ -31,7 +31,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         }
 
         private Mock<IFileSystem> _fileSystemMock;
-        private SlnBuildCommandStrategy _objectUnderTest;
+        private SlnPublishCommandStrategy _objectUnderTest;
 
         private readonly string _defaultOpposlnContent = "{\"projects\": []}";
 		private readonly string _sampleOpposlnContentWithOneProject = "{\"projects\": [{\"name\":\"" + _sampleOpcuaClientAppName + "\",\"path\":\"" + _sampleOpcuaClientAppName + "/" + _sampleOpcuaClientAppName + ".oppoproj\"}]}";
@@ -49,7 +49,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void SetUp_ObjectUnderTest()
         {
             _fileSystemMock = new Mock<IFileSystem>();
-            _objectUnderTest = new SlnBuildCommandStrategy(_fileSystemMock.Object);
+            _objectUnderTest = new SlnPublishCommandStrategy(_fileSystemMock.Object);
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var name = _objectUnderTest.Name;
 
             // Assert
-            Assert.AreEqual(Constants.SlnCommandName.Build, name);
+            Assert.AreEqual(Constants.SlnCommandName.Publish, name);
         }
 
         [Test]
@@ -84,7 +84,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var helpText = _objectUnderTest.GetHelpText();
 
             // Assert
-            Assert.AreEqual(Resources.text.help.HelpTextValues.SlnBuildNameArgumentCommandDescription, helpText);
+            Assert.AreEqual(Resources.text.help.HelpTextValues.SlnPublishNameArgumentCommandDescription, helpText);
         }
 
         [Test]
@@ -201,14 +201,14 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				Assert.IsNotNull(commandResult.OutputMessages);
 				var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
 				OppoLogger.RemoveListener(loggerListenerMock.Object);
-				loggerListenerMock.Verify(x => x.Info(Resources.text.logging.LoggingText.SlnBuildSuccess), Times.Once);
-				Assert.AreEqual(string.Format(OutputText.SlnBuildSuccess, solutionName), firstMessageLine.Key);
+				loggerListenerMock.Verify(x => x.Info(Resources.text.logging.LoggingText.SlnPublishSuccess), Times.Once);
+				Assert.AreEqual(string.Format(OutputText.SlnPublishSuccess, solutionName), firstMessageLine.Key);
 				Assert.AreEqual(string.Empty, firstMessageLine.Value);
 			}
 		}
 		
         [Test]
-        public void BuildAllSolutionsProjects([ValueSource(nameof(ValidInputs))] string[] inputParams)
+        public void PublishAllSolutionsProjects([ValueSource(nameof(ValidInputs))] string[] inputParams)
         {
 			// Arrange
 			var solutionName = inputParams.ElementAtOrDefault(1);
@@ -224,27 +224,22 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			var solutionFullName = Path.Combine(solutionName + Constants.FileExtension.OppoSln);
 
 			using (var slnMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpposlnContentWithTwoProjects)))
-			using (var clientOppoprojMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpcuaClientAppContent)))
-			using (var serverOppoprojMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpcuaServerAppContent)))
 			{
 				_fileSystemMock.Setup(x => x.ReadFile(solutionFullName)).Returns(slnMemoryStream);
 
-				// Arrange clientApp build command
-				_fileSystemMock.Setup(x => x.DirectoryExists(_sampleOpcuaClientAppName)).Returns(true);
-				_fileSystemMock.Setup(x => x.CombinePaths(_sampleOpcuaClientAppName, _sampleOpcuaClientAppName + Constants.FileExtension.OppoProject)).Returns(Path.Combine(_sampleOpcuaClientAppName, _sampleOpcuaClientAppName + Constants.FileExtension.OppoProject));
-				_fileSystemMock.Setup(x => x.ReadFile(Path.Combine(_sampleOpcuaClientAppName, _sampleOpcuaClientAppName + Constants.FileExtension.OppoProject))).Returns(clientOppoprojMemoryStream);
-				_fileSystemMock.Setup(x => x.CombinePaths(_sampleOpcuaClientAppName, Constants.DirectoryName.MesonBuild)).Returns(Path.Combine(_sampleOpcuaClientAppName, Constants.DirectoryName.MesonBuild));
-				_fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.Meson, _sampleOpcuaClientAppName, Constants.DirectoryName.MesonBuild)).Returns(true);
-				_fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.Ninja, Path.Combine(_sampleOpcuaClientAppName, Constants.DirectoryName.MesonBuild), string.Empty)).Returns(true);
+				// Arrange clientApp publish command
+				var clientAppBuildDirectory = Path.Combine(_sampleOpcuaClientAppName, Constants.DirectoryName.MesonBuild);
+				_fileSystemMock.Setup(x => x.CombinePaths(_sampleOpcuaClientAppName, Constants.DirectoryName.MesonBuild)).Returns(clientAppBuildDirectory);
+				var clientAppBuildLocation = Path.Combine(clientAppBuildDirectory, Constants.ExecutableName.AppClient);
+				_fileSystemMock.Setup(x => x.CombinePaths(clientAppBuildDirectory, Constants.ExecutableName.AppClient)).Returns(clientAppBuildLocation);
+				_fileSystemMock.Setup(x => x.FileExists(clientAppBuildLocation)).Returns(true);
 
-				// Arrange serverApp build command
-				_fileSystemMock.Setup(x => x.DirectoryExists(_sampleOpcuaServerAppName)).Returns(true);
-				_fileSystemMock.Setup(x => x.CombinePaths(_sampleOpcuaServerAppName, _sampleOpcuaServerAppName + Constants.FileExtension.OppoProject)).Returns(Path.Combine(_sampleOpcuaServerAppName, _sampleOpcuaServerAppName + Constants.FileExtension.OppoProject));
-				_fileSystemMock.Setup(x => x.ReadFile(Path.Combine(_sampleOpcuaServerAppName, _sampleOpcuaServerAppName + Constants.FileExtension.OppoProject))).Returns(serverOppoprojMemoryStream);
-				_fileSystemMock.Setup(x => x.CombinePaths(_sampleOpcuaServerAppName, Constants.DirectoryName.MesonBuild)).Returns(Path.Combine(_sampleOpcuaServerAppName, Constants.DirectoryName.MesonBuild));
-				_fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.Meson, _sampleOpcuaServerAppName, Constants.DirectoryName.MesonBuild)).Returns(true);
-				_fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.Ninja, Path.Combine(_sampleOpcuaServerAppName, Constants.DirectoryName.MesonBuild), string.Empty)).Returns(true);
-
+				// Arrange serverApp publish command
+				var serverAppBuildDirectory = Path.Combine(_sampleOpcuaServerAppName, Constants.DirectoryName.MesonBuild);
+				_fileSystemMock.Setup(x => x.CombinePaths(_sampleOpcuaServerAppName, Constants.DirectoryName.MesonBuild)).Returns(serverAppBuildDirectory);
+				var serverAppBuildLocation = Path.Combine(serverAppBuildDirectory, Constants.ExecutableName.AppClient);
+				_fileSystemMock.Setup(x => x.CombinePaths(serverAppBuildDirectory, Constants.ExecutableName.AppClient)).Returns(serverAppBuildLocation);
+				_fileSystemMock.Setup(x => x.FileExists(serverAppBuildLocation)).Returns(true);
 
 				// Act
 				var commandResult = _objectUnderTest.Execute(inputParams);
@@ -255,8 +250,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				Assert.IsNotNull(commandResult.OutputMessages);
 				var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
 				OppoLogger.RemoveListener(loggerListenerMock.Object);
-				loggerListenerMock.Verify(x => x.Info(Resources.text.logging.LoggingText.SlnBuildSuccess), Times.Once);
-				Assert.AreEqual(string.Format(OutputText.SlnBuildSuccess, solutionName), firstMessageLine.Key);
+				loggerListenerMock.Verify(x => x.Info(Resources.text.logging.LoggingText.SlnPublishSuccess), Times.Once);
+				Assert.AreEqual(string.Format(OutputText.SlnPublishSuccess, solutionName), firstMessageLine.Key);
 				Assert.AreEqual(string.Empty, firstMessageLine.Value);
 			}
 		}

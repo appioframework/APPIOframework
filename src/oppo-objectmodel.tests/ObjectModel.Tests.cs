@@ -6,11 +6,13 @@ using System.Linq;
 using Oppo.ObjectModel.CommandStrategies.BuildCommands;
 using Oppo.ObjectModel.CommandStrategies.CleanCommands;
 using Oppo.ObjectModel.CommandStrategies.DeployCommands;
+using Oppo.ObjectModel.CommandStrategies.GenerateCommands;
 using Oppo.ObjectModel.CommandStrategies.HelloCommands;
 using Oppo.ObjectModel.CommandStrategies.HelpCommands;
 using Oppo.ObjectModel.CommandStrategies.ImportCommands;
 using Oppo.ObjectModel.CommandStrategies.NewCommands;
 using Oppo.ObjectModel.CommandStrategies.PublishCommands;
+using Oppo.ObjectModel.CommandStrategies.SlnCommands;
 using Oppo.ObjectModel.CommandStrategies.VersionCommands;
 using Oppo.Resources.text.logging;
 
@@ -88,11 +90,13 @@ namespace Oppo.ObjectModel.Tests
             Assert.IsTrue(commands.Any(x => x is BuildStrategy));
             Assert.IsTrue(commands.Any(x => x is CleanStrategy));
             Assert.IsTrue(commands.Any(x => x is DeployStrategy));
-            Assert.IsTrue(commands.Any(x => x is HelloStrategy));
+			Assert.IsTrue(commands.Any(x => x is GenerateStrategy));
+			Assert.IsTrue(commands.Any(x => x is HelloStrategy));
             Assert.IsTrue(commands.Any(x => x is HelpStrategy<ObjectModel>));
             Assert.IsTrue(commands.Any(x => x is ImportStrategy));
             Assert.IsTrue(commands.Any(x => x is NewStrategy));
             Assert.IsTrue(commands.Any(x => x is PublishStrategy));
+			Assert.IsTrue(commands.Any(x => x is SlnStrategy));
             Assert.IsTrue(commands.Any(x => x is VersionStrategy));
         }
 

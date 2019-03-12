@@ -65,6 +65,7 @@
 		public const string SlnRemoveOpcuaappIsNotInSln = "Opcuaapp is not a part of the soluton!";
 		//sln build command
 		public const string SlnBuildSuccess = "Projects that are part of solution were successfully built.";
+		public const string SlnPublishSuccess = "Projects that are part of solution were successfully published.";
 
 
 		public const string DirectoryIOException = "Directory IOException detected!";

@@ -79,5 +79,6 @@ namespace Oppo.Resources.text.output
 		public const string SlnRemoveOpcuaappIsNotInSln		= "The opcuaapp project '{0}' is not a part of the solution '{1}'!";
 		// sln build <command>
 		public const string SlnBuildSuccess = "Projects that are part of solution '{0}' were successfully built.";
+		public const string SlnPublishSuccess = "Projects that are part of solution '{0}' were successfully published.";
 	}
 }

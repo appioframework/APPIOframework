@@ -59,6 +59,7 @@ namespace Oppo.ObjectModel
             public const string Add = "add";
             public const string Remove = "remove";
 			public const string Build = "build";
+			public const string Publish = "publish";
         }
 
         public static class DirectoryName
