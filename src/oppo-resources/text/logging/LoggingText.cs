@@ -66,6 +66,7 @@
 		//sln build command
 		public const string SlnBuildSuccess = "Projects that are part of solution were successfully built.";
 		public const string SlnPublishSuccess = "Projects that are part of solution were successfully published.";
+		public const string SlnDeploySuccess = "Projects that are part of solution were successfully deployed.";
 
 
 		public const string DirectoryIOException = "Directory IOException detected!";

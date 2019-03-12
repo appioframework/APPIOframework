@@ -73,6 +73,7 @@
 		public const string SlnCallDescription = "oppo sln <Arguments> <Options>";
 		public const string SlnArgumentAdd = "add";
 		public const string SlnArgumentBuild = "build";
+		public const string SlnArgumentDeploy = "deploy";
 		public const string SlnArgumentPublish = "publish";
 		public const string SlnArgumentRemove = "remove";
 
@@ -96,6 +97,6 @@
 		public const string SlnRemoveNameArgumentCommandDescription = "Remove project from solution";
 		public const string SlnBuildNameArgumentCommandDescription = "Build all solution's projects";
 		public const string SlnPublishNameArgumentCommandDescription = "Publish all solution's projects";
-
+		public const string SlnDeployNameArgumentCommandDescription = "Deploy all solution's projects";
 	}
 }

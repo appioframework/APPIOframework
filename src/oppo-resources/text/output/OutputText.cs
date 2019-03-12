@@ -80,5 +80,6 @@ namespace Oppo.Resources.text.output
 		// sln build <command>
 		public const string SlnBuildSuccess = "Projects that are part of solution '{0}' were successfully built.";
 		public const string SlnPublishSuccess = "Projects that are part of solution '{0}' were successfully published.";
+		public const string SlnDeploySuccess = "Projects that are part of solution '{0}' were successfully deployed.";
 	}
 }
