@@ -77,7 +77,6 @@
 		public const string SlnArgumentPublish = "publish";
 		public const string SlnArgumentRemove = "remove";
 
-       
 
 		//Commands description
 		public const string BuildHelpArgumentCommandDescription = "Build help";
@@ -98,5 +97,7 @@
 		public const string SlnBuildNameArgumentCommandDescription = "Build all solution's projects";
 		public const string SlnPublishNameArgumentCommandDescription = "Publish all solution's projects";
 		public const string SlnDeployNameArgumentCommandDescription = "Deploy all solution's projects";
+		public const string ReferenceAddNameArgumentCommandDescription = "Add reference server to client";
+		public const string ReferenceRemoveNameArgumentCommandDescription = "Remove reference server from client";
 	}
 }

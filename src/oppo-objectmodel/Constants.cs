@@ -63,8 +63,16 @@ namespace Oppo.ObjectModel
 			public const string Publish = "publish";
 			public const string Deploy = "deploy";
         }
+		
+		public static class ReferenceCommandName
+		{
+			public const string Help = "-h";
+			public const string VerboseHelp = "--help";
+			public const string Add = "add";
+			public const string Remove = "remove";
+		}
 
-        public static class DirectoryName
+		public static class DirectoryName
         {
             public const string SourceCode = "src";
             public const string ClientApp = "client";
@@ -245,6 +253,24 @@ namespace Oppo.ObjectModel
             public const string VerboseProject = "--project";
 
         }
+		
+		public static class ReferenceAddCommandArguments
+		{
+			public const string Server = "-s";
+			public const string VerboseServer = "--server";
+			public const string Client = "-c";
+			public const string VerboseClient = "--client";
+
+		}
+
+		public static class ReferenceRemoveCommandArguments
+		{
+			public const string Server = "-s";
+			public const string VerboseServer = "--server";
+			public const string Client = "-c";
+			public const string VerboseClient = "--client";
+
+		}
 
 		public static class ApplicationType
 		{

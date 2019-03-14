@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Oppo.ObjectModel
 {
-    public class OpcuaappConverter : JsonConverter
+    public class OpcuaappConverter<sourceType, targetType> : JsonConverter
     {
         public override bool CanWrite => false;
 
@@ -14,7 +14,7 @@ namespace Oppo.ObjectModel
 
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof(List<IOpcuaapp>);
+            return objectType == typeof(List<sourceType>);
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
@@ -25,7 +25,7 @@ namespace Oppo.ObjectModel
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
 			var array = JArray.Load(reader);
-			return array.Select(x => serializer.Deserialize<OpcuaappReference>(new JTokenReader(x))).Cast<IOpcuaapp>().ToList();
+			return array.Select(x => serializer.Deserialize<targetType>(new JTokenReader(x))).Cast<sourceType>().ToList();
 		}
 	}
 }

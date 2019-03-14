@@ -54,8 +54,7 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
                 outputMessages.Add(string.Format(OutputText.SlnAddOpcuaappNotFound, oppoprojFilePath), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
-
-
+			
 			// deserialize *.opposln file
 			var solutionFullName = solutionName + Constants.FileExtension.OppoSln;
 			Solution oppoSolution = SlnUtility.DeserializeFile<Solution>(solutionFullName, _fileSystem);
@@ -74,8 +73,7 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
                 outputMessages.Add(string.Format(OutputText.SlnAddCouldntDeserliazeOpcuaapp, projectName), string.Empty);
                 return new CommandResult(false, outputMessages);
 			}
-
-
+			
             // check if sln does not contain opcuaapp yet
             if (!oppoSolution.Projects.Any(x => x.Name == oppoProj.Name))
             {
@@ -93,8 +91,7 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
                 outputMessages.Add(string.Format(OutputText.SlnAddContainsOpcuaapp, solutionName, projectName), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
-
-
+			
 			// exit method with success
             OppoLogger.Info(LoggingText.SlnAddSuccess);                        
             outputMessages.Add(string.Format(OutputText.SlnAddSuccess, projectName, solutionName), string.Empty);

@@ -6,12 +6,12 @@ namespace Oppo.ObjectModel.Tests
 {
     public class OpcuaappConverterShould
     {
-        private OpcuaappConverter _converter;
+        private OpcuaappConverter<IOpcuaapp, OpcuaappReference> _converter;
 
         [SetUp]
         public void SetupTest()
         {
-			_converter = new OpcuaappConverter();   
+			_converter = new OpcuaappConverter<IOpcuaapp, OpcuaappReference>();   
         }
 
         [TearDown]
