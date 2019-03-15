@@ -31,7 +31,8 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
                 return new CommandResult(false, outputMessages);
             }
 
-			setServerHostnameAndPort(projectName);
+			SetServerHostnameAndPort(projectName);
+			SetClientReferenceToServers(projectName);
 
 			var buildDirectory = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.MesonBuild);
             var mesonResult = _fileSystem.CallExecutable(Constants.ExecutableName.Meson, projectName, Constants.DirectoryName.MesonBuild);
@@ -55,18 +56,40 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
             return new CommandResult(true, outputMessages);
         }
 
-		private void setServerHostnameAndPort(string projectName)
+		private void SetServerHostnameAndPort(string projectName)
 		{
 			var oppoprojFilePath = _fileSystem.CombinePaths(projectName, projectName + Constants.FileExtension.OppoProject);
 
 			var oppoProjOpcuaapp = SlnUtility.DeserializeFile<OpcuaServerApp>(oppoprojFilePath, _fileSystem);
 
-			if(oppoProjOpcuaapp.Type == Constants.ApplicationType.Server || oppoProjOpcuaapp.Type == Constants.ApplicationType.ClientServer)
+			if(oppoProjOpcuaapp != null && (oppoProjOpcuaapp.Type == Constants.ApplicationType.Server || oppoProjOpcuaapp.Type == Constants.ApplicationType.ClientServer))
 			{
 				var serverConstantsFilePath = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp, Constants.FileName.SourceCode_constants_h);
 
 				var constantsFileContent = Constants.ServerConstants.ServerAppHostname + " = \"" + oppoProjOpcuaapp.Url + "\";\n" + Constants.ServerConstants.ServerAppPort + " = " + oppoProjOpcuaapp.Port + ";";
 				_fileSystem.WriteFile(serverConstantsFilePath, new List<string> { constantsFileContent });
+			}
+		}
+
+		private void SetClientReferenceToServers(string projectName)
+		{
+			var oppoprojFilePath = _fileSystem.CombinePaths(projectName, projectName + Constants.FileExtension.OppoProject);
+
+			var oppoProjOpcuaapp = SlnUtility.DeserializeFile<OpcuaClientApp>(oppoprojFilePath, _fileSystem);
+
+			if(oppoProjOpcuaapp != null && (oppoProjOpcuaapp.Type == Constants.ApplicationType.Client || oppoProjOpcuaapp.Type == Constants.ApplicationType.ClientServer))
+			{
+				var clientGlobalVariablesFilePath = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ClientApp, Constants.FileName.SourceCode_globalVariables_h);
+
+				var globalVariablesFileContent = "#define numberOfReferences " + oppoProjOpcuaapp.ServerReferences.Count + "const char* SERVER_APP_URL[numberOfReferences] = {";
+				foreach (var project in oppoProjOpcuaapp.ServerReferences)
+				{
+					globalVariablesFileContent += " \"opc.tcp://" + project.Url + ":" + project.Port + "/\",";
+				}
+				globalVariablesFileContent = globalVariablesFileContent.Remove(globalVariablesFileContent.Length - 1);
+				globalVariablesFileContent += " };\nUA_Client* client[numberOfReferences];";
+
+				_fileSystem.WriteFile(clientGlobalVariablesFilePath, new List<string> { globalVariablesFileContent });
 			}
 		}
 
@@ -76,3 +99,4 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
         }
     }
 }
+ 
