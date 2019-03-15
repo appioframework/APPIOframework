@@ -86,7 +86,6 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 				{
 					globalVariablesFileContent.Append(string.Format(Constants.ClientGlobalVariables.Hostname, project.Url, project.Port));
 				}
-				globalVariablesFileContent = globalVariablesFileContent.Remove(globalVariablesFileContent.Length - 1, 1);
 				globalVariablesFileContent.Append(Constants.ClientGlobalVariables.LastLines);
 
 				_fileSystem.WriteFile(clientGlobalVariablesFilePath, new List<string> { globalVariablesFileContent.ToString() } );
