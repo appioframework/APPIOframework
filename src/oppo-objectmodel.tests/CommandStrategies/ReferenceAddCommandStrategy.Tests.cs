@@ -54,7 +54,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		private readonly string _sampleOpcuaClientAppContent = "{\"name\":\"testApp\",\"type\":\"Client\"}";
 		private readonly string _sampleOpcuaServerAppContent = "{\"name\":\"testApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"8413\"}";
 		private readonly string _succesfullReferenceClientContent = "{\"name\":\"testApp\",\"type\":\"Client\", \"references\":[{\"name\":\"testApp\",\"type\":\"ClientServer\",\"url\":\"127.0.0.1\",\"port\":\"8413\"}]}";
-		private readonly string _sampleOpcuaClientServerAppContent = "{\"name\":\"testApp\",\"type\":\"ClientServer\",\"url\":\"127.0.0.1\",\"port\":\"8413\"}";
+		private readonly string _sampleOpcuaClientServerAppContent = "{\"name\":\"testApp\",\"type\":\"ClientServer\",\"url\":\"127.0.0.1\",\"port\":\"8413\",\"references\":[]}";
 
 
 		[SetUp]
@@ -291,7 +291,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
 
 		[Test]
-		public void SucceedOnServerReference([ValueSource(nameof(ValidInputs))] string[] inputParams)
+		public void SucceessOnAddingServerReferenceToClientServer([ValueSource(nameof(ValidInputs))] string[] inputParams)
 		{
 			// Arrage
 			var serverName = inputParams.ElementAtOrDefault(3);
@@ -307,10 +307,11 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			_fileSystemMock.Setup(x => x.CombinePaths(serverName, serverName + Constants.FileExtension.OppoProject)).Returns(oppoServerPath);
 			_fileSystemMock.Setup(x => x.FileExists(oppoServerPath)).Returns(true);
 
-			using (Stream clientMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpcuaClientAppContent)))
+			using (Stream clientMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpcuaClientServerAppContent)))
+			using (Stream clientServerMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpcuaClientServerAppContent)))
 			using (Stream serverMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpcuaServerAppContent)))
 			{
-				_fileSystemMock.Setup(x => x.ReadFile(oppoClientPath)).Returns(clientMemoryStream);
+				_fileSystemMock.SetupSequence(x => x.ReadFile(oppoClientPath)).Returns(clientMemoryStream).Returns(clientServerMemoryStream);
 
 				_fileSystemMock.Setup(x => x.ReadFile(oppoServerPath)).Returns(serverMemoryStream);
 				OpcuaClientApp opcuaClient = JsonConvert.DeserializeObject<OpcuaClientApp>(_succesfullReferenceClientContent);
@@ -326,14 +327,14 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				loggerListenerMock.Verify(x => x.Info(Resources.text.logging.LoggingText.ReferenceAddSuccess), Times.Once);
 				Assert.AreEqual(string.Format(OutputText.RefereneceAddSuccess, serverName, clientName), firstMessageLine.Key);
 				Assert.AreEqual(string.Empty, firstMessageLine.Value);
-				_fileSystemMock.Verify(x => x.ReadFile(oppoClientPath), Times.Once);
+				_fileSystemMock.Verify(x => x.ReadFile(oppoClientPath), Times.Exactly(2));
 				_fileSystemMock.Verify(x => x.ReadFile(oppoServerPath), Times.Once);
 				_fileSystemMock.Verify(x => x.WriteFile(oppoClientPath, It.IsAny<IEnumerable<string>>()), Times.Once);
 			}
 		}
 
 		[Test]
-		public void SuccessOnClientServerReference([ValueSource(nameof(ValidInputs))] string[] inputParams)
+		public void SuccessOnAddingClientServerReferenceToClient([ValueSource(nameof(ValidInputs))] string[] inputParams)
 		{
 			// Arrage
 			var serverName = inputParams.ElementAtOrDefault(3);

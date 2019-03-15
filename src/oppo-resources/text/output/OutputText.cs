@@ -95,6 +95,6 @@ namespace Oppo.Resources.text.output
 		public const string ClientNotFound = "The client file '{0}' not found!";
 		public const string CouldntDeserliazeServer = "The server file '{0}' has invalid content!";
 		public const string CouldntDeserliazeClient = "The client file '{0}' has invalid content!";
-		public const string RefereneceAddSuccess = "The reference of the opcuaapp with the name '{0}' was successfully add from the client '{1}'.";
+		public const string RefereneceAddSuccess = "The reference of the server with the name '{0}' was successfully added to the client '{1}'.";
 	}
 }

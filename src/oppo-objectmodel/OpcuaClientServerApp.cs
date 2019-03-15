@@ -22,14 +22,15 @@ namespace Oppo.ObjectModel
 
         [JsonProperty("type")]
         public string Type { get; set;  } = Constants.ApplicationType.ClientServer;
-                
-        [JsonIgnore]
-        public List<IOpcuaServerApp> ServerReferences { get; set; } = new List<IOpcuaServerApp>();
 
         [JsonProperty("url")]
         public string Url { get; set; } = string.Empty;
 
 		[JsonProperty("port")]
 		public string Port { get; set; } = string.Empty;
-    }
+
+		[JsonProperty("references")]
+		[JsonConverter(typeof(OpcuaappConverter<IOpcuaServerApp, OpcuaServerApp>))]
+		public List<IOpcuaServerApp> ServerReferences { get; set; } = new List<IOpcuaServerApp>();
+	}
 }

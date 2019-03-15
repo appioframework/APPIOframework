@@ -86,7 +86,7 @@
         public const string OppoHelpForImportInformationModel = "Help for import <command> called";
 
 		// reference add command
-		public const string ReferenceAddSuccess = "Opcuaapp reference successfully added to client project file.";
+		public const string ReferenceAddSuccess = "Server reference successfully added to client project file.";
 		public const string ReferenceUnknownCommandParam = "Unknown reference add command parameter!";
 		public const string CouldntDeserliazeServer = "Couldn't deserialize server file!";
 		public const string CouldntDeserliazeClient = "Couldn't deserialize client file!";

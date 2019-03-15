@@ -63,17 +63,8 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 				return new CommandResult(false, outputMessages);
 			}
 
-			// deserialize client file
-			OpcuaClientApp opcuaClient = SlnUtility.DeserializeFile<OpcuaClientApp>(clientFullName, _fileSystem);
-			if (opcuaClient == null)
-			{
-				OppoLogger.Warn(LoggingText.CouldntDeserliazeClient);
-				outputMessages.Add(string.Format(OutputText.CouldntDeserliazeClient, clientFullName), string.Empty);
-				return new CommandResult(false, outputMessages);
-			}
-
 			// deserialize server file
-			OpcuaClientServerApp oppoServer = SlnUtility.DeserializeFile<OpcuaClientServerApp>(serverFullName, _fileSystem);
+			OpcuaServerApp oppoServer = SlnUtility.DeserializeFile<OpcuaServerApp>(serverFullName, _fileSystem);
 			if (oppoServer == null)
 			{
 				OppoLogger.Warn(LoggingText.CouldntDeserliazeServer);
@@ -81,10 +72,33 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 				return new CommandResult(false, outputMessages);
 			}
 
+			// deserialize client file
+			OpcuaClientApp opcuaClient = SlnUtility.DeserializeFile<OpcuaClientApp>(clientFullName, _fileSystem);
+			OpcuaClientServerApp opcuaClientServer = null;
+			if (opcuaClient != null && opcuaClient.Type == Constants.ApplicationType.ClientServer)
+			{
+				opcuaClientServer = SlnUtility.DeserializeFile<OpcuaClientServerApp>(clientFullName, _fileSystem);
+			}
+			else if (opcuaClient == null)
+			{
+				OppoLogger.Warn(LoggingText.CouldntDeserliazeClient);
+				outputMessages.Add(string.Format(OutputText.CouldntDeserliazeClient, clientFullName), string.Empty);
+				return new CommandResult(false, outputMessages);
+			}
+
 			// overwrite client oppoproj file with new server reference
-			opcuaClient.ServerReferences.Add(oppoServer);
-			var ClientNewContent = JsonConvert.SerializeObject(opcuaClient, Formatting.Indented);
-			_fileSystem.WriteFile(clientFullName, new List<string> { ClientNewContent });
+			string clientNewContent = string.Empty;
+			if (opcuaClientServer != null)
+			{
+				opcuaClient.ServerReferences.Add(oppoServer);
+				clientNewContent = JsonConvert.SerializeObject(opcuaClientServer, Formatting.Indented);
+			}
+			else
+			{
+				opcuaClient.ServerReferences.Add(oppoServer);
+				clientNewContent = JsonConvert.SerializeObject(opcuaClient, Formatting.Indented);
+			}
+			_fileSystem.WriteFile(clientFullName, new List<string> { clientNewContent });
 
 			// exit with success
 			OppoLogger.Info(LoggingText.ReferenceAddSuccess);
