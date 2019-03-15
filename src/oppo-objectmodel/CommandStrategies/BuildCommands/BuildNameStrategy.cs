@@ -2,7 +2,7 @@
 using System.Linq;
 using Oppo.Resources.text.output;
 using Oppo.Resources.text.logging;
-using Newtonsoft.Json;
+using System.Text;
 
 namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 {
@@ -77,19 +77,19 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 
 			var oppoProjOpcuaapp = SlnUtility.DeserializeFile<OpcuaClientApp>(oppoprojFilePath, _fileSystem);
 
-			if(oppoProjOpcuaapp != null && (oppoProjOpcuaapp.Type == Constants.ApplicationType.Client || oppoProjOpcuaapp.Type == Constants.ApplicationType.ClientServer))
+			if (oppoProjOpcuaapp != null && (oppoProjOpcuaapp.Type == Constants.ApplicationType.Client || oppoProjOpcuaapp.Type == Constants.ApplicationType.ClientServer))
 			{
 				var clientGlobalVariablesFilePath = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ClientApp, Constants.FileName.SourceCode_globalVariables_h);
 
-				var globalVariablesFileContent = "#define numberOfReferences " + oppoProjOpcuaapp.ServerReferences.Count + "const char* SERVER_APP_URL[numberOfReferences] = {";
+				var globalVariablesFileContent = new StringBuilder(string.Format(Constants.ClientGlobalVariables.FirstLines, oppoProjOpcuaapp.ServerReferences.Count));
 				foreach (var project in oppoProjOpcuaapp.ServerReferences)
 				{
-					globalVariablesFileContent += " \"opc.tcp://" + project.Url + ":" + project.Port + "/\",";
+					globalVariablesFileContent.Append(string.Format(Constants.ClientGlobalVariables.Hostname, project.Url, project.Port));
 				}
-				globalVariablesFileContent = globalVariablesFileContent.Remove(globalVariablesFileContent.Length - 1);
-				globalVariablesFileContent += " };\nUA_Client* client[numberOfReferences];";
+				globalVariablesFileContent = globalVariablesFileContent.Remove(globalVariablesFileContent.Length - 1, 1);
+				globalVariablesFileContent.Append(Constants.ClientGlobalVariables.LastLines);
 
-				_fileSystem.WriteFile(clientGlobalVariablesFilePath, new List<string> { globalVariablesFileContent });
+				_fileSystem.WriteFile(clientGlobalVariablesFilePath, new List<string> { globalVariablesFileContent.ToString() } );
 			}
 		}
 

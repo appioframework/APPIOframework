@@ -285,6 +285,13 @@ namespace Oppo.ObjectModel
 			public const string ServerAppHostname = "const char* SERVER_APP_HOSTNAME";
 			public const string ServerAppPort = "const UA_UInt16 SERVER_APP_PORT";
 		}
+
+		public static class ClientGlobalVariables
+		{
+			public const string FirstLines = "#define numberOfReferences {0}\n\nconst char* SERVER_APP_URL[numberOfReferences] = {{";
+			public const string Hostname = " \"opc.tcp://{0}:{1}/\",";
+			public const string LastLines = " };\nUA_Client* client[numberOfReferences];";
+		}
 		
 		public static class UAMethodCallback
 		{
