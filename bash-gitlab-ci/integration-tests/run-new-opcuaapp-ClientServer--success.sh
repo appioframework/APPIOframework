@@ -48,6 +48,9 @@ do
   check_for_exisiting_file_named "./my-app/src/client/main.c" \
                                  "any oppo project source file for the client application does not exist ..."
 
+  check_for_exisiting_file_named "./my-app/src/client/globalVariables.h" \
+                                 "any oppo project source file for the client application does not exist ..."
+
   check_for_exisiting_file_named "./my-app/src/server/main.c" \
                                  "any oppo project source file for the server application does not exist ..."
 

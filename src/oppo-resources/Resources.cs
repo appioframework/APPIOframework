@@ -8,6 +8,8 @@
 
 		public const string OppoOpcuaAppTemplateFileName_main_client_c = "Oppo.Resources.open62541.main-client.c";
 
+		public const string OppoOpcuaAppTemplateFileName_globalVariables_client_h = "Oppo.Resources.open62541.globalVariables-client.h";
+
 		public const string OppoOpcuaAppTemplateFileName_main_server_c = "Oppo.Resources.open62541.main-server.c";
 
 		public const string OppoOpcuaAppTemplateFileName_meson_server_build = "Oppo.Resources.open62541.meson-server.build";

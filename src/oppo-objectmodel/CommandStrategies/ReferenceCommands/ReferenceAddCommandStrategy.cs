@@ -22,13 +22,20 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 		public CommandResult Execute(IEnumerable<string> inputParams)
 		{
 			var inputParamsArray = inputParams.ToArray();
-			var serverNameFlag = inputParamsArray.ElementAtOrDefault(0);
-			var serverName = inputParamsArray.ElementAtOrDefault(1);
-			var clientNameFlag = inputParamsArray.ElementAtOrDefault(2);
-			var clientName = inputParamsArray.ElementAtOrDefault(3);
+			var clientNameFlag = inputParamsArray.ElementAtOrDefault(0);
+			var clientName = inputParamsArray.ElementAtOrDefault(1);
+			var serverNameFlag = inputParamsArray.ElementAtOrDefault(2);
+			var serverName = inputParamsArray.ElementAtOrDefault(3);
 
 			var outputMessages = new MessageLines();
 
+			// check if clientNameFlag is valid
+			if (clientNameFlag != Constants.ReferenceAddCommandArguments.Client && clientNameFlag != Constants.ReferenceAddCommandArguments.VerboseClient)
+			{
+				OppoLogger.Warn(LoggingText.ReferenceUnknownCommandParam);
+				outputMessages.Add(string.Format(OutputText.ReferenceUnknownParameter, clientNameFlag), string.Empty);
+				return new CommandResult(false, outputMessages);
+			}
 
 			// check if serverNameFlag is valid
 			if (serverNameFlag != Constants.ReferenceAddCommandArguments.Server && serverNameFlag != Constants.ReferenceAddCommandArguments.VerboseServer)
@@ -38,11 +45,12 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 				return new CommandResult(false, outputMessages);
 			}
 
-			// check if clientNameFlag is valid
-			if (clientNameFlag != Constants.ReferenceAddCommandArguments.Client && clientNameFlag != Constants.ReferenceAddCommandArguments.VerboseClient)
+			//Check if client file exists
+			var clientFullName = _fileSystem.CombinePaths(clientName, clientName + Constants.FileExtension.OppoProject);
+			if (string.IsNullOrEmpty(clientName) || !_fileSystem.FileExists(clientFullName))
 			{
-				OppoLogger.Warn(LoggingText.ReferenceUnknownCommandParam);
-				outputMessages.Add(string.Format(OutputText.ReferenceUnknownParameter, clientNameFlag), string.Empty);
+				OppoLogger.Warn(LoggingText.OppoClientFileNotFound);
+				outputMessages.Add(string.Format(OutputText.ClientNotFound, clientFullName), string.Empty);
 				return new CommandResult(false, outputMessages);
 			}
 
@@ -55,12 +63,12 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 				return new CommandResult(false, outputMessages);
 			}
 
-			//Check if client file exists
-			var ClientFullName = _fileSystem.CombinePaths(clientName, clientName + Constants.FileExtension.OppoProject);
-			if (string.IsNullOrEmpty(clientName) || !_fileSystem.FileExists(ClientFullName))
+			// deserialize client file
+			OpcuaClientApp opcuaClient = SlnUtility.DeserializeFile<OpcuaClientApp>(clientFullName, _fileSystem);
+			if (opcuaClient == null)
 			{
-				OppoLogger.Warn(LoggingText.OppoClientFileNotFound);
-				outputMessages.Add(string.Format(OutputText.ClientNotFound, ClientFullName), string.Empty);
+				OppoLogger.Warn(LoggingText.CouldntDeserliazeClient);
+				outputMessages.Add(string.Format(OutputText.CouldntDeserliazeClient, clientFullName), string.Empty);
 				return new CommandResult(false, outputMessages);
 			}
 
@@ -73,19 +81,12 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 				return new CommandResult(false, outputMessages);
 			}
 
-			// deserialize client file
-			OpcuaClientApp opcuaClient = SlnUtility.DeserializeFile<OpcuaClientApp>(ClientFullName, _fileSystem);
-			if (opcuaClient == null)
-			{
-				OppoLogger.Warn(LoggingText.CouldntDeserliazeClient);
-				outputMessages.Add(string.Format(OutputText.CouldntDeserliazeClient, ClientFullName), string.Empty);
-				return new CommandResult(false, outputMessages);
-			}
-
+			// overwrite client oppoproj file with new server reference
 			opcuaClient.ServerReferences.Add(oppoServer);
 			var ClientNewContent = JsonConvert.SerializeObject(opcuaClient, Formatting.Indented);
-			_fileSystem.WriteFile(ClientFullName, new List<string> { ClientNewContent });
+			_fileSystem.WriteFile(clientFullName, new List<string> { ClientNewContent });
 
+			// exit with success
 			OppoLogger.Info(LoggingText.ReferenceAddSuccess);
 			outputMessages.Add(string.Format(OutputText.RefereneceAddSuccess, serverName, clientName), string.Empty);
 			return new CommandResult(true, outputMessages);

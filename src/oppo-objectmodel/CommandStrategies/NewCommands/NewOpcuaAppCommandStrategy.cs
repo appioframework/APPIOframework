@@ -123,6 +123,7 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 			var appSourceDirectory = _fileSystem.CombinePaths(sourceDirectory, Constants.DirectoryName.ClientApp);
 			_fileSystem.CreateDirectory(appSourceDirectory);
 			_fileSystem.CreateFile(_fileSystem.CombinePaths(appSourceDirectory, Constants.FileName.SourceCode_main_c), _fileSystem.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_main_client_c));
+			_fileSystem.CreateFile(_fileSystem.CombinePaths(appSourceDirectory, Constants.FileName.SourceCode_globalVariables_h), _fileSystem.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_globalVariables_client_h));
 		}
 
 		private void DeployTemplateOpcuaServerSourceFiles(string sourceDirectory)

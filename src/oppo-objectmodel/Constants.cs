@@ -118,6 +118,7 @@ namespace Oppo.ObjectModel
         public static class FileName
         {
             public const string SourceCode_main_c                   = "main.c";
+			public const string SourceCode_globalVariables_h		= "globalVariables.h";
             public const string SourceCode_loadInformationModels_c  = "loadInformationModels.c";
 			public const string SourceCode_constants_h				= "constants.h";
 			public const string SourceCode_mainCallbacks_c			= "mainCallbacks.c";

@@ -1,41 +1,46 @@
 ﻿#include "open62541.h"
 #include <stdio.h>
+#include <signal.h>
+#include "globalVariables.h"
 
-int main(int argc, char *argv[]) {
-	if (argc != 2)
+UA_Boolean running = true;
+static void stopHandler(int sig) {
+	UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "received ctrl-c");
+	running = false;
+}
+
+int main(int argc, char *argv[])
+{
+	signal(SIGINT, stopHandler);
+	signal(SIGTERM, stopHandler);
+
+	if (argc != 1)
 	{
-		printf("server URL is missing!\n");
+		printf("Too many arguments!\n");
 		return -1;
 	}
 
-	char* serverAddress          = argv[1];
-
-	UA_ClientConfig clientConfig = UA_ClientConfig_default;
-	UA_Client* client            = UA_Client_new(clientConfig);
-
-	UA_StatusCode connectStatus  = 
-		UA_Client_connect(client, serverAddress);
-
-	if (connectStatus != UA_STATUSCODE_GOOD)
+	for (int index = 0; index < numberOfReferences; index++)
 	{
-		printf("could not connect to server!\n");
-		return -1;
+		char* serverAddress = SERVER_APP_URL[index];
+		UA_ClientConfig clientConfig = UA_ClientConfig_default;
+		client[index] = UA_Client_new(clientConfig);
+
+		UA_StatusCode connectStatus = UA_Client_connect(client[index], serverAddress);
+
+		if (connectStatus != UA_STATUSCODE_GOOD)
+		{
+			printf("could not connect to server: %s!\n", SERVER_APP_URL[index]);
+			return -1;
+		}
 	}
 
-	UA_Variant value;
-	UA_Variant_init(&value);
+	/* TODO: place your code here */
 
-	const char* nodeName         = "temperature";
-
-	UA_NodeId stringNode         = UA_NODEID_STRING(1, nodeName);
-	UA_StatusCode readStatus     = UA_Client_readValueAttribute(client, stringNode, &value);
-
-	if(readStatus == UA_STATUSCODE_GOOD && UA_Variant_hasScalarType(&value, &UA_TYPES[UA_TYPES_INT32]))
-	{           
-		printf("The value of node-id: %d and display-name: %s is: %d\n", stringNode.namespaceIndex, stringNode.identifier.string.data, *(UA_Int32*)value.data);
+	for (int index = 0; index < numberOfReferences; index++)
+	{
+		UA_Client_delete(client[index]);
 	}
-
-	UA_Client_delete(client);
 
 	return 0;
 }
