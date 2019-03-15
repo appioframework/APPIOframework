@@ -90,7 +90,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 			string clientNewContent = string.Empty;
 			if (opcuaClientServer != null)
 			{
-				opcuaClient.ServerReferences.Add(oppoServer);
+				opcuaClientServer.ServerReferences.Add(oppoServer);
 				clientNewContent = JsonConvert.SerializeObject(opcuaClientServer, Formatting.Indented);
 			}
 			else
