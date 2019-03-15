@@ -3,7 +3,6 @@ using System.Linq;
 
 namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 {
-
         public class ReferenceStrategy : ICommand<ObjectModel>
         {
             private readonly ICommandFactory<ReferenceStrategy> _factory;

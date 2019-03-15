@@ -77,6 +77,12 @@
 		public const string SlnArgumentPublish = "publish";
 		public const string SlnArgumentRemove = "remove";
 
+		//Reference command
+		public const string ReferenceFirstLine = "The command is used to add and remove server refereances to and from client oppoproj files.";
+		public const string ReferenceCallDescription = "oppo referance <Arguments> <Options>";
+		public const string ReferenceArgumentAdd = "add";
+		public const string ReferenceArgumentRemove = "remove";
+
 
 		//Commands description
 		public const string BuildHelpArgumentCommandDescription = "Build help";
@@ -99,5 +105,6 @@
 		public const string SlnDeployNameArgumentCommandDescription = "Deploy all solution's projects";
 		public const string ReferenceAddNameArgumentCommandDescription = "Add reference server to client";
 		public const string ReferenceRemoveNameArgumentCommandDescription = "Remove reference server from client";
+		public const string ReferenceHelpArgumentCommandDescription = "Reference help";
 	}
 }

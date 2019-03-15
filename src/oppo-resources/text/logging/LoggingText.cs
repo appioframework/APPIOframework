@@ -99,5 +99,6 @@
 		public const string OppoServerFileNotFound = "Server not found!";
 		public const string ClientUnknownCommandParam = "Unknown client add command parameter!";
 		public const string OppoClientFileNotFound = "Client not found!";
+		public const string OppoHelpForReferenceCommand = "Help for reference <command> called";
 	}
 }

@@ -12,6 +12,7 @@ using Oppo.ObjectModel.CommandStrategies.HelpCommands;
 using Oppo.ObjectModel.CommandStrategies.ImportCommands;
 using Oppo.ObjectModel.CommandStrategies.NewCommands;
 using Oppo.ObjectModel.CommandStrategies.PublishCommands;
+using Oppo.ObjectModel.CommandStrategies.ReferenceCommands;
 using Oppo.ObjectModel.CommandStrategies.SlnCommands;
 using Oppo.ObjectModel.CommandStrategies.VersionCommands;
 using Oppo.Resources.text.logging;
@@ -96,6 +97,7 @@ namespace Oppo.ObjectModel.Tests
             Assert.IsTrue(commands.Any(x => x is ImportStrategy));
             Assert.IsTrue(commands.Any(x => x is NewStrategy));
             Assert.IsTrue(commands.Any(x => x is PublishStrategy));
+			Assert.IsTrue(commands.Any(x => x is ReferenceStrategy));
 			Assert.IsTrue(commands.Any(x => x is SlnStrategy));
             Assert.IsTrue(commands.Any(x => x is VersionStrategy));
         }

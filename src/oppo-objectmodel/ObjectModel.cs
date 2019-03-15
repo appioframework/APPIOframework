@@ -14,6 +14,7 @@ using Oppo.ObjectModel.CommandStrategies.PublishCommands;
 using Oppo.ObjectModel.CommandStrategies.VersionCommands;
 using Oppo.ObjectModel.CommandStrategies.GenerateCommands;
 using Oppo.ObjectModel.CommandStrategies.SlnCommands;
+using Oppo.ObjectModel.CommandStrategies.ReferenceCommands;
 
 namespace Oppo.ObjectModel
 {
@@ -91,6 +92,9 @@ namespace Oppo.ObjectModel
 
 			var slnStrategy = CreateSlnStrategy(fileSystem);
 			commands.Add(slnStrategy);
+
+			var referenceStrategy = CreateReferenceStrategy(fileSystem);
+			commands.Add(referenceStrategy);
 
             var factory = new CommandFactory<ObjectModel>(commands, Constants.CommandName.Help);
 
@@ -516,14 +520,59 @@ namespace Oppo.ObjectModel
 				slnHelpVerboseStrategy,
 			};
 
-			var slnStrategyCommandFactory = new CommandFactory<SlnStrategy>(slnStrategies, Constants.NewCommandName.Help);
+			var slnStrategyCommandFactory = new CommandFactory<SlnStrategy>(slnStrategies, Constants.SlnCommandName.Help);
 			slnHelpStrategy.CommandFactory = slnStrategyCommandFactory;
 			slnHelpVerboseStrategy.CommandFactory = slnStrategyCommandFactory;
 
 			return new SlnStrategy(slnStrategyCommandFactory);
 		}
+		
+		private static ReferenceStrategy CreateReferenceStrategy(IFileSystem fileSystem)
+		{
+			var referenceHelpStrategyHelpText = new MessageLines
+			{
+				{ string.Empty, Resources.text.help.HelpTextValues.ReferenceFirstLine },
+				{ string.Empty, string.Empty },
+				{ string.Empty, Resources.text.help.HelpTextValues.GeneralUsage },
+				{ string.Empty, Resources.text.help.HelpTextValues.ReferenceCallDescription },
+				{ string.Empty, string.Empty },
+				{ string.Empty, Resources.text.help.HelpTextValues.GeneralArguments },
+				{ string.Empty, Resources.text.help.HelpTextValues.ReferenceArgumentAdd },
+				{ string.Empty, Resources.text.help.HelpTextValues.ReferenceArgumentRemove },
+				{ string.Empty, string.Empty },
+				{ string.Empty, Resources.text.help.HelpTextValues.GeneralOptions },
+			};
 
-        public string PrepareCommandFailureOutputText(string[] args)
+			var referenceHelpStrategyData = new HelpData
+			{
+				CommandName = Constants.ReferenceCommandName.Help,
+				HelpTextFirstLine = referenceHelpStrategyHelpText,
+				LogMessage = LoggingText.OppoHelpForReferenceCommand,
+				HelpText = Resources.text.help.HelpTextValues.ReferenceHelpArgumentCommandDescription,
+			};
+
+			var referenceHelpStrategy = new HelpStrategy<ReferenceStrategy>(referenceHelpStrategyData);
+
+			referenceHelpStrategyData.CommandName = Constants.ReferenceCommandName.VerboseHelp;
+
+			var referenceHelpVerboseStrategy = new HelpStrategy<ReferenceStrategy>(referenceHelpStrategyData);
+			
+			var referenceStrategies = new ICommand<ReferenceStrategy>[]
+			{
+				new ReferenceAddCommandStrategy(fileSystem),
+				new ReferenceRemoveCommandStrategy(fileSystem),
+				referenceHelpStrategy,
+				referenceHelpVerboseStrategy,
+			};
+
+			var referenceStrategyCommandFactory = new CommandFactory<ReferenceStrategy>(referenceStrategies, Constants.ReferenceCommandName.Help);
+			referenceHelpStrategy.CommandFactory = referenceStrategyCommandFactory;
+			referenceHelpVerboseStrategy.CommandFactory = referenceStrategyCommandFactory;
+
+			return new ReferenceStrategy(referenceStrategyCommandFactory);
+		}
+
+		public string PrepareCommandFailureOutputText(string[] args)
         {
             return string.Format(OutputText.GeneralCommandExecutionFailure, string.Join(' ', args));
         }
