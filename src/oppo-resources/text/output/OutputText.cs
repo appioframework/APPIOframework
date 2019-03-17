@@ -93,13 +93,10 @@ namespace Oppo.Resources.text.output
 		public const string ReferenceAddServerOppoprojFileNotFound = "The server's oppoproj file '{0}' not found!";
 		public const string ReferenceAddCouldntDeserliazeServer = "The server file '{0}' has invalid content!";
 		public const string RefereneceAddSuccess = "The reference of the server with the name '{0}' was successfully added to the client '{1}'.";
-
-
-
+		
 		// reference remove <command>
 		public const string ReferenceRemoveSuccess = "The opcuaapp with the name '{0}' was successfully removed from the server '{1}'.";
-		public const string ReferenceRemoveClientNameEmpty = "The client project name empty!";
 		public const string ReferenceRemoveServerNameEmpty = "The server name empty!";
-		public const string ReferenceRemoveServerIsNotInClient = "The reference server '{0}' is not a part of the client'{1}'!";
+		public const string ReferenceRemoveServerIsNotInClient = "The reference server '{0}' is not a part of the client '{1}'!";
 	}
 }

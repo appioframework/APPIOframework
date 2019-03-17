@@ -48,10 +48,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		private Mock<IFileSystem> _fileSystemMock;
 		private ReferenceAddCommandStrategy _objectUnderTest;
 
-		private readonly string _sampleOpcuaClientAppContent = "{\"name\":\"clientApp\",\"type\":\"Client\",\"references\":[]}";
-		private readonly string _sampleOpcuaServerAppContent = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"8413\"}";
-		private readonly string _sampleOpcuaClientServerAppContent = "{\"name\":\"clientServerApp\",\"type\":\"ClientServer\",\"url\":\"127.0.0.1\",\"port\":\"8413\",\"references\":[]}";
-		private readonly string _sampleOpcuaClientAppContentWithServerReference = "{\"name\":\"clientApp\",\"type\":\"Client\",\"references\":[{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"8413\"}]}";
+		private readonly string _sampleOpcuaClientAppContent = "{\"name\":\"testClient\",\"type\":\"Client\",\"references\":[]}";
+		private readonly string _sampleOpcuaServerAppContent = "{\"name\":\"testServer\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"8413\"}";
+		private readonly string _sampleOpcuaClientServerAppContent = "{\"name\":\"testClientServer\",\"type\":\"ClientServer\",\"url\":\"127.0.0.1\",\"port\":\"8413\",\"references\":[]}";
+		private readonly string _sampleOpcuaClientAppContentWithServerReference = "{\"name\":\"testClient\",\"type\":\"Client\",\"references\":[{\"name\":\"testServer\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"8413\"}]}";
 
 
 		[SetUp]

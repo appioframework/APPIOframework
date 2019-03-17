@@ -73,7 +73,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 			}
 
 			// check if server is not already a part of client's references
-			if(!ServerIsNotYetClientsReference(ref resultMessages, ref opcuaClient, ref opcuaClientServer, opcuaServer, clientName, serverName))
+			if(!ServerIsNotYetClientsReference(ref resultMessages, ref opcuaClient, ref opcuaClientServer, clientName, opcuaServer.Name))
 			{
 				OppoLogger.Warn(resultMessages.LoggerMessage);
 				outputMessages.Add(resultMessages.OutputMessage, string.Empty);
@@ -142,9 +142,9 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 			return true;
 		}
 
-		private bool ServerIsNotYetClientsReference(ref ResultMessages resultMessages, ref OpcuaClientApp opcuaClient, ref OpcuaClientServerApp opcuaClientServer, OpcuaServerApp opcuaServer, string clientName, string serverName)
+		private bool ServerIsNotYetClientsReference(ref ResultMessages resultMessages, ref OpcuaClientApp opcuaClient, ref OpcuaClientServerApp opcuaClientServer, string clientName, string serverName)
 		{
-			if((opcuaClient != null && opcuaClient.ServerReferences.Any(x => x.Name == opcuaServer.Name)) || (opcuaClientServer != null && opcuaClientServer.ServerReferences.Any(x => x.Name == opcuaServer.Name)))
+			if((opcuaClient != null && opcuaClient.ServerReferences.Any(x => x.Name == serverName)) || (opcuaClientServer != null && opcuaClientServer.ServerReferences.Any(x => x.Name == serverName)))
 			{
 				resultMessages.LoggerMessage = LoggingText.ReferenceAddServerIsPartOfClientReference;
 				resultMessages.OutputMessage = string.Format(OutputText.ReferenceAddServerIsPartOfClientReference, serverName, clientName);
