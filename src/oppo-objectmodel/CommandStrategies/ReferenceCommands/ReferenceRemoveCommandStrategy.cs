@@ -16,12 +16,6 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 		}
 
 		public string Name => Constants.ReferenceCommandName.Remove;
-		
-		public struct ResultMessages
-		{
-			public string LoggerMessage { get; set; }
-			public string OutputMessage { get; set; }
-		};
 
 		public CommandResult Execute(IEnumerable<string> inputParams)
 		{
@@ -32,7 +26,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 			var serverName = inputParamsArray.ElementAtOrDefault(3);
 
 			var outputMessages = new MessageLines();
-			var resultMessages = new ResultMessages();
+			var resultMessages = new RefUtility.ResultMessages();
 
 			// validate client
 			var clientFullName = _fileSystem.CombinePaths(clientName, clientName + Constants.FileExtension.OppoProject);
@@ -89,7 +83,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 			return new CommandResult(true, outputMessages);
 		}
 
-		private bool ValidateClient(ref ResultMessages resultMessages, string clientNameFlag, string clientName, string clientFullName)
+		private bool ValidateClient(ref RefUtility.ResultMessages resultMessages, string clientNameFlag, string clientName, string clientFullName)
 		{
 			// validate client name flag
 			if (clientNameFlag != Constants.ReferenceRemoveCommandArguments.Client && clientNameFlag != Constants.ReferenceRemoveCommandArguments.VerboseClient)
@@ -99,7 +93,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 				return false;
 			}
 
-			// check if client name is empty 
+			// check if client oppoproj file exists
 			if (string.IsNullOrEmpty(clientName) || !_fileSystem.FileExists(clientFullName))
 			{
 				resultMessages.LoggerMessage = LoggingText.ReferenceClientOppoprojFileNotFound;
@@ -110,7 +104,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 			return true;
 		}
 
-		private bool ValidateServer(ref ResultMessages resultMessages, string serverNameFlag, string serverName)
+		private bool ValidateServer(ref RefUtility.ResultMessages resultMessages, string serverNameFlag, string serverName)
 		{
 			// check if serverNameFlag is valid
 			if (serverNameFlag != Constants.ReferenceRemoveCommandArguments.Server && serverNameFlag != Constants.ReferenceRemoveCommandArguments.VerboseServer)

@@ -17,12 +17,6 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 
 		public string Name => Constants.ReferenceCommandName.Add;
 
-		private struct ResultMessages
-		{
-			public string LoggerMessage { get; set; }
-			public string OutputMessage { get; set; }
-		};
-
 		public CommandResult Execute(IEnumerable<string> inputParams)
 		{
 			var inputParamsArray = inputParams.ToArray();
@@ -32,7 +26,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 			var serverName = inputParamsArray.ElementAtOrDefault(3);
 
 			var outputMessages = new MessageLines();
-			var resultMessages = new ResultMessages();
+			var resultMessages = new RefUtility.ResultMessages();
 
 			// validate client
 			var clientFullName = _fileSystem.CombinePaths(clientName, clientName + Constants.FileExtension.OppoProject);
@@ -100,7 +94,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 			return new CommandResult(true, outputMessages);
 		}
 
-		private bool ValidateClient(ref ResultMessages resultMessages, string clientNameFlag, string clientName, string clientFullName)
+		private bool ValidateClient(ref RefUtility.ResultMessages resultMessages, string clientNameFlag, string clientName, string clientFullName)
 		{
 			// validate client name flag
 			if (clientNameFlag != Constants.ReferenceAddCommandArguments.Client && clientNameFlag != Constants.ReferenceAddCommandArguments.VerboseClient)
@@ -121,7 +115,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 			return true;
 		}
 
-		private bool ValidateServer(ref ResultMessages resultMessages, string serverNameFlag, string serverName, string serverFullName)
+		private bool ValidateServer(ref RefUtility.ResultMessages resultMessages, string serverNameFlag, string serverName, string serverFullName)
 		{
 			// validate server name flag
 			if (serverNameFlag != Constants.ReferenceAddCommandArguments.Server && serverNameFlag != Constants.ReferenceAddCommandArguments.VerboseServer)
@@ -142,7 +136,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 			return true;
 		}
 
-		private bool ServerIsNotYetClientsReference(ref ResultMessages resultMessages, ref OpcuaClientApp opcuaClient, ref OpcuaClientServerApp opcuaClientServer, string clientName, string serverName)
+		private bool ServerIsNotYetClientsReference(ref RefUtility.ResultMessages resultMessages, ref OpcuaClientApp opcuaClient, ref OpcuaClientServerApp opcuaClientServer, string clientName, string serverName)
 		{
 			if((opcuaClient != null && opcuaClient.ServerReferences.Any(x => x.Name == serverName)) || (opcuaClientServer != null && opcuaClientServer.ServerReferences.Any(x => x.Name == serverName)))
 			{
