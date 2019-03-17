@@ -48,13 +48,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		private Mock<IFileSystem> _fileSystemMock;
 		private ReferenceAddCommandStrategy _objectUnderTest;
 
-		private readonly string _defaultOpposlnContent = "{\"projects\": []}";
-		private readonly string _sampleOpposlnContent = "{\"projects\": [{\"name\":\"testApp\",\"path\":\"testApp.oppoproj\"}]}";
-
-		private readonly string _sampleOpcuaClientAppContent = "{\"name\":\"testApp\",\"type\":\"Client\"}";
-		private readonly string _sampleOpcuaServerAppContent = "{\"name\":\"testApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"8413\"}";
-		private readonly string _succesfullReferenceClientContent = "{\"name\":\"testApp\",\"type\":\"Client\", \"references\":[{\"name\":\"testApp\",\"type\":\"ClientServer\",\"url\":\"127.0.0.1\",\"port\":\"8413\"}]}";
-		private readonly string _sampleOpcuaClientServerAppContent = "{\"name\":\"testApp\",\"type\":\"ClientServer\",\"url\":\"127.0.0.1\",\"port\":\"8413\",\"references\":[]}";
+		private readonly string _sampleOpcuaClientAppContent = "{\"name\":\"clientApp\",\"type\":\"Client\",\"references\":[]}";
+		private readonly string _sampleOpcuaServerAppContent = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"8413\"}";
+		private readonly string _sampleOpcuaClientServerAppContent = "{\"name\":\"clientServerApp\",\"type\":\"ClientServer\",\"url\":\"127.0.0.1\",\"port\":\"8413\",\"references\":[]}";
+		private readonly string _sampleOpcuaClientAppContentWithServerReference = "{\"name\":\"clientApp\",\"type\":\"Client\",\"references\":[{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"8413\"}]}";
 
 
 		[SetUp]
@@ -125,10 +122,16 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		public void FailBecauseOfUnkownServerParam([ValueSource(nameof(InvalidInputs_UnknownServerParam))] string[] inputParams)
 		{
 			// Arrange
+			var clientName = inputParams.ElementAtOrDefault(1);
 			var serverNameFlag = inputParams.ElementAtOrDefault(2);
 
 			var loggerListenerMock = new Mock<ILoggerListener>();
 			OppoLogger.RegisterListener(loggerListenerMock.Object);
+			
+			// Arrange client file
+			var oppoProjectPath = Path.Combine(clientName, clientName + Constants.FileExtension.OppoProject);
+			_fileSystemMock.Setup(x => x.CombinePaths(clientName, clientName + Constants.FileExtension.OppoProject)).Returns(oppoProjectPath);
+			_fileSystemMock.Setup(x => x.FileExists(oppoProjectPath)).Returns(true);
 
 			// Act
 			var commandResult = _objectUnderTest.Execute(inputParams);
@@ -167,8 +170,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			Assert.IsNotNull(commandResult.OutputMessages);
 			var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
 			OppoLogger.RemoveListener(loggerListenerMock.Object);
-			loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.OppoClientFileNotFound), Times.Once);
-			Assert.AreEqual(string.Format(OutputText.ClientNotFound, oppoProjectPath), firstMessageLine.Key);
+			loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.ReferenceClientOppoprojFileNotFound), Times.Once);
+			Assert.AreEqual(string.Format(OutputText.ReferenceClientOppoprojFileNotFound, oppoProjectPath), firstMessageLine.Key);
 			Assert.AreEqual(string.Empty, firstMessageLine.Value);
 			_fileSystemMock.Verify(x => x.CombinePaths(clientName, clientName + Constants.FileExtension.OppoProject), Times.Once);
 			_fileSystemMock.Verify(x => x.FileExists(oppoProjectPath), Times.Once);
@@ -202,8 +205,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			Assert.IsNotNull(commandResult.OutputMessages);
 			var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
 			OppoLogger.RemoveListener(loggerListenerMock.Object);
-			loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.OppoServerFileNotFound), Times.Once);
-			Assert.AreEqual(string.Format(OutputText.ServerNotFound, oppoServerProjectPath), firstMessageLine.Key);
+			loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.ReferenceAddServerOppoprojFileNotFound), Times.Once);
+			Assert.AreEqual(string.Format(OutputText.ReferenceAddServerOppoprojFileNotFound, oppoServerProjectPath), firstMessageLine.Key);
 			Assert.AreEqual(string.Empty, firstMessageLine.Value);
 			_fileSystemMock.Verify(x => x.CombinePaths(serverName, serverName + Constants.FileExtension.OppoProject), Times.Once);
 			_fileSystemMock.Verify(x => x.FileExists(oppoServerProjectPath), Times.Once);
@@ -240,8 +243,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				Assert.IsNotNull(commandResult.OutputMessages);
 				var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
 				OppoLogger.RemoveListener(loggerListenerMock.Object);
-				loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.CouldntDeserliazeServer), Times.Once);
-				Assert.AreEqual(string.Format(OutputText.CouldntDeserliazeServer, oppoServerPath), firstMessageLine.Key);
+				loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.ReferenceAddCouldntDeserliazeServer), Times.Once);
+				Assert.AreEqual(string.Format(OutputText.ReferenceAddCouldntDeserliazeServer, oppoServerPath), firstMessageLine.Key);
 				Assert.AreEqual(string.Empty, firstMessageLine.Value);
 				_fileSystemMock.Verify(x => x.ReadFile(oppoServerPath), Times.Once);
 			}
@@ -278,8 +281,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			Assert.IsNotNull(commandResult.OutputMessages);
 			var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
 			OppoLogger.RemoveListener(loggerListenerMock.Object);
-			loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.CouldntDeserliazeClient), Times.Once);
-			Assert.AreEqual(string.Format(OutputText.CouldntDeserliazeClient, oppoClientPath), firstMessageLine.Key);
+			loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.ReferenceCouldntDeserliazeClient), Times.Once);
+			Assert.AreEqual(string.Format(OutputText.ReferenceCouldntDeserliazeClient, oppoClientPath), firstMessageLine.Key);
 			Assert.AreEqual(string.Empty, firstMessageLine.Value);
 			_fileSystemMock.Verify(x => x.ReadFile(oppoClientPath), Times.Once);
 
@@ -289,6 +292,42 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			serverMemoryStream.Dispose();
 		}
 
+		[Test]
+		public void FailOnAddingServerWhichIsAlreadyClientsReference([ValueSource(nameof(ValidInputs))] string[] inputParams)
+		{
+			// Arrage
+			var serverName = inputParams.ElementAtOrDefault(3);
+			var clientName = inputParams.ElementAtOrDefault(1);
+
+			var loggerListenerMock = new Mock<ILoggerListener>();
+			OppoLogger.RegisterListener(loggerListenerMock.Object);
+
+			var oppoClientPath = Path.Combine(clientName, clientName + Constants.FileExtension.OppoProject);
+			_fileSystemMock.Setup(x => x.CombinePaths(clientName, clientName + Constants.FileExtension.OppoProject)).Returns(oppoClientPath);
+			_fileSystemMock.Setup(x => x.FileExists(oppoClientPath)).Returns(true);
+			var oppoServerPath = Path.Combine(serverName, serverName + Constants.FileExtension.OppoProject);
+			_fileSystemMock.Setup(x => x.CombinePaths(serverName, serverName + Constants.FileExtension.OppoProject)).Returns(oppoServerPath);
+			_fileSystemMock.Setup(x => x.FileExists(oppoServerPath)).Returns(true);
+
+			using (Stream clientMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpcuaClientAppContentWithServerReference)))
+			using (Stream serverMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpcuaServerAppContent)))
+			{
+				_fileSystemMock.Setup(x => x.ReadFile(oppoClientPath)).Returns(clientMemoryStream);
+				_fileSystemMock.Setup(x => x.ReadFile(oppoServerPath)).Returns(serverMemoryStream);
+
+				// Act
+				var commandResult = _objectUnderTest.Execute(inputParams);
+
+				// Assert 
+				Assert.IsFalse(commandResult.Sucsess);
+				Assert.IsNotNull(commandResult.OutputMessages);
+				var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
+				OppoLogger.RemoveListener(loggerListenerMock.Object);
+				loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.ReferenceAddServerIsPartOfClientReference), Times.Once);
+				Assert.AreEqual(string.Format(OutputText.ReferenceAddServerIsPartOfClientReference, serverName, clientName), firstMessageLine.Key);
+				Assert.AreEqual(string.Empty, firstMessageLine.Value);
+			}
+		}
 
 		[Test]
 		public void SucceessOnAddingServerReferenceToClientServer([ValueSource(nameof(ValidInputs))] string[] inputParams)
@@ -312,9 +351,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			using (Stream serverMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpcuaServerAppContent)))
 			{
 				_fileSystemMock.SetupSequence(x => x.ReadFile(oppoClientPath)).Returns(clientMemoryStream).Returns(clientServerMemoryStream);
-
 				_fileSystemMock.Setup(x => x.ReadFile(oppoServerPath)).Returns(serverMemoryStream);
-				OpcuaClientApp opcuaClient = JsonConvert.DeserializeObject<OpcuaClientApp>(_succesfullReferenceClientContent);
 
 				// Act
 				var commandResult = _objectUnderTest.Execute(inputParams);
@@ -354,9 +391,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			using (Stream clientServerMemoryStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpcuaClientServerAppContent)))
 			{
 				_fileSystemMock.Setup(x => x.ReadFile(oppoClientPath)).Returns(clientMemoryStream);
-
 				_fileSystemMock.Setup(x => x.ReadFile(oppoServerPath)).Returns(clientServerMemoryStream);
-				OpcuaClientApp opcuaClient = JsonConvert.DeserializeObject<OpcuaClientApp>(_succesfullReferenceClientContent);
 
 				// Act
 				var commandResult = _objectUnderTest.Execute(inputParams);

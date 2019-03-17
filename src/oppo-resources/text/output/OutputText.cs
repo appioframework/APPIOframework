@@ -82,19 +82,24 @@ namespace Oppo.Resources.text.output
 		public const string SlnPublishSuccess = "Projects that are part of solution '{0}' were successfully published.";
 		public const string SlnDeploySuccess = "Projects that are part of solution '{0}' were successfully deployed.";
 
-		// reference add <command>
+
+		// reference common
 		public const string ReferenceUnknownParameter = "Unknown reference command parameter '{0}'!";
-		public const string ClientUnknownParameter = "Unknown client parameter '{0}'!";
+		public const string ReferenceClientOppoprojFileNotFound = "The client's oppoproj file '{0}' not found!";
+		public const string ReferenceCouldntDeserliazeClient = "The client file '{0}' has invalid content!";
+
+		// reference add <command>
+		public const string ReferenceAddServerIsPartOfClientReference = "Server '{0}' is already the reference of client '{1}'!";
+		public const string ReferenceAddServerOppoprojFileNotFound = "The server's oppoproj file '{0}' not found!";
+		public const string ReferenceAddCouldntDeserliazeServer = "The server file '{0}' has invalid content!";
+		public const string RefereneceAddSuccess = "The reference of the server with the name '{0}' was successfully added to the client '{1}'.";
+
+
+
 		// reference remove <command>
 		public const string ReferenceRemoveSuccess = "The opcuaapp with the name '{0}' was successfully removed from the server '{1}'.";
 		public const string ReferenceRemoveClientNameEmpty = "The client project name empty!";
 		public const string ReferenceRemoveServerNameEmpty = "The server name empty!";
 		public const string ReferenceRemoveServerIsNotInClient = "The reference server '{0}' is not a part of the client'{1}'!";
-		// reference common <command>
-		public const string ServerNotFound = "The server file '{0}' not found!";
-		public const string ClientNotFound = "The client file '{0}' not found!";
-		public const string CouldntDeserliazeServer = "The server file '{0}' has invalid content!";
-		public const string CouldntDeserliazeClient = "The client file '{0}' has invalid content!";
-		public const string RefereneceAddSuccess = "The reference of the server with the name '{0}' was successfully added to the client '{1}'.";
 	}
 }

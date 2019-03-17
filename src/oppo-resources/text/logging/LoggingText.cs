@@ -85,20 +85,24 @@
         public const string InvalidInformationModelMissingModelFile = "Information model import failure, missing model file!";
         public const string OppoHelpForImportInformationModel = "Help for import <command> called";
 
+		// reference common
+		public const string ReferenceUnknownCommandParam = "Unknown reference add command parameter!";
+		public const string ReferenceClientOppoprojFileNotFound = "Client's oppoproj file not found!";
+		public const string ReferenceCouldntDeserliazeClient = "Couldn't deserialize client file!";
+		public const string OppoHelpForReferenceCommand = "Help for reference <command> called";
+
 		// reference add command
 		public const string ReferenceAddSuccess = "Server reference successfully added to client project file.";
-		public const string ReferenceUnknownCommandParam = "Unknown reference add command parameter!";
-		public const string CouldntDeserliazeServer = "Couldn't deserialize server file!";
-		public const string CouldntDeserliazeClient = "Couldn't deserialize client file!";
+		public const string ReferenceAddServerOppoprojFileNotFound = "Server's oppoproj file not found!";
+		public const string ReferenceAddCouldntDeserliazeServer = "Couldn't deserialize server file!";
+		public const string ReferenceAddServerIsPartOfClientReference = "Server is already client's reference!";
+
+
+		
 		// reference remove command
 		public const string ReferenceRemoveSuccess = "Opcuaapp reference was successfully removed from server.";
 		public const string ReferenceRemoveClientNameEmpty = "Empty client name!";
 		public const string ReferenceRemoveServerNameEmpty = "Empty server name!";
 		public const string ReferenceRemoveServerIsNotInClient = "Server is not a part of the client reference list!";
-		// reference common 
-		public const string OppoServerFileNotFound = "Server not found!";
-		public const string ClientUnknownCommandParam = "Unknown client add command parameter!";
-		public const string OppoClientFileNotFound = "Client not found!";
-		public const string OppoHelpForReferenceCommand = "Help for reference <command> called";
 	}
 }

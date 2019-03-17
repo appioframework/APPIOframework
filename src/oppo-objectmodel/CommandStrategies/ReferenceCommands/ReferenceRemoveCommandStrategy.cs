@@ -47,8 +47,8 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 			var clientFullName = _fileSystem.CombinePaths(clientName, clientName + Constants.FileExtension.OppoProject);
 			if (string.IsNullOrEmpty(clientName) || !_fileSystem.FileExists(clientFullName))
 			{
-				OppoLogger.Warn(LoggingText.OppoClientFileNotFound);
-				outputMessages.Add(string.Format(OutputText.ClientNotFound, clientFullName), string.Empty);
+				OppoLogger.Warn(LoggingText.ReferenceClientOppoprojFileNotFound);
+				outputMessages.Add(string.Format(OutputText.ReferenceClientOppoprojFileNotFound, clientFullName), string.Empty);
 				return new CommandResult(false, outputMessages);
 			}
 
@@ -64,8 +64,8 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 			OpcuaClientApp oppoClient = SlnUtility.DeserializeFile<OpcuaClientApp>(clientFullName, _fileSystem);
 			if (oppoClient == null)
 			{
-				OppoLogger.Warn(LoggingText.CouldntDeserliazeClient);
-				outputMessages.Add(string.Format(OutputText.CouldntDeserliazeClient, clientFullName), string.Empty);
+				OppoLogger.Warn(LoggingText.ReferenceCouldntDeserliazeClient);
+				outputMessages.Add(string.Format(OutputText.ReferenceCouldntDeserliazeClient, clientFullName), string.Empty);
 				return new CommandResult(false, outputMessages);
 			}
 

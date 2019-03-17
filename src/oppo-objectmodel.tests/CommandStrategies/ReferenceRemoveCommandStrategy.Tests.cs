@@ -176,8 +176,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			Assert.IsNotNull(commandResult.OutputMessages);
 			var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
 			OppoLogger.RemoveListener(loggerListenerMock.Object);
-			loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.OppoClientFileNotFound), Times.Once);
-			Assert.AreEqual(string.Format(OutputText.ClientNotFound, oppoProjectPath), firstMessageLine.Key);
+			loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.ReferenceClientOppoprojFileNotFound), Times.Once);
+			Assert.AreEqual(string.Format(OutputText.ReferenceClientOppoprojFileNotFound, oppoProjectPath), firstMessageLine.Key);
 			Assert.AreEqual(string.Empty, firstMessageLine.Value);
 			_fileSystemMock.Verify(x => x.CombinePaths(clientName, clientName + Constants.FileExtension.OppoProject), Times.Once);
 			_fileSystemMock.Verify(x => x.FileExists(oppoProjectPath), Times.Once);
@@ -208,8 +208,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			Assert.IsNotNull(commandResult.OutputMessages);
 			var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
 			OppoLogger.RemoveListener(loggerListenerMock.Object);
-			loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.OppoClientFileNotFound), Times.Once);
-			Assert.AreEqual(string.Format(OutputText.ClientNotFound, clientFullName), firstMessageLine.Key); 
+			loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.ReferenceClientOppoprojFileNotFound), Times.Once);
+			Assert.AreEqual(string.Format(OutputText.ReferenceClientOppoprojFileNotFound, clientFullName), firstMessageLine.Key); 
 			Assert.AreEqual(string.Empty, firstMessageLine.Value);
 		}
 
@@ -268,8 +268,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				Assert.IsNotNull(commandResult.OutputMessages);
 				var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
 				OppoLogger.RemoveListener(loggerListenerMock.Object);
-				loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.CouldntDeserliazeClient), Times.Once);
-				Assert.AreEqual(string.Format(OutputText.CouldntDeserliazeClient, oppoClientPath), firstMessageLine.Key);
+				loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.ReferenceCouldntDeserliazeClient), Times.Once);
+				Assert.AreEqual(string.Format(OutputText.ReferenceCouldntDeserliazeClient, oppoClientPath), firstMessageLine.Key);
 				Assert.AreEqual(string.Empty, firstMessageLine.Value);
 			}
 		}
