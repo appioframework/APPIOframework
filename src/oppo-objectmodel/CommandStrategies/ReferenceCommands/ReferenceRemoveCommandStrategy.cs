@@ -6,65 +6,45 @@ using Newtonsoft.Json;
 
 namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 {
-	public class ReferenceRemoveCommandStrategy : ICommand<ReferenceStrategy>
+	public class ReferenceRemoveCommandStrategy : ReferenceBase
 	{
-		private readonly IFileSystem _fileSystem;
+		public ReferenceRemoveCommandStrategy(IFileSystem fileSystem) : base(fileSystem) { }
 
-		public ReferenceRemoveCommandStrategy(IFileSystem fileSystem)
+		public override string Name => Constants.ReferenceCommandName.Remove;
+
+		public override CommandResult Execute(IEnumerable<string> inputParams)
 		{
-			_fileSystem = fileSystem;
-		}
-
-		public string Name => Constants.ReferenceCommandName.Remove;
-
-		public CommandResult Execute(IEnumerable<string> inputParams)
-		{
-			var inputParamsArray = inputParams.ToArray();
-			var clientNameFlag = inputParamsArray.ElementAtOrDefault(0);
-			var clientName = inputParamsArray.ElementAtOrDefault(1);
-			var serverNameFlag = inputParamsArray.ElementAtOrDefault(2);
-			var serverName = inputParamsArray.ElementAtOrDefault(3);
-
-			var outputMessages = new MessageLines();
-			var resultMessages = new RefUtility.ResultMessages();
-
-			// validate client
-			var clientFullName = _fileSystem.CombinePaths(clientName, clientName + Constants.FileExtension.OppoProject);
-			if (!ValidateClient(ref resultMessages, clientNameFlag, clientName, clientFullName))
+			if (!ExecuteCommon(inputParams))
 			{
-				OppoLogger.Warn(resultMessages.LoggerMessage);
-				outputMessages.Add(resultMessages.OutputMessage, string.Empty);
-				return new CommandResult(false, outputMessages);
+				return new CommandResult(false, _outputMessages);
 			}
 
 			// validate server
-			if (!ValidateServer(ref resultMessages, serverNameFlag, serverName))
+			if (!ValidateServer(_serverNameFlag, _serverName))
 			{
-				OppoLogger.Warn(resultMessages.LoggerMessage);
-				outputMessages.Add(resultMessages.OutputMessage, string.Empty);
-				return new CommandResult(false, outputMessages);
+				return new CommandResult(false, _outputMessages);
 			}
 
 			// deserialise client file
 			OpcuaClientApp opcuaClient = null;
 			OpcuaClientServerApp opcuaClientServer = null;
-			RefUtility.DeserializeClient(ref opcuaClient, ref opcuaClientServer, clientFullName, _fileSystem);
+			RefUtility.DeserializeClient(ref opcuaClient, ref opcuaClientServer, _clientFullName, _fileSystem);
 			if (opcuaClient == null && opcuaClientServer == null)
 			{
 				OppoLogger.Warn(LoggingText.ReferenceCouldntDeserliazeClient);
-				outputMessages.Add(string.Format(OutputText.ReferenceCouldntDeserliazeClient, clientFullName), string.Empty);
-				return new CommandResult(false, outputMessages);
+				_outputMessages.Add(string.Format(OutputText.ReferenceCouldntDeserliazeClient, _clientFullName), string.Empty);
+				return new CommandResult(false, _outputMessages);
 			}
 
 			// check if server is part of client's reference and remove it
 			string clientNewContent = string.Empty;
 			IOpcuaServerApp serverReference = null;
-			if (opcuaClientServer != null && (serverReference = opcuaClientServer.ServerReferences.SingleOrDefault(x => x.Name == serverName)) != null)
+			if (opcuaClientServer != null && (serverReference = opcuaClientServer.ServerReferences.SingleOrDefault(x => x.Name == _serverName)) != null)
 			{
 				opcuaClientServer.ServerReferences.Remove(serverReference);
 				clientNewContent = JsonConvert.SerializeObject(opcuaClientServer, Formatting.Indented);
 			}
-			else if (opcuaClient != null && (serverReference = opcuaClient.ServerReferences.SingleOrDefault(x => x.Name == serverName)) != null)
+			else if (opcuaClient != null && (serverReference = opcuaClient.ServerReferences.SingleOrDefault(x => x.Name == _serverName)) != null)
 			{
 				opcuaClient.ServerReferences.Remove(serverReference);
 				clientNewContent = JsonConvert.SerializeObject(opcuaClient, Formatting.Indented);
@@ -72,60 +52,39 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 			else
 			{
 				OppoLogger.Warn(LoggingText.ReferenceRemoveServerIsNotInClient);
-				outputMessages.Add(string.Format(OutputText.ReferenceRemoveServerIsNotInClient, serverName, clientName), string.Empty);
-				return new CommandResult(false, outputMessages);
+				_outputMessages.Add(string.Format(OutputText.ReferenceRemoveServerIsNotInClient, _serverName, _clientName), string.Empty);
+				return new CommandResult(false, _outputMessages);
 			}
-			_fileSystem.WriteFile(clientFullName, new List<string> { clientNewContent });
+			_fileSystem.WriteFile(_clientFullName, new List<string> { clientNewContent });
 
 			// exit method with success
 			OppoLogger.Info(LoggingText.ReferenceRemoveSuccess);
-			outputMessages.Add(string.Format(OutputText.ReferenceRemoveSuccess, clientName, serverName), string.Empty);
-			return new CommandResult(true, outputMessages);
+			_outputMessages.Add(string.Format(OutputText.ReferenceRemoveSuccess, _clientName, _serverName), string.Empty);
+			return new CommandResult(true, _outputMessages);
 		}
 
-		private bool ValidateClient(ref RefUtility.ResultMessages resultMessages, string clientNameFlag, string clientName, string clientFullName)
-		{
-			// validate client name flag
-			if (clientNameFlag != Constants.ReferenceRemoveCommandArguments.Client && clientNameFlag != Constants.ReferenceRemoveCommandArguments.VerboseClient)
-			{
-				resultMessages.LoggerMessage = LoggingText.ReferenceUnknownCommandParam;
-				resultMessages.OutputMessage = string.Format(OutputText.ReferenceUnknownParameter, clientNameFlag);
-				return false;
-			}
-
-			// check if client oppoproj file exists
-			if (string.IsNullOrEmpty(clientName) || !_fileSystem.FileExists(clientFullName))
-			{
-				resultMessages.LoggerMessage = LoggingText.ReferenceClientOppoprojFileNotFound;
-				resultMessages.OutputMessage = string.Format(OutputText.ReferenceClientOppoprojFileNotFound, clientFullName);
-				return false;
-			}
-
-			return true;
-		}
-
-		private bool ValidateServer(ref RefUtility.ResultMessages resultMessages, string serverNameFlag, string serverName)
+		private bool ValidateServer(string serverNameFlag, string serverName)
 		{
 			// check if serverNameFlag is valid
 			if (serverNameFlag != Constants.ReferenceRemoveCommandArguments.Server && serverNameFlag != Constants.ReferenceRemoveCommandArguments.VerboseServer)
 			{
-				resultMessages.LoggerMessage = LoggingText.ReferenceUnknownCommandParam;
-				resultMessages.OutputMessage = string.Format(OutputText.ReferenceUnknownParameter, serverNameFlag);
+				OppoLogger.Warn(LoggingText.ReferenceUnknownCommandParam);
+				_outputMessages.Add(string.Format(OutputText.ReferenceUnknownParameter, serverNameFlag), string.Empty);
 				return false;
 			}
 
 			// check if server name is empty
 			if (string.IsNullOrEmpty(serverName))
 			{
-				resultMessages.LoggerMessage = LoggingText.ReferenceRemoveServerNameEmpty;
-				resultMessages.OutputMessage = OutputText.ReferenceRemoveServerNameEmpty;
+				OppoLogger.Warn(LoggingText.ReferenceRemoveServerNameEmpty);
+				_outputMessages.Add(OutputText.ReferenceRemoveServerNameEmpty, string.Empty);
 				return false;
 			}
 
 			return true;
 		}
 
-		public string GetHelpText()
+		public override string GetHelpText()
 		{
 			return Resources.text.help.HelpTextValues.ReferenceRemoveNameArgumentCommandDescription;
 		}
