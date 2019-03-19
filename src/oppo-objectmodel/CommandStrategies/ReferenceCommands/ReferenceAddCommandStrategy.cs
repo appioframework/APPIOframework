@@ -72,27 +72,6 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 			return new CommandResult(true, _outputMessages);
 		}
 
-		private bool ValidateClient(string clientNameFlag, string clientName, string clientFullName)
-		{
-			// validate client name flag
-			if (clientNameFlag != Constants.ReferenceAddCommandArguments.Client && clientNameFlag != Constants.ReferenceAddCommandArguments.VerboseClient)
-			{
-				OppoLogger.Warn(LoggingText.ReferenceUnknownCommandParam);
-				_outputMessages.Add(string.Format(OutputText.ReferenceUnknownParameter, clientNameFlag), string.Empty);
-				return false;
-			}
-
-			// check if client oppoproj file exists
-			if (string.IsNullOrEmpty(clientName) || !_fileSystem.FileExists(clientFullName))
-			{
-				OppoLogger.Warn(LoggingText.ReferenceClientOppoprojFileNotFound);
-				_outputMessages.Add(string.Format(OutputText.ReferenceClientOppoprojFileNotFound, clientFullName), string.Empty);
-				return false;
-			}
-
-			return true;
-		}
-
 		private bool ValidateServer(string serverNameFlag, string serverName, string serverFullName)
 		{
 			// validate server name flag

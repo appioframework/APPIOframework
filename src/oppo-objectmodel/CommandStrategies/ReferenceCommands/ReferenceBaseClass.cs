@@ -9,7 +9,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 	{
 		protected readonly IFileSystem _fileSystem;
 		
-		public ReferenceBase(IFileSystem fileSystem)
+		protected ReferenceBase(IFileSystem fileSystem)
 		{
 			_fileSystem = fileSystem;
 		}
