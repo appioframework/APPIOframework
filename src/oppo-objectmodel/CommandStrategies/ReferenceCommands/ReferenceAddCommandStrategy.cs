@@ -35,6 +35,14 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 				return new CommandResult(false, _outputMessages);
 			}
 
+			// check if deserialized server is not a client
+			if(opcuaServer.Type == Constants.ApplicationType.Client)
+			{
+				OppoLogger.Warn(LoggingText.ReferenceAddClientCannotBeReferred);
+				_outputMessages.Add(string.Format(OutputText.ReferenceAddClientCannotBeReferred, _serverName), string.Empty);
+				return new CommandResult(false, _outputMessages);
+			}
+
 			// deserialize client file
 			OpcuaClientApp opcuaClient = null;
 			OpcuaClientServerApp opcuaClientServer = null;
