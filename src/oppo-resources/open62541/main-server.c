@@ -1,5 +1,6 @@
 #include "open62541.h"
 #include <signal.h>
+#include "constants.h"
 
 UA_Boolean running = true;
 static void stopHandler(int sig) {
@@ -40,13 +41,14 @@ int main(void) {
     signal(SIGINT, stopHandler);
     signal(SIGTERM, stopHandler);
 
-    UA_ServerConfig *config = UA_ServerConfig_new_default();
-    UA_Server *server = UA_Server_new(config);
+	UA_ServerConfig *config = UA_ServerConfig_new_minimal(SERVER_APP_PORT, NULL);
+	UA_ServerConfig_set_customHostname(config, UA_STRING(SERVER_APP_HOSTNAME));
+	UA_Server *server = UA_Server_new(config);
 
     createTemperatureVariableNode(server);
 
 	UA_StatusCode retval;
-	if (loadInformationModels(server) == UA_STATUSCODE_GOOD)
+	if (loadInformationModels(server) == UA_STATUSCODE_GOOD && addCallbacks(server) == UA_STATUSCODE_GOOD)
 	{
 		retval = UA_Server_run(server, &running);
 	}

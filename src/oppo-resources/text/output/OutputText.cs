@@ -9,17 +9,23 @@ namespace Oppo.Resources.text.output
 
         // publish <command>
         public const string OpcuaappPublishFailure = "Publish failure!";
-        public const string OpcuaappPublishSuccess = "Publish '{0}' success!";
+		public const string OpcuaappPublishFailureMissingExecutables = "Publish '{0}' failure! Missing client and server executable files";
+		public const string OpcuaappPublishSuccess = "Publish '{0}' success!";
 
         // build <command>
         public const string OpcuaappBuildFailure = "Build failure!";
-        public const string OpcuaappBuildSuccess = "Build '{0}' success!";
+		public const string OpcuaappBuildFailureProjectDoesNotExist = "Build failed! Project '{0}' does not exist!";
+		public const string OpcuaappBuildSuccess = "Build '{0}' success!";
 
         // new <command>
         public const string NewOpcuaappCommandSuccess = "An opcuaapp with name '{0}' was successfully created!";
         public const string NewOpcuaappCommandFailure = "Creating opcuaapp with name '{0}' failed!";
-        public const string NewOpcuaappCommandFailureUnknownParam = "Creating opcuaapp failed!";
-        public const string NewSlnCommandSuccess = "A solution with name '{0}' was successfully created!";
+        public const string NewOpcuaappCommandFailureUnknownParam = "Unknown command parameter '{0}'!";
+		public const string NewOpcuaappCommandFailureInvalidProjectName = "Invalid opcuaapp name '{0}'!";
+		public const string NewOpcuaappCommandFailureUnknownProjectType = "Unknown opcua application type '{0}'!";
+		public const string NewOpcuaappCommandFailureInvalidServerUrl = "Invalid server url '{0}'!";
+		public const string NewOpcuaappCommandFailureInvalidServerPort = "Invalid server port '{0}'!";
+		public const string NewSlnCommandSuccess = "A solution with name '{0}' was successfully created!";
         public const string NewSlnCommandFailure = "Creating solution with name '{0}' failed!";
         public const string NewSlnCommandFailureUnknownParam = "Creating solution failed!";
 
@@ -56,5 +62,42 @@ namespace Oppo.Resources.text.output
         public const string GenerateInformationModelFailureEmptyOpcuaAppName = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Empty opcuaapp name!";
         public const string GenerateInformationModelFailureValidatingModel = "It was not possible to validate the model '{0}' against known opc-ua 'UANodeSet.xsd'!";
         public const string GenerateInformationModelRequiredModelFailure = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Can't use required model '{2}'!";
-    }
+
+        // sln common <command>
+        public const string SlnOpposlnNotFound		= "The solution file '{0}' not found!";
+        public const string SlnUnknownParameter		= "Unknown command parameter '{0}'!";
+		public const string SlnCouldntDeserliazeSln = "The solution file '{0}' has invalid content!";
+		// sln add <command>
+		public const string SlnAddSuccess					= "The opcuaapp with the name '{0}' was successfully added to solution '{1}'.";
+		public const string SlnAddOpcuaappAlreadyExist		= "The opcuaapp with the name '{0}' is already a part of the solution '{1}'.";
+		public const string SlnAddOpcuaappNotFound			= "The opcuaapp project file '{0}' not found!";
+		public const string SlnAddCouldntDeserliazeOpcuaapp	= "The opcuaapp project file '{0}' has invalid content!";
+		public const string SlnAddContainsOpcuaapp			= "The solution '{0}' already contains the opcuaapp '{1}'";
+		// sln remove <command>
+		public const string SlnRemoveSuccess				= "The opcuaapp with the name '{0}' was successfully removed from the solution '{1}'.";
+		public const string SlnRemoveOpcuaappNameEmpty		= "The opcuaapp project name empty!";
+		public const string SlnRemoveOpcuaappIsNotInSln		= "The opcuaapp project '{0}' is not a part of the solution '{1}'!";
+		// sln build <command>
+		public const string SlnBuildSuccess = "Projects that are part of solution '{0}' were successfully built.";
+		public const string SlnPublishSuccess = "Projects that are part of solution '{0}' were successfully published.";
+		public const string SlnDeploySuccess = "Projects that are part of solution '{0}' were successfully deployed.";
+
+
+		// reference common
+		public const string ReferenceUnknownParameter = "Unknown reference command parameter '{0}'!";
+		public const string ReferenceClientOppoprojFileNotFound = "The client's oppoproj file '{0}' not found!";
+		public const string ReferenceCouldntDeserliazeClient = "The client file '{0}' has invalid content!";
+
+		// reference add <command>
+		public const string ReferenceAddServerIsPartOfClientReference = "Server '{0}' is already the reference of client '{1}'!";
+		public const string ReferenceAddServerOppoprojFileNotFound = "The server's oppoproj file '{0}' not found!";
+		public const string ReferenceAddCouldntDeserliazeServer = "The server file '{0}' has invalid content!";
+		public const string RefereneceAddSuccess = "The reference of the server with the name '{0}' was successfully added to the client '{1}'.";
+		public const string ReferenceAddClientCannotBeReferred = "The opcuaapp '{0}' is a client. Client cannot refer to another client!";
+
+		// reference remove <command>
+		public const string ReferenceRemoveSuccess = "The opcuaapp with the name '{0}' was successfully removed from the server '{1}'.";
+		public const string ReferenceRemoveServerNameEmpty = "The server name empty!";
+		public const string ReferenceRemoveServerIsNotInClient = "The reference server '{0}' is not a part of the client '{1}'!";
+	}
 }

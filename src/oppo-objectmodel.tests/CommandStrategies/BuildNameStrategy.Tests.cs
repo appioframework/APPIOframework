@@ -1,9 +1,11 @@
+using System.Text;
 using System.IO;
 using System.Linq;
 using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies.BuildCommands;
 using Oppo.Resources.text.output;
+using Oppo.Resources.text.logging;
 
 namespace Oppo.ObjectModel.Tests.CommandStrategies
 {
@@ -36,7 +38,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             };
         }
 
-        [Test]
+		private readonly string _oppoprojServerContent = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"localhost\",\"port\":\"4840\"}";
+		private readonly string _oppoprojClientContent = "{\"name\":\"clientApp\",\"type\":\"Client\",\"references\":[{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"localhost\",\"port\":\"4840\"}]}";
+
+		[Test]
         public void BuildNameStrategy_Should_ImplementICommandOfBuildStrategy()
         {
             // Arrange
@@ -78,36 +83,11 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         }
 
         [Test]
-        public void BuildStrategy_Should_SucceedOnBuildableProject([ValueSource(nameof(ValidInputs))] string[] inputParams)
-        {
-            // Arrange
-            var projectDirectoryName = inputParams.ElementAt(0);
-            var projectBuildDirectory = Path.Combine(projectDirectoryName, Constants.DirectoryName.MesonBuild);
-
-            var fileSystemMock = new Mock<IFileSystem>();
-            fileSystemMock.Setup(x => x.CombinePaths(It.IsAny<string>(), It.IsAny<string>())).Returns(projectBuildDirectory);
-            fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.Meson, projectDirectoryName, Constants.DirectoryName.MesonBuild)).Returns(true);
-            fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.Ninja, projectBuildDirectory, string.Empty)).Returns(true);
-            var buildStrategy = new BuildNameStrategy(string.Empty, fileSystemMock.Object);
-            var loggerListenerMock = new Mock<ILoggerListener>();
-            loggerListenerMock.Setup(y => y.Info(It.IsAny<string>()));
-            OppoLogger.RegisterListener(loggerListenerMock.Object);
-            
-            // Act
-            var strategyResult = buildStrategy.Execute(inputParams);
-
-            // Assert
-            Assert.IsTrue(strategyResult.Sucsess);
-            Assert.AreEqual(string.Format(OutputText.OpcuaappBuildSuccess, projectDirectoryName), strategyResult.OutputMessages.First().Key);
-            fileSystemMock.VerifyAll();
-            loggerListenerMock.Verify(y => y.Info(It.IsAny<string>()), Times.Once);
-            OppoLogger.RemoveListener(loggerListenerMock.Object);
-        }
-
-        [Test]
         public void ShouldExecuteStrategy_Fail_MissingParameter([ValueSource(nameof(InvalidInputs))] string[] inputParams)
         {
-            // Arrange
+			// Arrange
+			var projectName = inputParams.ElementAtOrDefault(0);
+
             var fileSystemMock = new Mock<IFileSystem>();
             var loggerListenerMock = new Mock<ILoggerListener>();
             loggerListenerMock.Setup(y => y.Warn(It.IsAny<string>()));
@@ -119,7 +99,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             // Assert
             Assert.IsFalse(strategyResult.Sucsess);
-            Assert.AreEqual(OutputText.OpcuaappBuildFailure, strategyResult.OutputMessages.First().Key);
+            Assert.AreEqual(string.Format(OutputText.OpcuaappBuildFailureProjectDoesNotExist, projectName), strategyResult.OutputMessages.First().Key);
             loggerListenerMock.Verify(y => y.Warn(It.IsAny<string>()),Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
@@ -127,28 +107,154 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         [Test]
         public void BuildStrategy_ShouldFail_DueToFailingExecutableCalls([ValueSource(nameof(FailingExecutableStates))] bool[] executableStates)
         {
-            // Arrange
+			// Arrange
+			var projectName = "anyName";
+
             var mesonState = executableStates.ElementAt(0);
             var ninjaState = executableStates.ElementAt(1);
 
             var fileSystemMock = new Mock<IFileSystem>();
+
+			fileSystemMock.Setup(x => x.DirectoryExists(projectName)).Returns(true);
+
             fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.Meson, It.IsAny<string>(), It.IsAny<string>())).Returns(mesonState);
             fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.Ninja, It.IsAny<string>(), It.IsAny<string>())).Returns(ninjaState);
 
-            var buildStrategy = new BuildNameStrategy(string.Empty, fileSystemMock.Object);
-            var loggerListenerMock=new Mock<ILoggerListener>();
-            loggerListenerMock.Setup(B => B.Warn(It.IsAny<string>()));
-            OppoLogger.RegisterListener(loggerListenerMock.Object);
+			var oppoprojFilePath = Path.Combine(projectName, projectName + Constants.FileExtension.OppoProject);
+			fileSystemMock.Setup(x => x.CombinePaths(projectName, projectName + Constants.FileExtension.OppoProject)).Returns(oppoprojFilePath);
+			
+			using (var oppoprojMemoryStreamFirstCall = new MemoryStream(Encoding.ASCII.GetBytes(_oppoprojServerContent)))
+			using (var oppoprojMemoryStreamSecondCall = new MemoryStream(Encoding.ASCII.GetBytes(_oppoprojServerContent)))
+			{
+				fileSystemMock.SetupSequence(x => x.ReadFile(oppoprojFilePath)).Returns(oppoprojMemoryStreamFirstCall).Returns(oppoprojMemoryStreamSecondCall);
 
-            // Act
-            var strategyResult = buildStrategy.Execute(new[] {"hugo"});
+				var buildStrategy = new BuildNameStrategy(string.Empty, fileSystemMock.Object);
+				var loggerListenerMock = new Mock<ILoggerListener>();
+				loggerListenerMock.Setup(B => B.Warn(It.IsAny<string>()));
+				OppoLogger.RegisterListener(loggerListenerMock.Object);
 
-            // Assert
-            Assert.IsFalse(strategyResult.Sucsess);
-            Assert.AreEqual(OutputText.OpcuaappBuildFailure, strategyResult.OutputMessages.First().Key);
+				// Act
+				var strategyResult = buildStrategy.Execute(new[] { projectName });
 
-            loggerListenerMock.Verify(y => y.Warn(It.IsAny<string>()), Times.Once);
-            OppoLogger.RemoveListener(loggerListenerMock.Object);
+				// Assert
+				Assert.IsFalse(strategyResult.Sucsess);
+				Assert.AreEqual(OutputText.OpcuaappBuildFailure, strategyResult.OutputMessages.First().Key);
+				fileSystemMock.Verify(x => x.ReadFile(oppoprojFilePath), Times.Exactly(2));
+				loggerListenerMock.Verify(y => y.Warn(It.IsAny<string>()), Times.Once);
+				OppoLogger.RemoveListener(loggerListenerMock.Object);
+			}
         }
-    }
+
+		[Test]
+		public void BuildStrategy_ShouldFail_DueToNotExistingProject([ValueSource(nameof(ValidInputs))] string[] inputParams)
+		{
+			// Arrange
+			var projectName = inputParams.ElementAtOrDefault(0);
+
+			var loggerListenerMock = new Mock<ILoggerListener>();
+			OppoLogger.RegisterListener(loggerListenerMock.Object);
+
+			var fileSystemMock = new Mock<IFileSystem>();
+			
+			fileSystemMock.Setup(x => x.DirectoryExists(projectName)).Returns(false);
+
+			var buildStrategy = new BuildNameStrategy(string.Empty, fileSystemMock.Object);
+
+			// Act
+			var strategyResult = buildStrategy.Execute(inputParams);
+
+			// Assert
+			Assert.IsFalse(strategyResult.Sucsess);
+			Assert.AreEqual(string.Format(OutputText.OpcuaappBuildFailureProjectDoesNotExist, projectName), strategyResult.OutputMessages.First().Key);
+			fileSystemMock.VerifyAll();
+			loggerListenerMock.Verify(y => y.Warn(LoggingText.BuildProjectDoesNotExist), Times.Once);
+			OppoLogger.RemoveListener(loggerListenerMock.Object);
+			fileSystemMock.Verify(x => x.DirectoryExists(projectName), Times.Once);
+		}
+
+		[Test]
+		public void BuildStrategy_Should_SucceessOnBuildableServerProject([ValueSource(nameof(ValidInputs))] string[] inputParams)
+		{
+			// Arrange
+			var projectName = inputParams.ElementAtOrDefault(0);
+			
+			var loggerListenerMock = new Mock<ILoggerListener>();
+			OppoLogger.RegisterListener(loggerListenerMock.Object);
+
+			var projectBuildDirectory = Path.Combine(projectName, Constants.DirectoryName.MesonBuild);
+
+			var fileSystemMock = new Mock<IFileSystem>();
+
+			fileSystemMock.Setup(x => x.DirectoryExists(projectName)).Returns(true);
+
+			fileSystemMock.Setup(x => x.CombinePaths(It.IsAny<string>(), It.IsAny<string>())).Returns(projectBuildDirectory);
+			fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.Meson, projectName, Constants.DirectoryName.MesonBuild)).Returns(true);
+			fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.Ninja, projectBuildDirectory, string.Empty)).Returns(true);
+			
+			var oppoprojFilePath = Path.Combine(projectName, projectName + Constants.FileExtension.OppoProject);
+			fileSystemMock.Setup(x => x.CombinePaths(projectName, projectName + Constants.FileExtension.OppoProject)).Returns(oppoprojFilePath);
+
+
+			using (var oppoprojMemoryStreamFirstCall = new MemoryStream(Encoding.ASCII.GetBytes(_oppoprojServerContent)))
+			using (var oppoprojMemoryStreamSecondCall = new MemoryStream(Encoding.ASCII.GetBytes(_oppoprojServerContent)))
+			{
+				fileSystemMock.SetupSequence(x => x.ReadFile(oppoprojFilePath)).Returns(oppoprojMemoryStreamFirstCall).Returns(oppoprojMemoryStreamSecondCall);
+
+				var buildStrategy = new BuildNameStrategy(string.Empty, fileSystemMock.Object);
+
+				// Act
+				var strategyResult = buildStrategy.Execute(inputParams);
+
+				// Assert
+				Assert.IsTrue(strategyResult.Sucsess);
+				Assert.AreEqual(string.Format(OutputText.OpcuaappBuildSuccess, projectName), strategyResult.OutputMessages.First().Key);
+				fileSystemMock.VerifyAll();
+				loggerListenerMock.Verify(y => y.Info(It.IsAny<string>()), Times.Once);
+				OppoLogger.RemoveListener(loggerListenerMock.Object);
+				fileSystemMock.Verify(x => x.DirectoryExists(projectName), Times.Once);
+			}
+		}
+
+		[Test]
+		public void BuildStrategy_Should_SucceessOnBuildableClientProject([ValueSource(nameof(ValidInputs))] string[] inputParams)
+		{
+			// Arrange
+			var projectName = inputParams.ElementAtOrDefault(0);
+
+			var loggerListenerMock = new Mock<ILoggerListener>();
+			OppoLogger.RegisterListener(loggerListenerMock.Object);
+
+			var projectBuildDirectory = Path.Combine(projectName, Constants.DirectoryName.MesonBuild);
+
+			var fileSystemMock = new Mock<IFileSystem>();
+
+			fileSystemMock.Setup(x => x.DirectoryExists(projectName)).Returns(true);
+
+			fileSystemMock.Setup(x => x.CombinePaths(It.IsAny<string>(), It.IsAny<string>())).Returns(projectBuildDirectory);
+			fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.Meson, projectName, Constants.DirectoryName.MesonBuild)).Returns(true);
+			fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.Ninja, projectBuildDirectory, string.Empty)).Returns(true);
+
+			var oppoprojFilePath = Path.Combine(projectName, projectName + Constants.FileExtension.OppoProject);
+			fileSystemMock.Setup(x => x.CombinePaths(projectName, projectName + Constants.FileExtension.OppoProject)).Returns(oppoprojFilePath);
+
+			using (var oppoprojMemoryStreamFirstCall = new MemoryStream(Encoding.ASCII.GetBytes(_oppoprojClientContent)))
+			using (var oppoprojMemoryStreamSecondCall = new MemoryStream(Encoding.ASCII.GetBytes(_oppoprojClientContent)))
+			{
+				fileSystemMock.SetupSequence(x => x.ReadFile(oppoprojFilePath)).Returns(oppoprojMemoryStreamFirstCall).Returns(oppoprojMemoryStreamSecondCall);
+
+				var buildStrategy = new BuildNameStrategy(string.Empty, fileSystemMock.Object);
+
+				// Act
+				var strategyResult = buildStrategy.Execute(inputParams);
+
+				// Assert
+				Assert.IsTrue(strategyResult.Sucsess);
+				Assert.AreEqual(string.Format(OutputText.OpcuaappBuildSuccess, projectName), strategyResult.OutputMessages.First().Key);
+				fileSystemMock.VerifyAll();
+				loggerListenerMock.Verify(y => y.Info(It.IsAny<string>()), Times.Once);
+				OppoLogger.RemoveListener(loggerListenerMock.Object);
+				fileSystemMock.Verify(x => x.DirectoryExists(projectName), Times.Once);
+			}
+		}
+	}
 }

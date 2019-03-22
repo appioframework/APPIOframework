@@ -16,7 +16,7 @@ do
   mkdir publish-opcuaapp--success
   cd    publish-opcuaapp--success
 
-  oppo new opcuaapp --name "my-app"
+  oppo new opcuaapp --name "my-app" -t "ClientServer" -u "127.0.0.1" -p "4840"
   oppo build        --name "my-app"
   rm --force "./oppo.log"
 

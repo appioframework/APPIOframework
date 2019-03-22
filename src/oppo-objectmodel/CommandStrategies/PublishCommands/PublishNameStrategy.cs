@@ -23,6 +23,7 @@ namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
 
             var outputMessages = new MessageLines();
 
+			// validate project name
             if (string.IsNullOrEmpty(projectName))
             {
                 OppoLogger.Warn(LoggingText.EmptyOpcuaappName);
@@ -30,30 +31,42 @@ namespace Oppo.ObjectModel.CommandStrategies.PublishCommands
                 return new CommandResult(false, outputMessages);
             }
 
+			// build string with publish command source location
             var projectBuildDirectory = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.MesonBuild);
             var appClientBuildLocation = _fileSystem.CombinePaths(projectBuildDirectory, Constants.ExecutableName.AppClient);
             var appServerBuildLocation = _fileSystem.CombinePaths(projectBuildDirectory, Constants.ExecutableName.AppServer);
 
+			// build strings with publish command target location
             var projectPublishDirectory = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.Publish);
             var appClientPublishLocation = _fileSystem.CombinePaths(projectPublishDirectory, Constants.ExecutableName.AppClient);
             var appServerPublishLocation = _fileSystem.CombinePaths(projectPublishDirectory, Constants.ExecutableName.AppServer);
 
-            if (string.IsNullOrEmpty(appClientBuildLocation) || !_fileSystem.FileExists(appClientBuildLocation) ||
-                string.IsNullOrEmpty(appServerBuildLocation) || !_fileSystem.FileExists(appServerBuildLocation))
+			// check if any of client and server executables exist
+            if ((string.IsNullOrEmpty(appClientBuildLocation) || !_fileSystem.FileExists(appClientBuildLocation)) &&
+                (string.IsNullOrEmpty(appServerBuildLocation) || !_fileSystem.FileExists(appServerBuildLocation)))
             {
                 OppoLogger.Warn(LoggingText.MissingBuiltOpcuaAppFiles);
-                outputMessages.Add(OutputText.OpcuaappPublishFailure, string.Empty);
+                outputMessages.Add(string.Format(OutputText.OpcuaappPublishFailureMissingExecutables, projectName), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
 
-            _fileSystem.CreateDirectory(projectPublishDirectory);
-            _fileSystem.CopyFile(appClientBuildLocation, appClientPublishLocation);
-            _fileSystem.CopyFile(appServerBuildLocation, appServerPublishLocation);
+			// create publish directory
+			_fileSystem.CreateDirectory(projectPublishDirectory);
 
+			// publish client executable
+			if (!string.IsNullOrEmpty(appClientBuildLocation) && _fileSystem.FileExists(appClientBuildLocation))
+			{
+				_fileSystem.CopyFile(appClientBuildLocation, appClientPublishLocation);
+			}
+			// publish server executable
+			if (!string.IsNullOrEmpty(appServerBuildLocation) && _fileSystem.FileExists(appServerBuildLocation))
+			{
+				_fileSystem.CopyFile(appServerBuildLocation, appServerPublishLocation);
+			}
+
+			// return with success
             OppoLogger.Info(LoggingText.OpcuaappPublishedSuccess);
-            
             outputMessages.Add(string.Format(OutputText.OpcuaappPublishSuccess, projectName), string.Empty);
-
             return new CommandResult(true, outputMessages);
         }
 

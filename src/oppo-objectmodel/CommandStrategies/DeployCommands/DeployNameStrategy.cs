@@ -36,7 +36,7 @@ namespace Oppo.ObjectModel.CommandStrategies.DeployCommands
 
             var projectDeployDirectory = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.Deploy);
                      
-            if (!_fileSystem.FileExists(appClientPublishLocation) || !_fileSystem.FileExists(appServerPublishLocation))
+            if (!_fileSystem.FileExists(appClientPublishLocation) && !_fileSystem.FileExists(appServerPublishLocation))
             {
                 OppoLogger.Warn(LoggingText.MissingPublishedOpcuaAppFiles);
                 outputMessages.Add(string.Format(OutputText.OpcuaappDeployWithNameFailure, projectName), string.Empty);
@@ -52,15 +52,21 @@ namespace Oppo.ObjectModel.CommandStrategies.DeployCommands
             _fileSystem.CreateDirectory(tempDirectory);
 
             // create needed installer structure            
-            var zipSourceLocation = _fileSystem.CombinePaths(projectDeployDirectory, Constants.DirectoryName.Temp, Constants.DirectoryName.OpcuaappInstaller + ".zip");          
+            var zipSourceLocation = _fileSystem.CombinePaths(projectDeployDirectory, Constants.DirectoryName.Temp, Constants.DirectoryName.OpcuaappInstaller + Constants.FileExtension.ZipFile);          
             _fileSystem.ExtractFromZip(zipSourceLocation, tempDirectory, Resources.Resources.InstallerZipResourceName);
 
             // copy all needed files to temp dir installer source
-            var appClientDeployTempLocation = _fileSystem.CombinePaths(tempDirectory, Constants.DirectoryName.OpcuaappInstaller, Constants.DirectoryName.Usr, Constants.DirectoryName.Bin, Constants.ExecutableName.AppClient);
-            var appServerDeployTempLocation = _fileSystem.CombinePaths(tempDirectory, Constants.DirectoryName.OpcuaappInstaller, Constants.DirectoryName.Usr, Constants.DirectoryName.Bin, Constants.ExecutableName.AppServer);
-            _fileSystem.CopyFile(appClientPublishLocation, appClientDeployTempLocation);
-            _fileSystem.CopyFile(appServerPublishLocation, appServerDeployTempLocation);
-                        
+			if(_fileSystem.FileExists(appClientPublishLocation))
+			{
+				var appClientDeployTempLocation = _fileSystem.CombinePaths(tempDirectory, Constants.DirectoryName.OpcuaappInstaller, Constants.DirectoryName.Usr, Constants.DirectoryName.Bin, Constants.ExecutableName.AppClient);
+				_fileSystem.CopyFile(appClientPublishLocation, appClientDeployTempLocation);
+			}
+			if(_fileSystem.FileExists(appServerPublishLocation))
+			{
+				var appServerDeployTempLocation = _fileSystem.CombinePaths(tempDirectory, Constants.DirectoryName.OpcuaappInstaller, Constants.DirectoryName.Usr, Constants.DirectoryName.Bin, Constants.ExecutableName.AppServer);
+				_fileSystem.CopyFile(appServerPublishLocation, appServerDeployTempLocation);
+			}
+          
             // create installer
             var debianInstallerResult = _fileSystem.CallExecutable(Constants.ExecutableName.CreateDebianInstaller, tempDirectory, Constants.ExecutableName.CreateDebianInstallerArguments);
             if (!debianInstallerResult)
@@ -79,16 +85,12 @@ namespace Oppo.ObjectModel.CommandStrategies.DeployCommands
             // remove temp dir
             _fileSystem.DeleteDirectory(tempDirectory);
 
-
+			// exit with success result
             OppoLogger.Info(LoggingText.OpcuaappDeploySuccess);
-            
             outputMessages.Add(string.Format(OutputText.OpcuaappDeploySuccess, projectName), string.Empty);
-
             return new CommandResult(true, outputMessages);
         }
-
-   
-
+		
         public string GetHelpText()
         {
             return Resources.text.help.HelpTextValues.DeployNameArgumentCommandDescription;

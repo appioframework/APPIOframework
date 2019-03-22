@@ -258,5 +258,18 @@ namespace Oppo.ObjectModel
                 throw;
             }
         }
+
+        public string[] GetFilesByExtension(string path, string extension)
+        {
+            try
+            {
+                return Directory.GetFiles(path, "*" + extension);
+            }
+            catch(Exception ex)
+            {
+                OppoLogger.Error(LoggingText.ExceptionOccured, ex);
+                throw;
+            }
+        }
     }
 }

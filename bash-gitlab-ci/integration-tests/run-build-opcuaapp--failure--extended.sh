@@ -18,7 +18,7 @@ do
   mkdir build-opcuaapp--failure--extended
   cd    build-opcuaapp--failure--extended
 
-  oppo new opcuaapp --name my-app
+  oppo new opcuaapp --name my-app -t "ClientServer" -u "127.0.0.1" -p "4840"
   rm --force "./oppo.log"
 
   mv "./my-app/meson.build" "./my-app/meson.build.bak"

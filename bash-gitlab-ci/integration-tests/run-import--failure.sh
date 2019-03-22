@@ -22,7 +22,7 @@ do
   mkdir import--failure
   cd    import--failure
 
-  oppo new opcuaapp -n "my-app"
+  oppo new opcuaapp -n "my-app" -t "ClientServer" -u "127.0.0.1" -p "4840"
   rm --force "./oppo.log"
 
   precondition_oppo_log_file_is_not_existent

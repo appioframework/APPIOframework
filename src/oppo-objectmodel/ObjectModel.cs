@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using Oppo.Resources.text.logging;
+using Oppo.Resources.text.output;
 using Oppo.ObjectModel.CommandStrategies.BuildCommands;
 using Oppo.ObjectModel.CommandStrategies.CleanCommands;
 using Oppo.ObjectModel.CommandStrategies.DeployCommands;
@@ -12,6 +13,8 @@ using Oppo.ObjectModel.CommandStrategies.NewCommands;
 using Oppo.ObjectModel.CommandStrategies.PublishCommands;
 using Oppo.ObjectModel.CommandStrategies.VersionCommands;
 using Oppo.ObjectModel.CommandStrategies.GenerateCommands;
+using Oppo.ObjectModel.CommandStrategies.SlnCommands;
+using Oppo.ObjectModel.CommandStrategies.ReferenceCommands;
 
 namespace Oppo.ObjectModel
 {
@@ -86,6 +89,12 @@ namespace Oppo.ObjectModel
 
             var generateStrategy = CreateGenerateStrategy(fileSystem);
             commands.Add(generateStrategy);
+
+			var slnStrategy = CreateSlnStrategy(fileSystem);
+			commands.Add(slnStrategy);
+
+			var referenceStrategy = CreateReferenceStrategy(fileSystem);
+			commands.Add(referenceStrategy);
 
             var factory = new CommandFactory<ObjectModel>(commands, Constants.CommandName.Help);
 
@@ -443,9 +452,129 @@ namespace Oppo.ObjectModel
             return new GenerateStrategy(generateStrategyCommandFactory);
         }
 
-        public string PrepareCommandFailureOutputText(string[] args)
+		private static SlnStrategy CreateSlnStrategy(IFileSystem fileSystem)
+		{
+			var slnHelpStrategyHelpText = new MessageLines
+			{
+				{ string.Empty, Resources.text.help.HelpTextValues.SlnFirstLine },
+				{ string.Empty, string.Empty },
+				{ string.Empty, Resources.text.help.HelpTextValues.GeneralUsage },
+				{ string.Empty, Resources.text.help.HelpTextValues.SlnCallDescription },
+				{ string.Empty, string.Empty },
+				{ string.Empty, Resources.text.help.HelpTextValues.GeneralArguments },
+				{ string.Empty, Resources.text.help.HelpTextValues.SlnArgumentAdd },
+				{ string.Empty, Resources.text.help.HelpTextValues.SlnArgumentBuild },
+				{ string.Empty, Resources.text.help.HelpTextValues.SlnArgumentDeploy },
+				{ string.Empty, Resources.text.help.HelpTextValues.SlnArgumentPublish },
+				{ string.Empty, Resources.text.help.HelpTextValues.SlnArgumentRemove },
+				{ string.Empty, string.Empty },
+				{ string.Empty, Resources.text.help.HelpTextValues.GeneralOptions },
+			};
+
+			var slnHelpStrategyData = new HelpData
+			{
+				CommandName = Constants.SlnCommandName.Help,
+				HelpTextFirstLine = slnHelpStrategyHelpText,
+				LogMessage = LoggingText.OppoHelpForSlnCommand,
+				HelpText = Resources.text.help.HelpTextValues.SlnHelpArgumentCommandDescription,
+			};
+
+			var slnHelpStrategy = new HelpStrategy<SlnStrategy>(slnHelpStrategyData);
+
+			slnHelpStrategyData.CommandName = Constants.SlnCommandName.VerboseHelp;
+
+			var slnHelpVerboseStrategy = new HelpStrategy<SlnStrategy>(slnHelpStrategyData);
+
+			var SlnBuildCommandData					 = new SlnOperationData();
+			SlnBuildCommandData.CommandName			 = Constants.CommandName.Build;
+			SlnBuildCommandData.FileSystem			 = fileSystem;
+			SlnBuildCommandData.Subcommand			 = new BuildNameStrategy(Constants.CommandName.Build, fileSystem);
+			SlnBuildCommandData.SuccessLoggerMessage = LoggingText.SlnBuildSuccess;
+			SlnBuildCommandData.SuccessOutputMessage = OutputText.SlnBuildSuccess;
+			SlnBuildCommandData.HelpText			 = Resources.text.help.HelpTextValues.SlnBuildNameArgumentCommandDescription;
+
+			var SlnDeployCommandData				  = new SlnOperationData();
+			SlnDeployCommandData.CommandName		  = Constants.CommandName.Deploy;
+			SlnDeployCommandData.FileSystem			  = fileSystem;
+			SlnDeployCommandData.Subcommand			  = new DeployNameStrategy(Constants.CommandName.Deploy, fileSystem);
+			SlnDeployCommandData.SuccessLoggerMessage = LoggingText.SlnDeploySuccess;
+			SlnDeployCommandData.SuccessOutputMessage = OutputText.SlnDeploySuccess;
+			SlnDeployCommandData.HelpText			  = Resources.text.help.HelpTextValues.SlnDeployNameArgumentCommandDescription;
+
+			var SlnPublishCommandData				   = new SlnOperationData();
+			SlnPublishCommandData.CommandName		   = Constants.CommandName.Publish;
+			SlnPublishCommandData.FileSystem		   = fileSystem;
+			SlnPublishCommandData.Subcommand		   = new PublishNameStrategy(Constants.CommandName.Publish, fileSystem);
+			SlnPublishCommandData.SuccessLoggerMessage = LoggingText.SlnPublishSuccess;
+			SlnPublishCommandData.SuccessOutputMessage = OutputText.SlnPublishSuccess;
+			SlnPublishCommandData.HelpText             = Resources.text.help.HelpTextValues.SlnPublishNameArgumentCommandDescription;
+
+			var slnStrategies = new ICommand<SlnStrategy>[]
+			{
+				new SlnAddCommandStrategy(fileSystem),
+				new SlnOperationCommandStrategy(SlnBuildCommandData),
+				new SlnOperationCommandStrategy(SlnDeployCommandData),
+				new SlnOperationCommandStrategy(SlnPublishCommandData),
+				new SlnRemoveCommandStrategy(fileSystem),
+				slnHelpStrategy,
+				slnHelpVerboseStrategy,
+			};
+
+			var slnStrategyCommandFactory = new CommandFactory<SlnStrategy>(slnStrategies, Constants.SlnCommandName.Help);
+			slnHelpStrategy.CommandFactory = slnStrategyCommandFactory;
+			slnHelpVerboseStrategy.CommandFactory = slnStrategyCommandFactory;
+
+			return new SlnStrategy(slnStrategyCommandFactory);
+		}
+		
+		private static ReferenceStrategy CreateReferenceStrategy(IFileSystem fileSystem)
+		{
+			var referenceHelpStrategyHelpText = new MessageLines
+			{
+				{ string.Empty, Resources.text.help.HelpTextValues.ReferenceFirstLine },
+				{ string.Empty, string.Empty },
+				{ string.Empty, Resources.text.help.HelpTextValues.GeneralUsage },
+				{ string.Empty, Resources.text.help.HelpTextValues.ReferenceCallDescription },
+				{ string.Empty, string.Empty },
+				{ string.Empty, Resources.text.help.HelpTextValues.GeneralArguments },
+				{ string.Empty, Resources.text.help.HelpTextValues.ReferenceArgumentAdd },
+				{ string.Empty, Resources.text.help.HelpTextValues.ReferenceArgumentRemove },
+				{ string.Empty, string.Empty },
+				{ string.Empty, Resources.text.help.HelpTextValues.GeneralOptions },
+			};
+
+			var referenceHelpStrategyData = new HelpData
+			{
+				CommandName = Constants.ReferenceCommandName.Help,
+				HelpTextFirstLine = referenceHelpStrategyHelpText,
+				LogMessage = LoggingText.OppoHelpForReferenceCommand,
+				HelpText = Resources.text.help.HelpTextValues.ReferenceHelpArgumentCommandDescription,
+			};
+
+			var referenceHelpStrategy = new HelpStrategy<ReferenceStrategy>(referenceHelpStrategyData);
+
+			referenceHelpStrategyData.CommandName = Constants.ReferenceCommandName.VerboseHelp;
+
+			var referenceHelpVerboseStrategy = new HelpStrategy<ReferenceStrategy>(referenceHelpStrategyData);
+			
+			var referenceStrategies = new ICommand<ReferenceStrategy>[]
+			{
+				new ReferenceAddCommandStrategy(fileSystem),
+				new ReferenceRemoveCommandStrategy(fileSystem),
+				referenceHelpStrategy,
+				referenceHelpVerboseStrategy,
+			};
+
+			var referenceStrategyCommandFactory = new CommandFactory<ReferenceStrategy>(referenceStrategies, Constants.ReferenceCommandName.Help);
+			referenceHelpStrategy.CommandFactory = referenceStrategyCommandFactory;
+			referenceHelpVerboseStrategy.CommandFactory = referenceStrategyCommandFactory;
+
+			return new ReferenceStrategy(referenceStrategyCommandFactory);
+		}
+
+		public string PrepareCommandFailureOutputText(string[] args)
         {
-            return string.Format(Resources.text.output.OutputText.GeneralCommandExecutionFailure, string.Join(' ', args));
+            return string.Format(OutputText.GeneralCommandExecutionFailure, string.Join(' ', args));
         }
     }
 }

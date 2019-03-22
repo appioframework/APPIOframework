@@ -6,6 +6,7 @@ namespace Oppo.ObjectModel
         public const string IncludeSnippet = "#include";
         public const string server = "server";
         public const string definitionXmlElement = "<Definition";
+		public const string opcuaappConverterSerializationException = "Use default serialization.";
 
         public static class FileExtension
         {
@@ -15,6 +16,7 @@ namespace Oppo.ObjectModel
             public const string InformationModel = ".xml";
             public const string ModelTypes = ".bsd";
             public const string CFile = ".c";
+			public const string ZipFile = ".zip";
         }
 
         public static class CommandName
@@ -33,6 +35,8 @@ namespace Oppo.ObjectModel
             public const string Import = "import";
             public const string Generate = "generate";
             public const string GenerateInformationModel = "information-model";
+            public const string Sln = "sln";
+            public const string Reference = "reference";
         }
 
         public static class CommandResults
@@ -49,7 +53,26 @@ namespace Oppo.ObjectModel
             public const string OpcuaApp = "opcuaapp";
         }
 
-        public static class DirectoryName
+        public static class SlnCommandName
+        {
+            public const string Help = "-h";
+            public const string VerboseHelp = "--help";
+            public const string Add = "add";
+            public const string Remove = "remove";
+			public const string Build = "build";
+			public const string Publish = "publish";
+			public const string Deploy = "deploy";
+        }
+		
+		public static class ReferenceCommandName
+		{
+			public const string Help = "-h";
+			public const string VerboseHelp = "--help";
+			public const string Add = "add";
+			public const string Remove = "remove";
+		}
+
+		public static class DirectoryName
         {
             public const string SourceCode = "src";
             public const string ClientApp = "client";
@@ -95,7 +118,10 @@ namespace Oppo.ObjectModel
         public static class FileName
         {
             public const string SourceCode_main_c                   = "main.c";
+			public const string SourceCode_globalVariables_h		= "globalVariables.h";
             public const string SourceCode_loadInformationModels_c  = "loadInformationModels.c";
+			public const string SourceCode_constants_h				= "constants.h";
+			public const string SourceCode_mainCallbacks_c			= "mainCallbacks.c";
             public const string SourceCode_meson_build              = "meson.build";
             public const string SampleInformationModelFile          = "OpcUaDiModel.xml";
         }
@@ -105,11 +131,17 @@ namespace Oppo.ObjectModel
             public const string Name = "-n";
             public const string VerboseName = "--name";
         }
-
+        
         public static class NewOpcuaAppCommandArguments
         {
             public const string Name = "-n";
             public const string VerboseName = "--name";
+			public const string Type = "-t";
+			public const string VerboseType = "--type";
+			public const string Url = "-u";
+			public const string VerboseUrl = "--url";
+			public const string Port = "-p";
+			public const string VerbosePort = "--port";
         }
 
 
@@ -205,5 +237,72 @@ namespace Oppo.ObjectModel
             public const string FunctionSnippetPart4 = "\t\treturn UA_STATUSCODE_BADUNEXPECTEDERROR;";
             public const string FunctionSnippetPart5 = "\t}";
         }
+
+        public static class SlnAddCommandArguments
+        {
+            public const string Solution = "-s";
+            public const string VerboseSolution = "--solution";
+            public const string Project = "-p";
+            public const string VerboseProject = "--project";
+            
+        }
+        public static class SlnRemoveCommandArguments
+        {
+            public const string Solution = "-s";
+            public const string VerboseSolution = "--solution";
+            public const string Project = "-p";
+            public const string VerboseProject = "--project";
+
+        }
+		
+		public static class ReferenceAddCommandArguments
+		{
+			public const string Server = "-s";
+			public const string VerboseServer = "--server";
+			public const string Client = "-c";
+			public const string VerboseClient = "--client";
+
+		}
+
+		public static class ReferenceRemoveCommandArguments
+		{
+			public const string Server = "-s";
+			public const string VerboseServer = "--server";
+			public const string Client = "-c";
+			public const string VerboseClient = "--client";
+
+		}
+
+		public static class ApplicationType
+		{
+			public const string Client = "Client";
+			public const string Server = "Server";
+			public const string ClientServer = "ClientServer";
+		}
+
+		public static class ServerConstants
+		{
+			public const string ServerAppHostname = "const char* SERVER_APP_HOSTNAME";
+			public const string ServerAppPort = "const UA_UInt16 SERVER_APP_PORT";
+		}
+
+		public static class ClientGlobalVariables
+		{
+			public const string FirstLines = "#define numberOfReferences {0}\n\nconst char* SERVER_APP_URL[numberOfReferences] = {{";
+			public const string Hostname = " \"opc.tcp://{0}:{1}/\",";
+			public const string LastLines = " };\nUA_Client* client[numberOfReferences];";
+		}
+		
+		public static class UAMethodCallback
+		{
+			public const string UAMethod = "UAMethod";
+			public const string BrowseName = "BrowseName";
+			public const string NodeId = "NodeId";
+			public const string AddCallbacks = "addCallbacks";
+			public const string FunctionName = "ns{0}_i{1}_Callback";
+			public const string FunctionBody = "// callback function of {0} UAMethod\nUA_MethodCallback ns{1}_i{2}_Callback(UA_Server* server, const UA_NodeId* sessionId, void* sessionContext, const UA_NodeId* methodId, void* methodContext, const UA_NodeId* objectId, void* objectContext, size_t inputSize, const UA_Variant* input, size_t outputSize, UA_Variant* output)\n{{\n\t/* TODO: place your code here */\n\treturn UA_STATUSCODE_GOOD;\n}}\n";
+			public const string FunctionCall = "\t// {0} UAMethod\n\tif(UA_Server_setMethodNode_callback(server, UA_NODEID_NUMERIC({1}, {2}), ns{1}_i{2}_Callback) != UA_STATUSCODE_GOOD)\n\t{{\n\t\treturn UA_STATUSCODE_BADUNEXPECTEDERROR;\n\t}}\n";
+			public const string ReturnLine = "return UA_STATUSCODE_GOOD;";
+		}
     }
 }

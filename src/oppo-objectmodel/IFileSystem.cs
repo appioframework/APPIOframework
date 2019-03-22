@@ -29,5 +29,6 @@ namespace Oppo.ObjectModel
         string GetFileNameWithoutExtension(string path);
         Stream ReadFile(string path);
         void WriteFile(string path, IEnumerable<string> content);
+        string[] GetFilesByExtension(string path, string extension);
     }    
 }
