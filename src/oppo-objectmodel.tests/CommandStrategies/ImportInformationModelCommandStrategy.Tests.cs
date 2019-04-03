@@ -158,8 +158,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _fileSystemMock.Setup(x => x.GetFileName(modelFilePath)).Returns(_modelName);
             _fileSystemMock.Setup(x => x.GetExtension(modelFilePath)).Returns(_validModelExtension);
             _fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.DirectoryName.Models)).Returns(modelsDirectory);
-            _fileSystemMock.Setup(x => x.CombinePaths(modelsDirectory, _modelName)).Returns(modelTargetPath);         
-            
+            _fileSystemMock.Setup(x => x.CombinePaths(modelsDirectory, _modelName)).Returns(modelTargetPath);
+			_fileSystemMock.Setup(x => x.DirectoryExists(projectDirectory)).Returns(true);
+
             var loggerListenerMock = new Mock<ILoggerListener>();
             loggerListenerMock.Setup(listener => listener.Info(string.Format(LoggingText.ImportInforamtionModelCommandSuccess, modelFilePath))).Callback(delegate { infoWrittenOut = true; });
             OppoLogger.RegisterListener(loggerListenerMock.Object);         
@@ -184,8 +185,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var modelsDirectory = "models";
             _fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.DirectoryName.Models)).Returns(modelsDirectory);
             var modelFilePath = $"{inputParams.ElementAtOrDefault(3)}";
+			_fileSystemMock.Setup(x => x.DirectoryExists(projectDirectory)).Returns(true);
 
-            var loggerListenerMock = new Mock<ILoggerListener>();
+			var loggerListenerMock = new Mock<ILoggerListener>();
             loggerListenerMock.Setup(listener => listener.Warn(LoggingText.UnknownImportInfomrationModelCommandParam)).Callback(delegate { warnWrittenOut = true; });
             OppoLogger.RegisterListener(loggerListenerMock.Object);
 
@@ -251,6 +253,29 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
 
+		[Test]
+		public void ImportInformationModelCommandStrategy_Should_Fail_OnCallingNotExistingProject([ValueSource(nameof(ValidInputs))] string[] inputParams)
+		{
+			// Arrange
+			var opcuaAppName = inputParams.ElementAtOrDefault(1);
+			var modelFilePath = inputParams.ElementAtOrDefault(3);
+
+			var warnWrittenOut = false;
+			var loggerListenerMock = new Mock<ILoggerListener>();
+			loggerListenerMock.Setup(listener => listener.Warn(LoggingText.InvalidOpcuaappName)).Callback(delegate { warnWrittenOut = true; });
+			OppoLogger.RegisterListener(loggerListenerMock.Object);
+
+			// Act
+			var result = _objectUnderTest.Execute(inputParams);
+
+			// Assert
+			Assert.IsFalse(result.Sucsess);
+			Assert.IsTrue(warnWrittenOut);
+			Assert.AreEqual(string.Format(OutputText.ImportInformationModelCommandInvalidOpcuaappName, opcuaAppName), result.OutputMessages.First().Key);
+			_fileSystemMock.Verify(x => x.CopyFile(modelFilePath, Constants.DirectoryName.Models), Times.Never);
+			OppoLogger.RemoveListener(loggerListenerMock.Object);
+		}
+
         [Test]
         public void ImportInformationModelCommandStrategy_Should_ImportModel_InvalidModelPath_Failure([ValueSource(nameof(InvalidInputsInvalidModelPath))]string[] inputParams)
         {
@@ -261,8 +286,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _fileSystemMock.Setup(x => x.CombinePaths(opcuaAppName, Constants.DirectoryName.Models)).Returns(modelsDirectory);
             _fileSystemMock.Setup(x => x.GetInvalidPathChars()).Returns(new[] { '\\', '/' });
             var modelFilePath = $"{inputParams.ElementAtOrDefault(3)}";
+			_fileSystemMock.Setup(x => x.DirectoryExists(opcuaAppName)).Returns(true);
 
-            var loggerListenerMock = new Mock<ILoggerListener>();
+			var loggerListenerMock = new Mock<ILoggerListener>();
             loggerListenerMock.Setup(listener => listener.Warn(string.Format(LoggingText.InvalidInformationModelPath, modelFilePath))).Callback(delegate { warnWrittenOut = true; });
             OppoLogger.RegisterListener(loggerListenerMock.Object);
 
@@ -290,8 +316,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _fileSystemMock.Setup(x => x.GetExtension(modelFilePath)).Returns(_invalidModelExtension);
             _fileSystemMock.Setup(x => x.FileExists(modelFilePath)).Returns(true);
             _fileSystemMock.Setup(x => x.GetFileName(modelFilePath)).Returns(_modelName);
+			_fileSystemMock.Setup(x => x.DirectoryExists(opcuaAppName)).Returns(true);
 
-            var loggerListenerMock = new Mock<ILoggerListener>();
+			var loggerListenerMock = new Mock<ILoggerListener>();
             loggerListenerMock.Setup(listener => listener.Warn(string.Format(LoggingText.InvalidInformationModelExtension, _modelName))).Callback(delegate { warnWrittenOut = true; });
             OppoLogger.RegisterListener(loggerListenerMock.Object);
 
@@ -318,8 +345,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _fileSystemMock.Setup(x => x.CombinePaths(opcuaAppName, Constants.DirectoryName.Models)).Returns(modelsDirectory);
             _fileSystemMock.Setup(x => x.GetExtension(modelFilePath)).Returns(validModelExtension);
             _fileSystemMock.Setup(x => x.FileExists(modelFilePath)).Returns(false);
+			_fileSystemMock.Setup(x => x.DirectoryExists(opcuaAppName)).Returns(true);
 
-            var loggerListenerMock = new Mock<ILoggerListener>();
+			var loggerListenerMock = new Mock<ILoggerListener>();
             loggerListenerMock.Setup(listener => listener.Warn(string.Format(LoggingText.InvalidInformationModelNotExistingPath, modelFilePath))).Callback(delegate { warnWrittenOut = true; });
             OppoLogger.RegisterListener(loggerListenerMock.Object);
 
@@ -343,8 +371,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var modelsDirectory = "models";           
             
             _fileSystemMock.Setup(x => x.CombinePaths(opcuaAppName, Constants.DirectoryName.Models)).Returns(modelsDirectory);
+			_fileSystemMock.Setup(x => x.DirectoryExists(opcuaAppName)).Returns(true);
 
-            var loggerListenerMock = new Mock<ILoggerListener>();
+			var loggerListenerMock = new Mock<ILoggerListener>();
             loggerListenerMock.Setup(listener => listener.Warn(LoggingText.InvalidInformationModelMissingModelFile)).Callback(delegate { warnWrittenOut = true; });
             OppoLogger.RegisterListener(loggerListenerMock.Object);
 
@@ -375,8 +404,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             _fileSystemMock.Setup(x => x.GetFileName(modelFilePath)).Returns(_modelName);
             _fileSystemMock.Setup(x => x.GetExtension(modelFilePath)).Returns(_validModelExtension);
             _fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.DirectoryName.Models)).Returns(modelsDirectory);
+			_fileSystemMock.Setup(x => x.DirectoryExists(projectDirectory)).Returns(true);
 
-            _fileSystemMock.Setup(x => x.CombinePaths(modelsDirectory, Constants.FileName.SampleInformationModelFile)).Returns(modelTargetPath);            
+			_fileSystemMock.Setup(x => x.CombinePaths(modelsDirectory, Constants.FileName.SampleInformationModelFile)).Returns(modelTargetPath);            
 
 
             var loggerListenerMock = new Mock<ILoggerListener>();

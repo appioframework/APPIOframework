@@ -40,7 +40,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
                 return new CommandResult(false, outputMessages);
             }
 
-            if (_fileSystem.GetInvalidFileNameChars().Any(opcuaAppName.Contains))
+            if (_fileSystem.GetInvalidFileNameChars().Any(opcuaAppName.Contains) || !_fileSystem.DirectoryExists(opcuaAppName))
             {
                 OppoLogger.Warn(LoggingText.InvalidOpcuaappName);
                 outputMessages.Add(string.Format(OutputText.ImportInformationModelCommandInvalidOpcuaappName, opcuaAppName), string.Empty);
