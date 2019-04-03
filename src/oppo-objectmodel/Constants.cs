@@ -123,8 +123,9 @@ namespace Oppo.ObjectModel
 			public const string SourceCode_constants_h				= "constants.h";
 			public const string SourceCode_mainCallbacks_c			= "mainCallbacks.c";
             public const string SourceCode_meson_build              = "meson.build";
-            public const string SampleInformationModelFile          = "OpcUaDiModel.xml";
-        }
+            public const string SampleInformationModelFile          = "DiNodeset.xml";
+			public const string SampleInformationModelTypesFile     = "DiTypes.bsd";
+		}
 
         public static class NewSlnCommandArguments
         {
