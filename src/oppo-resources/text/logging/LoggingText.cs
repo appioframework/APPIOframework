@@ -97,6 +97,7 @@
 		public const string ReferenceAddCouldntDeserliazeServer = "Couldn't deserialize server file!";
 		public const string ReferenceAddServerIsPartOfClientReference = "Server is already client's reference!";
 		public const string ReferenceAddClientCannotBeReferred = "Client cannot refer to another Client!";
+		public const string ReferenceAddClientIsAServer = "Client cannot be a server type!";
 		
 		// reference remove command
 		public const string ReferenceRemoveSuccess = "Opcuaapp reference was successfully removed from server.";
