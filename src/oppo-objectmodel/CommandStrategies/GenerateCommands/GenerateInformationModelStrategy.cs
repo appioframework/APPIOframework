@@ -399,55 +399,54 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
         private void AdjustServerMesonBuildTemplate(string srcDirectory, string fileNameToInclude)
         {
             var sourceFileSnippet = string.Format(Constants.InformationModelsName.FileSnippet, fileNameToInclude);
-            
-            var modelsFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_meson_build));
-            var currentFileContentLineByLine = ReadFileContent(modelsFileStream);
 
-            if (!currentFileContentLineByLine.Contains(sourceFileSnippet))
-            {
-                var sw = new StreamWriter(modelsFileStream);
-                foreach (var previousTextLine in currentFileContentLineByLine)
-                {
-                    if(previousTextLine.Contains("]"))
-                    {
-                        sw.WriteLine(sourceFileSnippet);
-                    }
+			using (var modelsFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_meson_build)))
+			{
+				var currentFileContentLineByLine = ReadFileContent(modelsFileStream);
 
-                    sw.WriteLine(previousTextLine);
-                }
-                sw.Close();
-                sw.Dispose();
-            }
+				if (!currentFileContentLineByLine.Any(x => x.Contains(sourceFileSnippet)))
+				{
+					using (var sw = new StreamWriter(modelsFileStream))
+					{
+						foreach (var previousTextLine in currentFileContentLineByLine)
+						{
+							if (previousTextLine.Contains("]"))
+							{
+								sw.WriteLine(sourceFileSnippet);
+							}
 
-            modelsFileStream.Close();
-            modelsFileStream.Dispose();
+							sw.WriteLine(previousTextLine);
+						}
+					}
+				}
+			}
         }
 
         private void AdjustLoadInformationModelsTemplate(string srcDirectory, string functionName)
         {
             var functionSnippet = string.Format(Constants.LoadInformationModelsContent.FunctionSnippetPart1,functionName);
-            
-            var loadInformationModelsFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_loadInformationModels_c));
-            var currentFileContentLineByLine = ReadFileContent(loadInformationModelsFileStream).ToList<string>();
 
-            loadInformationModelsFileStream.Close();
-            loadInformationModelsFileStream.Dispose();
+			var loadInformationModelsFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_loadInformationModels_c));
+			var currentFileContentLineByLine = ReadFileContent(loadInformationModelsFileStream).ToList();
 
-            if (!currentFileContentLineByLine.Contains(functionSnippet))
-            {
-                var lastFunctionLinePosition = currentFileContentLineByLine.FindIndex(x => x.Contains(Constants.LoadInformationModelsContent.ReturnLine));
-                if (lastFunctionLinePosition != -1)
-                {
-                    currentFileContentLineByLine.Insert(lastFunctionLinePosition, string.Empty);
-                    currentFileContentLineByLine.Insert(lastFunctionLinePosition, Constants.LoadInformationModelsContent.FunctionSnippetPart5);
-                    currentFileContentLineByLine.Insert(lastFunctionLinePosition, Constants.LoadInformationModelsContent.FunctionSnippetPart4);
-                    currentFileContentLineByLine.Insert(lastFunctionLinePosition,string.Format(Constants.LoadInformationModelsContent.FunctionSnippetPart3,functionName));
-                    currentFileContentLineByLine.Insert(lastFunctionLinePosition, Constants.LoadInformationModelsContent.FunctionSnippetPart2);
-                    currentFileContentLineByLine.Insert(lastFunctionLinePosition, string.Format(Constants.LoadInformationModelsContent.FunctionSnippetPart1, functionName));
-                }
+			loadInformationModelsFileStream.Close();
+			loadInformationModelsFileStream.Dispose();
 
-                _fileSystem.WriteFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_loadInformationModels_c), currentFileContentLineByLine);
-            }
+			if (!currentFileContentLineByLine.Any(x => x.Contains(functionSnippet.Substring(1))))
+			{
+				var lastFunctionLinePosition = currentFileContentLineByLine.FindIndex(x => x.Contains(Constants.LoadInformationModelsContent.ReturnLine));
+				if (lastFunctionLinePosition != -1)
+				{
+					currentFileContentLineByLine.Insert(lastFunctionLinePosition, string.Empty);
+					currentFileContentLineByLine.Insert(lastFunctionLinePosition, Constants.LoadInformationModelsContent.FunctionSnippetPart5);
+					currentFileContentLineByLine.Insert(lastFunctionLinePosition, Constants.LoadInformationModelsContent.FunctionSnippetPart4);
+					currentFileContentLineByLine.Insert(lastFunctionLinePosition, string.Format(Constants.LoadInformationModelsContent.FunctionSnippetPart3, functionName));
+					currentFileContentLineByLine.Insert(lastFunctionLinePosition, Constants.LoadInformationModelsContent.FunctionSnippetPart2);
+					currentFileContentLineByLine.Insert(lastFunctionLinePosition, string.Format(Constants.LoadInformationModelsContent.FunctionSnippetPart1, functionName));
+				}
+
+				_fileSystem.WriteFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_loadInformationModels_c), currentFileContentLineByLine);
+			}
         }
 
         
