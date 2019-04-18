@@ -94,6 +94,7 @@ namespace Oppo.Resources.text.output
 		public const string ReferenceAddCouldntDeserliazeServer = "The server file '{0}' has invalid content!";
 		public const string RefereneceAddSuccess = "The reference of the server with the name '{0}' was successfully added to the client '{1}'.";
 		public const string ReferenceAddClientCannotBeReferred = "The opcuaapp '{0}' is a client. Client cannot refer to another client!";
+		public const string ReferenceAddClientIsAServer = "The opcuaapp '{0}' is a server. Cannot add reference to server!";
 
 		// reference remove <command>
 		public const string ReferenceRemoveSuccess = "The opcuaapp with the name '{0}' was successfully removed from the server '{1}'.";

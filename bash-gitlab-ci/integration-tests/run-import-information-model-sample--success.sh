@@ -25,7 +25,10 @@ do
 
   ${VAR_COMMAND}
 
-  check_for_exisiting_file_named "./my-app/models/OpcUaDiModel.xml" \
+  check_for_exisiting_file_named "./my-app/models/DiNodeset.xml" \
+                                 "information-model import failed ..."
+
+  check_for_exisiting_file_named "./my-app/models/DiTypes.bsd" \
                                  "information-model import failed ..."
 
   check_for_exisiting_oppo_log_file

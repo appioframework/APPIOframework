@@ -54,6 +54,12 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 				return new CommandResult(false, _outputMessages);
 			}
 
+			// check if deserialized client is not a server
+			if(!ClientIsNotAServer(ref opcuaClient, ref opcuaClientServer, _clientName))
+			{
+				return new CommandResult(false, _outputMessages);
+			}
+
 			// check if server is not already a part of client's references
 			if(!ServerIsNotYetClientsReference(ref opcuaClient, ref opcuaClientServer, _clientName, opcuaServer.Name))
 			{
@@ -95,6 +101,18 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 			{
 				OppoLogger.Warn(LoggingText.ReferenceAddServerOppoprojFileNotFound);
 				_outputMessages.Add(string.Format(OutputText.ReferenceAddServerOppoprojFileNotFound, serverFullName), string.Empty);
+				return false;
+			}
+
+			return true;
+		}
+
+		private bool ClientIsNotAServer(ref OpcuaClientApp opcuaClient, ref OpcuaClientServerApp opcuaClientServer, string clientName)
+		{
+			if ((opcuaClient != null && opcuaClient.Type == Constants.ApplicationType.Server) || (opcuaClientServer != null && opcuaClientServer.Type == Constants.ApplicationType.Server))
+			{
+				OppoLogger.Warn(LoggingText.ReferenceAddClientIsAServer);
+				_outputMessages.Add(string.Format(OutputText.ReferenceAddClientIsAServer, clientName), string.Empty);
 				return false;
 			}
 

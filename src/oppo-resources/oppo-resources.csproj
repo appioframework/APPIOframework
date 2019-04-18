@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="information_models\OpcUaDiModel.xml" />
     <None Remove="information_models\UANodeSet.xsd" />
     <None Remove="installer\opcuaapp\oppo-opcuaapp.zip" />
     <None Remove="open62541\constants-server.h" />
@@ -22,8 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="information_models\OpcUaDiModel.xml" />
-    <EmbeddedResource Include="information_models\UANodeSet.xsd" />
+	<EmbeddedResource Include="information_models\DiNodeset.xml" />
+	<EmbeddedResource Include="information_models\DiTypes.bsd" />
+	<EmbeddedResource Include="information_models\UANodeSet.xsd" />
     <EmbeddedResource Include="installer\opcuaapp\oppo-opcuaapp.zip" />
     <EmbeddedResource Include="open62541\globalVariables-client.h" />
     <EmbeddedResource Include="open62541\mainCallbacks-server.c" />

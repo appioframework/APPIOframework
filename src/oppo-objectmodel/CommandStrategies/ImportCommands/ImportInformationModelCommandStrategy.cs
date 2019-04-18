@@ -40,7 +40,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
                 return new CommandResult(false, outputMessages);
             }
 
-            if (_fileSystem.GetInvalidFileNameChars().Any(opcuaAppName.Contains))
+            if (_fileSystem.GetInvalidFileNameChars().Any(opcuaAppName.Contains) || !_fileSystem.DirectoryExists(opcuaAppName))
             {
                 OppoLogger.Warn(LoggingText.InvalidOpcuaappName);
                 outputMessages.Add(string.Format(OutputText.ImportInformationModelCommandInvalidOpcuaappName, opcuaAppName), string.Empty);
@@ -49,12 +49,18 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 
             // -s flag (temporary solution for now -> needs bigger design changes)
             if (pathFlag == Constants.ImportInformationModelCommandArguments.Sample || pathFlag == Constants.ImportInformationModelCommandArguments.VerboseSample)
-            {
-                var content = _fileSystem.LoadTemplateFile(Resources.Resources.SampleInformationModelFileName);
-                var modelsDir = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.Models);
-                var modelFilePath = _fileSystem.CombinePaths(modelsDir, Constants.FileName.SampleInformationModelFile);
-                _fileSystem.CreateFile(modelFilePath, content);
-                outputMessages.Add(string.Format(OutputText.ImportSampleInformationModelSuccess, Constants.FileName.SampleInformationModelFile), string.Empty);
+			{
+				var modelsDir = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.Models);
+
+				var nodesetContent = _fileSystem.LoadTemplateFile(Resources.Resources.SampleInformationModelFileName);
+                var nodesetFilePath = _fileSystem.CombinePaths(modelsDir, Constants.FileName.SampleInformationModelFile);
+                _fileSystem.CreateFile(nodesetFilePath, nodesetContent);
+
+				var typesContent = _fileSystem.LoadTemplateFile(Resources.Resources.SampleInformationModelTypesFileName);
+				var typesFilePath = _fileSystem.CombinePaths(modelsDir, Constants.FileName.SampleInformationModelTypesFile);
+				_fileSystem.CreateFile(typesFilePath, typesContent);
+
+				outputMessages.Add(string.Format(OutputText.ImportSampleInformationModelSuccess, Constants.FileName.SampleInformationModelFile), string.Empty);
                 OppoLogger.Info(string.Format(LoggingText.ImportInforamtionModelCommandSuccess, Constants.FileName.SampleInformationModelFile));
                 return new CommandResult(true, outputMessages);
             }

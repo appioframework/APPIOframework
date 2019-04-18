@@ -35,12 +35,16 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	printf("Successfully connected with %d servers.\n", numberOfReferences);
+
 	/* TODO: place your code here */
 
 	for (int index = 0; index < numberOfReferences; index++)
 	{
 		UA_Client_delete(client[index]);
 	}
+
+	printf("All %d server connections were closed.\n", numberOfReferences);
 
 	return 0;
 }

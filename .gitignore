@@ -2,6 +2,7 @@
 /publish/
 /src/*/obj/
 /src/*/bin/
+/.vs
 *.user
 *.dll
 oppo.log
