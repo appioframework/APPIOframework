@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System.Collections.Generic;
 
 namespace Oppo.ObjectModel
 {
@@ -27,6 +28,8 @@ namespace Oppo.ObjectModel
 
 		[JsonProperty("port")]
 		public string Port { get; set; } = string.Empty;
-        
-    }
+
+		[JsonProperty("models")]
+		public List<IModelData> Models { get; set; } = new List<IModelData>();
+	}
 }
