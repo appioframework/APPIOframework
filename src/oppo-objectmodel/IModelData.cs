@@ -8,7 +8,6 @@ namespace Oppo.ObjectModel
 		string Name { get; set; }
 		string Uri { get; set; }
 		string Types { get; set; }
-		//List<string> requiredModels { get; set; }
 		string NamespaceVariable { get; set; }
     }
 }
