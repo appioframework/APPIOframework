@@ -9,7 +9,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
     public class ImportInformationModelCommandStrategy : ICommand<ImportStrategy>
     {
         private readonly IFileSystem _fileSystem;
-		private MessageLines _outputMessages;
+		private readonly MessageLines _outputMessages;
 
         public ImportInformationModelCommandStrategy(IFileSystem fileSystem)
         {
