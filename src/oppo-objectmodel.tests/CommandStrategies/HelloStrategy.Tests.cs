@@ -30,7 +30,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var result = objectUnderTest.Execute(inputArgsMock);
 
             // Assert
-            Assert.IsTrue(result.Sucsess);
+            Assert.IsTrue(result.Success);
             Assert.IsNotNull(result.OutputMessages);
             Assert.AreEqual(Constants.HelloString, result.OutputMessages.First().Key);
             Assert.AreEqual(string.Empty, result.OutputMessages.First().Value);

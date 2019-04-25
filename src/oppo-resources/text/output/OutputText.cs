@@ -46,9 +46,11 @@ namespace Oppo.Resources.text.output
         public const string ImportInformationModelCommandInvalidModelExtension = "Import information model failure, invalid model extension '{0}'!";
         public const string ImportInformationModelCommandNotExistingModelPath = "Import information model failure, can't find model '{0}'!";
         public const string ImportInformationModelCommandMissingModelPath = "Import information model failure, missing model name!";
+		public const string ImportInformationModelCommandOpcuaappIsAClient = "Import information model failure, can not import models to client!";
+		public const string ImportInforamtionModelCommandFailureCannotReadOppoprojFile = "Import information model failure, can not read oppoproj file!";
 
-        // import sample <command>
-        public const string ImportSampleInformationModelSuccess = "Sample information model '{0}' import success!";
+		// import sample <command>
+		public const string ImportSampleInformationModelSuccess = "Sample information model '{0}' import success!";
 
         // generate information model <command>
         public const string GenerateInformationModelSuccess = "The opcuaapp with the name '{0}' was succesfully updated with the Information model '{1}'.";

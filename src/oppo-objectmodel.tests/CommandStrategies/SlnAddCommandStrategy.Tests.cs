@@ -50,7 +50,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         private readonly string _defaultOpposlnContent = "{\"projects\": []}";
         private readonly string _sampleOpposlnContent = "{\"projects\": [{\"name\":\"clientApp\",\"path\":\"clientApp/clientApp.oppoproj\"}]}";
 
-        private readonly string _sampleOpcuaClientAppContent = "{\"name\":\"clientApp\",\"type\":\"Client\"}";
+        private readonly string _sampleOpcuaClientAppContent = "{\"name\":\"clientApp\",\"type\":\"Client\",\"references\": []}";
 		private readonly string _sampleOpcuaServerAppContent = "{\"name\":\"serverApp\",\"type\":\"Server\"}";
 
         [SetUp]
@@ -108,7 +108,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandResult = _objectUnderTest.Execute(inputParams);
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             OppoLogger.RemoveListener(loggerListenerMock.Object);
@@ -137,7 +137,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             OppoLogger.RemoveListener(loggerListenerMock.Object);
@@ -166,7 +166,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandResult = _objectUnderTest.Execute(inputParams);
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             OppoLogger.RemoveListener(loggerListenerMock.Object);
@@ -201,7 +201,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             OppoLogger.RemoveListener(loggerListenerMock.Object);
@@ -242,7 +242,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             OppoLogger.RemoveListener(loggerListenerMock.Object);
@@ -288,7 +288,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             OppoLogger.RemoveListener(loggerListenerMock.Object);
@@ -336,7 +336,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             OppoLogger.RemoveListener(loggerListenerMock.Object);
@@ -383,7 +383,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
 
             // Assert
-            Assert.IsTrue(commandResult.Sucsess);
+            Assert.IsTrue(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             OppoLogger.RemoveListener(loggerListenerMock.Object);
@@ -431,7 +431,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
 
             // Assert
-            Assert.IsTrue(commandResult.Sucsess);
+            Assert.IsTrue(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             OppoLogger.RemoveListener(loggerListenerMock.Object);

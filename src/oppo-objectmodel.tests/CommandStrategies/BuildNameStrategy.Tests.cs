@@ -98,7 +98,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var strategyResult = buildStrategy.Execute(inputParams);
 
             // Assert
-            Assert.IsFalse(strategyResult.Sucsess);
+            Assert.IsFalse(strategyResult.Success);
             Assert.AreEqual(string.Format(OutputText.OpcuaappBuildFailureProjectDoesNotExist, projectName), strategyResult.OutputMessages.First().Key);
             loggerListenerMock.Verify(y => y.Warn(It.IsAny<string>()),Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
@@ -137,7 +137,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				var strategyResult = buildStrategy.Execute(new[] { projectName });
 
 				// Assert
-				Assert.IsFalse(strategyResult.Sucsess);
+				Assert.IsFalse(strategyResult.Success);
 				Assert.AreEqual(OutputText.OpcuaappBuildFailure, strategyResult.OutputMessages.First().Key);
 				fileSystemMock.Verify(x => x.ReadFile(oppoprojFilePath), Times.Exactly(2));
 				loggerListenerMock.Verify(y => y.Warn(It.IsAny<string>()), Times.Once);
@@ -164,7 +164,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			var strategyResult = buildStrategy.Execute(inputParams);
 
 			// Assert
-			Assert.IsFalse(strategyResult.Sucsess);
+			Assert.IsFalse(strategyResult.Success);
 			Assert.AreEqual(string.Format(OutputText.OpcuaappBuildFailureProjectDoesNotExist, projectName), strategyResult.OutputMessages.First().Key);
 			fileSystemMock.VerifyAll();
 			loggerListenerMock.Verify(y => y.Warn(LoggingText.BuildProjectDoesNotExist), Times.Once);
@@ -206,7 +206,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				var strategyResult = buildStrategy.Execute(inputParams);
 
 				// Assert
-				Assert.IsTrue(strategyResult.Sucsess);
+				Assert.IsTrue(strategyResult.Success);
 				Assert.AreEqual(string.Format(OutputText.OpcuaappBuildSuccess, projectName), strategyResult.OutputMessages.First().Key);
 				fileSystemMock.VerifyAll();
 				loggerListenerMock.Verify(y => y.Info(It.IsAny<string>()), Times.Once);
@@ -248,7 +248,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				var strategyResult = buildStrategy.Execute(inputParams);
 
 				// Assert
-				Assert.IsTrue(strategyResult.Sucsess);
+				Assert.IsTrue(strategyResult.Success);
 				Assert.AreEqual(string.Format(OutputText.OpcuaappBuildSuccess, projectName), strategyResult.OutputMessages.First().Key);
 				fileSystemMock.VerifyAll();
 				loggerListenerMock.Verify(y => y.Info(It.IsAny<string>()), Times.Once);

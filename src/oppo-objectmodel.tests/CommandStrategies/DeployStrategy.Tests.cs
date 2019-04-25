@@ -76,7 +76,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var result = objectUnderTest.Execute(inputParams);
 
             // Assert
-            Assert.IsTrue(result.Sucsess);
+            Assert.IsTrue(result.Success);
             Assert.AreEqual(expectedCommandResult, result.OutputMessages.First().Key);
         }
     }

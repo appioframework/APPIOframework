@@ -88,7 +88,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandResult = _strategy.Execute(inputParams);
 
             // Assert
-            Assert.IsTrue(commandResult.Sucsess);
+            Assert.IsTrue(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
         }
 
@@ -111,7 +111,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandResult = _strategy.Execute(inputParams);
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
         }
     }

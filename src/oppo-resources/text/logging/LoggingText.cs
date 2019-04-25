@@ -83,7 +83,9 @@
         public const string InvalidInformationModelExtension = "Information model import failure, invalid model extension '{0}'";
         public const string InvalidInformationModelNotExistingPath = "Information model import failure, can't find model '{0}'!";
         public const string InvalidInformationModelMissingModelFile = "Information model import failure, missing model file!";
-        public const string OppoHelpForImportInformationModel = "Help for import <command> called";
+		public const string ImportInformationModelCommandOpcuaappIsAClient = "Import information model failure, can not import models to client!";
+		public const string ImportInforamtionModelCommandFailureCannotReadOppoprojFile = "Import information model failure, can not read oppoproj file!";
+		public const string OppoHelpForImportInformationModel = "Help for import <command> called";
 
 		// reference common
 		public const string ReferenceUnknownCommandParam = "Unknown reference command parameter!";

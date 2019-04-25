@@ -33,6 +33,7 @@ namespace Oppo.ObjectModel
 		public List<IOpcuaServerApp> ServerReferences { get; set; } = new List<IOpcuaServerApp>();
 
 		[JsonProperty("models")]
+		[JsonConverter(typeof(OpcuaappConverter<IModelData, ModelData>))]
 		public List<IModelData> Models { get; set; } = new List<IModelData>();
 	}
 }

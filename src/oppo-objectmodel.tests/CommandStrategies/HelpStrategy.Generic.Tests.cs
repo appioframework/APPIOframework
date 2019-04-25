@@ -100,7 +100,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var strategyResult = helpStrategy.Execute(new string[] { });
 
             // Assert
-            Assert.IsTrue(strategyResult.Sucsess);
+            Assert.IsTrue(strategyResult.Success);
             Assert.IsNotNull(strategyResult.OutputMessages);
            
             Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>("any-text", string.Empty)));
@@ -130,7 +130,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var strategyResult = helpStrategy.Execute(new string[] { });
 
             // Assert
-            Assert.IsTrue(strategyResult.Sucsess);
+            Assert.IsTrue(strategyResult.Success);
             Assert.IsNotNull(strategyResult.OutputMessages);
             Assert.AreEqual(string.Empty, strategyResult.OutputMessages.First().Value);
             Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>("any-text", string.Empty)));

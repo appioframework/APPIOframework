@@ -30,6 +30,7 @@ namespace Oppo.ObjectModel
 		public string Port { get; set; } = string.Empty;
 
 		[JsonProperty("models")]
+		[JsonConverter(typeof(OpcuaappConverter<IModelData, ModelData>))]
 		public List<IModelData> Models { get; set; } = new List<IModelData>();
 	}
 }

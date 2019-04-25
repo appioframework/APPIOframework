@@ -79,7 +79,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             // Assert
             Assert.IsTrue(infoWrittenOut);
-            Assert.IsTrue(result.Sucsess);
+            Assert.IsTrue(result.Success);
             Assert.AreEqual(string.Format(OutputText.NewSlnCommandSuccess, slnName), result.OutputMessages.First().Key);
             fileSystemMock.Verify(x => x.CreateFile(slnFileName, It.IsAny<string>()), Times.Once);
             fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoSlnTemplateFileName), Times.Once);
@@ -105,7 +105,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             // Assert
             Assert.IsTrue(warnWrittenOut);
-            Assert.IsFalse(result.Sucsess);
+            Assert.IsFalse(result.Success);
             Assert.AreEqual(OutputText.NewSlnCommandFailureUnknownParam, result.OutputMessages.First().Key);
             fileSystemMock.Verify(x => x.CreateFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoSlnTemplateFileName), Times.Never);
@@ -132,7 +132,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             // Assert
             Assert.IsTrue(warnWrittenOut);
-            Assert.IsFalse(result.Sucsess);
+            Assert.IsFalse(result.Success);
             Assert.AreEqual(string.Format(OutputText.NewSlnCommandFailure, slnName), result.OutputMessages.First().Key);
             fileSystemMock.Verify(x => x.CreateFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoSlnTemplateFileName), Times.Never);
