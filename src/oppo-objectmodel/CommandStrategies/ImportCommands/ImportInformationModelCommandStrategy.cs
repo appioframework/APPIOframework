@@ -9,11 +9,14 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
     public class ImportInformationModelCommandStrategy : ICommand<ImportStrategy>
     {
         private readonly IFileSystem _fileSystem;
+		private MessageLines _outputMessages;
 
         public ImportInformationModelCommandStrategy(IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
-        }
+			_outputMessages = new MessageLines();
+
+		}
 
         public string Name => Constants.ImportInformationModelCommandName.InformationModel;
 
@@ -24,28 +27,11 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 			var opcuaAppName = inputParamsList.ElementAtOrDefault(1);
 			var pathFlag = inputParams.ElementAtOrDefault(2);
 			var modelPath = inputParamsList.ElementAtOrDefault(3);
-			var outputMessages = new MessageLines();
-
-			if (nameFlag != Constants.ImportInformationModelCommandArguments.Name && nameFlag != Constants.ImportInformationModelCommandArguments.VerboseName)
-			{
-				OppoLogger.Warn(LoggingText.UnknownImportInfomrationModelCommandParam);
-				outputMessages.Add(OutputText.ImportInformationModelCommandUnknownParamFailure, string.Empty);
-				return new CommandResult(false, outputMessages);
-			}
 
 			// opcuaapp name validation
-			if (string.IsNullOrEmpty(opcuaAppName))
+			if (!ValidateOpcuaAppName(nameFlag, opcuaAppName))
 			{
-				OppoLogger.Warn(LoggingText.EmptyOpcuaappName);
-				outputMessages.Add(OutputText.ImportInformationModelCommandUnknownParamFailure, string.Empty);
-				return new CommandResult(false, outputMessages);
-			}
-
-			if (_fileSystem.GetInvalidFileNameChars().Any(opcuaAppName.Contains) || !_fileSystem.DirectoryExists(opcuaAppName))
-			{
-				OppoLogger.Warn(LoggingText.InvalidOpcuaappName);
-				outputMessages.Add(string.Format(OutputText.ImportInformationModelCommandInvalidOpcuaappName, opcuaAppName), string.Empty);
-				return new CommandResult(false, outputMessages);
+				return new CommandResult(false, _outputMessages);
 			}
 
 			// -s flag (temporary solution for now -> needs bigger design changes)
@@ -61,49 +47,17 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 				var typesFilePath = _fileSystem.CombinePaths(modelsDir, Constants.FileName.SampleInformationModelTypesFile);
 				_fileSystem.CreateFile(typesFilePath, typesContent);
 
-				outputMessages.Add(string.Format(OutputText.ImportSampleInformationModelSuccess, Constants.FileName.SampleInformationModelFile), string.Empty);
+				_outputMessages.Add(string.Format(OutputText.ImportSampleInformationModelSuccess, Constants.FileName.SampleInformationModelFile), string.Empty);
 				OppoLogger.Info(string.Format(LoggingText.ImportInforamtionModelCommandSuccess, Constants.FileName.SampleInformationModelFile));
-				return new CommandResult(true, outputMessages);
+				return new CommandResult(true, _outputMessages);
 			}
 
 			// path flag validation
-			if (pathFlag != Constants.ImportInformationModelCommandArguments.Path && pathFlag != Constants.ImportInformationModelCommandArguments.VerbosePath)
+			if (!ValidateModel(pathFlag, modelPath))
 			{
-				OppoLogger.Warn(LoggingText.UnknownImportInfomrationModelCommandParam);
-				outputMessages.Add(OutputText.ImportInformationModelCommandUnknownParamFailure, string.Empty);
-				return new CommandResult(false, outputMessages);
+				return new CommandResult(false, _outputMessages);
 			}
-			
-			// model path validation
-			if (string.IsNullOrEmpty(modelPath))
-			{
-				OppoLogger.Warn(LoggingText.InvalidInformationModelMissingModelFile);
-				outputMessages.Add(OutputText.ImportInformationModelCommandMissingModelPath, string.Empty);
-				return new CommandResult(false, outputMessages);
-			}
-
-			if (_fileSystem.GetInvalidPathChars().Any(modelPath.Contains))
-			{
-				OppoLogger.Warn(string.Format(LoggingText.InvalidInformationModelPath, modelPath));
-				outputMessages.Add(string.Format(OutputText.ImportInformationModelCommandInvalidModelPath, modelPath), string.Empty);
-				return new CommandResult(false, outputMessages);
-			}
-
-			if (!_fileSystem.FileExists(modelPath))
-			{
-				OppoLogger.Warn(string.Format(LoggingText.InvalidInformationModelNotExistingPath, modelPath));
-				outputMessages.Add(string.Format(OutputText.ImportInformationModelCommandNotExistingModelPath, modelPath), string.Empty);
-				return new CommandResult(false, outputMessages);
-			}
-
-			// model file name/extension validation
 			var modelFileName = _fileSystem.GetFileName(modelPath);
-			if (_fileSystem.GetExtension(modelPath) != Constants.FileExtension.InformationModel)
-			{
-				OppoLogger.Warn(string.Format(LoggingText.InvalidInformationModelExtension, modelFileName));
-				outputMessages.Add(string.Format(OutputText.ImportInformationModelCommandInvalidModelExtension, modelFileName), string.Empty);
-				return new CommandResult(false, outputMessages);
-			}
 
 			// here I should check if model is part of oppoproj
 			// check if opcuaapp alrady has models with this name (uri later)
@@ -112,14 +66,14 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 			if (opcuaappData == null)
 			{
 				OppoLogger.Warn(LoggingText.ImportInforamtionModelCommandFailureCannotReadOppoprojFile);
-				outputMessages.Add(OutputText.ImportInforamtionModelCommandFailureCannotReadOppoprojFile, string.Empty);
-				return new CommandResult(false, outputMessages);
+				_outputMessages.Add(OutputText.ImportInforamtionModelCommandFailureCannotReadOppoprojFile, string.Empty);
+				return new CommandResult(false, _outputMessages);
 			}
 			if (opcuaappData.Type == Constants.ApplicationType.Client)
 			{
 				OppoLogger.Warn(LoggingText.ImportInformationModelCommandOpcuaappIsAClient);
-				outputMessages.Add(OutputText.ImportInformationModelCommandOpcuaappIsAClient, string.Empty);
-				return new CommandResult(false, outputMessages);
+				_outputMessages.Add(OutputText.ImportInformationModelCommandOpcuaappIsAClient, string.Empty);
+				return new CommandResult(false, _outputMessages);
 			}
 			
 			// here I should add the information to oppoproj file
@@ -143,9 +97,81 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
             _fileSystem.CopyFile(modelPath, targetModelFilePath);
 
             OppoLogger.Info(string.Format(LoggingText.ImportInforamtionModelCommandSuccess, modelPath));
-            outputMessages.Add(string.Format(OutputText.ImportInformationModelCommandSuccess, modelPath), string.Empty);
-            return new CommandResult(true, outputMessages);
+			_outputMessages.Add(string.Format(OutputText.ImportInformationModelCommandSuccess, modelPath), string.Empty);
+            return new CommandResult(true, _outputMessages);
         }
+
+		private bool ValidateOpcuaAppName(string nameFlag, string opcuaAppName)
+		{
+			// opcuaapp name flag validation
+			if (nameFlag != Constants.ImportInformationModelCommandArguments.Name && nameFlag != Constants.ImportInformationModelCommandArguments.VerboseName)
+			{
+				OppoLogger.Warn(LoggingText.UnknownImportInfomrationModelCommandParam);
+				_outputMessages.Add(OutputText.ImportInformationModelCommandUnknownParamFailure, string.Empty);
+				return false;
+			}
+
+			// opcuaapp name validation
+			if (string.IsNullOrEmpty(opcuaAppName))
+			{
+				OppoLogger.Warn(LoggingText.EmptyOpcuaappName);
+				_outputMessages.Add(OutputText.ImportInformationModelCommandUnknownParamFailure, string.Empty);
+				return false;
+			}
+
+			if (_fileSystem.GetInvalidFileNameChars().Any(opcuaAppName.Contains) || !_fileSystem.DirectoryExists(opcuaAppName))
+			{
+				OppoLogger.Warn(LoggingText.InvalidOpcuaappName);
+				_outputMessages.Add(string.Format(OutputText.ImportInformationModelCommandInvalidOpcuaappName, opcuaAppName), string.Empty);
+				return false;
+			}
+
+			return true;
+		}
+
+		private bool ValidateModel(string pathFlag, string modelPath)
+		{
+			// path flag validation
+			if (pathFlag != Constants.ImportInformationModelCommandArguments.Path && pathFlag != Constants.ImportInformationModelCommandArguments.VerbosePath)
+			{
+				OppoLogger.Warn(LoggingText.UnknownImportInfomrationModelCommandParam);
+				_outputMessages.Add(OutputText.ImportInformationModelCommandUnknownParamFailure, string.Empty);
+				return false;
+			}
+
+			// model path validation
+			if (string.IsNullOrEmpty(modelPath))
+			{
+				OppoLogger.Warn(LoggingText.InvalidInformationModelMissingModelFile);
+				_outputMessages.Add(OutputText.ImportInformationModelCommandMissingModelPath, string.Empty);
+				return false;
+			}
+
+			if (_fileSystem.GetInvalidPathChars().Any(modelPath.Contains))
+			{
+				OppoLogger.Warn(string.Format(LoggingText.InvalidInformationModelPath, modelPath));
+				_outputMessages.Add(string.Format(OutputText.ImportInformationModelCommandInvalidModelPath, modelPath), string.Empty);
+				return false;
+			}
+
+			if (!_fileSystem.FileExists(modelPath))
+			{
+				OppoLogger.Warn(string.Format(LoggingText.InvalidInformationModelNotExistingPath, modelPath));
+				_outputMessages.Add(string.Format(OutputText.ImportInformationModelCommandNotExistingModelPath, modelPath), string.Empty);
+				return false;
+			}
+
+			// model file name/extension validation
+			var modelFileName = _fileSystem.GetFileName(modelPath);
+			if (_fileSystem.GetExtension(modelPath) != Constants.FileExtension.InformationModel)
+			{
+				OppoLogger.Warn(string.Format(LoggingText.InvalidInformationModelExtension, modelFileName));
+				_outputMessages.Add(string.Format(OutputText.ImportInformationModelCommandInvalidModelExtension, modelFileName), string.Empty);
+				return false;
+			}
+
+			return true;
+		}
 
         public string GetHelpText()
         {

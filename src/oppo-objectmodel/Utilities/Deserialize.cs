@@ -32,11 +32,6 @@ namespace Oppo.ObjectModel
 					{
 						deserializedData = JsonConvert.DeserializeObject<OpcuaClientServerApp>(jsonFileContent);
 					}
-
-					if (deserializedData == null)
-					{
-						throw null;
-					}
 				}
 				catch (Exception)
 				{
