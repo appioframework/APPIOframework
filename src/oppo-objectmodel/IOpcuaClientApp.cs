@@ -6,6 +6,4 @@ namespace Oppo.ObjectModel
     {
         List<IOpcuaServerApp> ServerReferences { get; }
     }
-
-
 }

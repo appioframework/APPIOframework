@@ -48,6 +48,7 @@ namespace Oppo.Resources.text.output
         public const string ImportInformationModelCommandMissingModelPath = "Import information model failure, missing model name!";
 		public const string ImportInformationModelCommandOpcuaappIsAClient = "Import information model failure, can not import models to client!";
 		public const string ImportInforamtionModelCommandFailureCannotReadOppoprojFile = "Import information model failure, can not read oppoproj file!";
+		public const string ImportInforamtionModelCommandFailureModelDuplication = "Import information model failure, opcuaapp '{0}' already has a model with name '{1}'!";
 
 		// import sample <command>
 		public const string ImportSampleInformationModelSuccess = "Sample information model '{0}' import success!";

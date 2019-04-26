@@ -1,7 +1,10 @@
 ﻿using Oppo.Resources.text.logging;
 using Oppo.Resources.text.output;
+using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using Newtonsoft.Json;
 
 namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
@@ -11,14 +14,15 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
         private readonly IFileSystem _fileSystem;
 		private readonly MessageLines _outputMessages;
 
-        public ImportInformationModelCommandStrategy(IFileSystem fileSystem)
+		public ImportInformationModelCommandStrategy(IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
 			_outputMessages = new MessageLines();
-
 		}
 
         public string Name => Constants.ImportInformationModelCommandName.InformationModel;
+
+		private Dictionary<string, Type> dict = new Dictionary<string, Type>();
 
 		public CommandResult Execute(IEnumerable<string> inputParams)
 		{
@@ -79,16 +83,22 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 			// here I should add the information to oppoproj file
 			var modelData = new ModelData();
 			modelData.Name = _fileSystem.GetFileName(modelFileName);
-			modelData.Uri = string.Empty;
+			modelData.Uri = GetNodesetUri(modelPath);
 			modelData.Types = string.Empty;
 			modelData.NamespaceVariable = "ns_" + _fileSystem.GetFileNameWithoutExtension(modelFileName);
 
-			if(opcuaappData.Type == Constants.ApplicationType.Server)
-				(opcuaappData as OpcuaServerApp).Models.Add(modelData);
-			else if (opcuaappData.Type == Constants.ApplicationType.ClientServer)
-				(opcuaappData as OpcuaClientServerApp).Models.Add(modelData);
+
+			// check if oppoproj file already contains imported model
+			if((opcuaappData as IOpcuaServerApp).Models.Any(x => x.Name == modelData.Name) || (opcuaappData as IOpcuaServerApp).Models.Any(x => x.Uri == modelData.Uri))
+			{
+				OppoLogger.Warn(LoggingText.ImportInforamtionModelCommandFailureModelDuplication);
+				_outputMessages.Add(string.Format(OutputText.ImportInforamtionModelCommandFailureModelDuplication, opcuaAppName, modelFileName), string.Empty);
+				return new CommandResult(false, _outputMessages);
+			}
 			
-			var oppoprojNewContent = JsonConvert.SerializeObject(opcuaappData, Formatting.Indented);
+			(opcuaappData as IOpcuaServerApp).Models.Add(modelData);
+
+			var oppoprojNewContent = JsonConvert.SerializeObject(opcuaappData, Newtonsoft.Json.Formatting.Indented);
 
 			_fileSystem.WriteFile(oppoprojFilePath, new List<string> { oppoprojNewContent });
 
@@ -173,7 +183,23 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 			return true;
 		}
 
-        public string GetHelpText()
+		private string GetNodesetUri(string nodesetPath)
+		{
+			XmlDocument nodesetXml = new XmlDocument();
+			using (var nodesetStream = _fileSystem.ReadFile(nodesetPath))
+			{
+				StreamReader reader = new StreamReader(nodesetStream);
+				var xmlFileContent = reader.ReadToEnd();
+				nodesetXml.LoadXml(xmlFileContent);
+			}
+			
+			var nsmgr = new XmlNamespaceManager(nodesetXml.NameTable);
+			nsmgr.AddNamespace("ns", "http://opcfoundation.org/UA/2011/03/UANodeSet.xsd");
+			var uriNamespace = nodesetXml.SelectSingleNode("//ns:UANodeSet//ns:Models//ns:Model", nsmgr);
+			return uriNamespace.Attributes["ModelUri"].Value;
+		}
+
+		public string GetHelpText()
         {
             return string.Empty;
         }

@@ -8,6 +8,4 @@ namespace Oppo.ObjectModel
 		string Port { get; set; }
 		List<IModelData> Models { get; set; }
     }
-
-
 }

@@ -104,9 +104,25 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		private Mock<IFileSystem> _fileSystemMock;
 		private ImportInformationModelCommandStrategy _objectUnderTest;
 
-		private readonly string _sampleOpcuaClientAppContent = "{\"name\":\"clientApp\",\"type\":\"Client\",\"references\": []}";
-		private readonly string _sampleOpcuaServerAppContent = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"models\":[]}";
-		private readonly string _sampleOpcuaClientServerAppContent = "{\"name\":\"clientServerApp\",\"type\":\"ClientServer\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"references\": [],\"models\":[]}";
+		private readonly string _defaultOpcuaClientAppContent = "{\"name\":\"clientApp\",\"type\":\"Client\",\"references\": []}";
+		private readonly string _defaultOpcuaServerAppContent = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"models\":[]}";
+		private readonly string _defaultOpcuaClientServerAppContent = "{\"name\":\"clientServerApp\",\"type\":\"ClientServer\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"references\": [],\"models\":[]}";
+
+		private readonly string _sampleOpcuaServerAppContent = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"models\":[{\"name\":\"model.xml\",\"uri\": \"sample_namespace\",\"types\": \"\",\"namespaceVariable\": \"ns_model\"}]}";
+
+		private readonly string _sampleNodesetContent = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
+														"<UANodeSet xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" LastModified=\"2012-12-31T00:00:00Z\" xmlns=\"http://opcfoundation.org/UA/2011/03/UANodeSet.xsd\">" +
+														"<NamespaceUris>" +
+														"<Uri>sample_namespace</Uri>" +
+														"<Uri>required_namespace</Uri>" +
+														"</NamespaceUris>" +
+														"<Models>" +
+														"<Model ModelUri = \"sample_namespace\" Version=\"1.01\" PublicationDate=\"2012-12-31T00:00:00Z\">" +
+														"<RequiredModel ModelUri = \"http://opcfoundation.org/UA/\" Version=\"1.04\" PublicationDate=\"2016-12-31T00:00:00Z\" />" +
+														"<RequiredModel ModelUri = \"required_namespace\" Version=\"1.01\" PublicationDate=\"2012-12-31T00:00:00Z\" />" +
+														"</Model>" +
+														"</Models>" +
+														"</UANodeSet>";
 
 		[SetUp]
 		public void SetupObjectUnderTest()
@@ -171,11 +187,13 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			_fileSystemMock.Setup(x => x.DirectoryExists(projectDirectory)).Returns(true);
 			_fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, projectDirectory + Constants.FileExtension.OppoProject)).Returns(oppoprojFilePath);
 
-			using (var serverOppoprojFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpcuaServerAppContent)))
+			using (var serverOppoprojFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_defaultOpcuaServerAppContent)))
+			using (var nodesetFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleNodesetContent)))
 			{
 				_fileSystemMock.Setup(x => x.ReadFile(oppoprojFilePath)).Returns(serverOppoprojFileStream);
+				_fileSystemMock.Setup(x => x.ReadFile(modelFilePath)).Returns(nodesetFileStream);
 
-				var loggerListenerMock = new Mock<ILoggerListener>();
+					var loggerListenerMock = new Mock<ILoggerListener>();
 				loggerListenerMock.Setup(listener => listener.Info(string.Format(LoggingText.ImportInforamtionModelCommandSuccess, modelFilePath))).Callback(delegate { infoWrittenOut = true; });
 				OppoLogger.RegisterListener(loggerListenerMock.Object);
 
@@ -212,9 +230,11 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			_fileSystemMock.Setup(x => x.DirectoryExists(projectDirectory)).Returns(true);
 			_fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, projectDirectory + Constants.FileExtension.OppoProject)).Returns(oppoprojFilePath);
 
-			using (var clientServerOppoprojFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpcuaClientServerAppContent)))
+			using (var clientServerOppoprojFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_defaultOpcuaClientServerAppContent)))
+			using (var nodesetFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleNodesetContent)))
 			{
 				_fileSystemMock.Setup(x => x.ReadFile(oppoprojFilePath)).Returns(clientServerOppoprojFileStream);
+				_fileSystemMock.Setup(x => x.ReadFile(modelFilePath)).Returns(nodesetFileStream);
 
 				var loggerListenerMock = new Mock<ILoggerListener>();
 				loggerListenerMock.Setup(listener => listener.Info(string.Format(LoggingText.ImportInforamtionModelCommandSuccess, modelFilePath))).Callback(delegate { infoWrittenOut = true; });
@@ -501,7 +521,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         }
 
 		[Test]
-		public void ImportInformatioNModelCommandStrategy_Should_Fail_OnImportingToClient([ValueSource(nameof(ValidInputs))] string[] inputParams)
+		public void ImportInformationModelCommandStrategy_Should_Fail_OnImportingToClient([ValueSource(nameof(ValidInputs))] string[] inputParams)
 		{
 			// Arrange
 			var projectName = inputParams.ElementAtOrDefault(1);
@@ -514,7 +534,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			_fileSystemMock.Setup(x => x.DirectoryExists(projectName)).Returns(true);
 			_fileSystemMock.Setup(x => x.CombinePaths(projectName, projectName + Constants.FileExtension.OppoProject)).Returns(oppoprojFilePath);
 
-			using (var clientOppoprojFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpcuaClientAppContent)))
+			using (var clientOppoprojFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_defaultOpcuaClientAppContent)))
 			{
 				_fileSystemMock.Setup(x => x.ReadFile(oppoprojFilePath)).Returns(clientOppoprojFileStream);
 
@@ -529,7 +549,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		}
 
 		[Test]
-		public void ImportInformatioNModelCommandStrategy_Should_Fail_OnInvalidOppoprojFile([ValueSource(nameof(ValidInputs))] string[] inputParams)
+		public void ImportInformationModelCommandStrategy_Should_Fail_OnInvalidOppoprojFile([ValueSource(nameof(ValidInputs))] string[] inputParams)
 		{
 			// Arrange
 			var projectName = inputParams.ElementAtOrDefault(1);
@@ -553,6 +573,38 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				Assert.IsFalse(commandResult.Success);
 				Assert.IsNotNull(commandResult.OutputMessages);
 				Assert.AreEqual(OutputText.ImportInforamtionModelCommandFailureCannotReadOppoprojFile, commandResult.OutputMessages.First().Key);
+			}
+		}
+
+		[Test]
+		public void ImportInformationModelCommandStrategy_Should_Fail_OnModelDuplication([ValueSource(nameof(ValidInputs))] string [] inputParams)
+		{
+			// Arrange
+			var projectName = inputParams.ElementAtOrDefault(1);
+			var modelFilePath = inputParams.ElementAtOrDefault(3);
+
+			var oppoprojFilePath = Path.Combine(projectName, projectName + Constants.FileExtension.OppoProject);
+			var modelName = Path.GetFileName(modelFilePath);
+
+			_fileSystemMock.Setup(x => x.FileExists(modelFilePath)).Returns(true);
+			_fileSystemMock.Setup(x => x.GetExtension(modelFilePath)).Returns(_validModelExtension);
+			_fileSystemMock.Setup(x => x.DirectoryExists(projectName)).Returns(true);
+			_fileSystemMock.Setup(x => x.CombinePaths(projectName, projectName + Constants.FileExtension.OppoProject)).Returns(oppoprojFilePath);
+			_fileSystemMock.Setup(x => x.GetFileName(modelFilePath)).Returns(modelName);
+
+			using (var sampleOppoprojFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpcuaServerAppContent)))
+			using (var nodesetFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleNodesetContent)))
+			{
+				_fileSystemMock.Setup(x => x.ReadFile(oppoprojFilePath)).Returns(sampleOppoprojFileStream);
+				_fileSystemMock.Setup(x => x.ReadFile(modelFilePath)).Returns(nodesetFileStream);
+
+				// Act
+				var commandResult = _objectUnderTest.Execute(inputParams);
+
+				// Assert
+				Assert.IsFalse(commandResult.Success);
+				Assert.IsNotNull(commandResult.OutputMessages);
+				Assert.AreEqual(string.Format(OutputText.ImportInforamtionModelCommandFailureModelDuplication, projectName, modelName), commandResult.OutputMessages.First().Key);
 			}
 		}
 	}
