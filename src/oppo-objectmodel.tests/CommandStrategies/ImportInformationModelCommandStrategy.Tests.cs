@@ -102,6 +102,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		}
 
 		private Mock<IFileSystem> _fileSystemMock;
+		private Mock<IModelValidator> _modelValidatorMock;
 		private ImportInformationModelCommandStrategy _objectUnderTest;
 
 		private readonly string _defaultOpcuaClientAppContent = "{\"name\":\"clientApp\",\"type\":\"Client\",\"references\": []}";
@@ -128,7 +129,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		public void SetupObjectUnderTest()
 		{
 			_fileSystemMock = new Mock<IFileSystem>();
-			_objectUnderTest = new ImportInformationModelCommandStrategy(_fileSystemMock.Object);
+			_modelValidatorMock = new Mock<IModelValidator>();
+			_objectUnderTest = new ImportInformationModelCommandStrategy(_fileSystemMock.Object, _modelValidatorMock.Object);
 		}
 
 		[Test]
@@ -187,6 +189,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			_fileSystemMock.Setup(x => x.DirectoryExists(projectDirectory)).Returns(true);
 			_fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, projectDirectory + Constants.FileExtension.OppoProject)).Returns(oppoprojFilePath);
 
+			_modelValidatorMock.Setup(x => x.Validate(modelFilePath, It.IsAny<string>())).Returns(true);
+
 			using (var serverOppoprojFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_defaultOpcuaServerAppContent)))
 			using (var nodesetFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleNodesetContent)))
 			{
@@ -229,6 +233,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			_fileSystemMock.Setup(x => x.CombinePaths(modelsDirectory, _modelName)).Returns(modelTargetPath);
 			_fileSystemMock.Setup(x => x.DirectoryExists(projectDirectory)).Returns(true);
 			_fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, projectDirectory + Constants.FileExtension.OppoProject)).Returns(oppoprojFilePath);
+
+			_modelValidatorMock.Setup(x => x.Validate(modelFilePath, It.IsAny<string>())).Returns(true);
 
 			using (var clientServerOppoprojFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_defaultOpcuaClientServerAppContent)))
 			using (var nodesetFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleNodesetContent)))
@@ -533,6 +539,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			_fileSystemMock.Setup(x => x.GetExtension(modelFilePath)).Returns(_validModelExtension);
 			_fileSystemMock.Setup(x => x.DirectoryExists(projectName)).Returns(true);
 			_fileSystemMock.Setup(x => x.CombinePaths(projectName, projectName + Constants.FileExtension.OppoProject)).Returns(oppoprojFilePath);
+			
+			_modelValidatorMock.Setup(x => x.Validate(modelFilePath, It.IsAny<string>())).Returns(true);
 
 			using (var clientOppoprojFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_defaultOpcuaClientAppContent)))
 			{
@@ -561,6 +569,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			_fileSystemMock.Setup(x => x.GetExtension(modelFilePath)).Returns(_validModelExtension);
 			_fileSystemMock.Setup(x => x.DirectoryExists(projectName)).Returns(true);
 			_fileSystemMock.Setup(x => x.CombinePaths(projectName, projectName + Constants.FileExtension.OppoProject)).Returns(oppoprojFilePath);
+
+			_modelValidatorMock.Setup(x => x.Validate(modelFilePath, It.IsAny<string>())).Returns(true);
 
 			using (var emptyOppoprojFileStream = new MemoryStream(Encoding.ASCII.GetBytes(string.Empty)))
 			{
@@ -592,6 +602,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			_fileSystemMock.Setup(x => x.CombinePaths(projectName, projectName + Constants.FileExtension.OppoProject)).Returns(oppoprojFilePath);
 			_fileSystemMock.Setup(x => x.GetFileName(modelFilePath)).Returns(modelName);
 
+			_modelValidatorMock.Setup(x => x.Validate(modelFilePath, It.IsAny<string>())).Returns(true);
+
 			using (var sampleOppoprojFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpcuaServerAppContent)))
 			using (var nodesetFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleNodesetContent)))
 			{
@@ -606,6 +618,31 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				Assert.IsNotNull(commandResult.OutputMessages);
 				Assert.AreEqual(string.Format(OutputText.ImportInforamtionModelCommandFailureModelDuplication, projectName, modelName), commandResult.OutputMessages.First().Key);
 			}
+		}
+
+		[Test]
+		public void ImportInformationModelCommandStrategy_Should_Fail_OnModelValidation([ValueSource(nameof(ValidInputs))] string[] inputParams)
+		{
+			// Arrange
+			var projectName = inputParams.ElementAtOrDefault(1);
+			var modelFilePath = inputParams.ElementAtOrDefault(3);
+
+			var oppoprojFilePath = Path.Combine(projectName, projectName + Constants.FileExtension.OppoProject);
+			var modelName = Path.GetFileName(modelFilePath);
+
+			_fileSystemMock.Setup(x => x.FileExists(modelFilePath)).Returns(true);
+			_fileSystemMock.Setup(x => x.GetExtension(modelFilePath)).Returns(_validModelExtension);
+			_fileSystemMock.Setup(x => x.DirectoryExists(projectName)).Returns(true);
+
+			_modelValidatorMock.Setup(x => x.Validate(modelFilePath, It.IsAny<string>())).Returns(false);
+
+			// Act
+			var commandResult = _objectUnderTest.Execute(inputParams);
+
+			// Assert
+			Assert.IsFalse(commandResult.Success);
+			Assert.IsNotNull(commandResult.OutputMessages);
+			Assert.AreEqual(string.Format(OutputText.NodesetValidationFailure, modelFilePath), commandResult.OutputMessages.First().Key);
 		}
 	}
 }

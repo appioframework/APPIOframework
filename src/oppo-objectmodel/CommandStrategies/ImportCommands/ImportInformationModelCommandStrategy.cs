@@ -12,11 +12,13 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
     public class ImportInformationModelCommandStrategy : ICommand<ImportStrategy>
     {
         private readonly IFileSystem _fileSystem;
+		private readonly IModelValidator _modelValidator;
 		private readonly MessageLines _outputMessages;
 
-		public ImportInformationModelCommandStrategy(IFileSystem fileSystem)
+		public ImportInformationModelCommandStrategy(IFileSystem fileSystem, IModelValidator modelValidator)
         {
             _fileSystem = fileSystem;
+			_modelValidator = modelValidator;
 			_outputMessages = new MessageLines();
 		}
 
@@ -175,6 +177,14 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 			{
 				OppoLogger.Warn(string.Format(LoggingText.InvalidInformationModelExtension, modelFileName));
 				_outputMessages.Add(string.Format(OutputText.ImportInformationModelCommandInvalidModelExtension, modelFileName), string.Empty);
+				return false;
+			}
+
+			// validate model against UANodeSet xsd file
+			if (!_modelValidator.Validate(modelPath, Resources.Resources.UANodeSetXsdFileName))
+			{
+				OppoLogger.Warn(string.Format(LoggingText.NodesetValidationFailure, modelPath));
+				_outputMessages.Add(string.Format(OutputText.NodesetValidationFailure, modelPath), string.Empty);
 				return false;
 			}
 

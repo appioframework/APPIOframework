@@ -210,8 +210,8 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             // validate model
             if (!_modelValidator.Validate(calculatedModelFilePath, Resources.Resources.UANodeSetXsdFileName))
             {
-                messages.loggerMessage = string.Format(LoggingText.GenerateInformationModelFailureValidatingModel, modelFullName);
-                messages.outputMessage = string.Format(OutputText.GenerateInformationModelFailureValidatingModel, modelFullName);
+                messages.loggerMessage = string.Format(LoggingText.NodesetValidationFailure, modelFullName);
+                messages.outputMessage = string.Format(OutputText.NodesetValidationFailure, modelFullName);
                 return false;
             }
             
@@ -315,8 +315,8 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 // validate model
                 if (!_modelValidator.Validate(calculatedRequiredModelPath, Resources.Resources.UANodeSetXsdFileName))
                 {
-                    messages.loggerMessage = string.Format(LoggingText.GenerateInformationModelFailureValidatingModel, requiredFiles.modelFullName);
-                    messages.outputMessage = string.Format(OutputText.GenerateInformationModelFailureValidatingModel, requiredFiles.modelFullName);
+                    messages.loggerMessage = string.Format(LoggingText.NodesetValidationFailure, requiredFiles.modelFullName);
+                    messages.outputMessage = string.Format(OutputText.NodesetValidationFailure, requiredFiles.modelFullName);
                     return false;
                 }
             }

@@ -2,7 +2,10 @@
 {
     public static class LoggingText
     {
-        public const string NullInputParams_Msg = "Null input parameters passed. Specify any valid parameters.";
+		// common
+		public const string NodesetValidationFailure = "Nodeset '{0}' validation failure!";
+
+		public const string NullInputParams_Msg = "Null input parameters passed. Specify any valid parameters.";
         public const string InvalidSolutionName = "Invalid solution name!";
         public const string EmptySolutionName = "Empty solution name!";
         public const string UnknownNewSlnCommandParam = "Unknown new sln <command> parameter!";
@@ -43,7 +46,6 @@
         public const string GenerateInformationModelFailureUnknownParam = "Generate information-model failure! Unknown command parameter '{0}'!";
         public const string GenerateInformationModelFailureEmptyOpcuaAppName = "Generate information-model failure! Empty opcuaapp name!";
         public const string OppoHelpForGenerateCommand = "Help for generate <command> called";
-        public const string GenerateInformationModelFailureValidatingModel = "Model '{0}' validation failure!";
 
         public const string ValidatingModel = "Validating model '{0}' against '{1}'.";
         public const string ValidationError = "Validation error \n {0}";

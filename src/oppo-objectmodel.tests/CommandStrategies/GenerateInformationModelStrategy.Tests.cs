@@ -415,9 +415,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
-            Assert.AreEqual(string.Format(string.Format(OutputText.GenerateInformationModelFailureValidatingModel, modelFullName)), firstMessageLine.Key);
+            Assert.AreEqual(string.Format(string.Format(OutputText.NodesetValidationFailure, modelFullName)), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
-            _loggerListenerMock.Verify(x => x.Warn(string.Format(LoggingText.GenerateInformationModelFailureValidatingModel, modelFullName)), Times.Once);
+            _loggerListenerMock.Verify(x => x.Warn(string.Format(LoggingText.NodesetValidationFailure, modelFullName)), Times.Once);
         }
 
         [Test]
@@ -1435,9 +1435,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
-            Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureValidatingModel, requiredModelFullName), firstMessageLine.Key);
+            Assert.AreEqual(string.Format(OutputText.NodesetValidationFailure, requiredModelFullName), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
-            _loggerListenerMock.Verify(x => x.Warn(string.Format(LoggingText.GenerateInformationModelFailureValidatingModel, requiredModelFullName)), Times.Once);
+            _loggerListenerMock.Verify(x => x.Warn(string.Format(LoggingText.NodesetValidationFailure, requiredModelFullName)), Times.Once);
             _modelValidatorMock.Verify(x => x.Validate(calculatedRequiredModelPath, It.IsAny<string>()), Times.Once);
         }
     }

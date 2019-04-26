@@ -6,9 +6,10 @@ namespace Oppo.Resources.text.output
     {
         // general
         public const string GeneralCommandExecutionFailure = "Command \"oppo {0}\" failed!";
+		public const string NodesetValidationFailure = "It was not possible to validate the model '{0}' against known opc-ua 'UANodeSet.xsd'!";
 
-        // publish <command>
-        public const string OpcuaappPublishFailure = "Publish failure!";
+		// publish <command>
+		public const string OpcuaappPublishFailure = "Publish failure!";
 		public const string OpcuaappPublishFailureMissingExecutables = "Publish '{0}' failure! Missing client and server executable files";
 		public const string OpcuaappPublishSuccess = "Publish '{0}' success!";
 
@@ -63,8 +64,7 @@ namespace Oppo.Resources.text.output
         public const string GenerateInformationModelFailureInvalidFile = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Invalid file extension '{2}'!";
         public const string GenerateInformationModelFailureUnknownParam = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Unknown command parameter '{2}'!";
         public const string GenerateInformationModelFailureEmptyOpcuaAppName = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Empty opcuaapp name!";
-        public const string GenerateInformationModelFailureValidatingModel = "It was not possible to validate the model '{0}' against known opc-ua 'UANodeSet.xsd'!";
-        public const string GenerateInformationModelRequiredModelFailure = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Can't use required model '{2}'!";
+		public const string GenerateInformationModelRequiredModelFailure = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Can't use required model '{2}'!";
 
         // sln common <command>
         public const string SlnOpposlnNotFound		= "The solution file '{0}' not found!";
