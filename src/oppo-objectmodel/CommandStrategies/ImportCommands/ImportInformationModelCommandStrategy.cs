@@ -192,7 +192,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 			}
 			
 			var nsmgr = new XmlNamespaceManager(nodesetXml.NameTable);
-			nsmgr.AddNamespace("ns", new Uri("http://opcfoundation.org/UA/2011/03/UANodeSet.xsd").ToString());
+			nsmgr.AddNamespace("ns", new UriBuilder("http", "opcfoundation.org", -1, "UA/2011/03/UANodeSet.xsd").ToString());
 			var uriNamespace = nodesetXml.SelectSingleNode("//ns:UANodeSet//ns:Models//ns:Model", nsmgr);
 			return uriNamespace.Attributes["ModelUri"].Value;
 		}

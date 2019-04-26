@@ -305,10 +305,5 @@ namespace Oppo.ObjectModel
 			public const string FunctionCall = "\t// {0} UAMethod\n\tif(UA_Server_setMethodNode_callback(server, UA_NODEID_NUMERIC({1}, {2}), ns{1}_i{2}_Callback) != UA_STATUSCODE_GOOD)\n\t{{\n\t\treturn UA_STATUSCODE_BADUNEXPECTEDERROR;\n\t}}\n";
 			public const string ReturnLine = "return UA_STATUSCODE_GOOD;";
 		}
-
-		public static class NodesetContent
-		{
-			public const string Namespace = "http://opcfoundation.org/UA/2011/03/UANodeSet.xsd";
-		}
     }
 }
