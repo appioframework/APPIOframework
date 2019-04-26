@@ -22,8 +22,6 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 
         public string Name => Constants.ImportInformationModelCommandName.InformationModel;
 
-		private Dictionary<string, Type> dict = new Dictionary<string, Type>();
-
 		public CommandResult Execute(IEnumerable<string> inputParams)
 		{
 			var inputParamsList = inputParams.ToList();
@@ -194,7 +192,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 			}
 			
 			var nsmgr = new XmlNamespaceManager(nodesetXml.NameTable);
-			nsmgr.AddNamespace("ns", "http://opcfoundation.org/UA/2011/03/UANodeSet.xsd");
+			nsmgr.AddNamespace("ns", new Uri("http://opcfoundation.org/UA/2011/03/UANodeSet.xsd").ToString());
 			var uriNamespace = nodesetXml.SelectSingleNode("//ns:UANodeSet//ns:Models//ns:Model", nsmgr);
 			return uriNamespace.Attributes["ModelUri"].Value;
 		}
