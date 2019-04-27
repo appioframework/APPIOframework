@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Oppo.ObjectModel
 {
@@ -8,12 +9,13 @@ namespace Oppo.ObjectModel
 		{
 		}
 
-		public ModelData(string name, string uri, string types, string namespaceVariable)
+		public ModelData(string name, string uri, string types, string namespaceVariable, List<string> requiredModelUris)
 		{
 			Name = name;
 			Uri = uri;
 			Types = types;
 			NamespaceVariable = namespaceVariable;
+			RequiredModelUris = requiredModelUris;
 		}
 
 		[JsonProperty("name")]
@@ -27,5 +29,8 @@ namespace Oppo.ObjectModel
 
 		[JsonProperty("namespaceVariable")]
 		public string NamespaceVariable { get; set; } = string.Empty;
+
+		[JsonProperty("requiredModelUris")]
+		public List<string> RequiredModelUris { get; set; } = new List<string>();
 	}
 }

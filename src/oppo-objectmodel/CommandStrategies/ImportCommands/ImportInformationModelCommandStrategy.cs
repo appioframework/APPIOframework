@@ -79,11 +79,15 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 				_outputMessages.Add(OutputText.ImportInformationModelCommandOpcuaappIsAClient, string.Empty);
 				return new CommandResult(false, _outputMessages);
 			}
-			
+
 			// here I should add the information to oppoproj file
+
 			var modelData = new ModelData();
 			modelData.Name = _fileSystem.GetFileName(modelFileName);
-			modelData.Uri = GetNodesetUri(modelPath);
+			if (!ExtractNodesetUris(ref modelData, modelPath))
+			{
+				return new CommandResult(false, _outputMessages);
+			}
 			modelData.Types = string.Empty;
 			modelData.NamespaceVariable = "ns_" + _fileSystem.GetFileNameWithoutExtension(modelFileName);
 
@@ -191,7 +195,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 			return true;
 		}
 
-		private string GetNodesetUri(string nodesetPath)
+		private bool ExtractNodesetUris(ref ModelData modelData, string nodesetPath)
 		{
 			XmlDocument nodesetXml = new XmlDocument();
 			using (var nodesetStream = _fileSystem.ReadFile(nodesetPath))
@@ -203,8 +207,26 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 			
 			var nsmgr = new XmlNamespaceManager(nodesetXml.NameTable);
 			nsmgr.AddNamespace("ns", new UriBuilder("http", "opcfoundation.org", -1, "UA/2011/03/UANodeSet.xsd").ToString());
-			var uriNamespace = nodesetXml.SelectSingleNode("//ns:UANodeSet//ns:Models//ns:Model", nsmgr);
-			return uriNamespace.Attributes["ModelUri"].Value;
+			var modelNode = nodesetXml.SelectSingleNode("//ns:UANodeSet//ns:Models//ns:Model", nsmgr);
+
+			if(modelNode == null || modelNode.Attributes == null || modelNode.Attributes["ModelUri"] == null)
+			{
+				OppoLogger.Warn(string.Format(LoggingText.ImportInforamtionModelCommandFailureModelMissingUri));
+				_outputMessages.Add(string.Format(OutputText.ImportInforamtionModelCommandFailureModelMissingUri, nodesetPath), string.Empty);
+				return false;
+			}
+
+			modelData.Uri = modelNode.Attributes["ModelUri"].Value;
+
+			if(modelNode.ChildNodes.Count > 0)
+			{
+				for(int index = 0; index < modelNode.ChildNodes.Count; index++)
+				{
+					modelData.RequiredModelUris.Add(modelNode.ChildNodes[index].Attributes["ModelUri"].Value);
+				}
+			}
+
+			return true;
 		}
 
 		public string GetHelpText()

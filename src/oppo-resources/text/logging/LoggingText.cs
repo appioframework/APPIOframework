@@ -88,6 +88,7 @@
 		public const string ImportInformationModelCommandOpcuaappIsAClient = "Import information model failure, can not import models to client!";
 		public const string ImportInforamtionModelCommandFailureCannotReadOppoprojFile = "Import information model failure, can not read oppoproj file!";
 		public const string ImportInforamtionModelCommandFailureModelDuplication = "Import information model failure, model is already part of opcuaapp!";
+		public const string ImportInforamtionModelCommandFailureModelMissingUri = "Import information model failure, model does not contain namespace uri!";
 		public const string OppoHelpForImportInformationModel = "Help for import <command> called";
 
 		// reference common

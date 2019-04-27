@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+﻿using System.Collections.Generic;
 
 namespace Oppo.ObjectModel
 {
@@ -9,5 +8,6 @@ namespace Oppo.ObjectModel
 		string Uri { get; set; }
 		string Types { get; set; }
 		string NamespaceVariable { get; set; }
+		List<string> RequiredModelUris { get; set; }
     }
 }

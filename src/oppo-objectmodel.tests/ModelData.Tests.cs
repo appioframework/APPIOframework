@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace Oppo.ObjectModel.Tests
@@ -10,12 +11,13 @@ namespace Oppo.ObjectModel.Tests
         private string _uri = "sampleModelUri";
 		private string _types = "sampleModelTypes";
 		private string _namespaceVariable = "sampleModelNamespaceVariable";
+		private List<string> _requiredModelUris = new List<string>(new string[] { "sampleRequiredModelUri_1", "sampleRequiredModelUri_2" });
 
         [SetUp]
         public void SetupTest()
         {
 			_defaultModelData = new ModelData();
-			_modelData = new ModelData(_name, _uri, _types, _namespaceVariable);   
+			_modelData = new ModelData(_name, _uri, _types, _namespaceVariable, _requiredModelUris);   
         }
 
         [TearDown]
@@ -35,6 +37,7 @@ namespace Oppo.ObjectModel.Tests
 			Assert.IsEmpty(_defaultModelData.Uri);
 			Assert.IsEmpty(_defaultModelData.Types);
 			Assert.IsEmpty(_defaultModelData.NamespaceVariable);
+			Assert.IsEmpty(_defaultModelData.RequiredModelUris);
 		}
 
         [Test]
@@ -49,6 +52,7 @@ namespace Oppo.ObjectModel.Tests
 			Assert.AreEqual(_uri, _modelData.Uri);
 			Assert.AreEqual(_types, _modelData.Types);
 			Assert.AreEqual(_namespaceVariable, _modelData.NamespaceVariable);
+			Assert.AreEqual(_requiredModelUris, _modelData.RequiredModelUris);
 		}
 
         [Test]
@@ -66,6 +70,10 @@ namespace Oppo.ObjectModel.Tests
 			Assert.IsTrue(modelDataAsJson.Contains(_uri));
 			Assert.IsTrue(modelDataAsJson.Contains(_types));
 			Assert.IsTrue(modelDataAsJson.Contains(_namespaceVariable));
+			foreach(var requiredModelUri in _requiredModelUris)
+			{
+				Assert.IsTrue(modelDataAsJson.Contains(requiredModelUri));
+			}
 		}
 
 
@@ -75,14 +83,15 @@ namespace Oppo.ObjectModel.Tests
             // Arrange
             var modelDataAsJson = "" +
                 "{" +    
-                    "\"name\": \"" + _name + "\"," +
-					"\"uri\": \"" + _uri + "\"," +
-                    "\"types\": \"" +  _types + "\"," +
-					"\"namespaceVariable\": \"" + _namespaceVariable + "\"" +
-                "}";
-
-            // Act
-            var modelData = JsonConvert.DeserializeObject<ModelData>(modelDataAsJson);
+                    "\"name\": \"" + _name + "\", " +
+					"\"uri\": \"" + _uri + "\", " +
+                    "\"types\": \"" +  _types + "\", " +
+					"\"namespaceVariable\": \"" + _namespaceVariable + "\", " +
+					"\"requiredModelUris\": [ \"" + _requiredModelUris[0] + "\", \"" + _requiredModelUris[1] + "\" ]" +
+				"}";
+			
+			// Act
+			var modelData = JsonConvert.DeserializeObject<ModelData>(modelDataAsJson);
 
             // Assert
             Assert.IsNotNull(modelData);
@@ -90,6 +99,7 @@ namespace Oppo.ObjectModel.Tests
 			Assert.AreEqual(_uri, modelData.Uri);
 			Assert.AreEqual(_types, modelData.Types);
 			Assert.AreEqual(_namespaceVariable, modelData.NamespaceVariable);
+			Assert.AreEqual(_requiredModelUris, modelData.RequiredModelUris);
 		}
 	}
 }

@@ -124,6 +124,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 														"</Model>" +
 														"</Models>" +
 														"</UANodeSet>";
+		private readonly string _emptyNodesetContent = "<?xml version=\"1.0\" encoding=\"utf-8\"?><UANodeSet />";
 
 		[SetUp]
 		public void SetupObjectUnderTest()
@@ -627,14 +628,11 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			var projectName = inputParams.ElementAtOrDefault(1);
 			var modelFilePath = inputParams.ElementAtOrDefault(3);
 
-			var oppoprojFilePath = Path.Combine(projectName, projectName + Constants.FileExtension.OppoProject);
-			var modelName = Path.GetFileName(modelFilePath);
-
 			_fileSystemMock.Setup(x => x.FileExists(modelFilePath)).Returns(true);
 			_fileSystemMock.Setup(x => x.GetExtension(modelFilePath)).Returns(_validModelExtension);
 			_fileSystemMock.Setup(x => x.DirectoryExists(projectName)).Returns(true);
 
-			_modelValidatorMock.Setup(x => x.Validate(modelFilePath, It.IsAny<string>())).Returns(false);
+			//_modelValidatorMock.Setup(x => x.Validate(modelFilePath, It.IsAny<string>())).Returns(false);
 
 			// Act
 			var commandResult = _objectUnderTest.Execute(inputParams);
@@ -643,6 +641,37 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			Assert.IsFalse(commandResult.Success);
 			Assert.IsNotNull(commandResult.OutputMessages);
 			Assert.AreEqual(string.Format(OutputText.NodesetValidationFailure, modelFilePath), commandResult.OutputMessages.First().Key);
+		}
+
+		[Test]
+		public void ImportInformationModelCommandStrategy_Should_Fail_OnModelWithMissingNamespaceUri([ValueSource(nameof(ValidInputs))] string[] inputParams)
+		{
+			// Arrange
+			var projectName = inputParams.ElementAtOrDefault(1);
+			var modelFilePath = inputParams.ElementAtOrDefault(3);
+
+			var oppoprojFilePath = Path.Combine(projectName, projectName + Constants.FileExtension.OppoProject);
+
+			_fileSystemMock.Setup(x => x.FileExists(modelFilePath)).Returns(true);
+			_fileSystemMock.Setup(x => x.GetExtension(modelFilePath)).Returns(_validModelExtension);
+			_fileSystemMock.Setup(x => x.DirectoryExists(projectName)).Returns(true);
+			_fileSystemMock.Setup(x => x.CombinePaths(projectName, projectName + Constants.FileExtension.OppoProject)).Returns(oppoprojFilePath);
+
+			_modelValidatorMock.Setup(x => x.Validate(modelFilePath, It.IsAny<string>())).Returns(true);
+
+			using (var clientServerOppoprojFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_defaultOpcuaClientServerAppContent)))
+			using (var nodesetFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_emptyNodesetContent)))
+			{
+				_fileSystemMock.Setup(x => x.ReadFile(oppoprojFilePath)).Returns(clientServerOppoprojFileStream);
+				_fileSystemMock.Setup(x => x.ReadFile(modelFilePath)).Returns(nodesetFileStream);
+				// Act
+				var commandResult = _objectUnderTest.Execute(inputParams);
+
+				// Assert
+				Assert.IsFalse(commandResult.Success);
+				Assert.IsNotNull(commandResult.OutputMessages);
+				Assert.AreEqual(string.Format(OutputText.ImportInforamtionModelCommandFailureModelMissingUri, modelFilePath), commandResult.OutputMessages.First().Key);
+			}
 		}
 	}
 }
