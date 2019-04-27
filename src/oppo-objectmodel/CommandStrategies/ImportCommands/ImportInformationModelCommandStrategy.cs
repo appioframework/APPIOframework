@@ -211,7 +211,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 
 			if(modelNode == null || modelNode.Attributes == null || modelNode.Attributes["ModelUri"] == null)
 			{
-				OppoLogger.Warn(string.Format(LoggingText.ImportInforamtionModelCommandFailureModelMissingUri));
+				OppoLogger.Warn(LoggingText.ImportInforamtionModelCommandFailureModelMissingUri);
 				_outputMessages.Add(string.Format(OutputText.ImportInforamtionModelCommandFailureModelMissingUri, nodesetPath), string.Empty);
 				return false;
 			}
