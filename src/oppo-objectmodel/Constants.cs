@@ -215,6 +215,8 @@ namespace Oppo.ObjectModel
             public const string VerboseName = "--name";
             public const string Path = "-p";
             public const string VerbosePath = "--path";
+			public const string Types = "-t";
+			public const string VerboseTypes = "--types";
             public const string Help = "-h";
             public const string VerboseHelp = "--help";
             public const string Sample = "-s";

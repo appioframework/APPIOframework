@@ -31,6 +31,8 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 			var opcuaAppName = inputParamsList.ElementAtOrDefault(1);
 			var pathFlag = inputParams.ElementAtOrDefault(2);
 			var modelPath = inputParamsList.ElementAtOrDefault(3);
+			var typesFlag = inputParamsList.ElementAtOrDefault(4);
+			var typesPath = inputParamsList.ElementAtOrDefault(5);
 
 			// opcuaapp name validation
 			if (!ValidateOpcuaAppName(nameFlag, opcuaAppName))
@@ -63,6 +65,13 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 			}
 			var modelFileName = _fileSystem.GetFileName(modelPath);
 
+			// types flag validation
+			string typesFileName = string.Empty;
+			if(typesFlag != null && !ValidateTypes(ref typesFileName, typesFlag, typesPath))
+			{
+				return new CommandResult(false, _outputMessages);
+			}
+
 			// here I should check if model is part of oppoproj
 			// check if opcuaapp alrady has models with this name (uri later)
 			var oppoprojFilePath = _fileSystem.CombinePaths(opcuaAppName, opcuaAppName + Constants.FileExtension.OppoProject);
@@ -88,7 +97,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 			{
 				return new CommandResult(false, _outputMessages);
 			}
-			modelData.Types = string.Empty;
+			modelData.Types = typesFileName;
 			modelData.NamespaceVariable = "ns_" + _fileSystem.GetFileNameWithoutExtension(modelFileName);
 
 
@@ -106,9 +115,17 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 
 			_fileSystem.WriteFile(oppoprojFilePath, new List<string> { oppoprojNewContent });
 
+			// copy model file
 			var modelsDirectory = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.Models);            
             var targetModelFilePath = _fileSystem.CombinePaths(modelsDirectory, modelFileName);
             _fileSystem.CopyFile(modelPath, targetModelFilePath);
+
+			// copy types file
+			if (typesFlag != null)
+			{
+				var targetTypesFilePath = _fileSystem.CombinePaths(modelsDirectory, typesFileName);
+				_fileSystem.CopyFile(typesPath, targetTypesFilePath);
+			}
 
             OppoLogger.Info(string.Format(LoggingText.ImportInforamtionModelCommandSuccess, modelPath));
 			_outputMessages.Add(string.Format(OutputText.ImportInformationModelCommandSuccess, modelPath), string.Empty);
@@ -189,6 +206,40 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 			{
 				OppoLogger.Warn(string.Format(LoggingText.NodesetValidationFailure, modelPath));
 				_outputMessages.Add(string.Format(OutputText.NodesetValidationFailure, modelPath), string.Empty);
+				return false;
+			}
+
+			return true;
+		}
+
+		private bool ValidateTypes(ref string typesFileName, string typesFlag, string typesPath)
+		{
+			if(typesFlag != Constants.ImportInformationModelCommandArguments.Types && typesFlag != Constants.ImportInformationModelCommandArguments.VerboseTypes)
+			{
+				OppoLogger.Warn(LoggingText.ImportInformationModelCommandFailureInvalidTypesFlag);
+				_outputMessages.Add(string.Format(OutputText.ImportInformationModelCommandFailureInvalidTypesFlag, typesFlag), string.Empty);
+				return false;
+			}
+			
+			if (string.IsNullOrEmpty(typesPath))
+			{
+				OppoLogger.Warn(LoggingText.ImportInformationModelCommandFailureMissingTypesName);
+				_outputMessages.Add(OutputText.ImportInformationModelCommandFailureMissingTypesName, string.Empty);
+				return false;
+			}
+
+			typesFileName = _fileSystem.GetFileName(typesPath);
+			if (_fileSystem.GetExtension(typesPath) != Constants.FileExtension.ModelTypes)
+			{
+				OppoLogger.Warn(LoggingText.ImportInformationModelCommandFailureTypesHasInvalidExtension);
+				_outputMessages.Add(string.Format(OutputText.ImportInformationModelCommandFailureTypesHasInvalidExtension, typesFileName), string.Empty);
+				return false;
+			}
+
+			if (!_fileSystem.FileExists(typesPath))
+			{
+				OppoLogger.Warn(LoggingText.ImportInformationModelCommandFailureTypesFileDoesNotExist);
+				_outputMessages.Add(string.Format(OutputText.ImportInformationModelCommandFailureTypesFileDoesNotExist, typesPath), string.Empty);
 				return false;
 			}
 

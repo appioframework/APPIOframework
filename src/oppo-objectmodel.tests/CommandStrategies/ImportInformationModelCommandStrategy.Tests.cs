@@ -9,10 +9,11 @@ using Oppo.Resources.text.output;
 
 namespace Oppo.ObjectModel.Tests.CommandStrategies
 {
-	public class ImportInformationModelCommandStrategyTests
+	public class ImportInformationModelCommandStrategyTestsShould
 	{
 		private readonly string _validModelExtension = ".xml";
 		private readonly string _invalidModelExtension = ".txt";
+		private readonly string _validTypesExtension = ".bsd";
 		private readonly string _modelName = "model.xml";
 
 		private static string[][] ValidInputs()
@@ -32,6 +33,21 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			{
 				new[] {"-n", "myApp", "-s"},
 				new[] {"-n", "myApp", "--sample"}
+			};
+		}
+
+		private static string[][] ValidInputsExtraTypes()
+		{
+			return new[]
+			{
+				new[] { "-n", "myApp", "-p", "model.xml", "-t", "types.bsd" },
+				new[] { "-n", "myApp", "-p", "model.xml", "--types", "types.bsd" },
+				new[] { "-n", "myApp", "--path", "model.xml", "-t", "types.bsd" },
+				new[] { "-n", "myApp", "--path", "model.xml", "--types", "types.bsd" },
+				new[] { "--name", "myApp", "-p", "model.xml", "-t", "types.bsd" },
+				new[] { "--name", "myApp", "-p", "model.xml", "--types", "types.bsd" },
+				new[] { "--name", "myApp", "--path", "model.xml", "-t", "types.bsd" },
+				new[] { "--name", "myApp", "--path", "model.xml", "--types", "types.bsd" }
 			};
 		}
 
@@ -59,9 +75,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			return new[]
 			{
 				new[] { "-n", "myApp", "-P", ""},
+				new[] { "-n", "myApp", "--p", ""},
 				new[] { "-n", "myApp", "--Path", ""},
-				new[] {"-N", "ab/yx"},
-				new[] {"-n", "myApp", "-P" }
+				new[] { "-n", "myApp", "-path", "" }
 			};
 		}
 
@@ -97,7 +113,40 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			return new[]
 			{
 				new[] { "-N", "myApp", "-p", "model.xml"},
-				new[] { "-name", "myApp", "--path", "model.xml"}
+				new[] { "--n", "myApp", "-p", "model.xml"},
+				new[] { "-name", "myApp", "--path", "model.xml"},
+				new[] { "--Name", "myApp", "--path", "model.xml"}
+			};
+		}
+
+		private static string[][] InvalidInputsInvalidExtraTypesFlag()
+		{
+			return new[]
+			{
+				new[] { "-n", "myApp", "-p", "model.xml", "-T", "types.bsd" },
+				new[] { "-n", "myApp", "-p", "model.xml", "--t", "types.bsd" },
+				new[] { "-n", "myApp", "-p", "model.xml", "--Types", "types.bsd" },
+				new[] { "-n", "myApp", "-p", "model.xml", "-types", "types.bsd" }
+			};
+		}
+
+		private static string[][] InvalidInputsMissingExtraTypesName()
+		{
+			return new[]
+			{
+				new[] { "-n", "myApp", "-p", "model.xml", "-t" },
+				new[] { "-n", "myApp", "-p", "model.xml", "--types" }
+			};
+		}
+
+		private static string[][] InvalidInputsInvalidExtraTypesExtension()
+		{
+			return new[]
+			{
+				new[] { "-n", "myApp", "-p", "model.xml", "-t", "types" },
+				new[] { "-n", "myApp", "-p", "model.xml", "-t", "types.txt" },
+				new[] { "-n", "myApp", "-p", "model.xml", "-t", "types.xml" },
+				new[] { "-n", "myApp", "-p", "model.xml", "-t", "types.typ" }
 			};
 		}
 
@@ -135,7 +184,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		}
 
 		[Test]
-		public void ImportInformationModelCommandStrategy_Should_ImplementICommandOfImportStrategy()
+		public void ImplementICommandOfImportStrategy()
 		{
 			// Arrange
 
@@ -146,7 +195,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		}
 
 		[Test]
-		public void ImportInformationModelCommandStrategy_Should_HaveCorrectCommandName()
+		public void HaveCorrectCommandName()
 		{
 			// Arrange
 
@@ -158,7 +207,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		}
 
 		[Test]
-		public void ImportInformationModelCommandStrategy_Should_ProvideEmptyHelpText()
+		public void ProvideEmptyHelpText()
 		{
 			// Arrange
 
@@ -170,7 +219,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		}
 
 		[Test]
-        public void ImportInformationModelCommandStrategy_Should_ImportModelToServer([ValueSource(nameof(ValidInputs))]string[] inputParams)
+        public void Success_OnImportingModelToServer([ValueSource(nameof(ValidInputs))]string[] inputParams)
 		{
 			// Arrange
 
@@ -215,7 +264,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		}
 
 		[Test]
-		public void ImportInformationModelCommandStrategy_Should_ImportModelToClientServer([ValueSource(nameof(ValidInputs))]string[] inputParams)
+		public void Success_OnImportingModelToClientServer([ValueSource(nameof(ValidInputs))]string[] inputParams)
 		{
 			// Arrange
 
@@ -260,7 +309,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		}
 
 		[Test]
-        public void ImportInformationModelCommandStrategy_Should_ImportModel_Failure([ValueSource(nameof(InvalidInputsInvalidPathFlag))]string[] inputParams)
+        public void Fail_OnInvalidPathFlag([ValueSource(nameof(InvalidInputsInvalidPathFlag))]string[] inputParams)
         {
             // Arrange
             var warnWrittenOut = false;
@@ -286,7 +335,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         }
 
         [Test]
-        public void ImportInformationModelCommandStrategy_Should_ImportModel_MissingOpcuaappName_Failure([ValueSource(nameof(InvalidInputsMissingOpcuaappName))]string[] inputParams)
+        public void Fail_OnMissingOpcuaappName([ValueSource(nameof(InvalidInputsMissingOpcuaappName))]string[] inputParams)
         {
             // Arrange
             var warnWrittenOut = false;
@@ -311,7 +360,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         }
 
         [Test]
-        public void ImportInformationModelCommandStrategy_Should_ImportModel_InvalidOpcuaappName_Failure([ValueSource(nameof(InvalidInputsInvalidOpcuaappName))]string[] inputParams)
+        public void Fail_OnInvalidOpcuaappName([ValueSource(nameof(InvalidInputsInvalidOpcuaappName))]string[] inputParams)
         {
             // Arrange
             var warnWrittenOut = false;
@@ -337,7 +386,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         }
 
 		[Test]
-		public void ImportInformationModelCommandStrategy_Should_Fail_OnCallingNotExistingProject([ValueSource(nameof(ValidInputs))] string[] inputParams)
+		public void Fail_OnCallingNotExistingProject([ValueSource(nameof(ValidInputs))] string[] inputParams)
 		{
 			// Arrange
 			var opcuaAppName = inputParams.ElementAtOrDefault(1);
@@ -360,7 +409,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		}
 
         [Test]
-        public void ImportInformationModelCommandStrategy_Should_ImportModel_InvalidModelPath_Failure([ValueSource(nameof(InvalidInputsInvalidModelPath))]string[] inputParams)
+        public void Fail_OnInvalidModelPath([ValueSource(nameof(InvalidInputsInvalidModelPath))]string[] inputParams)
         {
             // Arrange
             var warnWrittenOut = false;
@@ -387,7 +436,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         }
 
         [Test]
-        public void ImportInformationModelCommandStrategy_Should_ImportModel_InvalidModelName_Failure([ValueSource(nameof(InvalidInputsInvalidModelFile))]string[] inputParams)
+        public void Fail_OnInvalidModelName([ValueSource(nameof(InvalidInputsInvalidModelFile))]string[] inputParams)
         {
             // Arrange
             var warnWrittenOut = false;
@@ -417,7 +466,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         }
 
         [Test]
-        public void ImportInformationModelCommandStrategy_Should_ImportModel_ModelFileMissing_Failure([ValueSource(nameof(ValidInputs))]string[] inputParams)
+        public void Fail_OnMissingModelFile([ValueSource(nameof(ValidInputs))]string[] inputParams)
         {
             // Arrange
             var warnWrittenOut = false;
@@ -446,7 +495,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         }
 
         [Test]
-        public void ImportInformationModelCommandStrategy_Should_ImportModel_ModelFileParamMissing_Failure([ValueSource(nameof(InvalidInputsMissingInformationModel))]string[] inputParams)
+        public void Fail_OnMissingModelFileParam([ValueSource(nameof(InvalidInputsMissingInformationModel))]string[] inputParams)
         {
             // Arrange
             var warnWrittenOut = false;
@@ -471,7 +520,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         }
 
         [Test]
-        public void ImportInformationModelCommandStrategy_Should_ImportSampleModel([ValueSource(nameof(ValidInputsLoadSample))]string[] inputParams)
+        public void Success_OnImportingSampleModel([ValueSource(nameof(ValidInputsLoadSample))]string[] inputParams)
         {
             // Arrange
             var infoWrittenOut = false;
@@ -508,7 +557,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         }
 
         [Test]
-        public void ImportInformationModelCommandStrategy_Should_ImportModel_WrongNameFlag_Failure([ValueSource(nameof(InvalidInputsInvalidNameArgument))]string[] inputParams)
+        public void Fail_OnWrongNameFlag([ValueSource(nameof(InvalidInputsInvalidNameArgument))]string[] inputParams)
         {
             // Arrange
             var warnWrittenOut = false;
@@ -528,7 +577,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         }
 
 		[Test]
-		public void ImportInformationModelCommandStrategy_Should_Fail_OnImportingToClient([ValueSource(nameof(ValidInputs))] string[] inputParams)
+		public void Fail_OnImportingToClient([ValueSource(nameof(ValidInputs))] string[] inputParams)
 		{
 			// Arrange
 			var projectName = inputParams.ElementAtOrDefault(1);
@@ -558,7 +607,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		}
 
 		[Test]
-		public void ImportInformationModelCommandStrategy_Should_Fail_OnInvalidOppoprojFile([ValueSource(nameof(ValidInputs))] string[] inputParams)
+		public void Fail_OnInvalidOppoprojFile([ValueSource(nameof(ValidInputs))] string[] inputParams)
 		{
 			// Arrange
 			var projectName = inputParams.ElementAtOrDefault(1);
@@ -588,7 +637,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		}
 
 		[Test]
-		public void ImportInformationModelCommandStrategy_Should_Fail_OnModelDuplication([ValueSource(nameof(ValidInputs))] string [] inputParams)
+		public void Fail_OnModelDuplication([ValueSource(nameof(ValidInputs))] string [] inputParams)
 		{
 			// Arrange
 			var projectName = inputParams.ElementAtOrDefault(1);
@@ -622,7 +671,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		}
 
 		[Test]
-		public void ImportInformationModelCommandStrategy_Should_Fail_OnModelValidation([ValueSource(nameof(ValidInputs))] string[] inputParams)
+		public void Fail_OnModelValidation([ValueSource(nameof(ValidInputs))] string[] inputParams)
 		{
 			// Arrange
 			var projectName = inputParams.ElementAtOrDefault(1);
@@ -631,8 +680,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			_fileSystemMock.Setup(x => x.FileExists(modelFilePath)).Returns(true);
 			_fileSystemMock.Setup(x => x.GetExtension(modelFilePath)).Returns(_validModelExtension);
 			_fileSystemMock.Setup(x => x.DirectoryExists(projectName)).Returns(true);
-
-			//_modelValidatorMock.Setup(x => x.Validate(modelFilePath, It.IsAny<string>())).Returns(false);
 
 			// Act
 			var commandResult = _objectUnderTest.Execute(inputParams);
@@ -644,7 +691,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		}
 
 		[Test]
-		public void ImportInformationModelCommandStrategy_Should_Fail_OnModelWithMissingNamespaceUri([ValueSource(nameof(ValidInputs))] string[] inputParams)
+		public void Fail_OnImportingModelWithMissingNamespaceUri([ValueSource(nameof(ValidInputs))] string[] inputParams)
 		{
 			// Arrange
 			var projectName = inputParams.ElementAtOrDefault(1);
@@ -671,6 +718,145 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				Assert.IsFalse(commandResult.Success);
 				Assert.IsNotNull(commandResult.OutputMessages);
 				Assert.AreEqual(string.Format(OutputText.ImportInforamtionModelCommandFailureModelMissingUri, modelFilePath), commandResult.OutputMessages.First().Key);
+			}
+		}
+
+		[Test]
+		public void Fail_OnInvalidTypesFlag([ValueSource(nameof(InvalidInputsInvalidExtraTypesFlag))] string[] inputParams)
+		{
+			// Arrange
+			var projectName = inputParams.ElementAtOrDefault(1);
+			var modelFilePath = inputParams.ElementAtOrDefault(3);
+			var typesFlag = inputParams.ElementAtOrDefault(4);
+
+			_fileSystemMock.Setup(x => x.DirectoryExists(projectName)).Returns(true);
+			_fileSystemMock.Setup(x => x.FileExists(modelFilePath)).Returns(true);
+			_fileSystemMock.Setup(x => x.GetExtension(modelFilePath)).Returns(_validModelExtension);
+			_modelValidatorMock.Setup(x => x.Validate(modelFilePath, It.IsAny<string>())).Returns(true);
+
+			// Act
+			var commandResult = _objectUnderTest.Execute(inputParams);
+
+			// Assert
+			Assert.IsFalse(commandResult.Success);
+			Assert.IsNotNull(commandResult.OutputMessages);
+			Assert.AreEqual(string.Format(OutputText.ImportInformationModelCommandFailureInvalidTypesFlag, typesFlag), commandResult.OutputMessages.First().Key);
+		}
+
+		[Test]
+		public void Fail_OnMissingExtraTypesName([ValueSource(nameof(InvalidInputsMissingExtraTypesName))] string[] inputParams)
+		{
+			// Arrange
+			var projectName = inputParams.ElementAtOrDefault(1);
+			var modelFilePath = inputParams.ElementAtOrDefault(3);
+			var typesFilePath = inputParams.ElementAtOrDefault(5);
+
+			_fileSystemMock.Setup(x => x.DirectoryExists(projectName)).Returns(true);
+			_fileSystemMock.Setup(x => x.FileExists(modelFilePath)).Returns(true);
+			_fileSystemMock.Setup(x => x.GetExtension(modelFilePath)).Returns(_validModelExtension);
+			_modelValidatorMock.Setup(x => x.Validate(modelFilePath, It.IsAny<string>())).Returns(true);
+
+			// Act
+			var commandResult = _objectUnderTest.Execute(inputParams);
+
+			// Assert
+			Assert.IsFalse(commandResult.Success);
+			Assert.IsNotNull(commandResult.OutputMessages);
+			Assert.AreEqual(OutputText.ImportInformationModelCommandFailureMissingTypesName, commandResult.OutputMessages.First().Key);
+		}
+
+		[Test]
+		public void Fail_OnInvalidExtraTypesExtension([ValueSource(nameof(InvalidInputsInvalidExtraTypesExtension))] string[] inputParams)
+		{
+			// Arrange
+			var projectName = inputParams.ElementAtOrDefault(1);
+			var modelFilePath = inputParams.ElementAtOrDefault(3);
+			var typesFilePath = inputParams.ElementAtOrDefault(5);
+
+			var typesFileExtension = Path.GetExtension(typesFilePath);
+
+			_fileSystemMock.Setup(x => x.DirectoryExists(projectName)).Returns(true);
+			_fileSystemMock.Setup(x => x.FileExists(modelFilePath)).Returns(true);
+			_fileSystemMock.Setup(x => x.GetExtension(modelFilePath)).Returns(_validModelExtension);
+			_fileSystemMock.Setup(x => x.GetFileName(typesFilePath)).Returns(typesFilePath);
+			_modelValidatorMock.Setup(x => x.Validate(modelFilePath, It.IsAny<string>())).Returns(true);
+
+			_fileSystemMock.Setup(x => x.GetExtension(typesFilePath)).Returns(typesFileExtension);
+
+			// Act
+			var commandResult = _objectUnderTest.Execute(inputParams);
+
+			// Assert
+			Assert.IsFalse(commandResult.Success);
+			Assert.IsNotNull(commandResult.OutputMessages);
+			Assert.AreEqual(string.Format(OutputText.ImportInformationModelCommandFailureTypesHasInvalidExtension, typesFilePath), commandResult.OutputMessages.First().Key);
+		}
+
+		[Test]
+		public void Fail_OnMissingExtraTypesFile([ValueSource(nameof(ValidInputsExtraTypes))] string[] inputParams)
+		{
+			// Arrange
+			var projectName = inputParams.ElementAtOrDefault(1);
+			var modelFilePath = inputParams.ElementAtOrDefault(3);
+			var typesFilePath = inputParams.ElementAtOrDefault(5);
+
+			_fileSystemMock.Setup(x => x.DirectoryExists(projectName)).Returns(true);
+			_fileSystemMock.Setup(x => x.FileExists(modelFilePath)).Returns(true);
+			_fileSystemMock.Setup(x => x.GetExtension(modelFilePath)).Returns(_validModelExtension);
+			_fileSystemMock.Setup(x => x.GetExtension(typesFilePath)).Returns(_validTypesExtension);
+			_modelValidatorMock.Setup(x => x.Validate(modelFilePath, It.IsAny<string>())).Returns(true);
+
+			_fileSystemMock.Setup(x => x.FileExists(typesFilePath)).Returns(false);
+
+			// Act
+			var commandResult = _objectUnderTest.Execute(inputParams);
+
+			// Assert
+			Assert.IsFalse(commandResult.Success);
+			Assert.IsNotNull(commandResult.OutputMessages);
+			Assert.AreEqual(string.Format(OutputText.ImportInformationModelCommandFailureTypesFileDoesNotExist, typesFilePath), commandResult.OutputMessages.First().Key);
+		}
+
+		[Test]
+		public void Success_OnImportingModelAndExtraTypes([ValueSource(nameof(ValidInputsExtraTypes))] string[] inputParams)
+		{
+			// Arrange
+			var projectName = inputParams.ElementAtOrDefault(1);
+			var modelFilePath = inputParams.ElementAtOrDefault(3);
+			var typesFilePath = inputParams.ElementAtOrDefault(5);
+
+			var oppoprojFilePath = Path.Combine(projectName, projectName + Constants.FileExtension.OppoProject);
+			var modelsDirectory = Path.Combine(projectName, Constants.DirectoryName.Models);
+			var modelName = Path.GetFileName(modelFilePath);
+			var modelTargetPath = Path.Combine(modelsDirectory, modelName);
+			var typesName = Path.GetFileName(typesFilePath);
+			var typesTargetPath = Path.Combine(modelsDirectory, typesName);
+
+			_fileSystemMock.Setup(x => x.DirectoryExists(projectName)).Returns(true);
+			_fileSystemMock.Setup(x => x.FileExists(modelFilePath)).Returns(true);
+			_fileSystemMock.Setup(x => x.GetExtension(modelFilePath)).Returns(_validModelExtension);
+			_fileSystemMock.Setup(x => x.GetExtension(typesFilePath)).Returns(_validTypesExtension);
+			_fileSystemMock.Setup(x => x.FileExists(typesFilePath)).Returns(true);
+			_fileSystemMock.Setup(x => x.GetFileName(typesFilePath)).Returns(typesName);
+			_fileSystemMock.Setup(x => x.CombinePaths(projectName, projectName + Constants.FileExtension.OppoProject)).Returns(oppoprojFilePath);
+			_fileSystemMock.Setup(x => x.CombinePaths(projectName, Constants.DirectoryName.Models)).Returns(modelsDirectory);
+			_fileSystemMock.Setup(x => x.CombinePaths(modelsDirectory, typesName)).Returns(typesTargetPath);
+			_modelValidatorMock.Setup(x => x.Validate(modelFilePath, It.IsAny<string>())).Returns(true);
+
+			using (var serverOppoprojFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_defaultOpcuaServerAppContent)))
+			using (var nodesetFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleNodesetContent)))
+			{
+				_fileSystemMock.Setup(x => x.ReadFile(oppoprojFilePath)).Returns(serverOppoprojFileStream);
+				_fileSystemMock.Setup(x => x.ReadFile(modelFilePath)).Returns(nodesetFileStream);
+
+				// Act
+				var commandResult = _objectUnderTest.Execute(inputParams);
+
+				// Assert
+				Assert.IsTrue(commandResult.Success);
+				Assert.IsNotNull(commandResult.OutputMessages);
+				Assert.AreEqual(string.Format(OutputText.ImportInformationModelCommandSuccess, modelFilePath), commandResult.OutputMessages.First().Key);
+				_fileSystemMock.Verify(x => x.CopyFile(typesFilePath, typesTargetPath), Times.Once);
 			}
 		}
 	}
