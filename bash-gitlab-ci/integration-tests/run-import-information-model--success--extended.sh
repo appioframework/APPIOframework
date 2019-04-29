@@ -42,7 +42,7 @@ do
   check_for_exisiting_oppo_log_file
 
   cd ..
-  rm -rf import-information-model--success
+  rm -rf import-information-model--success--extended
 
   echo "Testing command '${VAR_COMMAND}' ... done"
 done
