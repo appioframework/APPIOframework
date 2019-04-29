@@ -36,7 +36,7 @@ do
   check_for_exisiting_file_named "./my-app/models/model.xml" \
                                  "information-model import failed ..."
 
-  check_for_exisiting_file_named "./my-app/models/types.xml" \
+  check_for_exisiting_file_named "./my-app/models/types.bsd" \
                                  "information-model import failed ..."
 
   check_for_exisiting_oppo_log_file
