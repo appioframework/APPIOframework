@@ -307,5 +307,16 @@ namespace Oppo.ObjectModel
 			public const string FunctionCall = "\t// {0} UAMethod\n\tif(UA_Server_setMethodNode_callback(server, UA_NODEID_NUMERIC({1}, {2}), ns{1}_i{2}_Callback) != UA_STATUSCODE_GOOD)\n\t{{\n\t\treturn UA_STATUSCODE_BADUNEXPECTEDERROR;\n\t}}\n";
 			public const string ReturnLine = "return UA_STATUSCODE_GOOD;";
 		}
+
+		public static class ImportModel
+		{
+			public const string NamespaceVariablePrefix = "ns_";
+			public const string UANodeSetNamespaceScheme = "http";
+			public const string UANodeSetNamespaceHost = "opcfoundation.org";
+			public const string UANodeSetNamespaceValuePath = "UA/2011/03/UANodeSet.xsd";
+			public const string UANodeSetNamespaceShortcut = "ns";
+			public const string UANodeSetNamespaceFullPath = "//{0}:UANodeSet//{0}:Models//{0}:Model";
+			public const string UANodeSetNamespaceModelUri = "ModelUri";
+		}
     }
 }

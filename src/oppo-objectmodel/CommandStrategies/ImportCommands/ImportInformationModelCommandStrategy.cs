@@ -33,7 +33,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 			var modelPath = inputParamsList.ElementAtOrDefault(3);
 			var typesFlag = inputParamsList.ElementAtOrDefault(4);
 			var typesPath = inputParamsList.ElementAtOrDefault(5);
-
+			
 			// opcuaapp name validation
 			if (!ValidateOpcuaAppName(nameFlag, opcuaAppName))
 			{
@@ -58,22 +58,21 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 				return new CommandResult(true, _outputMessages);
 			}
 
-			// path flag validation
+			// nodeset validation
 			if (!ValidateModel(pathFlag, modelPath))
 			{
 				return new CommandResult(false, _outputMessages);
 			}
 			var modelFileName = _fileSystem.GetFileName(modelPath);
 
-			// types flag validation
+			// types validation
 			string typesFileName = string.Empty;
 			if(typesFlag != null && !ValidateTypes(ref typesFileName, typesFlag, typesPath))
 			{
 				return new CommandResult(false, _outputMessages);
 			}
-
-			// here I should check if model is part of oppoproj
-			// check if opcuaapp alrady has models with this name (uri later)
+			
+			// deserialize oppoproj file
 			var oppoprojFilePath = _fileSystem.CombinePaths(opcuaAppName, opcuaAppName + Constants.FileExtension.OppoProject);
 			var opcuaappData = Deserialize.Opcuaapp(oppoprojFilePath, _fileSystem);
 			if (opcuaappData == null)
@@ -89,8 +88,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 				return new CommandResult(false, _outputMessages);
 			}
 
-			// here I should add the information to oppoproj file
-
+			//build model data
 			var modelData = new ModelData();
 			modelData.Name = _fileSystem.GetFileName(modelFileName);
 			if (!ExtractNodesetUris(ref modelData, modelPath))
@@ -98,21 +96,27 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 				return new CommandResult(false, _outputMessages);
 			}
 			modelData.Types = typesFileName;
-			modelData.NamespaceVariable = "ns_" + _fileSystem.GetFileNameWithoutExtension(modelFileName);
+			modelData.NamespaceVariable = Constants.ImportModel.NamespaceVariablePrefix + _fileSystem.GetFileNameWithoutExtension(modelFileName);
 
 
-			// check if oppoproj file already contains imported model
-			if((opcuaappData as IOpcuaServerApp).Models.Any(x => x.Name == modelData.Name) || (opcuaappData as IOpcuaServerApp).Models.Any(x => x.Uri == modelData.Uri))
+			// check if oppoproj file already contains model with imported model name
+			if((opcuaappData as IOpcuaServerApp).Models.Any(x => x.Name == modelData.Name))
 			{
 				OppoLogger.Warn(LoggingText.ImportInforamtionModelCommandFailureModelDuplication);
-				_outputMessages.Add(string.Format(OutputText.ImportInforamtionModelCommandFailureModelDuplication, opcuaAppName, modelFileName), string.Empty);
+				_outputMessages.Add(string.Format(OutputText.ImportInforamtionModelCommandFailureModelNameDuplication, opcuaAppName, modelFileName), string.Empty);
+				return new CommandResult(false, _outputMessages);
+			}
+			// check if oppoproj file already contains model with imported model namespace uri
+			if((opcuaappData as IOpcuaServerApp).Models.Any(x => x.Uri == modelData.Uri))
+			{
+				OppoLogger.Warn(LoggingText.ImportInforamtionModelCommandFailureModelDuplication);
+				_outputMessages.Add(string.Format(OutputText.ImportInforamtionModelCommandFailureModelUriDuplication, opcuaAppName, modelData.Uri), string.Empty);
 				return new CommandResult(false, _outputMessages);
 			}
 			
+			// add model to project structure, serialize structure and write to oppoproj file
 			(opcuaappData as IOpcuaServerApp).Models.Add(modelData);
-
 			var oppoprojNewContent = JsonConvert.SerializeObject(opcuaappData, Newtonsoft.Json.Formatting.Indented);
-
 			_fileSystem.WriteFile(oppoprojFilePath, new List<string> { oppoprojNewContent });
 
 			// copy model file
@@ -127,6 +131,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 				_fileSystem.CopyFile(typesPath, targetTypesFilePath);
 			}
 
+			// exit with success
             OppoLogger.Info(string.Format(LoggingText.ImportInforamtionModelCommandSuccess, modelPath));
 			_outputMessages.Add(string.Format(OutputText.ImportInformationModelCommandSuccess, modelPath), string.Empty);
             return new CommandResult(true, _outputMessages);
@@ -214,6 +219,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 
 		private bool ValidateTypes(ref string typesFileName, string typesFlag, string typesPath)
 		{
+			// types flag validation
 			if(typesFlag != Constants.ImportInformationModelCommandArguments.Types && typesFlag != Constants.ImportInformationModelCommandArguments.VerboseTypes)
 			{
 				OppoLogger.Warn(LoggingText.ImportInformationModelCommandFailureInvalidTypesFlag);
@@ -221,6 +227,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 				return false;
 			}
 			
+			// types name validation
 			if (string.IsNullOrEmpty(typesPath))
 			{
 				OppoLogger.Warn(LoggingText.ImportInformationModelCommandFailureMissingTypesName);
@@ -248,6 +255,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 
 		private bool ExtractNodesetUris(ref ModelData modelData, string nodesetPath)
 		{
+			// read XML file
 			XmlDocument nodesetXml = new XmlDocument();
 			using (var nodesetStream = _fileSystem.ReadFile(nodesetPath))
 			{
@@ -256,24 +264,28 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 				nodesetXml.LoadXml(xmlFileContent);
 			}
 			
+			// extract namespace uri
 			var nsmgr = new XmlNamespaceManager(nodesetXml.NameTable);
-			nsmgr.AddNamespace("ns", new UriBuilder("http", "opcfoundation.org", -1, "UA/2011/03/UANodeSet.xsd").ToString());
-			var modelNode = nodesetXml.SelectSingleNode("//ns:UANodeSet//ns:Models//ns:Model", nsmgr);
+			nsmgr.AddNamespace(Constants.ImportModel.UANodeSetNamespaceShortcut, new UriBuilder(Constants.ImportModel.UANodeSetNamespaceScheme, Constants.ImportModel.UANodeSetNamespaceHost, -1, Constants.ImportModel.UANodeSetNamespaceValuePath).ToString());
+			var modelNode = nodesetXml.SelectSingleNode(string.Format(Constants.ImportModel.UANodeSetNamespaceFullPath, Constants.ImportModel.UANodeSetNamespaceShortcut), nsmgr);
 
-			if(modelNode == null || modelNode.Attributes == null || modelNode.Attributes["ModelUri"] == null)
+			// validate namespace uri
+			if(modelNode == null || modelNode.Attributes == null || modelNode.Attributes[Constants.ImportModel.UANodeSetNamespaceModelUri] == null)
 			{
 				OppoLogger.Warn(LoggingText.ImportInforamtionModelCommandFailureModelMissingUri);
 				_outputMessages.Add(string.Format(OutputText.ImportInforamtionModelCommandFailureModelMissingUri, nodesetPath), string.Empty);
 				return false;
 			}
 
-			modelData.Uri = modelNode.Attributes["ModelUri"].Value;
+			// write namespace uri to model data
+			modelData.Uri = modelNode.Attributes[Constants.ImportModel.UANodeSetNamespaceModelUri].Value;
 
+			// find required model uris and write them to model data
 			if(modelNode.ChildNodes.Count > 0)
 			{
 				for(int index = 0; index < modelNode.ChildNodes.Count; index++)
 				{
-					modelData.RequiredModelUris.Add(modelNode.ChildNodes[index].Attributes["ModelUri"].Value);
+					modelData.RequiredModelUris.Add(modelNode.ChildNodes[index].Attributes[Constants.ImportModel.UANodeSetNamespaceModelUri].Value);
 				}
 			}
 
