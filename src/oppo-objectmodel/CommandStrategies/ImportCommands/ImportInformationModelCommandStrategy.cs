@@ -88,7 +88,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 				return new CommandResult(false, _outputMessages);
 			}
 
-			//build model data
+			// build model data
 			var modelData = new ModelData();
 			modelData.Name = _fileSystem.GetFileName(modelFileName);
 			if (!ExtractNodesetUris(ref modelData, modelPath))
@@ -99,23 +99,24 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 			modelData.NamespaceVariable = Constants.ImportModel.NamespaceVariablePrefix + _fileSystem.GetFileNameWithoutExtension(modelFileName);
 
 
+			var opcuaappDataAsServer = opcuaappData as IOpcuaServerApp;
 			// check if oppoproj file already contains model with imported model name
-			if((opcuaappData as IOpcuaServerApp).Models.Any(x => x.Name == modelData.Name))
+			if (opcuaappDataAsServer.Models.Any(x => x.Name == modelData.Name))
 			{
 				OppoLogger.Warn(LoggingText.ImportInforamtionModelCommandFailureModelDuplication);
 				_outputMessages.Add(string.Format(OutputText.ImportInforamtionModelCommandFailureModelNameDuplication, opcuaAppName, modelFileName), string.Empty);
 				return new CommandResult(false, _outputMessages);
 			}
 			// check if oppoproj file already contains model with imported model namespace uri
-			if((opcuaappData as IOpcuaServerApp).Models.Any(x => x.Uri == modelData.Uri))
+			if(opcuaappDataAsServer.Models.Any(x => x.Uri == modelData.Uri))
 			{
 				OppoLogger.Warn(LoggingText.ImportInforamtionModelCommandFailureModelDuplication);
 				_outputMessages.Add(string.Format(OutputText.ImportInforamtionModelCommandFailureModelUriDuplication, opcuaAppName, modelData.Uri), string.Empty);
 				return new CommandResult(false, _outputMessages);
 			}
-			
+
 			// add model to project structure, serialize structure and write to oppoproj file
-			(opcuaappData as IOpcuaServerApp).Models.Add(modelData);
+			opcuaappDataAsServer.Models.Add(modelData);
 			var oppoprojNewContent = JsonConvert.SerializeObject(opcuaappData, Newtonsoft.Json.Formatting.Indented);
 			_fileSystem.WriteFile(oppoprojFilePath, new List<string> { oppoprojNewContent });
 
