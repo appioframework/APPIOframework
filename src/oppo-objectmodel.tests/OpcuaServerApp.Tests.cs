@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using NUnit.Framework;
-using System.Linq;
+using System.Collections.Generic;
 
 namespace Oppo.ObjectModel.Tests
 {
@@ -11,6 +11,7 @@ namespace Oppo.ObjectModel.Tests
         private string _type = "Server";
         private string _url = "localhost";
 		private string _port = "4840";
+		private List<IModelData> _models = new List<IModelData>();
 
 
         [SetUp]
@@ -46,6 +47,9 @@ namespace Oppo.ObjectModel.Tests
             // Assert
             Assert.AreEqual(_name, _opcuaapp.Name);
             Assert.AreEqual(_type, _opcuaapp.Type);
+			Assert.AreEqual(_url, _opcuaapp.Url);
+			Assert.AreEqual(_port, _opcuaapp.Port);
+			Assert.AreEqual(_models, _opcuaapp.Models);
         }
 
         [Test]
@@ -60,6 +64,7 @@ namespace Oppo.ObjectModel.Tests
             Assert.IsNotNull(opcuaappAsJson);
             Assert.AreNotEqual(string.Empty, opcuaappAsJson);
             Assert.IsTrue(opcuaappAsJson.Contains(_name)); // don't care where
+			Assert.IsTrue(opcuaappAsJson.Contains(_type));
             Assert.IsTrue(opcuaappAsJson.Contains(_url)); // don't care where
 			Assert.IsTrue(opcuaappAsJson.Contains(_port)); // don't care where
 		}
@@ -73,7 +78,8 @@ namespace Oppo.ObjectModel.Tests
                     "\"name\": \"" + _name + "\"," +
                     "\"type\": \"" +  _type + "\"," +
                     "\"url\": \"" + _url + "\"," +
-					"\"port\": \"" + _port + "\"" +
+					"\"port\": \"" + _port + "\"," +
+					"\"models\": []" +
                 "}";
 
             // Act
@@ -85,6 +91,7 @@ namespace Oppo.ObjectModel.Tests
             Assert.AreEqual(_type, opcuaapp.Type);
 			Assert.AreEqual(_url, opcuaapp.Url);
 			Assert.AreEqual(_port, opcuaapp.Port);
+			Assert.AreEqual(_models, opcuaapp.Models);
 		}
     }
 }

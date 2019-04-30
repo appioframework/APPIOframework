@@ -291,7 +291,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				var commandResult = _strategy.Execute(inputParams);
 
 				// Assert
-				Assert.IsTrue(commandResult.Sucsess);
+				Assert.IsTrue(commandResult.Success);
 				Assert.IsNotNull(commandResult.OutputMessages);
 				var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
 				Assert.AreEqual(string.Format(OutputText.GenerateInformationModelSuccess, projectName, modelFullName), firstMessageLine.Key);
@@ -367,7 +367,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				var commandResult = _strategy.Execute(inputParams);
 
 				// Assert
-				Assert.IsTrue(commandResult.Sucsess);
+				Assert.IsTrue(commandResult.Success);
 				Assert.IsNotNull(commandResult.OutputMessages);
 				var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
 				Assert.AreEqual(string.Format(OutputText.GenerateInformationModelSuccess, inputParams.ElementAtOrDefault(1), inputParams.ElementAtOrDefault(3)), firstMessageLine.Key);
@@ -412,12 +412,12 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandResult = _strategy.Execute(inputParams);
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
-            Assert.AreEqual(string.Format(string.Format(OutputText.GenerateInformationModelFailureValidatingModel, modelFullName)), firstMessageLine.Key);
+            Assert.AreEqual(string.Format(string.Format(OutputText.NodesetValidationFailure, modelFullName)), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
-            _loggerListenerMock.Verify(x => x.Warn(string.Format(LoggingText.GenerateInformationModelFailureValidatingModel, modelFullName)), Times.Once);
+            _loggerListenerMock.Verify(x => x.Warn(string.Format(LoggingText.NodesetValidationFailure, modelFullName)), Times.Once);
         }
 
         [Test]
@@ -445,7 +445,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandResult = _strategy.Execute(inputParams);
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailure, inputParams.ElementAtOrDefault(1), inputParams.ElementAtOrDefault(3)), firstMessageLine.Key);
@@ -471,7 +471,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandResult = _strategy.Execute(inputParams);
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureMissingModel, inputParams.ElementAtOrDefault(1), inputParams.ElementAtOrDefault(3), calculatedModelFilePath), firstMessageLine.Key);
@@ -499,7 +499,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandResult = _strategy.Execute(inputParams);
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureInvalidModel, inputParams.ElementAtOrDefault(1), inputParams.ElementAtOrDefault(3), System.IO.Path.GetExtension(inputParams.ElementAtOrDefault(3))), firstMessageLine.Key);
@@ -517,7 +517,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandResult = _strategy.Execute(inputParams);
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, inputParams.ElementAtOrDefault(1), inputParams.ElementAtOrDefault(3), inputParams.ElementAtOrDefault(0)), firstMessageLine.Key);
@@ -534,7 +534,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandResult = _strategy.Execute(inputParams);
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, inputParams.ElementAtOrDefault(1), inputParams.ElementAtOrDefault(3), inputParams.ElementAtOrDefault(2)), firstMessageLine.Key);
@@ -551,7 +551,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandResult = _strategy.Execute(inputParams);
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureEmptyOpcuaAppName, inputParams.ElementAtOrDefault(1), inputParams.ElementAtOrDefault(3)), firstMessageLine.Key);
@@ -646,7 +646,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				var commandResult = _strategy.Execute(inputParams);
 
 				// Assert
-				Assert.IsTrue(commandResult.Sucsess);
+				Assert.IsTrue(commandResult.Success);
 				Assert.IsNotNull(commandResult.OutputMessages);
 				var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
 				Assert.AreEqual(string.Format(OutputText.GenerateInformationModelSuccess, projectName, modelFullName), firstMessageLine.Key);
@@ -685,7 +685,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandResult = _strategy.Execute(inputParams);
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, opcuaAppName, modelFullName, typesFlag), firstMessageLine.Key);
@@ -727,7 +727,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandResult = _strategy.Execute(inputParams);
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureMissingFile, opcuaAppName, modelFullName, calculatedTypesFilePath), firstMessageLine.Key);
@@ -770,7 +770,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandResult = _strategy.Execute(inputParams);
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureInvalidFile, opcuaAppName, modelFullName, typesFullName), firstMessageLine.Key);
@@ -818,7 +818,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandResult = _strategy.Execute(inputParams);
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             Assert.AreEqual(string.Format(OutputText.GenerateInformationModelGenerateTypesFailure, opcuaAppName, modelFullName, typesFullName), firstMessageLine.Key);
@@ -856,7 +856,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandResult = _strategy.Execute(inputParams);
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, opcuaAppName, modelFullName, requiredModelFlag), firstMessageLine.Key);
@@ -898,7 +898,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandResult = _strategy.Execute(inputParams);
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureMissingFile, opcuaAppName, modelFullName, calculatedRequiredModelFilePath), firstMessageLine.Key);
@@ -941,7 +941,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandResult = _strategy.Execute(inputParams);
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureInvalidFile, opcuaAppName, modelFullName, requiredModelFullName), firstMessageLine.Key);
@@ -1000,7 +1000,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandResult = _strategy.Execute(inputParams);
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailure, opcuaAppName, modelFullName), firstMessageLine.Key);
@@ -1049,7 +1049,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandResult = _strategy.Execute(inputParams);
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, opcuaAppName, modelFullName, requiredModelFlag), firstMessageLine.Key);
@@ -1103,7 +1103,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandResult = _strategy.Execute(inputParams);
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureMissingFile, opcuaAppName, modelFullName, calculatedRequiredModelFilePath), firstMessageLine.Key);
@@ -1158,7 +1158,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandResult = _strategy.Execute(inputParams);
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureInvalidFile, opcuaAppName, modelFullName, requiredModelFullName), firstMessageLine.Key);
@@ -1249,7 +1249,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				var commandResult = _strategy.Execute(inputParams);
 
 				// Assert
-				Assert.IsTrue(commandResult.Sucsess);
+				Assert.IsTrue(commandResult.Success);
 				Assert.IsNotNull(commandResult.OutputMessages);
 				var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
 				Assert.AreEqual(string.Format(OutputText.GenerateInformationModelSuccess, projectName, modelFullName), firstMessageLine.Key);
@@ -1369,7 +1369,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				var commandResult = _strategy.Execute(inputParams);
 
 				// Assert
-				Assert.IsTrue(commandResult.Sucsess);
+				Assert.IsTrue(commandResult.Success);
 				Assert.IsNotNull(commandResult.OutputMessages);
 				var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
 				Assert.AreEqual(string.Format(OutputText.GenerateInformationModelSuccess, projectName, modelFullName), firstMessageLine.Key);
@@ -1432,12 +1432,12 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandResult = _strategy.Execute(inputParams);
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
-            Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureValidatingModel, requiredModelFullName), firstMessageLine.Key);
+            Assert.AreEqual(string.Format(OutputText.NodesetValidationFailure, requiredModelFullName), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
-            _loggerListenerMock.Verify(x => x.Warn(string.Format(LoggingText.GenerateInformationModelFailureValidatingModel, requiredModelFullName)), Times.Once);
+            _loggerListenerMock.Verify(x => x.Warn(string.Format(LoggingText.NodesetValidationFailure, requiredModelFullName)), Times.Once);
             _modelValidatorMock.Verify(x => x.Validate(calculatedRequiredModelPath, It.IsAny<string>()), Times.Once);
         }
     }

@@ -55,7 +55,7 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 			foreach (var project in oppoSolution.Projects)
 			{
 				var commandResult = _subcommand.Execute(new string[] { project.Name });
-				if(!commandResult.Sucsess)
+				if(!commandResult.Success)
 				{
 					return commandResult;
 				}

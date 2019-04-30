@@ -392,7 +392,7 @@ namespace Oppo.ObjectModel
             var importHelpStrategyVerbose = new HelpStrategy<ImportStrategy>(importHelpStrategyData);
             var importCommands = new ICommand<ImportStrategy>[]
             {
-                new ImportInformationModelCommandStrategy(fileSystem),
+                new ImportInformationModelCommandStrategy(fileSystem, new ModelValidator(fileSystem)),
                 importHelpStrategy,
                 importHelpStrategyVerbose
             };

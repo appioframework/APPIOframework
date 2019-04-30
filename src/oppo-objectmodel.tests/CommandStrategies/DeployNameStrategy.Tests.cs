@@ -124,7 +124,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var strategyResult = deployStrategy.Execute(inputParams);
 
             // Assert
-            Assert.IsTrue(strategyResult.Sucsess);
+            Assert.IsTrue(strategyResult.Success);
             Assert.AreEqual(string.Format(OutputText.OpcuaappDeploySuccess, projectDirectoryName), strategyResult.OutputMessages.First().Key);
             Assert.AreEqual(string.Empty, strategyResult.OutputMessages.First().Value);
             fileSystemMock.Verify(x => x.CreateDirectory(_deployDirectory), Times.Once);
@@ -177,7 +177,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var strategyResult = deployStrategy.Execute(inputParams);
 
             // Assert
-            Assert.IsFalse(strategyResult.Sucsess);
+            Assert.IsFalse(strategyResult.Success);
             Assert.AreEqual(string.Format(OutputText.OpcuaappDeployWithNameFailure, projectDirectoryName), strategyResult.OutputMessages.First().Key);
             Assert.AreEqual(string.Empty, strategyResult.OutputMessages.First().Value);
             fileSystemMock.Verify(x => x.CreateDirectory(_deployDirectory), Times.Never);
@@ -201,7 +201,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var strategyResult = deployStrategy.Execute(inputParams);
 
             // Assert
-            Assert.IsFalse(strategyResult.Sucsess);
+            Assert.IsFalse(strategyResult.Success);
             Assert.AreEqual(OutputText.OpcuaappDeployFailure, strategyResult.OutputMessages.First().Key);
             Assert.AreEqual(string.Empty, strategyResult.OutputMessages.First().Value);
             loggerListenerMock.Verify(y => y.Warn(It.IsAny<string>()), Times.Once);
@@ -235,7 +235,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var strategyResult = buildStrategy.Execute(new[] { projectDirectoryName });
 
             // Assert
-            Assert.IsFalse(strategyResult.Sucsess);
+            Assert.IsFalse(strategyResult.Success);
             Assert.AreEqual(string.Format(OutputText.OpcuaappDeployWithNameFailure, projectDirectoryName), strategyResult.OutputMessages.First().Key);
 
             loggerListenerMock.Verify(y => y.Warn(LoggingText.CreateDebianInstallerFails), Times.Once);

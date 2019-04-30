@@ -86,6 +86,8 @@ echo "Testing version--success"
 
 echo "Testing import information-model--success"
 /bin/bash bash-gitlab-ci/integration-tests/run-import-information-model--success.sh
+echo "Testing import information-model--success--extended"
+/bin/bash bash-gitlab-ci/integration-tests/run-import-information-model--success--extended.sh
 echo "Testing import information-model--failure"
 /bin/bash bash-gitlab-ci/integration-tests/run-import-information-model--failure.sh
 echo "Testing import information-model sample--success"

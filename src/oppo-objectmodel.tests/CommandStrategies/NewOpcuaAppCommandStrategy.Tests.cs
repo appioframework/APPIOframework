@@ -247,7 +247,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
 			// Assert
 			Assert.IsTrue(warnWrittenOut);
-			Assert.IsFalse(result.Sucsess);
+			Assert.IsFalse(result.Success);
 			Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandFailureInvalidProjectName, inputParams.ElementAt(1)), result.OutputMessages.First().Key);
 			_fileSystemMock.Verify(x => x.CreateDirectory(It.IsAny<string>()), Times.Never);
 			_fileSystemMock.Verify(x => x.CreateFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
@@ -276,7 +276,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
 			// Assert
 			Assert.IsTrue(warnWrittenOut);
-			Assert.IsFalse(result.Sucsess);
+			Assert.IsFalse(result.Success);
 			Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandFailureUnknownParam, nameFlag), result.OutputMessages.First().Key);
 			_fileSystemMock.Verify(x => x.CreateDirectory(It.IsAny<string>()), Times.Never);
 			_fileSystemMock.Verify(x => x.CreateFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
@@ -297,7 +297,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			var result = _objectUnderTest.Execute(inputParam);
 
 			// Assert
-			Assert.IsFalse(result.Sucsess);
+			Assert.IsFalse(result.Success);
 			Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandFailureUnknownParam, typeFlag), result.OutputMessages.First().Key);
 			OppoLogger.RemoveListener(loggerListenerMock.Object);
 			loggerListenerMock.Verify(x => x.Warn(LoggingText.UnknownNewOpcuaappCommandParam), Times.Once);
@@ -316,7 +316,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			var result = _objectUnderTest.Execute(inputParam);
 
 			// Assert
-			Assert.IsFalse(result.Sucsess);
+			Assert.IsFalse(result.Success);
 			Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandFailureUnknownProjectType, applicationType), result.OutputMessages.First().Key);
 			OppoLogger.RemoveListener(loggerListenerMock.Object);
 			loggerListenerMock.Verify(x => x.Warn(LoggingText.InvalidOpcuaappType), Times.Once);
@@ -335,7 +335,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			var result = _objectUnderTest.Execute(inputParam);
 
 			// Assert
-			Assert.IsFalse(result.Sucsess);
+			Assert.IsFalse(result.Success);
 			Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandFailureUnknownParam, urlFlag), result.OutputMessages.First().Key);
 			OppoLogger.RemoveListener(loggerListenerMock.Object);
 			loggerListenerMock.Verify(x => x.Warn(LoggingText.UnknownNewOpcuaappCommandParam), Times.Once);
@@ -354,7 +354,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			var result = _objectUnderTest.Execute(inputParam);
 
 			// Assert
-			Assert.IsFalse(result.Sucsess);
+			Assert.IsFalse(result.Success);
 			Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandFailureInvalidServerUrl, url), result.OutputMessages.First().Key);
 			OppoLogger.RemoveListener(loggerListenerMock.Object);
 			loggerListenerMock.Verify(x => x.Warn(LoggingText.InvalidServerUrl), Times.Once);
@@ -373,7 +373,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			var result = _objectUnderTest.Execute(inputParam);
 
 			// Assert
-			Assert.IsFalse(result.Sucsess);
+			Assert.IsFalse(result.Success);
 			Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandFailureUnknownParam, portFlag), result.OutputMessages.First().Key);
 			OppoLogger.RemoveListener(loggerListenerMock.Object);
 			loggerListenerMock.Verify(x => x.Warn(LoggingText.UnknownNewOpcuaappCommandParam), Times.Once);
@@ -392,7 +392,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			var result = _objectUnderTest.Execute(inputParam);
 
 			// Assert
-			Assert.IsFalse(result.Sucsess);
+			Assert.IsFalse(result.Success);
 			Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandFailureInvalidServerPort, port), result.OutputMessages.First().Key);
 			OppoLogger.RemoveListener(loggerListenerMock.Object);
 			loggerListenerMock.Verify(x => x.Warn(LoggingText.InvalidServerPort), Times.Once);
@@ -443,7 +443,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			var result = _objectUnderTest.Execute(inputParam);
 
 			// Assert
-			Assert.IsTrue(result.Sucsess);
+			Assert.IsTrue(result.Success);
 			Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandSuccess, projectName), result.OutputMessages.First().Key);
 			OppoLogger.RemoveListener(loggerListenerMock.Object);
 			loggerListenerMock.Verify(x => x.Info(string.Format(LoggingText.NewOpcuaappCommandSuccess, projectName)), Times.Once);
@@ -522,7 +522,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			var result = _objectUnderTest.Execute(inputParam);
 
 			// Assert
-			Assert.IsTrue(result.Sucsess);
+			Assert.IsTrue(result.Success);
 			Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandSuccess, projectName), result.OutputMessages.First().Key);
 			OppoLogger.RemoveListener(loggerListenerMock.Object);
 			loggerListenerMock.Verify(x => x.Info(string.Format(LoggingText.NewOpcuaappCommandSuccess, projectName)), Times.Once);
@@ -601,7 +601,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			var result = _objectUnderTest.Execute(inputParam);
 
 			// Assert
-			Assert.IsTrue(result.Sucsess);
+			Assert.IsTrue(result.Success);
 			Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandSuccess, projectName), result.OutputMessages.First().Key);
 			OppoLogger.RemoveListener(loggerListenerMock.Object);
 			loggerListenerMock.Verify(x => x.Info(string.Format(LoggingText.NewOpcuaappCommandSuccess, projectName)), Times.Once);

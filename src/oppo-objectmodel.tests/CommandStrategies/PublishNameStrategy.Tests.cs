@@ -90,7 +90,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var result = objectUnderTest.Execute(new[] { applicationName });
 
             // Assert
-            Assert.IsTrue(result.Sucsess);
+            Assert.IsTrue(result.Success);
             Assert.IsNotNull(result.OutputMessages);
             Assert.AreEqual(string.Format(OutputText.OpcuaappPublishSuccess, applicationName), result.OutputMessages.First().Key);
             fileSystemMock.Verify(x => x.CreateDirectory(publishDirectory), Times.Once);
@@ -139,7 +139,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			var result = objectUnderTest.Execute(new[] { applicationName });
 
 			// Assert
-			Assert.IsTrue(result.Sucsess);
+			Assert.IsTrue(result.Success);
 			Assert.IsNotNull(result.OutputMessages);
 			Assert.AreEqual(string.Format(OutputText.OpcuaappPublishSuccess, applicationName), result.OutputMessages.First().Key);
 			fileSystemMock.Verify(x => x.CreateDirectory(publishDirectory), Times.Once);
@@ -189,7 +189,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			var result = objectUnderTest.Execute(new[] { applicationName });
 
 			// Assert
-			Assert.IsTrue(result.Sucsess);
+			Assert.IsTrue(result.Success);
 			Assert.IsNotNull(result.OutputMessages);
 			Assert.AreEqual(string.Format(OutputText.OpcuaappPublishSuccess, applicationName), result.OutputMessages.First().Key);
 			fileSystemMock.Verify(x => x.CreateDirectory(publishDirectory), Times.Once);
@@ -227,7 +227,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var result = objectUnderTest.Execute(new[] { applicationName });
 
             // Assert
-            Assert.IsFalse(result.Sucsess);
+            Assert.IsFalse(result.Success);
             Assert.IsNotNull(result.OutputMessages);
             Assert.AreEqual(string.Format(OutputText.OpcuaappPublishFailureMissingExecutables, applicationName), result.OutputMessages.First().Key);
             loggerListenerMock.Verify(x => x.Warn(LoggingText.MissingBuiltOpcuaAppFiles), Times.Once);
@@ -249,7 +249,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var result = objectUnderTest.Execute(new[] {applicationName});
 
             // Assert
-            Assert.IsFalse(result.Sucsess);
+            Assert.IsFalse(result.Success);
             Assert.IsNotNull(result.OutputMessages);
             Assert.AreEqual(OutputText.OpcuaappPublishFailure, result.OutputMessages.First().Key);
             loggerListenerMock.Verify(x => x.Warn(LoggingText.EmptyOpcuaappName), Times.Once);

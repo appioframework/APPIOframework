@@ -91,7 +91,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var result = strategy.Execute(data.Input);
 
             // Assert
-            Assert.IsTrue(result.Sucsess);
+            Assert.IsTrue(result.Success);
             Assert.AreEqual(data.Result, result.OutputMessages.First().Key);
         }
     }

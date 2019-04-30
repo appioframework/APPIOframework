@@ -5,11 +5,11 @@ namespace Oppo.ObjectModel
     {
         public CommandResult(bool sucess, MessageLines outputMessages)
         {
-            Sucsess = sucess;
+            Success = sucess;
             OutputMessages = outputMessages;
         }
 
-        public bool Sucsess { get; private set; }
+        public bool Success { get; private set; }
         public MessageLines OutputMessages { get; }
     }
 }

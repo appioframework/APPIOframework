@@ -23,7 +23,7 @@ namespace Oppo.Terminal
                 writer.Write(commandResult.OutputMessages);
             }
 
-            var commandResultSucces = commandResult.Sucsess;
+            var commandResultSucces = commandResult.Success;
             return commandResultSucces ? 0 : 1;
         }
 

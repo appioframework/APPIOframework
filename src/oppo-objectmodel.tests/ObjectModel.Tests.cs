@@ -48,7 +48,7 @@ namespace Oppo.ObjectModel.Tests
             var executionResult = objectModel.ExecuteCommand(inputParams);
 
             // Assert
-            Assert.IsTrue(executionResult.Sucsess);
+            Assert.IsTrue(executionResult.Success);
             Assert.AreEqual("anyMsg", executionResult.OutputMessages.First().Key);
         }
 

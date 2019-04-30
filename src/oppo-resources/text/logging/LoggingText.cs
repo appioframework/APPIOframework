@@ -2,7 +2,10 @@
 {
     public static class LoggingText
     {
-        public const string NullInputParams_Msg = "Null input parameters passed. Specify any valid parameters.";
+		// common
+		public const string NodesetValidationFailure = "Nodeset '{0}' validation failure!";
+
+		public const string NullInputParams_Msg = "Null input parameters passed. Specify any valid parameters.";
         public const string InvalidSolutionName = "Invalid solution name!";
         public const string EmptySolutionName = "Empty solution name!";
         public const string UnknownNewSlnCommandParam = "Unknown new sln <command> parameter!";
@@ -43,7 +46,6 @@
         public const string GenerateInformationModelFailureUnknownParam = "Generate information-model failure! Unknown command parameter '{0}'!";
         public const string GenerateInformationModelFailureEmptyOpcuaAppName = "Generate information-model failure! Empty opcuaapp name!";
         public const string OppoHelpForGenerateCommand = "Help for generate <command> called";
-        public const string GenerateInformationModelFailureValidatingModel = "Model '{0}' validation failure!";
 
         public const string ValidatingModel = "Validating model '{0}' against '{1}'.";
         public const string ValidationError = "Validation error \n {0}";
@@ -83,7 +85,15 @@
         public const string InvalidInformationModelExtension = "Information model import failure, invalid model extension '{0}'";
         public const string InvalidInformationModelNotExistingPath = "Information model import failure, can't find model '{0}'!";
         public const string InvalidInformationModelMissingModelFile = "Information model import failure, missing model file!";
-        public const string OppoHelpForImportInformationModel = "Help for import <command> called";
+		public const string ImportInformationModelCommandOpcuaappIsAClient = "Import information model failure, can not import models to client!";
+		public const string ImportInforamtionModelCommandFailureCannotReadOppoprojFile = "Import information model failure, can not read oppoproj file!";
+		public const string ImportInforamtionModelCommandFailureModelDuplication = "Import information model failure, model is already part of opcuaapp!";
+		public const string ImportInforamtionModelCommandFailureModelMissingUri = "Import information model failure, model does not contain namespace uri!";
+		public const string ImportInformationModelCommandFailureInvalidTypesFlag = "Import information model failure, invalid types flag!";
+		public const string ImportInformationModelCommandFailureMissingTypesName = "Import information model failute, missing types name!";
+		public const string ImportInformationModelCommandFailureTypesFileDoesNotExist = "Import information model failute, types file does not exist!";
+		public const string ImportInformationModelCommandFailureTypesHasInvalidExtension = "Import information model failute, types file has invalid extension!";
+		public const string OppoHelpForImportInformationModel = "Help for import <command> called";
 
 		// reference common
 		public const string ReferenceUnknownCommandParam = "Unknown reference command parameter!";

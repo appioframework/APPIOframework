@@ -103,7 +103,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             OppoLogger.RemoveListener(loggerListenerMock.Object);
             loggerListenerMock.Verify(x => x.Info(Resources.text.logging.LoggingText.CleanSuccess), Times.Once);
-            Assert.IsTrue(result.Sucsess);
+            Assert.IsTrue(result.Success);
             Assert.AreEqual(resultMessage, result.OutputMessages.First().Key);
         }
 
@@ -121,7 +121,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             OppoLogger.RemoveListener(loggerListenerMock.Object);
             loggerListenerMock.Verify(x => x.Info(Resources.text.logging.LoggingText.CleanFailure), Times.Once);
-            Assert.IsFalse(result.Sucsess);
+            Assert.IsFalse(result.Success);
             Assert.AreEqual(OutputText.OpcuaappCleanFailure, result.OutputMessages.First().Key);
         }
 
@@ -141,7 +141,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             OppoLogger.RemoveListener(loggerListenerMock.Object);
             loggerListenerMock.Verify(x => x.Info(Resources.text.logging.LoggingText.CleanFailure), Times.Once);
-            Assert.IsFalse(result.Sucsess);
+            Assert.IsFalse(result.Success);
             Assert.AreEqual(OutputText.OpcuaappCleanFailure, result.OutputMessages.First().Key);
         }
     }

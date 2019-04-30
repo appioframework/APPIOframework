@@ -116,7 +116,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandResult = _objectUnderTest.Execute(inputParams);
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             OppoLogger.RemoveListener(loggerListenerMock.Object);
@@ -138,7 +138,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandResult = _objectUnderTest.Execute(inputParams);
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             OppoLogger.RemoveListener(loggerListenerMock.Object);
@@ -167,7 +167,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             OppoLogger.RemoveListener(loggerListenerMock.Object);
@@ -198,7 +198,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             OppoLogger.RemoveListener(loggerListenerMock.Object);
@@ -238,7 +238,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             OppoLogger.RemoveListener(loggerListenerMock.Object);
@@ -276,7 +276,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
 
             // Assert
-            Assert.IsFalse(commandResult.Sucsess);
+            Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             OppoLogger.RemoveListener(loggerListenerMock.Object);
@@ -311,7 +311,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
 
             // Assert
-            Assert.IsTrue(commandResult.Sucsess);
+            Assert.IsTrue(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
             OppoLogger.RemoveListener(loggerListenerMock.Object);
