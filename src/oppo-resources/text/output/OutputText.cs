@@ -73,7 +73,7 @@ namespace Oppo.Resources.text.output
         public const string GenerateCertificateCommandSuccess = "Generated new certificate(s) for opcuaapp '{0}'";
         
         // generate information model <command>
-        public const string GenerateInformationModelSuccess = "The opcuaapp with the name '{0}' was succesfully updated with the Information model '{1}'.";
+		public const string GenerateInformationModelSuccess = "All information model were successfully generated got opcuaapp '{0}'.";
         public const string GenerateInformationModelFailure = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'.";
         public const string GenerateInformationModelGenerateTypesFailure = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Can't generate datatypes '{2}'!";
         public const string GenerateInformationModelFailureMissingModel = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Can't find the model '{2}'!";
