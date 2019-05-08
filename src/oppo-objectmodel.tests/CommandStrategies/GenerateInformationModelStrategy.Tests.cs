@@ -44,8 +44,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             };
         }
 
-        private Mock<IFileSystem> _mockFileSystem;
-        private Mock<IModelValidator> _modelValidatorMock;
         private GenerateInformationModelStrategy _strategy;
         private Mock<ILoggerListener> _loggerListenerMock;
         private readonly string _srcDir = @"src\server";
@@ -59,9 +57,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         {
             _loggerListenerMock = new Mock<ILoggerListener>();
             OppoLogger.RegisterListener(_loggerListenerMock.Object);
-            _mockFileSystem = new Mock<IFileSystem>();
-            _modelValidatorMock = new Mock<IModelValidator>();
-            _strategy = new GenerateInformationModelStrategy(Constants.GenerateInformationModeCommandArguments.Name, _mockFileSystem.Object, _modelValidatorMock.Object);
+            _strategy = new GenerateInformationModelStrategy(Constants.GenerateInformationModeCommandArguments.Name);
         }
 
         [TearDown]

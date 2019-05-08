@@ -14,13 +14,9 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
         private enum ParamId {AppName, ModelFullName, TypesFullName, RequiredModelFullName}
 
         private readonly ParameterResolver<ParamId> _resolver;
-        private readonly IFileSystem _fileSystem;
-        private readonly IModelValidator _modelValidator;
 
-        public GenerateInformationModelStrategy(string commandName, IFileSystem fileSystem, IModelValidator modelValidator)
+        public GenerateInformationModelStrategy(string commandName)
         {
-            _fileSystem = fileSystem;
-            _modelValidator = modelValidator;
             Name = commandName;
             _resolver = new ParameterResolver<ParamId>(Constants.CommandName.Generate + " " + Name, new []
             {
@@ -45,9 +41,6 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             var projectName = stringParams[ParamId.AppName];
 
             var outputMessages = new MessageLines();
-
-			var file = _fileSystem.ToString();				// to pass sonarqube tests. FileSystem will be used after copying all data from local branch
-			var validator = _modelValidator.ToString();     // to pass sonarqube tests. FileSystem will be used after copying all data from local branch
 
 			OppoLogger.Info(LoggingText.GenerateInformationModelSuccess);
 			outputMessages.Add(string.Format(OutputText.GenerateInformationModelSuccess, projectName), string.Empty);
