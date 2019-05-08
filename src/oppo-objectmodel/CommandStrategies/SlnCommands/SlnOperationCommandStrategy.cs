@@ -9,6 +9,10 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 	{
 		public string Name { get; }
 		private readonly IFileSystem _fileSystem;
+		private readonly ParameterResolver<ParamId> _resolver;
+        
+		private enum ParamId {SolutionName}
+		
 		private readonly ICommand _subcommand;
 		public string SuccessLoggerMessage { get; }
 		public string SuccessOutputMessage { get; }
@@ -22,19 +26,32 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 			SuccessLoggerMessage = operationData.SuccessLoggerMessage;
 			SuccessOutputMessage = operationData.SuccessOutputMessage;
 			HelpText = operationData.HelpText;
+			
+			_resolver = new ParameterResolver<ParamId>(Constants.CommandName.Sln + " " + Name, new []
+			{
+				new StringParameterSpecification<ParamId>
+				{
+					Identifier = ParamId.SolutionName,
+					Short = Constants.SlnAddCommandArguments.Solution,
+					Verbose = Constants.SlnAddCommandArguments.VerboseSolution
+				}
+			});
         }
 
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
-            var inputParamsArray    = inputParams.ToArray();
-            var solutionNameFlag    = inputParamsArray.ElementAtOrDefault(0);
-            var solutionName        = inputParamsArray.ElementAtOrDefault(1);
-
             var outputMessages = new MessageLines();
 			var validationMessages = new SlnUtility.ResultMessages();
 			
+			var (error, stringParams, _) = _resolver.ResolveParams(inputParams);
+            
+			if (error != null)
+				return new CommandResult(false, new MessageLines{{error, string.Empty}});
+			
+			var solutionName = stringParams[ParamId.SolutionName];
+			
 			// validate solution name
-			if (!SlnUtility.ValidateSolution(ref validationMessages, solutionNameFlag, solutionName, _fileSystem))
+			if (!SlnUtility.ValidateSolution(ref validationMessages, solutionName, _fileSystem))
 			{
 				OppoLogger.Warn(validationMessages.LoggerMessage);
 				outputMessages.Add(validationMessages.OutputMessage, string.Empty);

@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies.SlnCommands;
@@ -19,16 +19,11 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             };
         }
 
-        protected static string [][] InvalidInputs_UnknownSolutionParam()
+        protected static object[] BadFlagParams =
         {
-            return new[]
-            {
-                new [] { "-S", "testSln"},
-                new [] { "--Solution", "testSln" },
-                new [] { "--s", "testSln" },
-                new [] { "-solution", "testSln" },
-            };
-        }
+	        new [] { "--s", "testSln" },
+	        new [] { "-Solution", "testSln" }
+        };
 
         private Mock<IFileSystem> _fileSystemMock;
 		private Mock<ICommand> _commandMock;
@@ -97,27 +92,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             // Assert
             Assert.AreEqual(_operationData.HelpText, helpText);
-        }
-
-        [Test]
-        public void FailBecauseOfUknownSolutionParam([ValueSource(nameof(InvalidInputs_UnknownSolutionParam))] string[] inputParams)
-        {
-            // Arrange
-            var solutionNameFlag = inputParams.ElementAtOrDefault(0);
-
-            var loggerListenerMock = new Mock<ILoggerListener>();
-            OppoLogger.RegisterListener(loggerListenerMock.Object);
-
-            // Act
-            var commandResult = _objectUnderTest.Execute(inputParams);
-
-            // Assert
-            Assert.IsFalse(commandResult.Success);
-            Assert.IsNotNull(commandResult.OutputMessages);
-            var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
-            OppoLogger.RemoveListener(loggerListenerMock.Object);
-            Assert.AreEqual(string.Format(OutputText.SlnUnknownParameter, solutionNameFlag), firstMessageLine.Key);
-            Assert.AreEqual(string.Empty, firstMessageLine.Value);
         }
 
         [Test]
@@ -284,5 +258,15 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				Assert.AreEqual(string.Empty, firstMessageLine.Value);
 			}
 		}
+        
+        [Test]
+        public void FailOnIncorrectFlags([ValueSource(nameof(BadFlagParams))] string[] inputParams)
+        {
+	        var result = _objectUnderTest.Execute(inputParams);
+            
+	        Assert.IsFalse(result.Success);
+	        var unknownParameterStart = string.Join(" ", OutputText.UnknownParameterProvided.Split().Take(2));
+	        Assert.That(() => result.OutputMessages.First().Key.StartsWith(unknownParameterStart));
+        }
     }
 }

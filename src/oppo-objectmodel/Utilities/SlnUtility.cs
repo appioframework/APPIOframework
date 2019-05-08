@@ -40,16 +40,8 @@ namespace Oppo.ObjectModel
 			return deserializedData;
 		}
 
-		static public bool ValidateSolution(ref ResultMessages messages, string solutionNameFlag, string solutionName, IFileSystem fileSystem)
+		static public bool ValidateSolution(ref ResultMessages messages, string solutionName, IFileSystem fileSystem)
 		{
-			// check if solutionNameFlag is valid
-			if (solutionNameFlag != Constants.SlnAddCommandArguments.Solution && solutionNameFlag != Constants.SlnAddCommandArguments.VerboseSolution)
-			{
-				messages.LoggerMessage = LoggingText.SlnUnknownCommandParam;
-				messages.OutputMessage = string.Format(OutputText.SlnUnknownParameter, solutionNameFlag);
-				return false;
-			}
-
 			// check if *.opposln file exists
 			var solutionFullName = solutionName + Constants.FileExtension.OppoSln;
 			if (string.IsNullOrEmpty(solutionName) || !fileSystem.FileExists(solutionFullName))

@@ -11,40 +11,52 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
     public class SlnAddCommandStrategy : ICommand<SlnStrategy>
     {
         private readonly IFileSystem _fileSystem;
+        private readonly ParameterResolver<ParamId> _resolver;
+        
+        private enum ParamId {SolutionName, ProjectName}
 
         public SlnAddCommandStrategy(IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
+            _resolver = new ParameterResolver<ParamId>(Constants.CommandName.Sln + " " + Name, new []
+            {
+	            new StringParameterSpecification<ParamId>
+	            {
+		            Identifier = ParamId.SolutionName,
+		            Short = Constants.SlnAddCommandArguments.Solution,
+		            Verbose = Constants.SlnAddCommandArguments.VerboseSolution
+	            },
+	            new StringParameterSpecification<ParamId>
+	            {
+		            Identifier = ParamId.ProjectName,
+		            Short = Constants.SlnAddCommandArguments.Project,
+		            Verbose = Constants.SlnAddCommandArguments.VerboseProject
+	            }
+            });
         }
 
         public string Name => Constants.SlnCommandName.Add;
 
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
-            var inputParamsArray    = inputParams.ToArray();
-            var solutionNameFlag    = inputParamsArray.ElementAtOrDefault(0);
-            var solutionName        = inputParamsArray.ElementAtOrDefault(1);
-            var projectNameFlag     = inputParamsArray.ElementAtOrDefault(2);
-            var projectName         = inputParamsArray.ElementAtOrDefault(3);
-
             var outputMessages = new MessageLines();
 			var validationMessages = new SlnUtility.ResultMessages();
 
+			var (error, stringParams, _) = _resolver.ResolveParams(inputParams);
+            
+			if (error != null)
+				return new CommandResult(false, new MessageLines{{error, string.Empty}});
+
+			var solutionName = stringParams[ParamId.SolutionName];
+			var projectName = stringParams[ParamId.ProjectName];
+			
 			// validate solution name
-			if(!SlnUtility.ValidateSolution(ref validationMessages, solutionNameFlag, solutionName, _fileSystem))
+			if(!SlnUtility.ValidateSolution(ref validationMessages, solutionName, _fileSystem))
 			{
 				OppoLogger.Warn(validationMessages.LoggerMessage);
 				outputMessages.Add(validationMessages.OutputMessage, string.Empty);
 				return new CommandResult(false, outputMessages);
 			}
-
-			// check if projectNameFlag is valid
-			if (projectNameFlag != Constants.SlnAddCommandArguments.Project && projectNameFlag != Constants.SlnAddCommandArguments.VerboseProject)
-            {
-                OppoLogger.Warn(LoggingText.SlnUnknownCommandParam);
-                outputMessages.Add(string.Format(OutputText.SlnUnknownParameter, projectNameFlag), string.Empty);
-                return new CommandResult(false, outputMessages);
-            }
 
             // check if *.oppoproj file exists
             var oppoprojFilePath = _fileSystem.CombinePaths(projectName, projectName + Constants.FileExtension.OppoProject);

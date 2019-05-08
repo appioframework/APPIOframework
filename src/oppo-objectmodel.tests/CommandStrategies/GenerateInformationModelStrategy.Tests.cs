@@ -520,7 +520,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
-            Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, inputParams.ElementAtOrDefault(1), inputParams.ElementAtOrDefault(3), inputParams.ElementAtOrDefault(0)), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
         }
 
@@ -537,7 +536,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
-            Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, inputParams.ElementAtOrDefault(1), inputParams.ElementAtOrDefault(3), inputParams.ElementAtOrDefault(2)), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
         }
 
@@ -554,7 +552,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
-            Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureEmptyOpcuaAppName, inputParams.ElementAtOrDefault(1), inputParams.ElementAtOrDefault(3)), firstMessageLine.Key);
 
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
 
@@ -688,7 +685,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
-            Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, opcuaAppName, modelFullName, typesFlag), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
         }
 
@@ -859,7 +855,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
-            Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, opcuaAppName, modelFullName, requiredModelFlag), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
         }
 
@@ -1052,7 +1047,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsFalse(commandResult.Success);
             Assert.IsNotNull(commandResult.OutputMessages);
             var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
-            Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureUnknownParam, opcuaAppName, modelFullName, requiredModelFlag), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
         }
 

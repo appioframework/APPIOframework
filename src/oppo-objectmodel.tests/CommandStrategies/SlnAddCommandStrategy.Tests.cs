@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies.SlnCommands;
@@ -21,28 +21,14 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
                 new [] { "--solution", "testSln", "--project", "testProj" },
             };
         }
-
-        protected static string[][] InvalidInputs_UnknownProjectParam()
+        
+        protected static object[] BadFlagParams =
         {
-            return new[]
-            {
-                new [] { "-s", "testSln", "-P", "testApp" },
-                new [] { "-s", "testSln", "--Project", "testApp" },
-                new [] { "-s", "testSln", "--p", "testApp" },
-                new [] { "-s", "testSln", "-project", "testApp" },
-            };
-        }
-
-        protected static string [][] InvalidInputs_UnknownSolutionParam()
-        {
-            return new[]
-            {
-                new [] { "-S", "testSln", "-p", "testProj" },
-                new [] { "--Solution", "testSln", "-p", "testProj" },
-                new [] { "--s", "testSln", "-p", "testProj" },
-                new [] { "-solution", "testSln", "-p", "testProj" },
-            };
-        }
+	        new [] { "-s", "testSln", "--p", "testProj" },
+	        new [] { "-s", "testSln", "--Project", "testProj" },
+	        new [] { "-solution", "testSln", "-p", "testProj" },
+	        new [] { "--Solution", "testSln", "--project", "testProj" },
+        };
 
         private Mock<IFileSystem> _fileSystemMock;
         private SlnAddCommandStrategy _objectUnderTest;
@@ -96,28 +82,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         }
 
         [Test]
-        public void FailBecauseOfUknownSolutionParam([ValueSource(nameof(InvalidInputs_UnknownSolutionParam))] string[] inputParams)
-        {
-            // Arrange
-            var solutionNameFlag = inputParams.ElementAtOrDefault(0);
-
-            var loggerListenerMock = new Mock<ILoggerListener>();
-            OppoLogger.RegisterListener(loggerListenerMock.Object);
-
-            // Act
-            var commandResult = _objectUnderTest.Execute(inputParams);
-
-            // Assert
-            Assert.IsFalse(commandResult.Success);
-            Assert.IsNotNull(commandResult.OutputMessages);
-            var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
-            OppoLogger.RemoveListener(loggerListenerMock.Object);
-            loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.SlnUnknownCommandParam), Times.Once);
-            Assert.AreEqual(string.Format(OutputText.SlnUnknownParameter, solutionNameFlag), firstMessageLine.Key);
-            Assert.AreEqual(string.Empty, firstMessageLine.Value);
-        }
-
-        [Test]
         public void FailBecauseOfMissingOpposlnFile([ValueSource(nameof(ValidInputs))] string[] inputParams)
         {
             // Arrange
@@ -145,34 +109,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.AreEqual(string.Format(OutputText.SlnOpposlnNotFound, oppoSlnPath), firstMessageLine.Key);
             Assert.AreEqual(string.Empty, firstMessageLine.Value);
             _fileSystemMock.Verify(x => x.FileExists(oppoSlnPath), Times.Once);
-        }
-
-        [Test]
-        public void FailBecauseOfUknownNameParam([ValueSource(nameof(InvalidInputs_UnknownProjectParam))] string[] inputParams)
-        {
-            // Arrange
-            var solutionName = inputParams.ElementAtOrDefault(1);
-            var opcuaappNameFlag = inputParams.ElementAtOrDefault(2);
-
-            var loggerListenerMock = new Mock<ILoggerListener>();
-            OppoLogger.RegisterListener(loggerListenerMock.Object);
-
-            // Arrange opposln file
-            var oppoSlnPath = Path.Combine(solutionName + Constants.FileExtension.OppoSln);
-            _fileSystemMock.Setup(x => x.CombinePaths(solutionName + Constants.FileExtension.OppoSln)).Returns(oppoSlnPath);
-            _fileSystemMock.Setup(x => x.FileExists(oppoSlnPath)).Returns(true);
-
-            // Act
-            var commandResult = _objectUnderTest.Execute(inputParams);
-
-            // Assert
-            Assert.IsFalse(commandResult.Success);
-            Assert.IsNotNull(commandResult.OutputMessages);
-            var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
-            OppoLogger.RemoveListener(loggerListenerMock.Object);
-            loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.SlnUnknownCommandParam), Times.Once);
-            Assert.AreEqual(string.Format(OutputText.SlnUnknownParameter, opcuaappNameFlag), firstMessageLine.Key);
-            Assert.AreEqual(string.Empty, firstMessageLine.Value);
         }
 
         [Test]
@@ -445,5 +381,15 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			opcuaappMemoryStream.Close();
 			opcuaappMemoryStream.Dispose();
 		}
+        
+        [Test]
+        public void FailOnIncorrectFlags([ValueSource(nameof(BadFlagParams))] string[] inputParams)
+        {
+	        var result = _objectUnderTest.Execute(inputParams);
+            
+	        Assert.IsFalse(result.Success);
+	        var unknownParameterStart = string.Join(" ", OutputText.UnknownParameterProvided.Split().Take(2));
+	        Assert.That(() => result.OutputMessages.First().Key.StartsWith(unknownParameterStart));
+        }
     }
 }

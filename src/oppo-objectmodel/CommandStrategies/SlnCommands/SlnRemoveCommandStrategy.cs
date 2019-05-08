@@ -9,40 +9,44 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
     public class SlnRemoveCommandStrategy : ICommand<SlnStrategy>
     {
         private readonly IFileSystem _fileSystem;
+        private readonly ParameterResolver<ParamId> _resolver;
+        
+        private enum ParamId {SolutionName, ProjectName}
 
         public SlnRemoveCommandStrategy(IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
+            _resolver = new ParameterResolver<ParamId>(Constants.CommandName.Sln + " " + Name, new []
+            {
+                new StringParameterSpecification<ParamId>
+                {
+                    Identifier = ParamId.SolutionName,
+                    Short = Constants.SlnRemoveCommandArguments.Solution,
+                    Verbose = Constants.SlnRemoveCommandArguments.VerboseSolution
+                },
+                new StringParameterSpecification<ParamId>
+                {
+                    Identifier = ParamId.ProjectName,
+                    Short = Constants.SlnRemoveCommandArguments.Project,
+                    Verbose = Constants.SlnRemoveCommandArguments.VerboseProject
+                }
+            });
         }
 
         public string Name => Constants.SlnCommandName.Remove;
 
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
-            var inputParamsArray    = inputParams.ToArray();
-            var solutionNameFlag    = inputParamsArray.ElementAtOrDefault(0);
-            var solutionName        = inputParamsArray.ElementAtOrDefault(1);
-            var projectNameFlag     = inputParamsArray.ElementAtOrDefault(2);
-            var projectName         = inputParamsArray.ElementAtOrDefault(3);
-
             var outputMessages = new MessageLines();
 
-            // validate solution name flag
-            if (solutionNameFlag != Constants.SlnRemoveCommandArguments.Solution && solutionNameFlag != Constants.SlnRemoveCommandArguments.VerboseSolution)
-            {
-                OppoLogger.Warn(LoggingText.SlnUnknownCommandParam);
-                outputMessages.Add(string.Format(OutputText.SlnUnknownParameter, solutionNameFlag), string.Empty);
-                return new CommandResult(false, outputMessages);
-            }
+            var (error, stringParams, _) = _resolver.ResolveParams(inputParams);
+            
+            if (error != null)
+                return new CommandResult(false, new MessageLines{{error, string.Empty}});
 
-			// validate project name flag
-            if (projectNameFlag != Constants.SlnRemoveCommandArguments.Project && projectNameFlag != Constants.SlnRemoveCommandArguments.VerboseProject)
-            {
-                OppoLogger.Warn(LoggingText.SlnUnknownCommandParam);
-                outputMessages.Add(string.Format(OutputText.SlnUnknownParameter, projectNameFlag), string.Empty);
-                return new CommandResult(false, outputMessages);
-            }
-			
+            var solutionName = stringParams[ParamId.SolutionName];
+            var projectName = stringParams[ParamId.ProjectName];
+            
             // check if solution file is existing
             var solutionFullName = _fileSystem.CombinePaths(solutionName + Constants.FileExtension.OppoSln);
             if (string.IsNullOrEmpty(solutionName) || !_fileSystem.FileExists(solutionFullName))
@@ -51,15 +55,6 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
                 outputMessages.Add(string.Format(OutputText.SlnOpposlnNotFound, solutionFullName), string.Empty);
                 return new CommandResult(false, outputMessages);
             }
-
-            // check if project name is empty 
-            if (string.IsNullOrEmpty(projectName))
-            {
-                OppoLogger.Warn(LoggingText.SlnRemoveOppoprojNameEmpty);
-                outputMessages.Add (OutputText.SlnRemoveOpcuaappNameEmpty,string.Empty);
-                return new CommandResult(false, outputMessages);
-            }
-
 
 			// deserialise solution file
 			Solution oppoSolution = SlnUtility.DeserializeFile<Solution>(solutionFullName, _fileSystem);

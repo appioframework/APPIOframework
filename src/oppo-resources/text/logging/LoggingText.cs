@@ -1,14 +1,21 @@
-﻿namespace Oppo.Resources.text.logging
+﻿using System;
+
+namespace Oppo.Resources.text.logging
 {
     public static class LoggingText
     {
 		// common
 		public const string NodesetValidationFailure = "Nodeset '{0}' validation failure!";
 
-		public const string NullInputParams_Msg = "Null input parameters passed. Specify any valid parameters.";
+	    public const string MissingRequiredParameter = "Missing required parameter in {0} <command>";
+	    public const string DuplicateParameterProvided = "Duplicate parameter in {0} <command>";
+	    public const string ParameterValueMissing = "Parameter value for {0} <command> missing";
+	    public const string UnknownParameterProvided = "Unknown {0} <command> parameter";
+	    
+	    public const string CertificateGeneratorSuccess = "Generated new private key and certificate for instance '{0}'!";
+	    public const string CertificateGeneratorFailureNonexistentDirectory = "Cannot generate private key and certificate! Directory '{0}' does not exist!";
+	    public const string NullInputParams_Msg = "Null input parameters passed. Specify any valid parameters.";
         public const string InvalidSolutionName = "Invalid solution name!";
-        public const string EmptySolutionName = "Empty solution name!";
-        public const string UnknownNewSlnCommandParam = "Unknown new sln <command> parameter!";
         public const string NewSlnCommandSuccess = "Solution with name {0} was successfully created";
         public const string UnknownNewOpcuaappCommandParam = "Unknown new opcuaapp <command> parameter!";
 		public const string InvalidOpcuaappType = "Unknown opcua application type!";
@@ -16,6 +23,10 @@
 		public const string InvalidServerPort = "Invalid opcua server app port!";
 		public const string NewOpcuaappCommandSuccess = "opcuaapp with name {0} was successfully created";
         public const string ImportInforamtionModelCommandSuccess = "Information model '{0}' imported successfully";
+        public const string ImportCertificateSuccess = "Certificate '{0}' and private key '{1}' imported successfully";
+        public const string ImportCertificateFailureWrongFormat = "Certificate import failure, invalid format '{0}'";
+        public const string ImportCertificateFailureWrongClientServer = "Certificate import failure, invalid use of '--server' or '--client'";
+        public const string ImportCertificateFailureMissingClientServer = "Certificate import failure, specify '--server' or '--client'";
         public const string EmptyOpcuaappName = "Empty opcuaapp name!";
         public const string InvalidOpcuaappName = "Invalid opcuaapp name!";
         public const string MesonExecutableFails = "Meson Failed!";

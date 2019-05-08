@@ -2,6 +2,7 @@
 using Oppo.Resources.text.output;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Newtonsoft.Json;
 
 namespace Oppo.ObjectModel.CommandStrategies.NewCommands
@@ -9,10 +10,52 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 	public class NewOpcuaAppCommandStrategy : ICommand<NewStrategy>
 	{
 		private readonly IFileSystem _fileSystem;
+		private readonly ParameterResolver<ParamId> _resolver;
+		private readonly AbstractCertificateGenerator _certificateGenerator;
 
-		public NewOpcuaAppCommandStrategy(IFileSystem fileSystem)
+		private enum ParamId {OpcuaAppName, ApplicationType, Url, Port, NoCert}
+		
+		public NewOpcuaAppCommandStrategy(IFileSystem fileSystem, AbstractCertificateGenerator certificateGenerator)
 		{
 			_fileSystem = fileSystem;
+			_certificateGenerator = certificateGenerator;
+			_resolver = new ParameterResolver<ParamId>(Constants.CommandName.New + " " + Name, new []
+			{
+				new StringParameterSpecification<ParamId>
+				{
+					Identifier = ParamId.OpcuaAppName,
+					Short = Constants.NewOpcuaAppCommandArguments.Name,
+					Verbose = Constants.NewOpcuaAppCommandArguments.VerboseName
+				}, 
+				new StringParameterSpecification<ParamId>
+				{
+					Identifier = ParamId.ApplicationType,
+					Short = Constants.NewOpcuaAppCommandArguments.Type,
+					Verbose = Constants.NewOpcuaAppCommandArguments.VerboseType,
+					Default = Constants.ApplicationType.ClientServer
+				},
+				new StringParameterSpecification<ParamId>
+				{
+					Identifier = ParamId.Url,
+					Short = Constants.NewOpcuaAppCommandArguments.Url,
+					Verbose = Constants.NewOpcuaAppCommandArguments.VerboseUrl,
+					Default = string.Empty
+				},
+				new StringParameterSpecification<ParamId>
+				{
+					Identifier = ParamId.Port,
+					Short = Constants.NewOpcuaAppCommandArguments.Port,
+					Verbose = Constants.NewOpcuaAppCommandArguments.VerbosePort,
+					Default = string.Empty
+				}
+			}, new []
+			{
+				new BoolParameterSpecification<ParamId>
+				{
+					Identifier = ParamId.NoCert,
+					Verbose = Constants.NewOpcuaAppCommandArguments.VerboseNoCert
+				}
+			});
 		}
 
 		private struct Messages
@@ -25,39 +68,31 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 
 		public CommandResult Execute(IEnumerable<string> inputParams)
 		{
-			var inputParamsArray = inputParams.ToArray();
-			var nameFlag		 = inputParamsArray.ElementAtOrDefault(0);
-			var opcuaAppName	 = inputParamsArray.ElementAtOrDefault(1);
-			var typeFlag		 = inputParamsArray.ElementAtOrDefault(2);
-			var applicationType	 = inputParamsArray.ElementAtOrDefault(3);
-			var urlFlag			 = inputParamsArray.ElementAtOrDefault(4);
-			var url				 = inputParamsArray.ElementAtOrDefault(5);
-			var portFlag		 = inputParamsArray.ElementAtOrDefault(6);
-			var port			 = inputParamsArray.ElementAtOrDefault(7);
-
-			applicationType = string.IsNullOrEmpty(typeFlag) ? Constants.ApplicationType.ClientServer : applicationType;
-			
 			var outputMessages = new MessageLines();
 			var messages = new Messages();
 
-			// validate opcuaapp name flag
-			if (nameFlag != Constants.NewOpcuaAppCommandArguments.Name && nameFlag != Constants.NewOpcuaAppCommandArguments.VerboseName)
-			{
-				OppoLogger.Warn(LoggingText.UnknownNewOpcuaappCommandParam);
-				outputMessages.Add(string.Format(OutputText.NewOpcuaappCommandFailureUnknownParam, nameFlag), string.Empty);
-				return new CommandResult(false, outputMessages);
-			}
+			var (error, stringParams, options) = _resolver.ResolveParams(inputParams);
+
+			if (error != null)
+				return new CommandResult(false, new MessageLines {{error, string.Empty}});
+
+			var opcuaAppName = stringParams[ParamId.OpcuaAppName];
+			var applicationType = stringParams[ParamId.ApplicationType];
+			var url = stringParams[ParamId.Url];
+			var port = stringParams[ParamId.Port];
 
 			// validate opcuaapp name
-			if (string.IsNullOrEmpty(opcuaAppName) || _fileSystem.GetInvalidFileNameChars().Any(opcuaAppName.Contains) || _fileSystem.GetInvalidPathChars().Any(opcuaAppName.Contains))
+			if (_fileSystem.GetInvalidFileNameChars().Any(opcuaAppName.Contains) ||
+			    _fileSystem.GetInvalidPathChars().Any(opcuaAppName.Contains))
 			{
 				OppoLogger.Warn(LoggingText.InvalidOpcuaappName);
-				outputMessages.Add(string.Format(OutputText.NewOpcuaappCommandFailureInvalidProjectName, opcuaAppName), string.Empty);
+				outputMessages.Add(string.Format(OutputText.NewOpcuaappCommandFailureInvalidProjectName, opcuaAppName),
+					string.Empty);
 				return new CommandResult(false, outputMessages);
 			}
 
 			// validate opcuaapp type
-			if (!ValidateApplicationType(ref messages, typeFlag, applicationType, urlFlag, url, portFlag, port))
+			if (!ValidateApplicationType(ref messages, applicationType, url, port))
 			{
 				OppoLogger.Warn(messages.loggerMessage);
 				outputMessages.Add(messages.outputMessage, string.Empty);
@@ -65,21 +100,24 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 			}
 
 			// combine project file paths
-			var projectFilePath = _fileSystem.CombinePaths(opcuaAppName, $"{opcuaAppName}{Constants.FileExtension.OppoProject}");
+			var projectFilePath =
+				_fileSystem.CombinePaths(opcuaAppName, $"{opcuaAppName}{Constants.FileExtension.OppoProject}");
 			var sourceDirectory = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.SourceCode);
 			var mesonFilePath = _fileSystem.CombinePaths(opcuaAppName, Constants.FileName.SourceCode_meson_build);
 
 			// create project directories
 			_fileSystem.CreateDirectory(opcuaAppName);
 			_fileSystem.CreateDirectory(sourceDirectory);
-			
+
 			IOpcuaapp opcuaapp = null;
 
 			// deploy files for opcuaapp Client
 			if (applicationType == Constants.ApplicationType.Client)
 			{
 				opcuaapp = new OpcuaClientApp(opcuaAppName);
-				_fileSystem.CreateFile(mesonFilePath, _fileSystem.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_meson_ClientType_build));
+				_fileSystem.CreateFile(mesonFilePath,
+					_fileSystem.LoadTemplateFile(
+						Resources.Resources.OppoOpcuaAppTemplateFileName_meson_ClientType_build));
 
 				DeployTemplateOpcuaClientSourceFiles(sourceDirectory);
 			}
@@ -87,8 +125,10 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 			else if (applicationType == Constants.ApplicationType.Server)
 			{
 				opcuaapp = new OpcuaServerApp(opcuaAppName, url, port);
-				_fileSystem.CreateFile(mesonFilePath, _fileSystem.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_meson_ServerType_build));
-				
+				_fileSystem.CreateFile(mesonFilePath,
+					_fileSystem.LoadTemplateFile(
+						Resources.Resources.OppoOpcuaAppTemplateFileName_meson_ServerType_build));
+
 				CreateModelsDirectory(opcuaAppName);
 				DeployTemplateOpcuaServerSourceFiles(sourceDirectory);
 			}
@@ -96,13 +136,28 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 			else if (applicationType == Constants.ApplicationType.ClientServer)
 			{
 				opcuaapp = new OpcuaClientServerApp(opcuaAppName, url, port);
-				_fileSystem.CreateFile(mesonFilePath, _fileSystem.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_meson_ClientServerType_build));
+				_fileSystem.CreateFile(mesonFilePath,
+					_fileSystem.LoadTemplateFile(Resources.Resources
+						.OppoOpcuaAppTemplateFileName_meson_ClientServerType_build));
 
 				CreateModelsDirectory(opcuaAppName);
 				DeployTemplateOpcuaClientSourceFiles(sourceDirectory);
 				DeployTemplateOpcuaServerSourceFiles(sourceDirectory);
 			}
-			
+
+			if (!options[ParamId.NoCert])
+			{
+				if (applicationType == Constants.ApplicationType.ClientServer)
+				{
+					_certificateGenerator.Generate(opcuaAppName, Constants.FileName.ClientCryptoPrefix);
+					_certificateGenerator.Generate(opcuaAppName, Constants.FileName.ServerCryptoPrefix);
+				}
+				else
+				{
+					_certificateGenerator.Generate(opcuaAppName);
+				}
+			}
+
 			// create *.oppoproj file
 			var opcuaappAsJson = JsonConvert.SerializeObject(opcuaapp, Formatting.Indented);
 			_fileSystem.CreateFile(projectFilePath, opcuaappAsJson);
@@ -137,48 +192,29 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 			_fileSystem.CreateFile(_fileSystem.CombinePaths(appSourceDirectory, Constants.FileName.SourceCode_mainCallbacks_c), _fileSystem.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_mainCallbacks_c));
 		}
 
-		private bool ValidateApplicationType(ref Messages messages, string typeFlag, string applicationType, string urlFlag, string url, string portFlag, string port)
+		private bool ValidateApplicationType(ref Messages messages, string applicationType, string url, string port)
 		{
-			// validate opcuaapp type flag
-			if (typeFlag != Constants.NewOpcuaAppCommandArguments.Type && typeFlag != Constants.NewOpcuaAppCommandArguments.VerboseType)
-			{
-				messages.loggerMessage = LoggingText.UnknownNewOpcuaappCommandParam;
-				messages.outputMessage = string.Format(OutputText.NewOpcuaappCommandFailureUnknownParam, typeFlag);
-				return false;
-			}
 			// validate opcuaapp type
-			else if (applicationType != Constants.ApplicationType.Client && applicationType != Constants.ApplicationType.Server && applicationType != Constants.ApplicationType.ClientServer)
+			if (applicationType != Constants.ApplicationType.Client &&
+			    applicationType != Constants.ApplicationType.Server &&
+			    applicationType != Constants.ApplicationType.ClientServer)
 			{
 				messages.loggerMessage = LoggingText.InvalidOpcuaappType;
 				messages.outputMessage = string.Format(OutputText.NewOpcuaappCommandFailureUnknownProjectType, applicationType);
 				return false;
 			}
-			else if (applicationType == Constants.ApplicationType.Server || applicationType == Constants.ApplicationType.ClientServer)
+			
+			if (applicationType == Constants.ApplicationType.Server || applicationType == Constants.ApplicationType.ClientServer)
 			{
-				// validate server url flag
-				if (urlFlag != Constants.NewOpcuaAppCommandArguments.Url && urlFlag != Constants.NewOpcuaAppCommandArguments.VerboseUrl)
-				{
-					messages.loggerMessage = LoggingText.UnknownNewOpcuaappCommandParam;
-					messages.outputMessage = string.Format(OutputText.NewOpcuaappCommandFailureUnknownParam, urlFlag);
-					return false;
-				}
 				// validate server url
-				else if (ValidateUrl(url))
+				if (ValidateUrl(url))
 				{
 					messages.loggerMessage = LoggingText.InvalidServerUrl;
 					messages.outputMessage = string.Format(OutputText.NewOpcuaappCommandFailureInvalidServerUrl, url);
 					return false;
 				}
-
-				// validate server port flag
-				if (portFlag != Constants.NewOpcuaAppCommandArguments.Port && portFlag != Constants.NewOpcuaAppCommandArguments.VerbosePort)
-				{
-					messages.loggerMessage = LoggingText.UnknownNewOpcuaappCommandParam;
-					messages.outputMessage = string.Format(OutputText.NewOpcuaappCommandFailureUnknownParam, portFlag);
-					return false;
-				}
 				// validate server port
-				else if (ValidatePort(port))
+				if (ValidatePort(port))
 				{
 					messages.loggerMessage = LoggingText.InvalidServerPort;
 					messages.outputMessage = string.Format(OutputText.NewOpcuaappCommandFailureInvalidServerPort, port);

@@ -18,6 +18,7 @@
     <None Remove="open62541\meson_ClientType.build" />
     <None Remove="open62541\meson_ServerType.build" />
     <None Remove="templates\template.opposln" />
+    <None Remove="templates\template.cnf" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,6 +37,7 @@
 	<EmbeddedResource Include="open62541\meson-server.build" />
     <EmbeddedResource Include="open62541\loadInformationModels-server.c" />
     <EmbeddedResource Include="templates\template.opposln" />
+    <EmbeddedResource Include="templates\template.cnf" />
   </ItemGroup>
 
   <ItemGroup>

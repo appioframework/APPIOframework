@@ -19,12 +19,6 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 				return new CommandResult(false, _outputMessages);
 			}
 
-			// validate server
-			if (!ValidateServer(_serverNameFlag, _serverName))
-			{
-				return new CommandResult(false, _outputMessages);
-			}
-
 			// deserialise client file
 			OpcuaClientApp opcuaClient = null;
 			OpcuaClientServerApp opcuaClientServer = null;
@@ -61,27 +55,6 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 			OppoLogger.Info(LoggingText.ReferenceRemoveSuccess);
 			_outputMessages.Add(string.Format(OutputText.ReferenceRemoveSuccess, _clientName, _serverName), string.Empty);
 			return new CommandResult(true, _outputMessages);
-		}
-
-		private bool ValidateServer(string serverNameFlag, string serverName)
-		{
-			// check if serverNameFlag is valid
-			if (serverNameFlag != Constants.ReferenceRemoveCommandArguments.Server && serverNameFlag != Constants.ReferenceRemoveCommandArguments.VerboseServer)
-			{
-				OppoLogger.Warn(LoggingText.ReferenceUnknownCommandParam);
-				_outputMessages.Add(string.Format(OutputText.ReferenceUnknownParameter, serverNameFlag), string.Empty);
-				return false;
-			}
-
-			// check if server name is empty
-			if (string.IsNullOrEmpty(serverName))
-			{
-				OppoLogger.Warn(LoggingText.ReferenceRemoveServerNameEmpty);
-				_outputMessages.Add(OutputText.ReferenceRemoveServerNameEmpty, string.Empty);
-				return false;
-			}
-
-			return true;
 		}
 
 		public override string GetHelpText()

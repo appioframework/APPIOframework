@@ -51,6 +51,7 @@ namespace Oppo.ObjectModel
         {
             var reflection = reflectionWrapper;
             var fileSystem = new FileSystemWrapper();
+            var certificateGenerator = new CertificateGenerator(fileSystem);
 
             var commands = new List<ICommand<ObjectModel>>();
             
@@ -70,7 +71,7 @@ namespace Oppo.ObjectModel
             var helpDashVerboseStrategy = new HelpStrategy<ObjectModel>(CreateHelpData(Constants.CommandName.HelpDashVerbose));
             commands.Add(helpDashVerboseStrategy);
 
-            var newStrategy = CreateNewStrategy(fileSystem);
+            var newStrategy = CreateNewStrategy(fileSystem, certificateGenerator);
             commands.Add(newStrategy);
 
             var publishStrategy = CreatePublishStrategy(fileSystem);
@@ -87,7 +88,7 @@ namespace Oppo.ObjectModel
             var importStrategy = CreateImportStrategy(fileSystem);
             commands.Add(importStrategy);
 
-            var generateStrategy = CreateGenerateStrategy(fileSystem);
+            var generateStrategy = CreateGenerateStrategy(fileSystem, certificateGenerator);
             commands.Add(generateStrategy);
 
 			var slnStrategy = CreateSlnStrategy(fileSystem);
@@ -185,7 +186,7 @@ namespace Oppo.ObjectModel
             return new BuildStrategy(buildStrategyCommandFactory);
         }
 
-        private static NewStrategy CreateNewStrategy(IFileSystem fileSystem)
+        private static NewStrategy CreateNewStrategy(IFileSystem fileSystem, AbstractCertificateGenerator certificateGenerator)
         {
             // oppo new <command>
             var newHelpStrategyHelpText = new MessageLines
@@ -220,7 +221,7 @@ namespace Oppo.ObjectModel
             var newStrategies = new ICommand<NewStrategy>[]
             {
                 new NewSlnCommandStrategy(fileSystem),
-                new NewOpcuaAppCommandStrategy(fileSystem),
+                new NewOpcuaAppCommandStrategy(fileSystem, certificateGenerator),
                 newHelpStrategy,
                 newHelpVerboseStrategy,
             };
@@ -393,6 +394,7 @@ namespace Oppo.ObjectModel
             var importCommands = new ICommand<ImportStrategy>[]
             {
                 new ImportInformationModelCommandStrategy(fileSystem, new ModelValidator(fileSystem)),
+                new ImportCertificateStrategy(fileSystem), 
                 importHelpStrategy,
                 importHelpStrategyVerbose
             };
@@ -404,7 +406,7 @@ namespace Oppo.ObjectModel
             return new ImportStrategy(importStrategyCommandFactory);
         }
 
-        private static GenerateStrategy CreateGenerateStrategy(IFileSystem fileSystem)
+        private static GenerateStrategy CreateGenerateStrategy(IFileSystem fileSystem, AbstractCertificateGenerator certificateGenerator)
         {
             // oppo generate <command>
             var generateHelpStrategyHelpText = new MessageLines
@@ -441,6 +443,7 @@ namespace Oppo.ObjectModel
             var generateSubCommands = new ICommand<GenerateStrategy>[]
             {
                 new GenerateInformationModelStrategy(Constants.CommandName.GenerateInformationModel, fileSystem, new ModelValidator(fileSystem)),
+                new GenerateCertificateStrategy(fileSystem, certificateGenerator),
                 generateHelpStrategy,
                 generateHelpStrategyVerbose
             };

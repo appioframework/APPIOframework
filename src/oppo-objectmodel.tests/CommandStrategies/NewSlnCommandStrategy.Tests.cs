@@ -18,20 +18,17 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             };
         }
 
-        private static string[][] InvalidInputsFirstPart()
+        private static object[] InvalidInputsFirstPart =
         {
-            return new[]
-            {
-                new[] {"-n", ""},
-                //new[] {"-n", "ab/yx"},
-                //new[] {"-n", "ab\\yx"},
-                new[] {"-N", "ab/yx"},
-                new[] {"", ""},
-                new[] {""},
-                new[] {"-n"},
-                new string[] { }
-            };
-        }
+            new object[] {new[] {"-n", ""}, string.Format(OutputText.ParameterValueMissing, "-n")},
+            //new[] {"-n", "ab/yx"},
+            //new[] {"-n", "ab\\yx"},
+            new object[] {new[] {"-N", "ab/yx"}, string.Format(OutputText.UnknownParameterProvided, "-N", "'-n' or '--name'")},
+            new object[] {new[] {"", ""}, string.Format(OutputText.UnknownParameterProvided, string.Empty, "'-n' or '--name'")},
+            new object[] {new[] {""}, string.Format(OutputText.UnknownParameterProvided, string.Empty, "'-n' or '--name'")},
+            new object[] {new[] {"-n"}, string.Format(OutputText.ParameterValueMissing, "-n")},
+            new object[] {new string[] { }, string.Format(OutputText.MissingRequiredParameter, "'-n' or '--name'")}
+        };
 
         private static string[][] InvalidInputsSeccondPart()
         {
@@ -86,8 +83,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             RemoveLoggerListener(loggerListenerMock.Object);
         }
 
-        [Test]
-        public void NewSlnCommandStrategy_Should_IgnoreInputFirstPart([ValueSource(nameof(InvalidInputsFirstPart))] string[] inputParams)
+        [TestCaseSource(nameof(InvalidInputsFirstPart))]
+        public void NewSlnCommandStrategy_Should_IgnoreInputFirstPart(string[] inputParams, string expectedError)
         {
             // Arrange
             var invalidCharsMock = new[] { '/', '\\' };
@@ -106,7 +103,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             Assert.IsTrue(warnWrittenOut);
             Assert.IsFalse(result.Success);
-            Assert.AreEqual(OutputText.NewSlnCommandFailureUnknownParam, result.OutputMessages.First().Key);
+            Assert.AreEqual(expectedError, result.OutputMessages.First().Key);
             fileSystemMock.Verify(x => x.CreateFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoSlnTemplateFileName), Times.Never);
             RemoveLoggerListener(loggerListenerMock.Object);

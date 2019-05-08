@@ -20,11 +20,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
         
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
-            var inputParamsList = inputParams.ToList();
-            var commandName = inputParamsList.FirstOrDefault();
-            var command = _factory.GetCommand(commandName);
-            var commandParamters = inputParamsList.Skip(1);
-            return command.Execute(commandParamters);            
+            return ParameterResolver.DelegateToSubcommands(_factory, inputParams);         
         }
 
         public string GetHelpText()

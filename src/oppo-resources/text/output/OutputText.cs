@@ -8,7 +8,13 @@ namespace Oppo.Resources.text.output
         public const string GeneralCommandExecutionFailure = "Command \"oppo {0}\" failed!";
 		public const string NodesetValidationFailure = "It was not possible to validate the model '{0}' against known opc-ua 'UANodeSet.xsd'!";
 
-		// publish <command>
+		// parameter resolver
+	    public const string UnknownParameterProvided = "Unrecognized parameter '{0}'. Expected parameter {1} instead";
+	    public const string MissingRequiredParameter = "Missing required parameter {0}";
+	    public const string ParameterValueMissing = "Parameter value for '{0}' empty or not provided";
+	    public const string DuplicateParameterProvided = "Duplicate parameter '{0}'";
+
+	    //publish <command>
 		public const string OpcuaappPublishFailure = "Publish failure!";
 		public const string OpcuaappPublishFailureMissingExecutables = "Publish '{0}' failure! Missing client and server executable files";
 		public const string OpcuaappPublishSuccess = "Publish '{0}' success!";
@@ -57,9 +63,15 @@ namespace Oppo.Resources.text.output
 		public const string ImportInformationModelCommandFailureTypesFileDoesNotExist = "Import information model failute, types file '{0}' does not exist!";
 		public const string ImportInformationModelCommandFailureTypesHasInvalidExtension = "Import information model failute, types file has invalid extension '{0}'!";
 
-		// import sample <command>
+		public const string ImportCertificateCommandSuccess = "Imported key & certificate successfully!";
+        public const string ImportCertificateCommandUnknownFormat = "Invalid format specified!";
+        public const string ImportCertificateCommandUnknownFileExtension = "Unknown file extension. Please provide an explicit format parameter!";
+        public const string ImportCertificateCommandWrongServerClient = "Specified --server/--client incorrectly!";// import sample <command>
 		public const string ImportSampleInformationModelSuccess = "Sample information model '{0}' import success!";
 
+        // generate certificate <command>
+        public const string GenerateCertificateCommandSuccess = "Generated new certificate(s) for opcuaapp '{0}'";
+        
         // generate information model <command>
         public const string GenerateInformationModelSuccess = "The opcuaapp with the name '{0}' was succesfully updated with the Information model '{1}'.";
         public const string GenerateInformationModelFailure = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'.";

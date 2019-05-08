@@ -21,7 +21,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 
 			// validate server
 			var serverFullName = _fileSystem.CombinePaths(_serverName, _serverName + Constants.FileExtension.OppoProject);
-			if(!ValidateServer(_serverNameFlag, _serverName, serverFullName))
+			if(!ValidateServer(_serverName, serverFullName))
 			{
 				return new CommandResult(false, _outputMessages);
 			}
@@ -86,16 +86,8 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 			return new CommandResult(true, _outputMessages);
 		}
 
-		private bool ValidateServer(string serverNameFlag, string serverName, string serverFullName)
+		private bool ValidateServer(string serverName, string serverFullName)
 		{
-			// validate server name flag
-			if (serverNameFlag != Constants.ReferenceAddCommandArguments.Server && serverNameFlag != Constants.ReferenceAddCommandArguments.VerboseServer)
-			{
-				OppoLogger.Warn(LoggingText.ReferenceUnknownCommandParam);
-				_outputMessages.Add(string.Format(OutputText.ReferenceUnknownParameter, serverNameFlag), string.Empty);
-				return false;
-			}
-
 			// check if server oppoproj file exists
 			if (string.IsNullOrEmpty(serverName) || !_fileSystem.FileExists(serverFullName))
 			{

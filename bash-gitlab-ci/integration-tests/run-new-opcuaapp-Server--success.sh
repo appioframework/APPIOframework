@@ -60,6 +60,15 @@ do
   check_for_exisiting_file_named "./my-app/src/server/mainCallbacks.c" \
                                  "any oppo project source file for the server application does not exist ..."
 
+  check_for_exisiting_file_named "./my-app/priv.der" \
+                                 "private key was not generated ..."
+                                 
+  check_for_exisiting_file_named "./my-app/cert.der" \
+                                 "certificate was not generated ..."
+
+  openssl  rsa -in ./my-app/priv.der -inform der -noout
+  openssl x509 -in ./my-app/cert.der -inform der -noout
+
   cd ..
   rm -rf new-opcuaapp-Server--success
 

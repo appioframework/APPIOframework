@@ -9,6 +9,8 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 	{
 		protected readonly IFileSystem _fileSystem;
 		
+		private enum ParamId {ClientName, ServerName}
+		
 		protected ReferenceBase(IFileSystem fileSystem)
 		{
 			_fileSystem = fileSystem;
@@ -16,34 +18,45 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 
 		public virtual string Name => string.Empty;
 
-		protected string _clientNameFlag;
 		protected string _clientName;
 		protected string _clientFullName;
-		protected string _serverNameFlag;
 		protected string _serverName;
 		protected MessageLines _outputMessages;
 
 		protected bool ExecuteCommon(IEnumerable<string> inputParams)
 		{
-			var inputParamsArray = inputParams.ToArray();
-			_clientNameFlag = inputParamsArray.ElementAtOrDefault(0);
-			_clientName = inputParamsArray.ElementAtOrDefault(1);
-			_serverNameFlag = inputParamsArray.ElementAtOrDefault(2);
-			_serverName = inputParamsArray.ElementAtOrDefault(3);
-
-			_outputMessages = new MessageLines();
-			
-			// validate client name flag
-			if (_clientNameFlag != Constants.ReferenceAddCommandArguments.Client && _clientNameFlag != Constants.ReferenceAddCommandArguments.VerboseClient)
+			var resolver = new ParameterResolver<ParamId>(Constants.CommandName.Reference + " " + Name, new []
 			{
-				OppoLogger.Warn(LoggingText.ReferenceUnknownCommandParam);
-				_outputMessages.Add(string.Format(OutputText.ReferenceUnknownParameter, _clientNameFlag), string.Empty);
+				new StringParameterSpecification<ParamId>
+				{
+					Identifier = ParamId.ClientName,
+					Short = Constants.ReferenceAddCommandArguments.Client,
+					Verbose = Constants.ReferenceAddCommandArguments.VerboseClient
+				},
+				new StringParameterSpecification<ParamId>
+				{
+					Identifier = ParamId.ServerName,
+					Short = Constants.ReferenceAddCommandArguments.Server,
+					Verbose = Constants.ReferenceAddCommandArguments.VerboseServer
+				}
+			});
+
+			var (error, stringParams, _) = resolver.ResolveParams(inputParams);
+
+			if (error != null)
+			{
+				_outputMessages = new MessageLines {{error, string.Empty}};
 				return false;
 			}
 
+			_serverName = stringParams[ParamId.ServerName];
+			_clientName = stringParams[ParamId.ClientName];
+			
+			_outputMessages = new MessageLines();
+
 			// check if client oppoproj file exists
 			_clientFullName = _fileSystem.CombinePaths(_clientName, _clientName + Constants.FileExtension.OppoProject);
-			if (string.IsNullOrEmpty(_clientName) || !_fileSystem.FileExists(_clientFullName))
+			if (!_fileSystem.FileExists(_clientFullName))
 			{
 				OppoLogger.Warn(LoggingText.ReferenceClientOppoprojFileNotFound);
 				_outputMessages.Add(string.Format(OutputText.ReferenceClientOppoprojFileNotFound, _clientFullName), string.Empty);

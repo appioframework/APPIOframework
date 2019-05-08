@@ -1,4 +1,6 @@
-﻿using System.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Moq;
 using NUnit.Framework;
 using Oppo.ObjectModel.CommandStrategies.NewCommands;
@@ -66,6 +68,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			};
 		}
 
+		private static string[][] ValidInputs_ServerAppTypeNocert =
+			ValidInputs_ServerAppType().Select(args => args.Append("--nocert").ToArray()).ToArray();
+
 		private static string[][] InvalidInputsFistParam()
 		{
 			return new[]
@@ -90,16 +95,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			};
 		}
 
-		private static string[][] InvalidInputs_UnknownTypeParam()
-		{
-			return new[]
-			{
-				new[] { "-n", "anyName", "-T", "ClientServer" },
-				new[] { "-n", "anyName", "--t", "ClientServer" },
-				new[] { "-n", "anyName", "--Type", "ClientServer" },
-				new[] { "-n", "anyName", "-type", "ClientServer" },
-			};
-		}
 
 		private static string[][] InvalidInputs_UnknownAppType()
 		{
@@ -113,9 +108,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				new[] { "-n", "anyName", "-t", "Cln" },
 				new[] { "-n", "anyName", "-t", "Serwer" },
 				new[] { "-n", "anyName", "-t", "server" },
-				new[] { "-n", "anyName", "-t", "Ser" },
-				new[] { "-n", "anyName", "-t", "" },
-				new[] { "-n", "anyName", "-t", null },
+				new[] { "-n", "anyName", "-t", "Ser" }
 			};
 		}
 
@@ -142,27 +135,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				new[] { "-n", "anyName", "-t", "Server", "-u", "url\turl", "-p", "4840" },
 				new[] { "-n", "anyName", "-t", "Server", "-u", "url\nurl", "-p", "4840" },
 				new[] { "-n", "anyName", "-t", "Server", "-u", "url\rurl", "-p", "4840" },
-				new[] { "-n", "anyName", "-t", "Server", "-u", "", "-p", "4840" },
 				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "u r l", "-p", "4840" },
 				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "url\turl", "-p", "4840" },
 				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "url\nurl", "-p", "4840" },
-				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "url\rurl", "-p", "4840" },
-				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "", "-p", "4840" },
-			};
-		}
-
-		private static string[][] InvalidInputs_UnknownPortParam()
-		{
-			return new[]
-			{
-				new[] { "-n", "anyName", "-t", "Server", "-u", "127.0.0.1", "--p", "4840" },
-				new[] { "-n", "anyName", "-t", "Server", "-u", "127.0.0.1", "-P", "4840" },
-				new[] { "-n", "anyName", "-t", "Server", "-u", "127.0.0.1", "-port", "4840" },
-				new[] { "-n", "anyName", "-t", "Server", "-u", "127.0.0.1", "--Port", "4840" },
-				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "127.0.0.1", "--p", "4840" },
-				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "127.0.0.1", "-P", "4840" },
-				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "127.0.0.1", "-port", "4840" },
-				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "127.0.0.1", "--Port", "4840" },
+				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "url\rurl", "-p", "4840" }
 			};
 		}
 
@@ -174,23 +150,23 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				new[] { "-n", "anyName", "-t", "Server", "-u", "127.0.0.1", "-p", "-1" },
 				new[] { "-n", "anyName", "-t", "Server", "-u", "127.0.0.1", "-p", "65536" },
 				new[] { "-n", "anyName", "-t", "Server", "-u", "127.0.0.1", "-p", "1 2 3" },
-				new[] { "-n", "anyName", "-t", "Server", "-u", "127.0.0.1", "-p", "" },
 				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "127.0.0.1", "-p", "PortCanContainOnlyDigits" },
 				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "127.0.0.1", "-p", "-1" },
 				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "127.0.0.1", "-p", "65536" },
-				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "127.0.0.1", "-p", "1 2 3" },
-				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "127.0.0.1", "-p", "" },
+				new[] { "-n", "anyName", "-t", "ClientServer", "-u", "127.0.0.1", "-p", "1 2 3" }
 			};
 		}
 
 		private Mock<IFileSystem> _fileSystemMock;
+		private Mock<AbstractCertificateGenerator> _certGenMock;
 		private NewOpcuaAppCommandStrategy _objectUnderTest;
 
 		[SetUp]
 		public void SetupObjectUnderTest()
 		{
 			_fileSystemMock = new Mock<IFileSystem>();
-			_objectUnderTest = new NewOpcuaAppCommandStrategy(_fileSystemMock.Object);
+			_certGenMock = new Mock<AbstractCertificateGenerator>();
+			_objectUnderTest = new NewOpcuaAppCommandStrategy(_fileSystemMock.Object, _certGenMock.Object);
 		}
 
 		[Test]
@@ -277,30 +253,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			// Assert
 			Assert.IsTrue(warnWrittenOut);
 			Assert.IsFalse(result.Success);
-			Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandFailureUnknownParam, nameFlag), result.OutputMessages.First().Key);
 			_fileSystemMock.Verify(x => x.CreateDirectory(It.IsAny<string>()), Times.Never);
 			_fileSystemMock.Verify(x => x.CreateFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
 			_fileSystemMock.Verify(x => x.LoadTemplateFile(It.IsAny<string>()), Times.Never);
 			OppoLogger.RemoveListener(loggerListenerMock.Object);
-		}
-
-		[Test]
-		public void NewOpcuaAppCommandStrategy_Should_FailOnInvalidTypeParameter([ValueSource(nameof(InvalidInputs_UnknownTypeParam))] string[] inputParam)
-		{
-			// Arrange
-			var typeFlag = inputParam.ElementAtOrDefault(2);
-
-			var loggerListenerMock = new Mock<ILoggerListener>();
-			OppoLogger.RegisterListener(loggerListenerMock.Object);
-
-			// Act
-			var result = _objectUnderTest.Execute(inputParam);
-
-			// Assert
-			Assert.IsFalse(result.Success);
-			Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandFailureUnknownParam, typeFlag), result.OutputMessages.First().Key);
-			OppoLogger.RemoveListener(loggerListenerMock.Object);
-			loggerListenerMock.Verify(x => x.Warn(LoggingText.UnknownNewOpcuaappCommandParam), Times.Once);
 		}
 
 		[Test]
@@ -336,9 +292,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
 			// Assert
 			Assert.IsFalse(result.Success);
-			Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandFailureUnknownParam, urlFlag), result.OutputMessages.First().Key);
 			OppoLogger.RemoveListener(loggerListenerMock.Object);
-			loggerListenerMock.Verify(x => x.Warn(LoggingText.UnknownNewOpcuaappCommandParam), Times.Once);
+			loggerListenerMock.Verify(x => x.Warn(string.Format(LoggingText.UnknownParameterProvided, "new opcuaapp")), Times.Once);
 		}
 
 		[Test]
@@ -358,25 +313,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandFailureInvalidServerUrl, url), result.OutputMessages.First().Key);
 			OppoLogger.RemoveListener(loggerListenerMock.Object);
 			loggerListenerMock.Verify(x => x.Warn(LoggingText.InvalidServerUrl), Times.Once);
-		}
-
-		[Test]
-		public void NewOpcuaAppCommandStrategy_Should_FailOnInvalidPortParameter([ValueSource(nameof(InvalidInputs_UnknownPortParam))] string[] inputParam)
-		{
-			// Arrange
-			var portFlag = inputParam.ElementAtOrDefault(6);
-
-			var loggerListenerMock = new Mock<ILoggerListener>();
-			OppoLogger.RegisterListener(loggerListenerMock.Object);
-
-			// Act
-			var result = _objectUnderTest.Execute(inputParam);
-
-			// Assert
-			Assert.IsFalse(result.Success);
-			Assert.AreEqual(string.Format(OutputText.NewOpcuaappCommandFailureUnknownParam, portFlag), result.OutputMessages.First().Key);
-			OppoLogger.RemoveListener(loggerListenerMock.Object);
-			loggerListenerMock.Verify(x => x.Warn(LoggingText.UnknownNewOpcuaappCommandParam), Times.Once);
 		}
 
 		[Test]
@@ -633,6 +569,154 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			_fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_constants_server_h), Times.Once);
 			_fileSystemMock.Verify(x => x.LoadTemplateFile(Resources.Resources.OppoOpcuaAppTemplateFileName_mainCallbacks_c), Times.Once);
 			OppoLogger.RemoveListener(loggerListenerMock.Object);
+		}
+
+		[Test]
+		public void NewOpcuaAppCommandStrategy_Should_GenerateServerCertificate([ValueSource(nameof(ValidInputs_ServerAppType))] string[] inputParam)
+		{
+			// Arrange
+			var projectName = inputParam.ElementAtOrDefault(1);
+
+			var loggerListenerMock = new Mock<ILoggerListener>();
+			OppoLogger.RegisterListener(loggerListenerMock.Object);
+
+			var projectDirectory = $"{projectName}";
+			const string sourceCodeDirectory = "source-directory";
+			const string clientSourceDirectory = "client-source-directory";
+			const string serverSourceDirectory = "server-source-directory";
+
+			_fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.DirectoryName.SourceCode)).Returns(sourceCodeDirectory);
+			_fileSystemMock.Setup(x => x.CombinePaths(sourceCodeDirectory, Constants.DirectoryName.ClientApp)).Returns(clientSourceDirectory);
+			_fileSystemMock.Setup(x => x.CombinePaths(sourceCodeDirectory, Constants.DirectoryName.ServerApp)).Returns(serverSourceDirectory);
+
+			var projectFileName = $"{projectName}{Constants.FileExtension.OppoProject}";
+			const string projectFilePath = "project-file-path";
+			const string mesonBuildFilePath = "meson-build-file-path";
+			const string clientMainC = "client-main-c-file";
+			const string serverMainC = "server-main-c-file";
+			const string serverMesonBuild = "server-meson-build-file";
+			const string serverloadInformationModelsC = "server-loadInformationModels-c-file";
+			const string serverconstantsH = "constants-h-file";
+			const string serverMainCallbacksC = "mainCallbacks-c-file";
+			const string modelsDirectory = "models";
+
+
+			_fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, projectFileName)).Returns(projectFilePath);
+			_fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.FileName.SourceCode_meson_build)).Returns(mesonBuildFilePath);
+			_fileSystemMock.Setup(x => x.CombinePaths(clientSourceDirectory, Constants.FileName.SourceCode_main_c)).Returns(clientMainC);
+			_fileSystemMock.Setup(x => x.CombinePaths(serverSourceDirectory, Constants.FileName.SourceCode_main_c)).Returns(serverMainC);
+			_fileSystemMock.Setup(x => x.CombinePaths(serverSourceDirectory, Constants.FileName.SourceCode_meson_build)).Returns(serverMesonBuild);
+			_fileSystemMock.Setup(x => x.CombinePaths(serverSourceDirectory, Constants.FileName.SourceCode_loadInformationModels_c)).Returns(serverloadInformationModelsC);
+			_fileSystemMock.Setup(x => x.CombinePaths(serverSourceDirectory, Constants.FileName.SourceCode_constants_h)).Returns(serverconstantsH);
+			_fileSystemMock.Setup(x => x.CombinePaths(serverSourceDirectory, Constants.FileName.SourceCode_mainCallbacks_c)).Returns(serverMainCallbacksC);
+			_fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.DirectoryName.Models)).Returns(modelsDirectory);
+
+			// Act
+			var result = _objectUnderTest.Execute(inputParam);
+
+			// Assert
+			Assert.IsTrue(result.Success);
+			_certGenMock.Verify(x => x.Generate(projectName, string.Empty), Times.Once);
+		}
+		
+		[Test]
+		public void NewOpcuaAppCommandStrategy_ShouldNot_GenerateServerCertificateWithNocert([ValueSource(nameof(ValidInputs_ServerAppTypeNocert))] string[] inputParam)
+		{
+			// Arrange
+			var projectName = inputParam.ElementAtOrDefault(1);
+
+			var loggerListenerMock = new Mock<ILoggerListener>();
+			OppoLogger.RegisterListener(loggerListenerMock.Object);
+
+			var projectDirectory = $"{projectName}";
+			const string sourceCodeDirectory = "source-directory";
+			const string clientSourceDirectory = "client-source-directory";
+			const string serverSourceDirectory = "server-source-directory";
+
+			_fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.DirectoryName.SourceCode)).Returns(sourceCodeDirectory);
+			_fileSystemMock.Setup(x => x.CombinePaths(sourceCodeDirectory, Constants.DirectoryName.ClientApp)).Returns(clientSourceDirectory);
+			_fileSystemMock.Setup(x => x.CombinePaths(sourceCodeDirectory, Constants.DirectoryName.ServerApp)).Returns(serverSourceDirectory);
+
+			var projectFileName = $"{projectName}{Constants.FileExtension.OppoProject}";
+			const string projectFilePath = "project-file-path";
+			const string mesonBuildFilePath = "meson-build-file-path";
+			const string clientMainC = "client-main-c-file";
+			const string serverMainC = "server-main-c-file";
+			const string serverMesonBuild = "server-meson-build-file";
+			const string serverloadInformationModelsC = "server-loadInformationModels-c-file";
+			const string serverconstantsH = "constants-h-file";
+			const string serverMainCallbacksC = "mainCallbacks-c-file";
+			const string modelsDirectory = "models";
+
+
+			_fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, projectFileName)).Returns(projectFilePath);
+			_fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.FileName.SourceCode_meson_build)).Returns(mesonBuildFilePath);
+			_fileSystemMock.Setup(x => x.CombinePaths(clientSourceDirectory, Constants.FileName.SourceCode_main_c)).Returns(clientMainC);
+			_fileSystemMock.Setup(x => x.CombinePaths(serverSourceDirectory, Constants.FileName.SourceCode_main_c)).Returns(serverMainC);
+			_fileSystemMock.Setup(x => x.CombinePaths(serverSourceDirectory, Constants.FileName.SourceCode_meson_build)).Returns(serverMesonBuild);
+			_fileSystemMock.Setup(x => x.CombinePaths(serverSourceDirectory, Constants.FileName.SourceCode_loadInformationModels_c)).Returns(serverloadInformationModelsC);
+			_fileSystemMock.Setup(x => x.CombinePaths(serverSourceDirectory, Constants.FileName.SourceCode_constants_h)).Returns(serverconstantsH);
+			_fileSystemMock.Setup(x => x.CombinePaths(serverSourceDirectory, Constants.FileName.SourceCode_mainCallbacks_c)).Returns(serverMainCallbacksC);
+			_fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.DirectoryName.Models)).Returns(modelsDirectory);
+
+			// Act
+			var result = _objectUnderTest.Execute(inputParam);
+
+			// Assert
+			Assert.IsTrue(result.Success);
+			_certGenMock.Verify(x => x.Generate(projectName, string.Empty), Times.Never);
+		}
+		
+		[Test]
+		public void NewOpcuaAppCommandStrategy_Should_GenerateBothClientServerCertificates([ValueSource(nameof(ValidInputs_ClientServerAppType))] string[] inputParam)
+		{
+			// Arrange
+			var projectName = inputParam.ElementAtOrDefault(1);
+
+			var loggerListenerMock = new Mock<ILoggerListener>();
+			OppoLogger.RegisterListener(loggerListenerMock.Object);
+
+			var projectDirectory = $"{projectName}";
+			const string sourceCodeDirectory = "source-directory";
+			const string clientSourceDirectory = "client-source-directory";
+			const string serverSourceDirectory = "server-source-directory";
+
+			_fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.DirectoryName.SourceCode)).Returns(sourceCodeDirectory);
+			_fileSystemMock.Setup(x => x.CombinePaths(sourceCodeDirectory, Constants.DirectoryName.ClientApp)).Returns(clientSourceDirectory);
+			_fileSystemMock.Setup(x => x.CombinePaths(sourceCodeDirectory, Constants.DirectoryName.ServerApp)).Returns(serverSourceDirectory);
+
+			var projectFileName = $"{projectName}{Constants.FileExtension.OppoProject}";
+			const string projectFilePath = "project-file-path";
+			const string clientDirectoryPath = "client-directory-path";
+			const string serverDirectoryPath = "server-directory-path";
+			const string mesonBuildFilePath = "meson-build-file-path";
+			const string clientMainC = "client-main-c-file";
+			const string serverMainC = "server-main-c-file";
+			const string serverMesonBuild = "server-meson-build-file";
+			const string serverloadInformationModelsC = "server-loadInformationModels-c-file";
+			const string serverconstantsH = "constants-h-file";
+			const string serverMainCallbacksC = "mainCallbacks-c-file";
+			const string modelsDirectory = "models";
+
+			_fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, projectFileName)).Returns(projectFilePath);
+			_fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.DirectoryName.ServerApp)).Returns(serverDirectoryPath);
+			_fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.DirectoryName.ClientApp)).Returns(clientDirectoryPath);
+			_fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.FileName.SourceCode_meson_build)).Returns(mesonBuildFilePath);
+			_fileSystemMock.Setup(x => x.CombinePaths(clientSourceDirectory, Constants.FileName.SourceCode_main_c)).Returns(clientMainC);
+			_fileSystemMock.Setup(x => x.CombinePaths(serverSourceDirectory, Constants.FileName.SourceCode_main_c)).Returns(serverMainC);
+			_fileSystemMock.Setup(x => x.CombinePaths(serverSourceDirectory, Constants.FileName.SourceCode_meson_build)).Returns(serverMesonBuild);
+			_fileSystemMock.Setup(x => x.CombinePaths(serverSourceDirectory, Constants.FileName.SourceCode_loadInformationModels_c)).Returns(serverloadInformationModelsC);
+			_fileSystemMock.Setup(x => x.CombinePaths(serverSourceDirectory, Constants.FileName.SourceCode_constants_h)).Returns(serverconstantsH);
+			_fileSystemMock.Setup(x => x.CombinePaths(serverSourceDirectory, Constants.FileName.SourceCode_mainCallbacks_c)).Returns(serverMainCallbacksC);
+			_fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.DirectoryName.Models)).Returns(modelsDirectory);
+
+			// Act
+			var result = _objectUnderTest.Execute(inputParam);
+
+			// Assert
+			Assert.IsTrue(result.Success);
+			_certGenMock.Verify(x => x.Generate(projectName, Constants.FileName.ClientCryptoPrefix), Times.Once);
+			_certGenMock.Verify(x => x.Generate(projectName, Constants.FileName.ServerCryptoPrefix), Times.Once);
 		}
 	}
 }

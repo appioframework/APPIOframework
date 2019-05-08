@@ -21,24 +21,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			};
 		}
 
-		protected static string[][] InvalidInputs_EmptyClientName()
-		{
-			return new[]
-			{
-				new [] { "-c", "", "-s", "testServer" },
-				new [] { "--client", "", "-s", "testSerer" },
-			};
-		}
-
-		protected static string[][] InvalidInputs_EmptyServerName()
-		{
-			return new[]
-			{
-				new [] { "-c", "testClient", "-s", "" },
-				new [] { "-c", "testClient", "--server", "" },
-			};
-		}
-
 		protected static string[][] InvalidInputs_UnknownClientParam()
 		{
 			return new[]
@@ -132,8 +114,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			Assert.IsNotNull(commandResult.OutputMessages);
 			var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
 			OppoLogger.RemoveListener(loggerListenerMock.Object);
-			loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.ReferenceUnknownCommandParam), Times.Once);
-			Assert.AreEqual(string.Format(OutputText.ReferenceUnknownParameter, serverNameFlag), firstMessageLine.Key);
+			loggerListenerMock.Verify(x => x.Warn(It.IsAny<string>()), Times.Once);
 			Assert.AreEqual(string.Empty, firstMessageLine.Value);
 		}
 
@@ -154,8 +135,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			Assert.IsNotNull(commandResult.OutputMessages);
 			var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
 			OppoLogger.RemoveListener(loggerListenerMock.Object);
-			loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.ReferenceUnknownCommandParam), Times.Once);
-			Assert.AreEqual(string.Format(OutputText.ReferenceUnknownParameter, clientNameFlag), firstMessageLine.Key);
+			loggerListenerMock.Verify(x => x.Warn(It.IsAny<string>()), Times.Once);
 			Assert.AreEqual(string.Empty, firstMessageLine.Value);
 		}
 
@@ -188,64 +168,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			Assert.AreEqual(string.Empty, firstMessageLine.Value);
 			_fileSystemMock.Verify(x => x.CombinePaths(clientName, clientName + Constants.FileExtension.OppoProject), Times.Once);
 			_fileSystemMock.Verify(x => x.FileExists(oppoProjectPath), Times.Once);
-		}
-
-		[Test]
-		public void FailBecauseOfEmptyClientName([ValueSource(nameof(InvalidInputs_EmptyClientName))] string[] inputParams)
-		{
-			// Arrange
-			var clientName = inputParams.ElementAtOrDefault(1);
-			var serverName = inputParams.ElementAtOrDefault(3);
-			var clientFullName = clientName + Constants.FileExtension.OppoProject;
-
-			var loggerListenerMock = new Mock<ILoggerListener>();
-			OppoLogger.RegisterListener(loggerListenerMock.Object);
-
-			// Arrange client file
-			var oppoProjectPath = Path.Combine(clientName, clientName + Constants.FileExtension.OppoProject);
-			_fileSystemMock.Setup(x => x.CombinePaths(clientName, clientName+ Constants.FileExtension.OppoProject)).Returns(oppoProjectPath);
-			_fileSystemMock.Setup(x => x.FileExists(oppoProjectPath)).Returns(true);
-
-			// Act
-			var commandResult = _objectUnderTest.Execute(inputParams);
-
-
-			// Assert
-			Assert.IsFalse(commandResult.Success);
-			Assert.IsNotNull(commandResult.OutputMessages);
-			var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
-			OppoLogger.RemoveListener(loggerListenerMock.Object);
-			loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.ReferenceClientOppoprojFileNotFound), Times.Once);
-			Assert.AreEqual(string.Format(OutputText.ReferenceClientOppoprojFileNotFound, clientFullName), firstMessageLine.Key); 
-			Assert.AreEqual(string.Empty, firstMessageLine.Value);
-		}
-
-		[Test]
-		public void FailBecauseOfEmptyServerName([ValueSource(nameof(InvalidInputs_EmptyServerName))] string[] inputParams)
-		{
-			// Arrange
-			var clientName = inputParams.ElementAtOrDefault(1);
-			var serverName = inputParams.ElementAtOrDefault(3);
-
-			var loggerListenerMock = new Mock<ILoggerListener>();
-			OppoLogger.RegisterListener(loggerListenerMock.Object);
-
-			// Arrange server file
-			var oppoProjectPath = Path.Combine(clientName, clientName + Constants.FileExtension.OppoProject);
-			_fileSystemMock.Setup(x => x.CombinePaths(clientName, clientName + Constants.FileExtension.OppoProject)).Returns(oppoProjectPath);
-			_fileSystemMock.Setup(x => x.FileExists(oppoProjectPath)).Returns(true);
-
-			// Act
-			var commandResult = _objectUnderTest.Execute(inputParams);
-			
-			// Assert
-			Assert.IsFalse(commandResult.Success);
-			Assert.IsNotNull(commandResult.OutputMessages);
-			var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
-			OppoLogger.RemoveListener(loggerListenerMock.Object);
-			loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.ReferenceRemoveServerNameEmpty), Times.Once);
-			Assert.AreEqual(OutputText.ReferenceRemoveServerNameEmpty, firstMessageLine.Key);
-			Assert.AreEqual(string.Empty, firstMessageLine.Value);
 		}
 
 		[Test]

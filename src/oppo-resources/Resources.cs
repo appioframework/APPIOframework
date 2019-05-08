@@ -2,6 +2,8 @@
 {
 	public static class Resources
 	{
+		public const string OpenSSLConfigTemplateFileName = "Oppo.Resources.templates.template.cnf";
+		
 		public const string OppoSlnTemplateFileName = "Oppo.Resources.templates.template.opposln";
 
 		public const string OppoOpcuaAppTemplateFileName_oppoproject = "Oppo.Resources.templates.template.oppoproj";

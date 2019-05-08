@@ -8,35 +8,37 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
     public class NewSlnCommandStrategy : ICommand<NewStrategy>
     {
         private readonly IFileSystem _fileSystem;
+        private readonly ParameterResolver<ParamId> _resolver;
+        
+        private enum ParamId {SolutionName}
 
         public NewSlnCommandStrategy(IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
+            _resolver = new ParameterResolver<ParamId>(Constants.CommandName.New + " " + Name, new []
+            {
+                new StringParameterSpecification<ParamId>
+                {
+                    Identifier = ParamId.SolutionName,
+                    Short = Constants.NewSlnCommandArguments.Name,
+                    Verbose = Constants.NewSlnCommandArguments.VerboseName
+                }
+            });
         }
 
         public string Name => Constants.NewCommandName.Sln;
 
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
-            var inputParamsArray = inputParams.ToArray();
-            var nameFlag = inputParamsArray.ElementAtOrDefault(0);
-            var solutionName = inputParamsArray.ElementAtOrDefault(1);
             var outputMessages = new MessageLines();
 
-            if (nameFlag != Constants.NewSlnCommandArguments.Name && nameFlag != Constants.NewSlnCommandArguments.VerboseName)
-            {
-                OppoLogger.Warn(LoggingText.UnknownNewSlnCommandParam);
-                outputMessages.Add(OutputText.NewSlnCommandFailureUnknownParam, string.Empty);
-                return new CommandResult(false, outputMessages);
-            }
+            var (error, stringParams, _) = _resolver.ResolveParams(inputParams);
 
-            if (string.IsNullOrEmpty(solutionName))
-            {
-                OppoLogger.Warn(LoggingText.EmptySolutionName);
-                outputMessages.Add(OutputText.NewSlnCommandFailureUnknownParam, string.Empty);
-                return new CommandResult(false, outputMessages);
-            }
+            if (error != null)
+                return new CommandResult(false, new MessageLines{{error, string.Empty}});
 
+            var solutionName = stringParams[ParamId.SolutionName];
+            
             if (_fileSystem.GetInvalidFileNameChars().Any(solutionName.Contains))
             {
                 OppoLogger.Warn(LoggingText.InvalidSolutionName);

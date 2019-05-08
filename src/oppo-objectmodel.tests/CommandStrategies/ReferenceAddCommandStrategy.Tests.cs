@@ -112,8 +112,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			Assert.IsNotNull(commandResult.OutputMessages);
 			var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
 			OppoLogger.RemoveListener(loggerListenerMock.Object);
-			loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.ReferenceUnknownCommandParam), Times.Once);
-			Assert.AreEqual(string.Format(OutputText.ReferenceUnknownParameter, clientNameFlag), firstMessageLine.Key);
+			loggerListenerMock.Verify(x => x.Warn(It.IsAny<string>()), Times.Once);
 			Assert.AreEqual(string.Empty, firstMessageLine.Value);
 		}
 
@@ -141,8 +140,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			Assert.IsNotNull(commandResult.OutputMessages);
 			var firstMessageLine = commandResult.OutputMessages.FirstOrDefault();
 			OppoLogger.RemoveListener(loggerListenerMock.Object);
-			loggerListenerMock.Verify(x => x.Warn(Resources.text.logging.LoggingText.ReferenceUnknownCommandParam), Times.Once);
-			Assert.AreEqual(string.Format(OutputText.ReferenceUnknownParameter, serverNameFlag), firstMessageLine.Key);
+			loggerListenerMock.Verify(x => x.Warn(It.IsAny<string>()), Times.Once);
 			Assert.AreEqual(string.Empty, firstMessageLine.Value);
 
 		}

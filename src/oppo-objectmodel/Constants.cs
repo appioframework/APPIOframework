@@ -17,6 +17,9 @@ namespace Oppo.ObjectModel
             public const string ModelTypes = ".bsd";
             public const string CFile = ".c";
 			public const string ZipFile = ".zip";
+			public const string DerFile = ".der";
+			public const string PemCertificateFile = ".pem";
+			public const string PemKeyFile = ".key";
         }
 
         public static class CommandName
@@ -33,6 +36,7 @@ namespace Oppo.ObjectModel
             public const string Clean = "clean";
             public const string Deploy = "deploy";
             public const string Import = "import";
+            public const string ImportCertificate = "certificate";
             public const string Generate = "generate";
             public const string GenerateInformationModel = "information-model";
             public const string Sln = "sln";
@@ -90,6 +94,7 @@ namespace Oppo.ObjectModel
 
         public static class ExecutableName
         {
+            public const string OpenSSL = "openssl";
             public const string Meson = "meson";
             public const string Ninja = "ninja";
             public const string AppClient = "client-app";
@@ -125,7 +130,24 @@ namespace Oppo.ObjectModel
             public const string SourceCode_meson_build              = "meson.build";
             public const string SampleInformationModelFile          = "DiNodeset.xml";
 			public const string SampleInformationModelTypesFile     = "DiTypes.bsd";
+            public const string CertificateConfig                   = "certConfig.cnf";
+            public const string PrivateKeyDER                       = "priv.der";
+            public const string PrivateKeyPEM                       = "priv.pem";
+            public const string Certificate                         = "cert.der";
+            public const string ServerCryptoPrefix                  = "server";
+            public const string ClientCryptoPrefix                  = "client";
 		}
+
+        public static class ExternalExecutableArguments
+        {
+            public static readonly string OpenSSL = $"req -new -x509 -out {{0}}{FileName.Certificate} -outform der -nodes -keyout {{0}}{FileName.PrivateKeyPEM} -config {FileName.CertificateConfig} -days {{1}} -extensions v3";
+            public const uint OpenSSLDefaultKeySize = 1024;
+            public const uint OpenSSLDefaultDays = 365;
+            public const string OpenSSLDefaultOrganization = "MyOrg";
+
+            public const string OpenSSLConvertCertificateFromPEM = "x509 -inform PEM -outform DER -in {0} -out {1}";
+            public const string OpenSSLConvertKeyFromPEM = "rsa -outform der -in {0} -out {1}";
+        }
 
         public static class NewSlnCommandArguments
         {
@@ -143,6 +165,7 @@ namespace Oppo.ObjectModel
 			public const string VerboseUrl = "--url";
 			public const string Port = "-p";
 			public const string VerbosePort = "--port";
+            public const string VerboseNoCert = "--nocert";
         }
 
 
@@ -191,10 +214,20 @@ namespace Oppo.ObjectModel
             public const string VerboseHelp             = "--help";
             public const string Help                    = "-h";
         }
+        
+        public static class GenerateCertificateCommandArguments
+        {
+            public const string AppName                    = "-n";
+            public const string VerboseAppName             = "--name";
+            public const string VerboseKeySize             = "--keysize";
+            public const string VerboseDays                = "--days";
+            public const string VerboseOrganization                 = "--organization";
+        }
 
         public static class GenerateCommandArguments
         {
             public const string InformationModel = "information-model";
+            public const string Certificate = "certificate";
             public const string VerboseHelp = "--help";
             public const string Help = "-h";
         }
@@ -222,6 +255,18 @@ namespace Oppo.ObjectModel
             public const string Sample = "-s";
             public const string VerboseSample = "--sample";
 
+        }
+        
+        public static class ImportCertificateCommandArguments
+        {
+            public const string Key = "-k";
+            public const string VerboseKey = "--key";
+            public const string Certificate = "-c";
+            public const string VerboseCertificate = "--certificate";
+            public const string Project = "-p";
+            public const string VerboseProject = "--project";
+            public const string VerboseServer = "--server";
+            public const string VerboseClient = "--client";
         }
 
         public static class InformationModelsName
