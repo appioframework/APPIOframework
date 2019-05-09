@@ -36,7 +36,7 @@ namespace Oppo.ObjectModel.Tests
         public void Success_OnGeneratingModelTypes()
 		{
 			// Arrange tested object
-			_objectUnderTest = new NodesetGenerator(_projectName, _modelFullName, _typesFullName, null, null, _fileSystemMock.Object);
+			_objectUnderTest = new NodesetGenerator(_projectName, _modelFullName, _typesFullName, _fileSystemMock.Object);
 
 			// Arrange file system
 			var typesPath = Path.Combine(_projectName, Constants.DirectoryName.Models, _typesFullName);
@@ -72,7 +72,7 @@ namespace Oppo.ObjectModel.Tests
 		public void Fail_OnGeneratingTypesFileWithInvalidExtension([ValueSource(nameof(InvalidTypesFullNames))] string typesFullName)
 		{
 			// Arrange tested object
-			_objectUnderTest = new NodesetGenerator(_projectName, _modelFullName, typesFullName, null, null, _fileSystemMock.Object);
+			_objectUnderTest = new NodesetGenerator(_projectName, _modelFullName, typesFullName, _fileSystemMock.Object);
 
 			// Act
 			var result = _objectUnderTest.GenerateTypesSourceCodeFiles();
@@ -90,7 +90,7 @@ namespace Oppo.ObjectModel.Tests
 		public void Fail_OnGeneratingNotExistingTypesFile()
 		{
 			// Arrange tested object
-			_objectUnderTest = new NodesetGenerator(_projectName, _modelFullName, _typesFullName, null, null, _fileSystemMock.Object);
+			_objectUnderTest = new NodesetGenerator(_projectName, _modelFullName, _typesFullName, _fileSystemMock.Object);
 
 			// Arrange file system
 			var typesPath = Path.Combine(_projectName, Constants.DirectoryName.Models, _typesFullName);
@@ -115,7 +115,7 @@ namespace Oppo.ObjectModel.Tests
 		public void Fail_OnGeneratingTypesWithFailingPythonScript()
 		{
 			// Arrange tested object
-			_objectUnderTest = new NodesetGenerator(_projectName, _modelFullName, _typesFullName, null, null, _fileSystemMock.Object);
+			_objectUnderTest = new NodesetGenerator(_projectName, _modelFullName, _typesFullName, _fileSystemMock.Object);
 
 			// Arrange file system
 			var typesPath = Path.Combine(_projectName, Constants.DirectoryName.Models, _typesFullName);

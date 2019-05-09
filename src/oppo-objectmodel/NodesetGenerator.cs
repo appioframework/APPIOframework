@@ -4,34 +4,23 @@ using Oppo.Resources.text.logging;
 
 namespace Oppo.ObjectModel
 {
-	public struct RequiredModel
-	{
-		string modelName;
-		bool requiresTypes;
-	}
-
     public class NodesetGenerator : INodesetGenerator
     {
 		private readonly string _projectName;
 		private readonly string _modelFullName;
 		private readonly string _typesFullName;
-		private readonly string _namespaceVariableName;
-		private readonly List<RequiredModel> _requiredModels;
 
 		private readonly IFileSystem _fileSystem;
 
 		private string _outputMessage;
 
-		public NodesetGenerator(string projectName, string modelName, string typesName, string namespaceVariableName, List<RequiredModel> requiredModels, IFileSystem fileSystem)
+		public NodesetGenerator(string projectName, string modelName, string typesName, IFileSystem fileSystem)
         {
 			_projectName = projectName;
 			_modelFullName = modelName;
 			_typesFullName = typesName;
-			_namespaceVariableName = namespaceVariableName;
-			_requiredModels = requiredModels;
 			_fileSystem = fileSystem;
 			_outputMessage = string.Empty;
-
 		}
 
 		public string GetOutputMessage()
@@ -64,7 +53,7 @@ namespace Oppo.ObjectModel
 
 			// Build types source file and target files directories
 			var modelName = _fileSystem.GetFileNameWithoutExtension(_modelFullName);
-			var typesSourceLocation = @"../../" + _fileSystem.CombinePaths(Constants.DirectoryName.Models, _typesFullName); ;
+			var typesSourceLocation = @"../../" + _fileSystem.CombinePaths(Constants.DirectoryName.Models, _typesFullName);
 			var typesTargetLocation = _fileSystem.CombinePaths(Constants.DirectoryName.InformationModels, modelName.ToLower());
 
 			// Build nodeset compiler python script arguments
