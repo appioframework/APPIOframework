@@ -135,7 +135,10 @@ namespace Oppo.ObjectModel.Tests
 			var typesSourcePath = Path.Combine(Constants.DirectoryName.Models, _typesFullName);
 			var typesSourceFullPath = @"../../" + typesSourcePath;
 			var typesTargetFullPath = Path.Combine(Constants.DirectoryName.InformationModels, modelName.ToLower());
-			var generatedTypesArgs = Constants.ExecutableName.GenerateDatatypesScriptPath + string.Format(Constants.ExecutableName.GenerateDatatypesTypeBsd, typesSourceFullPath) + " " + typesTargetFullPath + Constants.InformationModelsName.Types;
+			var generatedTypesArgs = Constants.ExecutableName.GenerateDatatypesScriptPath +
+										string.Format(Constants.ExecutableName.GenerateDatatypesTypeBsd, typesSourceFullPath) +
+										" " +
+										typesTargetFullPath + Constants.InformationModelsName.Types;
 
 			_fileSystemMock.Setup(x => x.GetExtension(_typesFullName)).Returns(Constants.FileExtension.ModelTypes);
 			_fileSystemMock.Setup(x => x.CombinePaths(_projectName, Constants.DirectoryName.Models, _typesFullName)).Returns(typesPath);
@@ -281,7 +284,12 @@ namespace Oppo.ObjectModel.Tests
 			var modelSourcePath = Path.Combine(Constants.DirectoryName.Models, _modelFullName);
 			var modelSourceRelativePath = @"../../" + modelSourcePath;
 			var modelTargetRelativePath = Path.Combine(Constants.DirectoryName.InformationModels, modelName.ToLower());
-			var nodesetCompilerArgs = Constants.ExecutableName.NodesetCompilerCompilerPath + Constants.ExecutableName.NodesetCompilerInternalHeaders + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes) + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes) + string.Format(Constants.ExecutableName.NodesetCompilerExisting, Constants.ExecutableName.NodesetCompilerBasicNodeset) + string.Format(Constants.ExecutableName.NodesetCompilerXml, modelSourceRelativePath, modelTargetRelativePath);
+			var nodesetCompilerArgs = Constants.ExecutableName.NodesetCompilerCompilerPath +
+										Constants.ExecutableName.NodesetCompilerInternalHeaders +
+										string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes) +
+										string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes) +
+										string.Format(Constants.ExecutableName.NodesetCompilerExisting, Constants.ExecutableName.NodesetCompilerBasicNodeset) +
+										string.Format(Constants.ExecutableName.NodesetCompilerXml, modelSourceRelativePath, modelTargetRelativePath);
 
 			_fileSystemMock.Setup(x => x.GetExtension(_modelFullName)).Returns(Constants.FileExtension.InformationModel);
 			_fileSystemMock.Setup(x => x.CombinePaths(_projectName, Constants.DirectoryName.Models, _modelFullName)).Returns(modelPath);
@@ -300,6 +308,46 @@ namespace Oppo.ObjectModel.Tests
 			Assert.IsTrue(result);
 			Assert.AreEqual(string.Empty, _objectUnderTest.GetOutputMessage());
 			_fileSystemMock.Verify(x => x.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, nodesetCompilerArgs), Times.Once);
+		}
+
+		[Test]
+		public void Success_OnGeneratingNodesetWithExtraTypes()
+		{
+			// Arrange tested object
+			_objectUnderTest = new NodesetGenerator(_projectName, _modelFullName, _typesFullName, _fileSystemMock.Object, _modelValidator.Object);
+
+			// Arrange file system
+			var modelPath = Path.Combine(_projectName, Constants.DirectoryName.Models, _modelFullName);
+			var srcDirectory = Path.Combine(_projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp);
+			var modelName = Path.GetFileNameWithoutExtension(_modelFullName);
+			var modelSourcePath = Path.Combine(Constants.DirectoryName.Models, _modelFullName);
+			var modelSourceRelativePath = @"../../" + modelSourcePath;
+			var modelTargetRelativePath = Path.Combine(Constants.DirectoryName.InformationModels, modelName.ToLower());
+			var nodesetCompilerArgs = Constants.ExecutableName.NodesetCompilerCompilerPath +
+										Constants.ExecutableName.NodesetCompilerInternalHeaders +
+										string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes) +
+										string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, (modelName + Constants.InformationModelsName.Types).ToUpper()) +
+										string.Format(Constants.ExecutableName.NodesetCompilerExisting, Constants.ExecutableName.NodesetCompilerBasicNodeset) +
+										string.Format(Constants.ExecutableName.NodesetCompilerXml, modelSourceRelativePath, modelTargetRelativePath);
+
+			_fileSystemMock.Setup(x => x.GetExtension(_modelFullName)).Returns(Constants.FileExtension.InformationModel);
+			_fileSystemMock.Setup(x => x.CombinePaths(_projectName, Constants.DirectoryName.Models, _modelFullName)).Returns(modelPath);
+			_fileSystemMock.Setup(x => x.FileExists(modelPath)).Returns(true);
+			_modelValidator.Setup(x => x.Validate(modelPath, Resources.Resources.UANodeSetXsdFileName)).Returns(true);
+			_fileSystemMock.Setup(x => x.CombinePaths(_projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp)).Returns(srcDirectory);
+			_fileSystemMock.Setup(x => x.GetFileNameWithoutExtension(_modelFullName)).Returns(modelName);
+			_fileSystemMock.Setup(x => x.CombinePaths(Constants.DirectoryName.InformationModels, modelName.ToLower())).Returns(modelTargetRelativePath);
+			_fileSystemMock.Setup(x => x.CombinePaths(Constants.DirectoryName.Models, _modelFullName)).Returns(modelSourcePath);
+			_fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, nodesetCompilerArgs)).Returns(true);
+
+			// Act
+			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles();
+
+			// Assert
+			Assert.IsTrue(result);
+			Assert.AreEqual(string.Empty, _objectUnderTest.GetOutputMessage());
+			_fileSystemMock.Verify(x => x.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, nodesetCompilerArgs), Times.Once);
+
 		}
 	}
 }

@@ -59,7 +59,11 @@ namespace Oppo.ObjectModel
 			var typesTargetRelativePath = _fileSystem.CombinePaths(Constants.DirectoryName.InformationModels, modelName.ToLower());
 
 			// Build types generation script arguments
-			var generatedTypesArgs = Constants.ExecutableName.GenerateDatatypesScriptPath + string.Format(Constants.ExecutableName.GenerateDatatypesTypeBsd, typesSourceRelativePath) + " " + typesTargetRelativePath + Constants.InformationModelsName.Types;
+			var generatedTypesArgs = Constants.ExecutableName.GenerateDatatypesScriptPath +
+										string.Format(Constants.ExecutableName.GenerateDatatypesTypeBsd, typesSourceRelativePath) +
+										" " +
+										typesTargetRelativePath +
+										Constants.InformationModelsName.Types;
 
 			// Execute types generation script call
 			var generatedTypesResult = _fileSystem.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, generatedTypesArgs);
@@ -119,7 +123,13 @@ namespace Oppo.ObjectModel
 			var modelTargetRelativePath = _fileSystem.CombinePaths(Constants.DirectoryName.InformationModels, modelName);
 
 			// Build nodeset compiler script arguments
-			var nodesetCompilerArgs = Constants.ExecutableName.NodesetCompilerCompilerPath + Constants.ExecutableName.NodesetCompilerInternalHeaders + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes) + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes) + string.Format(Constants.ExecutableName.NodesetCompilerExisting, Constants.ExecutableName.NodesetCompilerBasicNodeset) + string.Format(Constants.ExecutableName.NodesetCompilerXml, modelSourceRelativePath, modelTargetRelativePath);
+			var typesNameForScriptCall = _typesFullName == null ? Constants.ExecutableName.NodesetCompilerBasicTypes : (modelName + Constants.InformationModelsName.Types).ToUpper();
+			var nodesetCompilerArgs = Constants.ExecutableName.NodesetCompilerCompilerPath +
+										Constants.ExecutableName.NodesetCompilerInternalHeaders +
+										string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes) +
+										string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, typesNameForScriptCall) +
+										string.Format(Constants.ExecutableName.NodesetCompilerExisting, Constants.ExecutableName.NodesetCompilerBasicNodeset) +
+										string.Format(Constants.ExecutableName.NodesetCompilerXml, modelSourceRelativePath, modelTargetRelativePath);
 
 			// Execute nodeset compiler call
 			var nodesetResult = _fileSystem.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, nodesetCompilerArgs);
