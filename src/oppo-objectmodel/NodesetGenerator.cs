@@ -123,7 +123,7 @@ namespace Oppo.ObjectModel
 			var modelTargetRelativePath = _fileSystem.CombinePaths(Constants.DirectoryName.InformationModels, modelName);
 
 			// Build nodeset compiler script arguments
-			var typesNameForScriptCall = _typesFullName == null ? Constants.ExecutableName.NodesetCompilerBasicTypes : (modelName + Constants.InformationModelsName.Types).ToUpper();
+			var typesNameForScriptCall = string.IsNullOrEmpty(_typesFullName) ? Constants.ExecutableName.NodesetCompilerBasicTypes : (modelName + Constants.InformationModelsName.Types).ToUpper();
 			var nodesetCompilerArgs = Constants.ExecutableName.NodesetCompilerCompilerPath +
 										Constants.ExecutableName.NodesetCompilerInternalHeaders +
 										string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes) +
