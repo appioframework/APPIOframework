@@ -44,9 +44,9 @@ namespace Oppo.Resources.text.output
         public const string OpcuaappDeploySuccess = "Deploy '{0}' success!";
         public const string OpcuaappDeployFailure = "Deploy failure!";
         public const string OpcuaappDeployWithNameFailure = "Deploy '{0}' failure!";
-
-        // import <command>
-        public const string ImportInformationModelCommandSuccess = "Import information model '{0}' success!";
+		
+		// import <command>
+		public const string ImportInformationModelCommandSuccess = "Import information model '{0}' success!";
         public const string ImportInformationModelCommandUnknownParamFailure = "Import information model failure!";
         public const string ImportInformationModelCommandInvalidOpcuaappName = "Import information model for opcuaapp '{0}' failure!";
         public const string ImportInformationModelCommandInvalidModelPath = "Import information model failure, invalid character in model path '{0}'!";
@@ -84,9 +84,11 @@ namespace Oppo.Resources.text.output
         public const string GenerateInformationModelFailureUnknownParam = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Unknown command parameter '{2}'!";
         public const string GenerateInformationModelFailureEmptyOpcuaAppName = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Empty opcuaapp name!";
 		public const string GenerateInformationModelRequiredModelFailure = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Can't use required model '{2}'!";
+		public const string GenerateInformationModelFailureCouldntDeserliazeOpcuaapp = "It was not possible to update opcuaapp with the name '{0}'! Couldn't read project file '{1}'!";
+		public const string GenerateInformationModelFailuteOpcuaappIsAClient = "It was not possible to update opcuaapp with the name '{0}'! Can not generate models for client!";
 
-        // sln common <command>
-        public const string SlnOpposlnNotFound		= "The solution file '{0}' not found!";
+		// sln common <command>
+		public const string SlnOpposlnNotFound		= "The solution file '{0}' not found!";
         public const string SlnUnknownParameter		= "Unknown command parameter '{0}'!";
 		public const string SlnCouldntDeserliazeSln = "The solution file '{0}' has invalid content!";
 		// sln add <command>

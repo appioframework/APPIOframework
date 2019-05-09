@@ -442,7 +442,7 @@ namespace Oppo.ObjectModel
             
             var generateSubCommands = new ICommand<GenerateStrategy>[]
             {
-                new GenerateInformationModelStrategy(Constants.CommandName.GenerateInformationModel),
+                new GenerateInformationModelStrategy(Constants.CommandName.GenerateInformationModel, fileSystem),
                 new GenerateCertificateStrategy(fileSystem, certificateGenerator),
                 generateHelpStrategy,
                 generateHelpStrategyVerbose

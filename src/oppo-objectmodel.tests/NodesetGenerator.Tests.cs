@@ -26,7 +26,7 @@ namespace Oppo.ObjectModel.Tests
 		private Mock<IFileSystem> _fileSystemMock;
 		private Mock<IModelValidator> _modelValidator;
 		private Mock<ILoggerListener> _loggerListenerMock;
-		private bool _loggerWrittenOut;
+		private bool _loggerWroteOut;
 
 		[SetUp]
         public void SetupTest()
@@ -34,7 +34,9 @@ namespace Oppo.ObjectModel.Tests
 			_fileSystemMock = new Mock<IFileSystem>();
 			_modelValidator = new Mock<IModelValidator>();
 			_loggerListenerMock = new Mock<ILoggerListener>();
-			_loggerWrittenOut = false;
+			_loggerWroteOut = false;
+
+			OppoLogger.RegisterListener(_loggerListenerMock.Object);
 		}
 
         [TearDown]
@@ -50,15 +52,14 @@ namespace Oppo.ObjectModel.Tests
 			_objectUnderTest = new NodesetGenerator(_projectName, _modelFullName, invalidTypesFullName, _fileSystemMock.Object, null);
 
 			// Arrange logger listener
-			_loggerListenerMock.Setup(listener => listener.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidFile, invalidTypesFullName))).Callback(delegate { _loggerWrittenOut = true; });
-			OppoLogger.RegisterListener(_loggerListenerMock.Object);
+			_loggerListenerMock.Setup(listener => listener.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidFile, invalidTypesFullName))).Callback(delegate { _loggerWroteOut = true; });
 
 			// Act
 			var result = _objectUnderTest.GenerateTypesSourceCodeFiles();
 
 			// Assert
 			Assert.IsFalse(result);
-			Assert.IsTrue(_loggerWrittenOut);
+			Assert.IsTrue(_loggerWroteOut);
 			Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureInvalidFile, _projectName, _modelFullName, invalidTypesFullName), _objectUnderTest.GetOutputMessage());
 			_fileSystemMock.Verify(x => x.GetExtension(invalidTypesFullName), Times.Once);
 		}
@@ -77,15 +78,14 @@ namespace Oppo.ObjectModel.Tests
 			_fileSystemMock.Setup(x => x.FileExists(It.IsAny<string>())).Returns(false);
 
 			// Arrange logger listener
-			_loggerListenerMock.Setup(listener => listener.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsMissingFile, typesPath))).Callback(delegate { _loggerWrittenOut = true; });
-			OppoLogger.RegisterListener(_loggerListenerMock.Object);
+			_loggerListenerMock.Setup(listener => listener.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsMissingFile, typesPath))).Callback(delegate { _loggerWroteOut = true; });
 
 			// Act
 			var result = _objectUnderTest.GenerateTypesSourceCodeFiles();
 
 			// Assert
 			Assert.IsFalse(result);
-			Assert.IsTrue(_loggerWrittenOut);
+			Assert.IsTrue(_loggerWroteOut);
 			Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureMissingFile, _projectName, _modelFullName, typesPath), _objectUnderTest.GetOutputMessage());
 			_fileSystemMock.Verify(x => x.FileExists(typesPath), Times.Once);
 		}
@@ -109,15 +109,14 @@ namespace Oppo.ObjectModel.Tests
 			_fileSystemMock.Setup(x => x.CallExecutable(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(false);
 
 			// Arrange logger listener
-			_loggerListenerMock.Setup(listener => listener.Warn(LoggingText.GeneratedTypesExecutableFails)).Callback(delegate { _loggerWrittenOut = true; });
-			OppoLogger.RegisterListener(_loggerListenerMock.Object);
+			_loggerListenerMock.Setup(listener => listener.Warn(LoggingText.GeneratedTypesExecutableFails)).Callback(delegate { _loggerWroteOut = true; });
 
 			// Act
 			var result = _objectUnderTest.GenerateTypesSourceCodeFiles();
 
 			// Assert
 			Assert.IsFalse(result);
-			Assert.IsTrue(_loggerWrittenOut);
+			Assert.IsTrue(_loggerWroteOut);
 			Assert.AreEqual(string.Format(OutputText.GenerateInformationModelGenerateTypesFailure, _projectName, _modelFullName, _typesFullName), _objectUnderTest.GetOutputMessage());
 			_fileSystemMock.Verify(x => x.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, It.IsAny<string>()), Times.Once);
 		}
@@ -165,15 +164,14 @@ namespace Oppo.ObjectModel.Tests
 			_objectUnderTest = new NodesetGenerator(_projectName, invalidModelFullName, null, _fileSystemMock.Object, null);
 
 			// Arrange logger listener
-			_loggerListenerMock.Setup(listener => listener.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidModelFile, invalidModelFullName))).Callback(delegate { _loggerWrittenOut = true; });
-			OppoLogger.RegisterListener(_loggerListenerMock.Object);
+			_loggerListenerMock.Setup(listener => listener.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidModelFile, invalidModelFullName))).Callback(delegate { _loggerWroteOut = true; });
 
 			// Act
 			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles();
 
 			// Assert
 			Assert.IsFalse(result);
-			Assert.IsTrue(_loggerWrittenOut);
+			Assert.IsTrue(_loggerWroteOut);
 			Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureInvalidModel, _projectName, invalidModelFullName), _objectUnderTest.GetOutputMessage());
 			_fileSystemMock.Verify(x => x.GetExtension(invalidModelFullName), Times.Once);
 		}
@@ -192,15 +190,14 @@ namespace Oppo.ObjectModel.Tests
 			_fileSystemMock.Setup(x => x.FileExists(It.IsAny<string>())).Returns(false);
 
 			// Arrange logger listener
-			_loggerListenerMock.Setup(listener => listener.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsMissingModelFile, _modelFullName))).Callback(delegate { _loggerWrittenOut = true; });
-			OppoLogger.RegisterListener(_loggerListenerMock.Object);
+			_loggerListenerMock.Setup(listener => listener.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsMissingModelFile, _modelFullName))).Callback(delegate { _loggerWroteOut = true; });
 
 			// Act
 			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles();
 
 			// Assert
 			Assert.IsFalse(result);
-			Assert.IsTrue(_loggerWrittenOut);
+			Assert.IsTrue(_loggerWroteOut);
 			Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureMissingModel, _projectName, _modelFullName, modelPath), _objectUnderTest.GetOutputMessage());
 			_fileSystemMock.Verify(x => x.FileExists(modelPath), Times.Once);
 		}
@@ -220,15 +217,14 @@ namespace Oppo.ObjectModel.Tests
 			_modelValidator.Setup(x => x.Validate(It.IsAny<string>(), It.IsAny<string>())).Returns(false);
 
 			// Arrange logger listener
-			_loggerListenerMock.Setup(listener => listener.Warn(string.Format(LoggingText.NodesetValidationFailure, _modelFullName))).Callback(delegate { _loggerWrittenOut = true; });
-			OppoLogger.RegisterListener(_loggerListenerMock.Object);
+			_loggerListenerMock.Setup(listener => listener.Warn(string.Format(LoggingText.NodesetValidationFailure, _modelFullName))).Callback(delegate { _loggerWroteOut = true; });
 
 			// Act
 			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles();
 
 			// Assert
 			Assert.IsFalse(result);
-			Assert.IsTrue(_loggerWrittenOut);
+			Assert.IsTrue(_loggerWroteOut);
 			Assert.AreEqual(string.Format(OutputText.NodesetValidationFailure, _modelFullName), _objectUnderTest.GetOutputMessage());
 			_modelValidator.Verify(x => x.Validate(modelPath, Resources.Resources.UANodeSetXsdFileName), Times.Once);
 		}
@@ -258,7 +254,7 @@ namespace Oppo.ObjectModel.Tests
 			_fileSystemMock.Setup(x => x.CallExecutable(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(false);
 
 			// Arrange logger listener
-			_loggerListenerMock.Setup(listener => listener.Warn(LoggingText.NodesetCompilerExecutableFails)).Callback(delegate { _loggerWrittenOut = true; });
+			_loggerListenerMock.Setup(listener => listener.Warn(LoggingText.NodesetCompilerExecutableFails)).Callback(delegate { _loggerWroteOut = true; });
 			OppoLogger.RegisterListener(_loggerListenerMock.Object);
 
 			// Act
@@ -266,7 +262,7 @@ namespace Oppo.ObjectModel.Tests
 
 			// Assert
 			Assert.IsFalse(result);
-			Assert.IsTrue(_loggerWrittenOut);
+			Assert.IsTrue(_loggerWroteOut);
 			Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailure, _projectName, _modelFullName), _objectUnderTest.GetOutputMessage());
 			_fileSystemMock.Verify(x => x.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, It.IsAny<string>()), Times.Once);
 		}
@@ -347,7 +343,6 @@ namespace Oppo.ObjectModel.Tests
 			Assert.IsTrue(result);
 			Assert.AreEqual(string.Empty, _objectUnderTest.GetOutputMessage());
 			_fileSystemMock.Verify(x => x.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, nodesetCompilerArgs), Times.Once);
-
 		}
 	}
 }
