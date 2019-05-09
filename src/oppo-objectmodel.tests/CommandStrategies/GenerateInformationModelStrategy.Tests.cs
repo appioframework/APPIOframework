@@ -113,12 +113,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandResult = _strategy.Execute(inputParams);
 
 			// Assert
-			Assert.Multiple(() =>
-			{
-				Assert.IsFalse(commandResult.Success);
-				Assert.IsNotNull(commandResult.OutputMessages);
-				Assert.AreEqual(string.Format(OutputText.UnknownParameterProvided, projectNameFlag, "'-n' or '--name'"), commandResult.OutputMessages.FirstOrDefault().Key);
-			});
+			Assert.IsFalse(commandResult.Success);
+			Assert.IsNotNull(commandResult.OutputMessages);
+			Assert.AreEqual(string.Format(OutputText.UnknownParameterProvided, projectNameFlag, "'-n' or '--name'"), commandResult.OutputMessages.FirstOrDefault().Key);
 		}
 		
         [Test]
@@ -133,12 +130,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandResult = _strategy.Execute(inputParams);
 
 			// Assert
-			Assert.Multiple(() =>
-			{
-				Assert.IsFalse(commandResult.Success);
+			Assert.IsFalse(commandResult.Success);
 			Assert.IsNotNull(commandResult.OutputMessages);
 			Assert.AreEqual(string.Format(OutputText.ParameterValueMissing, projectNameFlag), commandResult.OutputMessages.FirstOrDefault().Key);
-			});
         }
 
 		[Test]
@@ -153,12 +147,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			var commandResult = _strategy.Execute(inputParams);
 
 			// Assert
-			Assert.Multiple(() =>
-			{
-				Assert.IsTrue(commandResult.Success);
-				Assert.IsNotNull(commandResult.OutputMessages);
-				Assert.AreEqual(string.Format(OutputText.GenerateInformationModelSuccess, projectName), commandResult.OutputMessages.First().Key);
-			});
+			Assert.IsTrue(commandResult.Success);
+			Assert.IsNotNull(commandResult.OutputMessages);
+			Assert.AreEqual(string.Format(OutputText.GenerateInformationModelSuccess, projectName), commandResult.OutputMessages.First().Key);
 		}
     }
 }
