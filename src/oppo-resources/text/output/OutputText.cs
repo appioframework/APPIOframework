@@ -83,6 +83,7 @@ namespace Oppo.Resources.text.output
         public const string GenerateInformationModelFailureInvalidFile = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Invalid file extension '{2}'!";
         public const string GenerateInformationModelFailureUnknownParam = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Unknown command parameter '{2}'!";
         public const string GenerateInformationModelFailureEmptyOpcuaAppName = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Empty opcuaapp name!";
+		public const string GenerateInformationModelFailureEmptyModelName = "It was not possible to update opcuaapp with the name '{0}'! Empty model name!";
 		public const string GenerateInformationModelRequiredModelFailure = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Can't use required model '{2}'!";
 		public const string GenerateInformationModelFailureCouldntDeserliazeOpcuaapp = "It was not possible to update opcuaapp with the name '{0}'! Couldn't read project file '{1}'!";
 		public const string GenerateInformationModelFailuteOpcuaappIsAClient = "It was not possible to update opcuaapp with the name '{0}'! Can not generate models for client!";

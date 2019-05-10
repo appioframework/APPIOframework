@@ -23,8 +23,14 @@ namespace Oppo.ObjectModel
 			return _outputMessage;
 		}
 
-		public bool GenerateTypesSourceCodeFiles(string projectName, IModelData modelData)//string projectName, string modelFullName, string typesFullName)
+		public bool GenerateTypesSourceCodeFiles(string projectName, IModelData modelData)
 		{
+			// Verify if model has types
+			if(string.IsNullOrEmpty(modelData.Types))
+			{
+				return true;
+			}
+
 			// Verify types extension
 			if (_fileSystem.GetExtension(modelData.Types) != Constants.FileExtension.ModelTypes)
 			{
@@ -81,6 +87,14 @@ namespace Oppo.ObjectModel
 
 		public bool GenerateNodesetSourceCodeFiles(string projectName, IModelData modelData)
 		{
+			// Verify if nodeset file name is not empty
+			if (string.IsNullOrEmpty(modelData.Name))
+			{
+				OppoLogger.Warn(LoggingText.GenerateInformationModelFailureEmptyModelName);
+				_outputMessage = string.Format(OutputText.GenerateInformationModelFailureEmptyModelName, projectName);
+				return false;
+			}
+
 			// Verify nodeset extension
 			if (_fileSystem.GetExtension(modelData.Name) != Constants.FileExtension.InformationModel)
 			{

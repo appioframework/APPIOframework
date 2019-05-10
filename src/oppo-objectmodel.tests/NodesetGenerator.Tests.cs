@@ -20,7 +20,7 @@ namespace Oppo.ObjectModel.Tests
 		}
 		protected static string[] InvalidModelFullNames()
 		{
-			return new string[] { "model", "model.bsd", "model.txt", "model.mod"};
+			return new string[] { "model", "model.bsd", "model.txt", "model.mod" };
 		}
 
 		private IModelData _defaultModelData;
@@ -48,6 +48,19 @@ namespace Oppo.ObjectModel.Tests
 			OppoLogger.RemoveListener(_loggerListenerMock.Object);
 		}
 		
+		[Test]
+		public void Success_OnGeneratingTypesWhenModelsTypesEmpty()
+		{
+			// Arrange
+
+			// Act
+			var result = _objectUnderTest.GenerateTypesSourceCodeFiles(_projectName, new ModelData());
+
+			// Assert
+			Assert.IsTrue(result);
+			Assert.AreEqual(string.Empty, _objectUnderTest.GetOutputMessage());
+		}
+
 		[Test]
 		public void Fail_OnGeneratingTypesFileWithInvalidExtension([ValueSource(nameof(InvalidTypesFullNames))] string invalidTypesFullName)
 		{
@@ -146,6 +159,21 @@ namespace Oppo.ObjectModel.Tests
 			Assert.IsTrue(result);
 			Assert.AreEqual(string.Empty, _objectUnderTest.GetOutputMessage());
 			_fileSystemMock.Verify(x => x.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, generatedTypesArgs), Times.Once);
+		}
+
+		[Test]
+		public void Fail_OnGeneratingModelWhenModelNameEmpty()
+		{
+			// Arrange
+			_loggerListenerMock.Setup(listener => listener.Warn(LoggingText.GenerateInformationModelFailureEmptyModelName)).Callback(delegate { _loggerWroteOut = true; });
+
+			// Act
+			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, new ModelData());
+
+			// Assert
+			Assert.IsFalse(result);
+			Assert.IsTrue(_loggerWroteOut);
+			Assert.AreEqual(string.Format(OutputText.GenerateInformationModelFailureEmptyModelName, _projectName), _objectUnderTest.GetOutputMessage());
 		}
 
 		[Test]

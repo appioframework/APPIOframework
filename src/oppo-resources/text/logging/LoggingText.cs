@@ -56,7 +56,8 @@ namespace Oppo.Resources.text.logging
         // generate command
         public const string GenerateInformationModelFailureUnknownParam = "Generate information-model failure! Unknown command parameter '{0}'!";
         public const string GenerateInformationModelFailureEmptyOpcuaAppName = "Generate information-model failure! Empty opcuaapp name!";
-        public const string OppoHelpForGenerateCommand = "Help for generate <command> called";
+		public const string GenerateInformationModelFailureEmptyModelName = "Generate information-model failure! Empty model name!";
+		public const string OppoHelpForGenerateCommand = "Help for generate <command> called";
 		public const string GenerateInformationModelFailureCouldntDeserliazeOpcuaapp = "Couldn't deserialize oppoproj file!";
 		public const string GenerateInformationModelFailuteOpcuaappIsAClient = "Generate information model failure, can not generate models for client!";
 
