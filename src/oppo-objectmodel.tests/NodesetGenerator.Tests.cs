@@ -1,6 +1,8 @@
 ﻿using NUnit.Framework;
 using Moq;
 using System.IO;
+using System.Text;
+using System.Collections.Generic;
 using Oppo.Resources.text.output;
 using Oppo.Resources.text.logging;
 
@@ -29,6 +31,8 @@ namespace Oppo.ObjectModel.Tests
 		private Mock<IModelValidator> _modelValidator;
 		private Mock<ILoggerListener> _loggerListenerMock;
 		private bool _loggerWroteOut;
+		
+		private readonly string _defaultLoadInformationModelsC = "UA_StatusCode loadInformationModels(UA_Server* server)\n{\n\treturn UA_STATUSCODE_GOOD;\n}";
 
 		[SetUp]
         public void SetupTest()
@@ -290,6 +294,7 @@ namespace Oppo.ObjectModel.Tests
 										string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes) +
 										string.Format(Constants.ExecutableName.NodesetCompilerExisting, Constants.ExecutableName.NodesetCompilerBasicNodeset) +
 										string.Format(Constants.ExecutableName.NodesetCompilerXml, modelSourceRelativePath, modelTargetRelativePath);
+			var loadInformationModelsFilePath = Path.Combine(srcDirectory, Constants.FileName.SourceCode_loadInformationModels_c);
 
 			_fileSystemMock.Setup(x => x.GetExtension(_modelFullName)).Returns(Constants.FileExtension.InformationModel);
 			_fileSystemMock.Setup(x => x.CombinePaths(_projectName, Constants.DirectoryName.Models, _modelFullName)).Returns(modelPath);
@@ -300,14 +305,23 @@ namespace Oppo.ObjectModel.Tests
 			_fileSystemMock.Setup(x => x.CombinePaths(Constants.DirectoryName.InformationModels, modelName.ToLower())).Returns(modelTargetRelativePath);
 			_fileSystemMock.Setup(x => x.CombinePaths(Constants.DirectoryName.Models, _modelFullName)).Returns(modelSourcePath);
 			_fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, nodesetCompilerArgs)).Returns(true);
+			_fileSystemMock.Setup(x => x.CombinePaths(srcDirectory, Constants.FileName.SourceCode_loadInformationModels_c)).Returns(loadInformationModelsFilePath);
 
-			// Act
-			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, new ModelData(_modelFullName, null, null, null, null));
 
-			// Assert
-			Assert.IsTrue(result);
-			Assert.AreEqual(string.Empty, _objectUnderTest.GetOutputMessage());
-			_fileSystemMock.Verify(x => x.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, nodesetCompilerArgs), Times.Once);
+			using (var loadInformationModelsFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_defaultLoadInformationModelsC)))
+			{
+				_fileSystemMock.Setup(x => x.ReadFile(loadInformationModelsFilePath)).Returns(loadInformationModelsFileStream);
+
+				// Act
+				var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, new ModelData(_modelFullName, null, null, null, null));
+
+				// Assert
+				Assert.IsTrue(result);
+				Assert.AreEqual(string.Empty, _objectUnderTest.GetOutputMessage());
+				_fileSystemMock.Verify(x => x.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, nodesetCompilerArgs), Times.Once);
+				_fileSystemMock.Verify(x => x.ReadFile(loadInformationModelsFilePath), Times.Once);
+				_fileSystemMock.Verify(x => x.WriteFile(loadInformationModelsFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
+			}
 		}
 
 		[Test]
@@ -326,6 +340,7 @@ namespace Oppo.ObjectModel.Tests
 										string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, (modelName + Constants.InformationModelsName.Types).ToUpper()) +
 										string.Format(Constants.ExecutableName.NodesetCompilerExisting, Constants.ExecutableName.NodesetCompilerBasicNodeset) +
 										string.Format(Constants.ExecutableName.NodesetCompilerXml, modelSourceRelativePath, modelTargetRelativePath);
+			var loadInformationModelsFilePath = Path.Combine(srcDirectory, Constants.FileName.SourceCode_loadInformationModels_c);
 
 			_fileSystemMock.Setup(x => x.GetExtension(_modelFullName)).Returns(Constants.FileExtension.InformationModel);
 			_fileSystemMock.Setup(x => x.CombinePaths(_projectName, Constants.DirectoryName.Models, _modelFullName)).Returns(modelPath);
@@ -336,14 +351,23 @@ namespace Oppo.ObjectModel.Tests
 			_fileSystemMock.Setup(x => x.CombinePaths(Constants.DirectoryName.InformationModels, modelName.ToLower())).Returns(modelTargetRelativePath);
 			_fileSystemMock.Setup(x => x.CombinePaths(Constants.DirectoryName.Models, _modelFullName)).Returns(modelSourcePath);
 			_fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, nodesetCompilerArgs)).Returns(true);
+			_fileSystemMock.Setup(x => x.CombinePaths(srcDirectory, Constants.FileName.SourceCode_loadInformationModels_c)).Returns(loadInformationModelsFilePath);
 
-			// Act
-			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, _defaultModelData);
 
-			// Assert
-			Assert.IsTrue(result);
-			Assert.AreEqual(string.Empty, _objectUnderTest.GetOutputMessage());
-			_fileSystemMock.Verify(x => x.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, nodesetCompilerArgs), Times.Once);
+			using (var loadInformationModelsFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_defaultLoadInformationModelsC)))
+			{
+				_fileSystemMock.Setup(x => x.ReadFile(loadInformationModelsFilePath)).Returns(loadInformationModelsFileStream);
+
+				// Act
+				var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, _defaultModelData);
+
+				// Assert
+				Assert.IsTrue(result);
+				Assert.AreEqual(string.Empty, _objectUnderTest.GetOutputMessage());
+				_fileSystemMock.Verify(x => x.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, nodesetCompilerArgs), Times.Once);
+				_fileSystemMock.Verify(x => x.ReadFile(loadInformationModelsFilePath), Times.Once);
+				_fileSystemMock.Verify(x => x.WriteFile(loadInformationModelsFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
+			}
 		}
 	}
 }

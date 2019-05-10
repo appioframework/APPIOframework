@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.IO;
+using System.Collections.Generic;
 using Oppo.Resources.text.output;
 using Oppo.Resources.text.logging;
 
@@ -147,8 +149,55 @@ namespace Oppo.ObjectModel
 				return false;
 			}
 
+			// Add nodeset function call to server code
+			AdjustLoadInformationModelsTemplate(srcDirectory, modelName);
+
 
 			return true;
+		}
+
+		// Adding nodeset function call to server code
+		private void AdjustLoadInformationModelsTemplate(string srcDirectory, string functionName)
+        {
+            var functionSnippet = string.Format(Constants.LoadInformationModelsContent.FunctionSnippetPart1,functionName);
+
+			var loadInformationModelsFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_loadInformationModels_c));
+			var currentFileContentLineByLine = ReadFileContent(loadInformationModelsFileStream);
+
+			loadInformationModelsFileStream.Close();
+			loadInformationModelsFileStream.Dispose();
+
+			if (!currentFileContentLineByLine.Any(x => x.Contains(functionSnippet.Substring(1))))
+			{
+				var lastFunctionLinePosition = currentFileContentLineByLine.FindIndex(x => x.Contains(Constants.LoadInformationModelsContent.ReturnLine));
+				if (lastFunctionLinePosition != -1)
+				{
+					currentFileContentLineByLine.Insert(lastFunctionLinePosition, string.Empty);
+					currentFileContentLineByLine.Insert(lastFunctionLinePosition, Constants.LoadInformationModelsContent.FunctionSnippetPart5);
+					currentFileContentLineByLine.Insert(lastFunctionLinePosition, Constants.LoadInformationModelsContent.FunctionSnippetPart4);
+					currentFileContentLineByLine.Insert(lastFunctionLinePosition, string.Format(Constants.LoadInformationModelsContent.FunctionSnippetPart3, functionName));
+					currentFileContentLineByLine.Insert(lastFunctionLinePosition, Constants.LoadInformationModelsContent.FunctionSnippetPart2);
+					currentFileContentLineByLine.Insert(lastFunctionLinePosition, string.Format(Constants.LoadInformationModelsContent.FunctionSnippetPart1, functionName));
+				}
+
+				_fileSystem.WriteFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_loadInformationModels_c), currentFileContentLineByLine);
+			}
+		}
+		
+		// Conversion of stream to List of strings
+		private List<string> ReadFileContent(Stream stream)
+		{
+			var fileContent = new List<string>();
+			using (var sr = new StreamReader(stream))
+			{
+				string lineOfText;
+				while ((lineOfText = sr.ReadLine()) != null)
+				{
+					fileContent.Add(lineOfText);
+				}
+				stream.Position = 0;
+			}
+			return fileContent.ToList();
 		}
 	}
 }
