@@ -23,6 +23,8 @@ namespace Oppo.ObjectModel.Tests
 			return new string[] { "model", "model.bsd", "model.txt", "model.mod"};
 		}
 
+		private IModelData _defaultModelData;
+
 		private Mock<IFileSystem> _fileSystemMock;
 		private Mock<IModelValidator> _modelValidator;
 		private Mock<ILoggerListener> _loggerListenerMock;
@@ -31,11 +33,12 @@ namespace Oppo.ObjectModel.Tests
 		[SetUp]
         public void SetupTest()
         {
+			_defaultModelData = new ModelData(_modelFullName, null, _typesFullName, null, null);
 			_fileSystemMock = new Mock<IFileSystem>();
 			_modelValidator = new Mock<IModelValidator>();
 			_loggerListenerMock = new Mock<ILoggerListener>();
 			_loggerWroteOut = false;
-
+			_objectUnderTest = new NodesetGenerator(_fileSystemMock.Object, _modelValidator.Object);
 			OppoLogger.RegisterListener(_loggerListenerMock.Object);
 		}
 
@@ -48,14 +51,11 @@ namespace Oppo.ObjectModel.Tests
 		[Test]
 		public void Fail_OnGeneratingTypesFileWithInvalidExtension([ValueSource(nameof(InvalidTypesFullNames))] string invalidTypesFullName)
 		{
-			// Arrange tested object
-			_objectUnderTest = new NodesetGenerator(_projectName, _modelFullName, invalidTypesFullName, _fileSystemMock.Object, null);
-
-			// Arrange logger listener
+			// Arrange
 			_loggerListenerMock.Setup(listener => listener.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidFile, invalidTypesFullName))).Callback(delegate { _loggerWroteOut = true; });
 
 			// Act
-			var result = _objectUnderTest.GenerateTypesSourceCodeFiles();
+			var result = _objectUnderTest.GenerateTypesSourceCodeFiles(_projectName, new ModelData(_modelFullName, null, invalidTypesFullName, null, null));
 
 			// Assert
 			Assert.IsFalse(result);
@@ -67,9 +67,6 @@ namespace Oppo.ObjectModel.Tests
 		[Test]
 		public void Fail_OnGeneratingNotExistingTypesFile()
 		{
-			// Arrange tested object
-			_objectUnderTest = new NodesetGenerator(_projectName, _modelFullName, _typesFullName, _fileSystemMock.Object, null);
-
 			// Arrange file system
 			var typesPath = Path.Combine(_projectName, Constants.DirectoryName.Models, _typesFullName);
 
@@ -81,7 +78,7 @@ namespace Oppo.ObjectModel.Tests
 			_loggerListenerMock.Setup(listener => listener.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsMissingFile, typesPath))).Callback(delegate { _loggerWroteOut = true; });
 
 			// Act
-			var result = _objectUnderTest.GenerateTypesSourceCodeFiles();
+			var result = _objectUnderTest.GenerateTypesSourceCodeFiles(_projectName, _defaultModelData);
 
 			// Assert
 			Assert.IsFalse(result);
@@ -93,9 +90,6 @@ namespace Oppo.ObjectModel.Tests
 		[Test]
 		public void Fail_OnGeneratingTypesWithFailingPythonScript()
 		{
-			// Arrange tested object
-			_objectUnderTest = new NodesetGenerator(_projectName, _modelFullName, _typesFullName, _fileSystemMock.Object, null);
-
 			// Arrange file system
 			var typesPath = Path.Combine(_projectName, Constants.DirectoryName.Models, _typesFullName);
 			var srcDirectory = Path.Combine(_projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp);
@@ -112,7 +106,7 @@ namespace Oppo.ObjectModel.Tests
 			_loggerListenerMock.Setup(listener => listener.Warn(LoggingText.GeneratedTypesExecutableFails)).Callback(delegate { _loggerWroteOut = true; });
 
 			// Act
-			var result = _objectUnderTest.GenerateTypesSourceCodeFiles();
+			var result = _objectUnderTest.GenerateTypesSourceCodeFiles(_projectName, _defaultModelData);
 
 			// Assert
 			Assert.IsFalse(result);
@@ -124,9 +118,6 @@ namespace Oppo.ObjectModel.Tests
 		[Test]
 		public void Success_OnGeneratingModelTypes()
 		{
-			// Arrange tested object
-			_objectUnderTest = new NodesetGenerator(_projectName, _modelFullName, _typesFullName, _fileSystemMock.Object, null);
-
 			// Arrange file system
 			var typesPath = Path.Combine(_projectName, Constants.DirectoryName.Models, _typesFullName);
 			var srcDirectory = Path.Combine(_projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp);
@@ -149,7 +140,7 @@ namespace Oppo.ObjectModel.Tests
 			_fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, generatedTypesArgs)).Returns(true);
 			
 			// Act
-			var result = _objectUnderTest.GenerateTypesSourceCodeFiles();
+			var result = _objectUnderTest.GenerateTypesSourceCodeFiles(_projectName, _defaultModelData);
 
 			// Assert
 			Assert.IsTrue(result);
@@ -160,14 +151,11 @@ namespace Oppo.ObjectModel.Tests
 		[Test]
 		public void Fail_OnGeneratingNodesetFileWithInvalidExntension([ValueSource(nameof(InvalidModelFullNames))] string invalidModelFullName)
 		{
-			// Arrange tested object
-			_objectUnderTest = new NodesetGenerator(_projectName, invalidModelFullName, null, _fileSystemMock.Object, null);
-
 			// Arrange logger listener
 			_loggerListenerMock.Setup(listener => listener.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidModelFile, invalidModelFullName))).Callback(delegate { _loggerWroteOut = true; });
 
 			// Act
-			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles();
+			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, new ModelData(invalidModelFullName, null, _typesFullName, null, null));
 
 			// Assert
 			Assert.IsFalse(result);
@@ -179,9 +167,6 @@ namespace Oppo.ObjectModel.Tests
 		[Test]
 		public void Fail_OnGeneratingNotExistingNodesetFile()
 		{
-			// Arrange tested object
-			_objectUnderTest = new NodesetGenerator(_projectName, _modelFullName, null, _fileSystemMock.Object, null);
-
 			// Arrange file system
 			var modelPath = Path.Combine(_projectName, Constants.DirectoryName.Models, _modelFullName);
 
@@ -193,7 +178,7 @@ namespace Oppo.ObjectModel.Tests
 			_loggerListenerMock.Setup(listener => listener.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsMissingModelFile, _modelFullName))).Callback(delegate { _loggerWroteOut = true; });
 
 			// Act
-			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles();
+			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, _defaultModelData);
 
 			// Assert
 			Assert.IsFalse(result);
@@ -205,9 +190,6 @@ namespace Oppo.ObjectModel.Tests
 		[Test]
 		public void Fail_OnGeneratingInvalidModel()
 		{
-			// Arrange tested object
-			_objectUnderTest = new NodesetGenerator(_projectName, _modelFullName, null, _fileSystemMock.Object, _modelValidator.Object);
-
 			// Arrange file system
 			var modelPath = Path.Combine(_projectName, Constants.DirectoryName.Models, _modelFullName);
 
@@ -220,7 +202,7 @@ namespace Oppo.ObjectModel.Tests
 			_loggerListenerMock.Setup(listener => listener.Warn(string.Format(LoggingText.NodesetValidationFailure, _modelFullName))).Callback(delegate { _loggerWroteOut = true; });
 
 			// Act
-			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles();
+			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, _defaultModelData);
 
 			// Assert
 			Assert.IsFalse(result);
@@ -232,9 +214,6 @@ namespace Oppo.ObjectModel.Tests
 		[Test]
 		public void Fail_OnGeneratingNodesetWithFailingPythonScript()
 		{
-			// Arrange tested object
-			_objectUnderTest = new NodesetGenerator(_projectName, _modelFullName, null, _fileSystemMock.Object, _modelValidator.Object);
-
 			// Arrange file system
 			var modelPath = Path.Combine(_projectName, Constants.DirectoryName.Models, _modelFullName);
 			var srcDirectory = Path.Combine(_projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp);
@@ -258,7 +237,7 @@ namespace Oppo.ObjectModel.Tests
 			OppoLogger.RegisterListener(_loggerListenerMock.Object);
 
 			// Act
-			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles();
+			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, _defaultModelData);
 
 			// Assert
 			Assert.IsFalse(result);
@@ -270,9 +249,6 @@ namespace Oppo.ObjectModel.Tests
 		[Test]
 		public void Success_OnGeneratingNodeset()
 		{
-			// Arrange tested object
-			_objectUnderTest = new NodesetGenerator(_projectName, _modelFullName, null, _fileSystemMock.Object, _modelValidator.Object);
-
 			// Arrange file system
 			var modelPath = Path.Combine(_projectName, Constants.DirectoryName.Models, _modelFullName);
 			var srcDirectory = Path.Combine(_projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp);
@@ -298,7 +274,7 @@ namespace Oppo.ObjectModel.Tests
 			_fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, nodesetCompilerArgs)).Returns(true);
 
 			// Act
-			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles();
+			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, new ModelData(_modelFullName, null, null, null, null));
 
 			// Assert
 			Assert.IsTrue(result);
@@ -309,9 +285,6 @@ namespace Oppo.ObjectModel.Tests
 		[Test]
 		public void Success_OnGeneratingNodesetWithExtraTypes()
 		{
-			// Arrange tested object
-			_objectUnderTest = new NodesetGenerator(_projectName, _modelFullName, _typesFullName, _fileSystemMock.Object, _modelValidator.Object);
-
 			// Arrange file system
 			var modelPath = Path.Combine(_projectName, Constants.DirectoryName.Models, _modelFullName);
 			var srcDirectory = Path.Combine(_projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp);
@@ -337,7 +310,7 @@ namespace Oppo.ObjectModel.Tests
 			_fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, nodesetCompilerArgs)).Returns(true);
 
 			// Act
-			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles();
+			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, _defaultModelData);
 
 			// Assert
 			Assert.IsTrue(result);

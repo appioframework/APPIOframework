@@ -47,9 +47,11 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
         private GenerateInformationModelStrategy _strategy;
 		private Mock<IFileSystem> _fileSystemMock;
+		private Mock<IModelValidator> _modelValidator;
         private Mock<ILoggerListener> _loggerListenerMock;
 		private bool _loggerWroteOut;
 		private string _commandName;
+		private Mock<INodesetGenerator> _nodesetGenerator;
 		private readonly string _srcDir = @"src\server";
         private readonly string _defaultServerMesonBuild        = "server_app_sources += [\n]";
         private readonly string _defaultLoadInformationModelsC  = "UA_StatusCode loadInformationModels(UA_Server* server)\n{\n\treturn UA_STATUSCODE_GOOD;\n}";
@@ -63,10 +65,12 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         public void SetUpTest()
         {
 			_fileSystemMock = new Mock<IFileSystem>();
+			_modelValidator = new Mock<IModelValidator>();
             _loggerListenerMock = new Mock<ILoggerListener>();
 			_loggerWroteOut = false;
 			_commandName = Constants.CommandName.Generate + " " + Constants.GenerateInformationModeCommandArguments.Name;
-			_strategy = new GenerateInformationModelStrategy(Constants.GenerateInformationModeCommandArguments.Name, _fileSystemMock.Object);
+			_nodesetGenerator = new Mock<INodesetGenerator>();
+			_strategy = new GenerateInformationModelStrategy(Constants.GenerateInformationModeCommandArguments.Name, _fileSystemMock.Object, _modelValidator.Object, _nodesetGenerator.Object);
 
 			OppoLogger.RegisterListener(_loggerListenerMock.Object);
 		}
@@ -217,6 +221,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			{
 				_fileSystemMock.Setup(x => x.ReadFile(oppoprojFilePath)).Returns(oppoprojFileStream);
 
+				_nodesetGenerator.Setup(x => x.GenerateTypesSourceCodeFiles(It.IsAny<string>(), It.IsAny<IModelData>())).Returns(true);
+				_nodesetGenerator.Setup(x => x.GenerateNodesetSourceCodeFiles(It.IsAny<string>(), It.IsAny<IModelData>())).Returns(true);
+
 				// Arrange logger listener
 				_loggerListenerMock.Setup(x => x.Info(LoggingText.GenerateInformationModelSuccess)).Callback(delegate { _loggerWroteOut = true; });
 
@@ -228,6 +235,32 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				Assert.IsTrue(_loggerWroteOut);
 				Assert.IsNotNull(commandResult.OutputMessages);
 				Assert.AreEqual(string.Format(OutputText.GenerateInformationModelSuccess, projectName), commandResult.OutputMessages.First().Key);
+			}
+		}
+
+		[Test, Sequential]
+		public void Fail_OnCallingNodesetGenerator([Values(false, true)] bool typesGeneratorResult, [Values(true, false)] bool nodesetGeneratorResult, [ValueSource(nameof(ValidInputs))] string[] inputParams)
+		{
+			// Arrange
+			var projectName = inputParams.ElementAtOrDefault(1);
+			var oppoprojFilePath = Path.Combine(projectName, projectName + Constants.FileExtension.OppoProject);
+
+			_fileSystemMock.Setup(x => x.CombinePaths(projectName, projectName + Constants.FileExtension.OppoProject)).Returns(oppoprojFilePath);
+
+			using (var oppoprojFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpcuaServerAppContent)))
+			{
+				_fileSystemMock.Setup(x => x.ReadFile(oppoprojFilePath)).Returns(oppoprojFileStream);
+
+				_nodesetGenerator.Setup(x => x.GenerateTypesSourceCodeFiles(It.IsAny<string>(), It.IsAny<IModelData>())).Returns(typesGeneratorResult);
+				_nodesetGenerator.Setup(x => x.GenerateNodesetSourceCodeFiles(It.IsAny<string>(), It.IsAny<IModelData>())).Returns(nodesetGeneratorResult);
+			
+				// Act
+				var commandResult = _strategy.Execute(inputParams);
+
+				// Assert
+				Assert.IsFalse(commandResult.Success);
+				Assert.IsNotNull(commandResult.OutputMessages);
+				Assert.IsNotEmpty(commandResult.OutputMessages.First().Key);
 			}
 		}
     }

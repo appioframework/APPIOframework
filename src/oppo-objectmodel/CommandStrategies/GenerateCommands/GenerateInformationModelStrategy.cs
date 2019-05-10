@@ -12,15 +12,19 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
     public class GenerateInformationModelStrategy : ICommand<GenerateStrategy>
 	{
 		private readonly IFileSystem _fileSystem;
+		private readonly IModelValidator _modelValidator;
+		private INodesetGenerator _nodesetGenerator;
 
 		private enum ParamId {AppName, ModelFullName, TypesFullName, RequiredModelFullName}
 
         private readonly ParameterResolver<ParamId> _resolver;
 
-        public GenerateInformationModelStrategy(string commandName, IFileSystem fileSystem)
+        public GenerateInformationModelStrategy(string commandName, IFileSystem fileSystem, IModelValidator modelValidator, INodesetGenerator nodesetGenerator)
         {
             Name = commandName;
 			_fileSystem = fileSystem;
+			_modelValidator = modelValidator;
+			_nodesetGenerator = nodesetGenerator;
 
 			_resolver = new ParameterResolver<ParamId>(Constants.CommandName.Generate + " " + Name, new []
             {
@@ -60,6 +64,14 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 			{
 				OppoLogger.Warn(LoggingText.GenerateInformationModelFailuteOpcuaappIsAClient);
 				outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailuteOpcuaappIsAClient, projectName), string.Empty);
+				return new CommandResult(false, outputMessages);
+			}
+
+			var opcuaappModel = (opcuaappData as IOpcuaServerApp).Models[0];
+			
+			if (!_nodesetGenerator.GenerateTypesSourceCodeFiles(projectName, opcuaappModel) || !_nodesetGenerator.GenerateNodesetSourceCodeFiles(projectName, opcuaappModel))
+			{
+				outputMessages.Add(_nodesetGenerator.GetOutputMessage(), string.Empty);
 				return new CommandResult(false, outputMessages);
 			}
 
