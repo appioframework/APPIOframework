@@ -12,8 +12,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
     public class GenerateInformationModelStrategy : ICommand<GenerateStrategy>
 	{
 		private readonly IFileSystem _fileSystem;
-		private readonly IModelValidator _modelValidator;
-		private INodesetGenerator _nodesetGenerator;
+		private readonly INodesetGenerator _nodesetGenerator;
 
 		private enum ParamId {AppName, ModelFullName, TypesFullName, RequiredModelFullName}
 
@@ -23,7 +22,6 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
         {
             Name = commandName;
 			_fileSystem = fileSystem;
-			_modelValidator = modelValidator;
 			_nodesetGenerator = nodesetGenerator;
 
 			_resolver = new ParameterResolver<ParamId>(Constants.CommandName.Generate + " " + Name, new []
