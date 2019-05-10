@@ -75,6 +75,9 @@ namespace Oppo.ObjectModel
 				return false;
 			}
 
+			// Add generated types header file to server's meson build
+			AdjustServerMesonBuildTemplate(srcDirectory, modelName.ToLower() + Constants.InformationModelsName.TypesGenerated);
+
 			return true;
 		}
 		
@@ -149,11 +152,34 @@ namespace Oppo.ObjectModel
 				return false;
 			}
 
+			// Add nodeset header file to server's meson build
+			AdjustServerMesonBuildTemplate(srcDirectory, modelName);
+
 			// Add nodeset function call to server code
 			AdjustLoadInformationModelsTemplate(srcDirectory, modelName);
-
-
+			
 			return true;
+		}
+
+		// Adding header file include to server's meson build
+		private void AdjustServerMesonBuildTemplate(string srcDirectory, string fileNameToInclude)
+		{
+			var sourceFileSnippet = string.Format(Constants.InformationModelsName.FileSnippet, fileNameToInclude);
+
+			using (var modelsFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_meson_build)))
+			{
+				var currentFileContentLineByLine = ReadFileContent(modelsFileStream);
+
+				if (!currentFileContentLineByLine.Any(x => x.Contains(sourceFileSnippet)))
+				{
+					var lastFunctionLinePosition = currentFileContentLineByLine.FindIndex(x => x.Contains("]"));
+					if (lastFunctionLinePosition != -1)
+					{
+						currentFileContentLineByLine.Insert(lastFunctionLinePosition, sourceFileSnippet);
+					}
+					_fileSystem.WriteFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_meson_build), currentFileContentLineByLine);
+				}
+			}
 		}
 
 		// Adding nodeset function call to server code

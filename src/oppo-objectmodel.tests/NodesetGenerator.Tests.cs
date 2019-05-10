@@ -31,7 +31,8 @@ namespace Oppo.ObjectModel.Tests
 		private Mock<IModelValidator> _modelValidator;
 		private Mock<ILoggerListener> _loggerListenerMock;
 		private bool _loggerWroteOut;
-		
+
+		private readonly string _defaultServerMesonBuild = "server_app_sources += [\n]";
 		private readonly string _defaultLoadInformationModelsC = "UA_StatusCode loadInformationModels(UA_Server* server)\n{\n\treturn UA_STATUSCODE_GOOD;\n}";
 
 		[SetUp]
@@ -146,6 +147,7 @@ namespace Oppo.ObjectModel.Tests
 										string.Format(Constants.ExecutableName.GenerateDatatypesTypeBsd, typesSourceFullPath) +
 										" " +
 										typesTargetFullPath + Constants.InformationModelsName.Types;
+			var serverMesonBuildFilePath = Path.Combine(srcDirectory, Constants.FileName.SourceCode_meson_build);
 
 			_fileSystemMock.Setup(x => x.GetExtension(_typesFullName)).Returns(Constants.FileExtension.ModelTypes);
 			_fileSystemMock.Setup(x => x.CombinePaths(_projectName, Constants.DirectoryName.Models, _typesFullName)).Returns(typesPath);
@@ -155,14 +157,22 @@ namespace Oppo.ObjectModel.Tests
 			_fileSystemMock.Setup(x => x.CombinePaths(Constants.DirectoryName.InformationModels, modelName.ToLower())).Returns(typesTargetFullPath);
 			_fileSystemMock.Setup(x => x.CombinePaths(Constants.DirectoryName.Models, _typesFullName)).Returns(typesSourcePath);
 			_fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, generatedTypesArgs)).Returns(true);
-			
-			// Act
-			var result = _objectUnderTest.GenerateTypesSourceCodeFiles(_projectName, _defaultModelData);
+			_fileSystemMock.Setup(x => x.CombinePaths(srcDirectory, Constants.FileName.SourceCode_meson_build)).Returns(serverMesonBuildFilePath);
 
-			// Assert
-			Assert.IsTrue(result);
-			Assert.AreEqual(string.Empty, _objectUnderTest.GetOutputMessage());
-			_fileSystemMock.Verify(x => x.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, generatedTypesArgs), Times.Once);
+			using (var serverMesonBuildFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_defaultServerMesonBuild)))
+			{
+				_fileSystemMock.Setup(x => x.ReadFile(serverMesonBuildFilePath)).Returns(serverMesonBuildFileStream);
+
+				// Act
+				var result = _objectUnderTest.GenerateTypesSourceCodeFiles(_projectName, _defaultModelData);
+
+				// Assert
+				Assert.IsTrue(result);
+				Assert.AreEqual(string.Empty, _objectUnderTest.GetOutputMessage());
+				_fileSystemMock.Verify(x => x.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, generatedTypesArgs), Times.Once);
+				_fileSystemMock.Verify(x => x.ReadFile(serverMesonBuildFilePath), Times.Once);
+				_fileSystemMock.Verify(x => x.WriteFile(serverMesonBuildFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
+			}
 		}
 
 		[Test]
@@ -294,6 +304,7 @@ namespace Oppo.ObjectModel.Tests
 										string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes) +
 										string.Format(Constants.ExecutableName.NodesetCompilerExisting, Constants.ExecutableName.NodesetCompilerBasicNodeset) +
 										string.Format(Constants.ExecutableName.NodesetCompilerXml, modelSourceRelativePath, modelTargetRelativePath);
+			var serverMesonBuildFilePath = Path.Combine(srcDirectory, Constants.FileName.SourceCode_meson_build);
 			var loadInformationModelsFilePath = Path.Combine(srcDirectory, Constants.FileName.SourceCode_loadInformationModels_c);
 
 			_fileSystemMock.Setup(x => x.GetExtension(_modelFullName)).Returns(Constants.FileExtension.InformationModel);
@@ -305,11 +316,13 @@ namespace Oppo.ObjectModel.Tests
 			_fileSystemMock.Setup(x => x.CombinePaths(Constants.DirectoryName.InformationModels, modelName.ToLower())).Returns(modelTargetRelativePath);
 			_fileSystemMock.Setup(x => x.CombinePaths(Constants.DirectoryName.Models, _modelFullName)).Returns(modelSourcePath);
 			_fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, nodesetCompilerArgs)).Returns(true);
+			_fileSystemMock.Setup(x => x.CombinePaths(srcDirectory, Constants.FileName.SourceCode_meson_build)).Returns(serverMesonBuildFilePath);
 			_fileSystemMock.Setup(x => x.CombinePaths(srcDirectory, Constants.FileName.SourceCode_loadInformationModels_c)).Returns(loadInformationModelsFilePath);
 
-
+			using (var serverMesonBuildFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_defaultServerMesonBuild)))
 			using (var loadInformationModelsFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_defaultLoadInformationModelsC)))
 			{
+				_fileSystemMock.Setup(x => x.ReadFile(serverMesonBuildFilePath)).Returns(serverMesonBuildFileStream);
 				_fileSystemMock.Setup(x => x.ReadFile(loadInformationModelsFilePath)).Returns(loadInformationModelsFileStream);
 
 				// Act
@@ -319,6 +332,8 @@ namespace Oppo.ObjectModel.Tests
 				Assert.IsTrue(result);
 				Assert.AreEqual(string.Empty, _objectUnderTest.GetOutputMessage());
 				_fileSystemMock.Verify(x => x.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, nodesetCompilerArgs), Times.Once);
+				_fileSystemMock.Verify(x => x.ReadFile(serverMesonBuildFilePath), Times.Once);
+				_fileSystemMock.Verify(x => x.WriteFile(serverMesonBuildFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
 				_fileSystemMock.Verify(x => x.ReadFile(loadInformationModelsFilePath), Times.Once);
 				_fileSystemMock.Verify(x => x.WriteFile(loadInformationModelsFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
 			}
@@ -340,6 +355,7 @@ namespace Oppo.ObjectModel.Tests
 										string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, (modelName + Constants.InformationModelsName.Types).ToUpper()) +
 										string.Format(Constants.ExecutableName.NodesetCompilerExisting, Constants.ExecutableName.NodesetCompilerBasicNodeset) +
 										string.Format(Constants.ExecutableName.NodesetCompilerXml, modelSourceRelativePath, modelTargetRelativePath);
+			var serverMesonBuildFilePath = Path.Combine(srcDirectory, Constants.FileName.SourceCode_meson_build);
 			var loadInformationModelsFilePath = Path.Combine(srcDirectory, Constants.FileName.SourceCode_loadInformationModels_c);
 
 			_fileSystemMock.Setup(x => x.GetExtension(_modelFullName)).Returns(Constants.FileExtension.InformationModel);
@@ -351,11 +367,13 @@ namespace Oppo.ObjectModel.Tests
 			_fileSystemMock.Setup(x => x.CombinePaths(Constants.DirectoryName.InformationModels, modelName.ToLower())).Returns(modelTargetRelativePath);
 			_fileSystemMock.Setup(x => x.CombinePaths(Constants.DirectoryName.Models, _modelFullName)).Returns(modelSourcePath);
 			_fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, nodesetCompilerArgs)).Returns(true);
+			_fileSystemMock.Setup(x => x.CombinePaths(srcDirectory, Constants.FileName.SourceCode_meson_build)).Returns(serverMesonBuildFilePath);
 			_fileSystemMock.Setup(x => x.CombinePaths(srcDirectory, Constants.FileName.SourceCode_loadInformationModels_c)).Returns(loadInformationModelsFilePath);
 
-
+			using (var serverMesonBuildFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_defaultServerMesonBuild)))
 			using (var loadInformationModelsFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_defaultLoadInformationModelsC)))
 			{
+				_fileSystemMock.Setup(x => x.ReadFile(serverMesonBuildFilePath)).Returns(serverMesonBuildFileStream);
 				_fileSystemMock.Setup(x => x.ReadFile(loadInformationModelsFilePath)).Returns(loadInformationModelsFileStream);
 
 				// Act
@@ -365,6 +383,8 @@ namespace Oppo.ObjectModel.Tests
 				Assert.IsTrue(result);
 				Assert.AreEqual(string.Empty, _objectUnderTest.GetOutputMessage());
 				_fileSystemMock.Verify(x => x.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, nodesetCompilerArgs), Times.Once);
+				_fileSystemMock.Verify(x => x.ReadFile(serverMesonBuildFilePath), Times.Once);
+				_fileSystemMock.Verify(x => x.WriteFile(serverMesonBuildFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
 				_fileSystemMock.Verify(x => x.ReadFile(loadInformationModelsFilePath), Times.Once);
 				_fileSystemMock.Verify(x => x.WriteFile(loadInformationModelsFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
 			}
