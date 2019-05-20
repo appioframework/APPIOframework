@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Newtonsoft.Json.Linq;
+using Oppo.Resources.text.logging;
 using Oppo.Resources.text.output;
 
 namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
@@ -57,9 +59,31 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 return new CommandResult(false, new MessageLines{{error, string.Empty}});
 
             var appName = stringParams[ParamId.AppName];
-            var keySize = uint.Parse(stringParams[ParamId.KeySize]);
-            var days = uint.Parse(stringParams[ParamId.Days]);
-            var oppoProjContent = _fileSystem.ReadFile(_fileSystem.CombinePaths(appName, appName + Constants.FileExtension.OppoProject));
+
+            uint keySize, days;
+            
+            try
+            {
+                keySize = uint.Parse(stringParams[ParamId.KeySize]);
+                days = uint.Parse(stringParams[ParamId.Days]);
+            }
+            catch (FormatException)
+            {
+                OppoLogger.Warn(LoggingText.GenerateCertificateFailureNotParsable);
+                return new CommandResult(false, new MessageLines{{OutputText.GenerateCertificateCommandFailureNotParsable, string.Empty}});
+            }
+            
+            Stream oppoProjContent;
+            try
+            {
+                oppoProjContent = _fileSystem.ReadFile(_fileSystem.CombinePaths(appName, appName + Constants.FileExtension.OppoProject));
+            }
+            catch (Exception)
+            {
+                OppoLogger.Warn(string.Format(LoggingText.GenerateCertificateFailureNotFound, appName));
+                return new CommandResult(false, new MessageLines{{string.Format(OutputText.GenerateCertificateCommandFailureNotFound, appName), string.Empty}});
+            }
+            
             var reader = new StreamReader(oppoProjContent, Encoding.ASCII);
             var appType = (string) JObject.Parse(reader.ReadToEnd())["type"];
 
@@ -75,6 +99,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 _certificateGenerator.Generate(appName, string.Empty, keySize, days, stringParams[ParamId.Org]);
             }
             
+            OppoLogger.Info(LoggingText.GenerateCertificateSuccess);
             return new CommandResult(true, new MessageLines{{string.Format(OutputText.GenerateCertificateCommandSuccess, appName), string.Empty}});
         }
 

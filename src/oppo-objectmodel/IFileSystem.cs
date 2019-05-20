@@ -19,6 +19,7 @@ namespace Oppo.ObjectModel
 
         void CopyFile(string source, string target);
 
+        void DeleteFile(string name);
         void DeleteDirectory(string name);
         bool FileExists(string filePath);
         bool DirectoryExists(string directoryPath);

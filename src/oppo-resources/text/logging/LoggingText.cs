@@ -14,6 +14,7 @@ namespace Oppo.Resources.text.logging
 	    
 	    public const string CertificateGeneratorSuccess = "Generated new private key and certificate for instance '{0}'!";
 	    public const string CertificateGeneratorFailureNonexistentDirectory = "Cannot generate private key and certificate! Directory '{0}' does not exist!";
+	    public const string CertificateGeneratorFailureOpenSSLError = "Cannot generate private key and certificate! OpenSSL error!";
 	    public const string NullInputParams_Msg = "Null input parameters passed. Specify any valid parameters.";
         public const string InvalidSolutionName = "Invalid solution name!";
         public const string NewSlnCommandSuccess = "Solution with name {0} was successfully created";
@@ -47,6 +48,9 @@ namespace Oppo.Resources.text.logging
         public const string UnknownCommandCalled = "Unknown <command> called";
         public const string VersionCommandCalled = "version <command> called";
         public const string OppoHelpForDeployCommandCalled = "Help for deploy <command> called";
+        public const string GenerateCertificateSuccess = "Generate certificate success!";
+        public const string GenerateCertificateFailureNotParsable = "Generate certificate failure! Arguments could not be parsed!";
+        public const string GenerateCertificateFailureNotFound = "Generate certificate failure! Project '{0}' could not be found!";
         public const string GenerateInformationModelSuccess = "Generate information-model success!";
         public const string NodesetCompilerExecutableFailsMissingModelFile = "Generate information-model failure! Can't find model with path '{0}'!";
         public const string NodesetCompilerExecutableFailsMissingFile = "Generate information-model failure! Can't find file with path '{0}'!";
