@@ -63,3 +63,10 @@ function check_for_non_zero_error_code() {
         exit 1
     fi
 }
+
+function generate_crypto_all_formats() {
+    echo "generating manual certificate"
+    openssl req -new -x509 -out mycert.der -outform der -nodes -keyout mykey.key -days 90 -subj '/CN=example.com/O=MyOrg/C=DE'
+    openssl rsa -outform der -in mykey.key -out mykey.der
+    openssl x509 -inform der -outform pem -in mycert.der -out mycert.pem
+}

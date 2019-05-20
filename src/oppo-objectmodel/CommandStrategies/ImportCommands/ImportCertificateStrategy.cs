@@ -103,17 +103,19 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
                 certTarget = prefix + "_" + Constants.FileName.Certificate;
                 keyTarget = prefix + "_" + Constants.FileName.PrivateKeyDER;
             }
-            
-            Import(project, isKeyPEM,Constants.ExternalExecutableArguments.OpenSSLConvertKeyFromPEM, key, keyTarget);
-            Import(project, isCertPEM, Constants.ExternalExecutableArguments.OpenSSLConvertCertificateFromPEM, certificate, certTarget);
+
+            var certificatesFolder = _fileSystem.CombinePaths(project, Constants.DirectoryName.Certificates);
+            _fileSystem.CreateDirectory(certificatesFolder);
+            Import(certificatesFolder, isKeyPEM,Constants.ExternalExecutableArguments.OpenSSLConvertKeyFromPEM, key, keyTarget);
+            Import(certificatesFolder, isCertPEM, Constants.ExternalExecutableArguments.OpenSSLConvertCertificateFromPEM, certificate, certTarget);
 
             OppoLogger.Info(string.Format(LoggingText.ImportCertificateSuccess, certificate, key));
             return new CommandResult(true, new MessageLines{{OutputText.ImportCertificateCommandSuccess, string.Empty}});
         }
 
-        private void Import(string appName, bool isPEM, string openSSLArgsFmt, string source, string targetFileName)
+        private void Import(string directory, bool isPEM, string openSSLArgsFmt, string source, string targetFileName)
         {
-            var targetPath = _fileSystem.CombinePaths(appName, targetFileName);
+            var targetPath = _fileSystem.CombinePaths(directory, targetFileName);
             if (isPEM)
             {
                 var openSSLArgs = string.Format(openSSLArgsFmt, source, targetPath);
@@ -121,7 +123,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
             }
             else
             {
-                _fileSystem.CopyFile(source, appName);
+                _fileSystem.CopyFile(source, targetPath);
             }
         }
 

@@ -21,9 +21,11 @@ namespace Oppo.ObjectModel
             openSSLConfigBuilder.Replace("$ORG_NAME", organization);
             openSSLConfigBuilder.Replace("$COMMON_NAME", appName);
 
-            var certificateConfigPath = _fileSystem.CombinePaths(appName, Constants.FileName.CertificateConfig);
+            var certificateFolder = _fileSystem.CombinePaths(appName, Constants.DirectoryName.Certificates);
+            var certificateConfigPath = _fileSystem.CombinePaths(certificateFolder, Constants.FileName.CertificateConfig);
             try
             {
+                _fileSystem.CreateDirectory(certificateFolder);
                 _fileSystem.CreateFile(certificateConfigPath, openSSLConfigBuilder.ToString());
             }
             catch (Exception)
@@ -33,9 +35,18 @@ namespace Oppo.ObjectModel
             }
 
             var separator = filePrefix == string.Empty ? "" : "_";
+
+            try
+            {
+                _fileSystem.CallExecutable(Constants.ExecutableName.OpenSSL, certificateFolder, string.Format(Constants.ExternalExecutableArguments.OpenSSL, filePrefix + separator, days));
+                _fileSystem.CallExecutable(Constants.ExecutableName.OpenSSL, certificateFolder, string.Format(Constants.ExternalExecutableArguments.OpenSSLConvertKeyFromPEM, filePrefix + separator + Constants.FileName.PrivateKeyPEM, filePrefix + separator + Constants.FileName.PrivateKeyDER));
+            }
+            catch (Exception)
+            {
+                OppoLogger.Warn(LoggingText.CertificateGeneratorFailureOpenSSLError);
+            }
             
-            _fileSystem.CallExecutable(Constants.ExecutableName.OpenSSL, appName, string.Format(Constants.ExternalExecutableArguments.OpenSSL, filePrefix + separator, days));
-            _fileSystem.CallExecutable(Constants.ExecutableName.OpenSSL, appName, string.Format(Constants.ExternalExecutableArguments.OpenSSLConvertKeyFromPEM, filePrefix + separator + Constants.FileName.PrivateKeyPEM, filePrefix + separator + Constants.FileName.PrivateKeyDER));
+            _fileSystem.DeleteFile(_fileSystem.CombinePaths(certificateFolder, filePrefix + separator + Constants.FileName.PrivateKeyPEM));
             OppoLogger.Info(string.Format(LoggingText.CertificateGeneratorSuccess, filePrefix == string.Empty ? appName : appName + "/" + filePrefix));
         }
     }

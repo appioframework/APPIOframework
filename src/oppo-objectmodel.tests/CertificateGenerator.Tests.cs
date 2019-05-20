@@ -75,19 +75,25 @@ CN={appName}";
         {
 	        // Arrange
 	        var projectDirectory = appName;
+	        const string certificateFolder = "certificate-folder";
             const string certificateConfigPath = "certificate-config-file";
-			
-			_fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.FileName.CertificateConfig)).Returns(certificateConfigPath);
+            const string privateKeyPEM = "private-key-pem";
+
+            _fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.DirectoryName.Certificates)).Returns(certificateFolder);
+			_fileSystemMock.Setup(x => x.CombinePaths(certificateFolder, Constants.FileName.CertificateConfig)).Returns(certificateConfigPath);
+			_fileSystemMock.Setup(x => x.CombinePaths(certificateFolder, Constants.FileName.PrivateKeyPEM)).Returns(privateKeyPEM);
 			_fileSystemMock.Setup(x => x.LoadTemplateFile(Resources.Resources.OpenSSLConfigTemplateFileName)).Returns(TemplateConfig);
 			
 			// Act
 			_objectUnderTest.Generate(appName, string.Empty, keySize, days, organization);
 			
 			// Assert
+            _fileSystemMock.Verify(fs => fs.CreateDirectory(certificateFolder), Times.Once);
             _fileSystemMock.Verify(fs => fs.CreateFile(certificateConfigPath, GetExpectedConfig(keySize, appName, organization)), Times.Once);
-            _fileSystemMock.Verify(fs => fs.CallExecutable(Constants.ExecutableName.OpenSSL, projectDirectory, string.Format(Constants.ExternalExecutableArguments.OpenSSL, string.Empty, days)), Times.Once);
-            _fileSystemMock.Verify(fs => fs.CallExecutable(Constants.ExecutableName.OpenSSL, projectDirectory, string.Format(Constants.ExternalExecutableArguments.OpenSSLConvertKeyFromPEM, Constants.FileName.PrivateKeyPEM, Constants.FileName.PrivateKeyDER)), Times.Once);
+            _fileSystemMock.Verify(fs => fs.CallExecutable(Constants.ExecutableName.OpenSSL, certificateFolder, string.Format(Constants.ExternalExecutableArguments.OpenSSL, string.Empty, days)), Times.Once);
+            _fileSystemMock.Verify(fs => fs.CallExecutable(Constants.ExecutableName.OpenSSL, certificateFolder, string.Format(Constants.ExternalExecutableArguments.OpenSSLConvertKeyFromPEM, Constants.FileName.PrivateKeyPEM, Constants.FileName.PrivateKeyDER)), Times.Once);
             _fileSystemMock.Verify(fs => fs.LoadTemplateFile(Resources.Resources.OpenSSLConfigTemplateFileName), Times.Once);
+            _fileSystemMock.Verify(fs => fs.DeleteFile(privateKeyPEM), Times.Once);
             _loggerListenerMock.Verify(listener => listener.Info(string.Format(LoggingText.CertificateGeneratorSuccess, projectDirectory)));
         }
 
@@ -97,18 +103,21 @@ CN={appName}";
         {
 	        // Arrange
 	        var projectDirectory = appName;
+	        const string certificateFolder = "certificate-folder";
 	        const string certificateConfigPath = "certificate-config-file";
 			
-	        _fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.FileName.CertificateConfig)).Returns(certificateConfigPath);
+	        _fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.DirectoryName.Certificates)).Returns(certificateFolder);
+	        _fileSystemMock.Setup(x => x.CombinePaths(certificateFolder, Constants.FileName.CertificateConfig)).Returns(certificateConfigPath);
 	        _fileSystemMock.Setup(x => x.LoadTemplateFile(Resources.Resources.OpenSSLConfigTemplateFileName)).Returns(TemplateConfig);
 	        
 	        _objectUnderTest.Generate(appName);
 
 	        // Assert
+	        _fileSystemMock.Verify(fs => fs.CreateDirectory(certificateFolder), Times.Once);
 	        _fileSystemMock.Verify(fs => fs.CreateFile(certificateConfigPath, GetExpectedConfig(Constants.ExternalExecutableArguments.OpenSSLDefaultKeySize, appName, Constants.ExternalExecutableArguments.OpenSSLDefaultOrganization)), Times.Once);
-	        _fileSystemMock.Verify(fs => fs.CallExecutable(Constants.ExecutableName.OpenSSL, projectDirectory, string.Format(Constants.ExternalExecutableArguments.OpenSSL, string.Empty, Constants.ExternalExecutableArguments.OpenSSLDefaultDays)), Times.Once);
+	        _fileSystemMock.Verify(fs => fs.CallExecutable(Constants.ExecutableName.OpenSSL, certificateFolder, string.Format(Constants.ExternalExecutableArguments.OpenSSL, string.Empty, Constants.ExternalExecutableArguments.OpenSSLDefaultDays)), Times.Once);
 	        _fileSystemMock.Verify(fs => fs.LoadTemplateFile(Resources.Resources.OpenSSLConfigTemplateFileName), Times.Once);
-	        _fileSystemMock.Verify(fs => fs.CallExecutable(Constants.ExecutableName.OpenSSL, projectDirectory, string.Format(Constants.ExternalExecutableArguments.OpenSSLConvertKeyFromPEM, Constants.FileName.PrivateKeyPEM, Constants.FileName.PrivateKeyDER)), Times.Once);
+	        _fileSystemMock.Verify(fs => fs.CallExecutable(Constants.ExecutableName.OpenSSL, certificateFolder, string.Format(Constants.ExternalExecutableArguments.OpenSSLConvertKeyFromPEM, Constants.FileName.PrivateKeyPEM, Constants.FileName.PrivateKeyDER)), Times.Once);
 	        _loggerListenerMock.Verify(listener => listener.Info(string.Format(LoggingText.CertificateGeneratorSuccess, projectDirectory)));
         }
         
@@ -119,18 +128,23 @@ CN={appName}";
 	        // Arrange
 	        const string prefix = "prefix";
 	        var projectDirectory = appName;
+	        const string certificateFolder = "certificate-folder";
 	        const string certificateConfigPath = "certificate-config-file";
+	        const string privateKeyPEM = "private-key-pem";
 			
-	        _fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.FileName.CertificateConfig)).Returns(certificateConfigPath);
+	        _fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.DirectoryName.Certificates)).Returns(certificateFolder);
+	        _fileSystemMock.Setup(x => x.CombinePaths(certificateFolder, Constants.FileName.CertificateConfig)).Returns(certificateConfigPath);
 	        _fileSystemMock.Setup(x => x.LoadTemplateFile(Resources.Resources.OpenSSLConfigTemplateFileName)).Returns(TemplateConfig);
+	        _fileSystemMock.Setup(x => x.CombinePaths(certificateFolder, prefix + "_" + Constants.FileName.PrivateKeyPEM)).Returns(privateKeyPEM);
 	        
 	        _objectUnderTest.Generate(appName, prefix);
 
 	        // Assert
 	        _fileSystemMock.Verify(fs => fs.CreateFile(certificateConfigPath, GetExpectedConfig(Constants.ExternalExecutableArguments.OpenSSLDefaultKeySize, appName, Constants.ExternalExecutableArguments.OpenSSLDefaultOrganization)), Times.Once);
-	        _fileSystemMock.Verify(fs => fs.CallExecutable(Constants.ExecutableName.OpenSSL, projectDirectory, string.Format(Constants.ExternalExecutableArguments.OpenSSL, prefix + "_", Constants.ExternalExecutableArguments.OpenSSLDefaultDays)), Times.Once);
-	        _fileSystemMock.Verify(fs => fs.CallExecutable(Constants.ExecutableName.OpenSSL, projectDirectory, string.Format(Constants.ExternalExecutableArguments.OpenSSLConvertKeyFromPEM, prefix + "_" + Constants.FileName.PrivateKeyPEM, prefix + "_" + Constants.FileName.PrivateKeyDER)), Times.Once);
+	        _fileSystemMock.Verify(fs => fs.CallExecutable(Constants.ExecutableName.OpenSSL, certificateFolder, string.Format(Constants.ExternalExecutableArguments.OpenSSL, prefix + "_", Constants.ExternalExecutableArguments.OpenSSLDefaultDays)), Times.Once);
+	        _fileSystemMock.Verify(fs => fs.CallExecutable(Constants.ExecutableName.OpenSSL, certificateFolder, string.Format(Constants.ExternalExecutableArguments.OpenSSLConvertKeyFromPEM, prefix + "_" + Constants.FileName.PrivateKeyPEM, prefix + "_" + Constants.FileName.PrivateKeyDER)), Times.Once);
 	        _fileSystemMock.Verify(fs => fs.LoadTemplateFile(Resources.Resources.OpenSSLConfigTemplateFileName), Times.Once);
+	        _fileSystemMock.Verify(fs => fs.DeleteFile(privateKeyPEM), Times.Once);
 	        _loggerListenerMock.Verify(listener => listener.Info(string.Format(LoggingText.CertificateGeneratorSuccess, projectDirectory + "/" + prefix)));
         }
 
@@ -140,9 +154,11 @@ CN={appName}";
 	        // Arrange
 	        const string appName = "nonexistent-directory";
 	        const string projectDirectory = appName;
+	        const string certificateFolder = "certificate-folder";
 	        const string certificateConfigPath = "certificate-config-file";
-			
-	        _fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.FileName.CertificateConfig)).Returns(certificateConfigPath);
+
+	        _fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.DirectoryName.Certificates)).Returns(certificateFolder);
+	        _fileSystemMock.Setup(x => x.CombinePaths(certificateFolder, Constants.FileName.CertificateConfig)).Returns(certificateConfigPath);
 	        _fileSystemMock.Setup(x => x.LoadTemplateFile(Resources.Resources.OpenSSLConfigTemplateFileName)).Returns(TemplateConfig);
 	        _fileSystemMock.Setup(x => x.CreateFile(certificateConfigPath, It.IsAny<string>())).Throws<Exception>();
 	        
@@ -151,9 +167,30 @@ CN={appName}";
 	        // Assert
 	        _fileSystemMock.Verify(fs => fs.LoadTemplateFile(Resources.Resources.OpenSSLConfigTemplateFileName), Times.Once);
 	        _fileSystemMock.Verify(fs => fs.CreateFile(certificateConfigPath, GetExpectedConfig(Constants.ExternalExecutableArguments.OpenSSLDefaultKeySize, appName, Constants.ExternalExecutableArguments.OpenSSLDefaultOrganization)), Times.Once);
-	        _fileSystemMock.Verify(fs => fs.CallExecutable(Constants.ExecutableName.OpenSSL, projectDirectory, string.Format(Constants.ExternalExecutableArguments.OpenSSL, string.Empty, Constants.ExternalExecutableArguments.OpenSSLDefaultDays)), Times.Never);
-	        _fileSystemMock.Verify(fs => fs.CallExecutable(Constants.ExecutableName.OpenSSL, projectDirectory, string.Format(Constants.ExternalExecutableArguments.OpenSSLConvertKeyFromPEM, Constants.FileName.PrivateKeyPEM, Constants.FileName.PrivateKeyDER)), Times.Never);
+	        _fileSystemMock.Verify(fs => fs.CallExecutable(Constants.ExecutableName.OpenSSL, certificateFolder, string.Format(Constants.ExternalExecutableArguments.OpenSSL, string.Empty, Constants.ExternalExecutableArguments.OpenSSLDefaultDays)), Times.Never);
+	        _fileSystemMock.Verify(fs => fs.CallExecutable(Constants.ExecutableName.OpenSSL, certificateFolder, string.Format(Constants.ExternalExecutableArguments.OpenSSLConvertKeyFromPEM, Constants.FileName.PrivateKeyPEM, Constants.FileName.PrivateKeyDER)), Times.Never);
 	        _loggerListenerMock.Verify(listener => listener.Warn(string.Format(LoggingText.CertificateGeneratorFailureNonexistentDirectory, projectDirectory)));
+        }
+        
+        [Test]
+        public void FailWhenOpenSSLNotWorking()
+        {
+	        // Arrange
+	        const string projectDirectory = "MyApp";
+	        const string certificateFolder = "certificate-folder";
+	        const string certificateConfigPath = "certificate-config-file";
+	        const string privateKeyPEM = "private-key-pem";
+
+	        _fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.DirectoryName.Certificates)).Returns(certificateFolder);
+	        _fileSystemMock.Setup(x => x.CombinePaths(certificateFolder, Constants.FileName.CertificateConfig)).Returns(certificateConfigPath);
+	        _fileSystemMock.Setup(x => x.CombinePaths(certificateFolder, Constants.FileName.PrivateKeyPEM)).Returns(privateKeyPEM);
+	        _fileSystemMock.Setup(x => x.LoadTemplateFile(Resources.Resources.OpenSSLConfigTemplateFileName)).Returns(TemplateConfig);
+	        _fileSystemMock.Setup(fs => fs.CallExecutable(Constants.ExecutableName.OpenSSL, certificateFolder, It.IsAny<string>())).Throws<Exception>();
+	        
+	        _objectUnderTest.Generate("MyApp");
+
+	        // Assert
+	        _loggerListenerMock.Verify(listener => listener.Warn(LoggingText.CertificateGeneratorFailureOpenSSLError));
         }
     }
 }

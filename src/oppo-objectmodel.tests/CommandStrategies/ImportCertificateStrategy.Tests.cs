@@ -1,5 +1,7 @@
+using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 using Moq;
 using NUnit.Framework;
@@ -49,6 +51,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         private static readonly string SampleClientAppProject = $"{{\"name\": \"App\",\"type\": \"{Constants.ApplicationType.Client}\"}}";
 
         const string OppoprojPath = "oppoproj-path";
+        const string CertificateFolder = "certificate-folder";
+        const string TargetCertPath = "certificate-path";
+        const string TargetKeyPath = "key-path";
 
         [SetUp]
         public void Setup()
@@ -75,6 +80,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var project = inputParams[5];
             
             MockPathCombine(project);
+            _fileSystemMock.Setup(fs => fs.CombinePaths(CertificateFolder, Constants.FileName.Certificate)).Returns(TargetCertPath);
+            _fileSystemMock.Setup(fs => fs.CombinePaths(CertificateFolder, Constants.FileName.PrivateKeyDER)).Returns(TargetKeyPath);
             var stream = MockFileRead(OppoprojPath, SampleClientAppProject);
             
             // act
@@ -82,9 +89,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
             // assert
             Assert.IsTrue(result.Success);
+            _fileSystemMock.Verify(fs => fs.CreateDirectory(CertificateFolder), Times.Once);
             Assert.AreEqual(OutputText.ImportCertificateCommandSuccess,result.OutputMessages.First().Key);
-            _fileSystemMock.Verify(fs => fs.CopyFile(keyFile, project), Times.Once);
-            _fileSystemMock.Verify(fs => fs.CopyFile(certFile, project), Times.Once);
+            _fileSystemMock.Verify(fs => fs.CopyFile(keyFile, TargetKeyPath), Times.Once);
+            _fileSystemMock.Verify(fs => fs.CopyFile(certFile, TargetCertPath), Times.Once);
             _loggerListenerMock.Verify(l => l.Info(string.Format(LoggingText.ImportCertificateSuccess, certFile, keyFile)));
             _loggerListenerMock.VerifyNoOtherCalls();
             stream.Close();
@@ -113,12 +121,11 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             MockPathCombine(project);
             var stream = MockFileRead(OppoprojPath, SampleClientAppProject);
             
-            const string targetCertPath = "certificate-path";
-            const string targetKeyPath = "key-path";
-            _fileSystemMock.Setup(fs => fs.CombinePaths(project, Constants.FileName.Certificate)).Returns(targetCertPath);
-            _fileSystemMock.Setup(fs => fs.CombinePaths(project, Constants.FileName.PrivateKeyDER)).Returns(targetKeyPath);
-            var openSSLCertArgs = string.Format(Constants.ExternalExecutableArguments.OpenSSLConvertCertificateFromPEM, certFile, targetCertPath);
-            var openSSLKeyArgs = string.Format(Constants.ExternalExecutableArguments.OpenSSLConvertKeyFromPEM, keyFile, targetKeyPath);
+            _fileSystemMock.Setup(fs => fs.CombinePaths(CertificateFolder, Constants.FileName.Certificate)).Returns(TargetCertPath);
+            _fileSystemMock.Setup(fs => fs.CombinePaths(CertificateFolder, Constants.FileName.PrivateKeyDER)).Returns(TargetKeyPath);
+            
+            var openSSLCertArgs = string.Format(Constants.ExternalExecutableArguments.OpenSSLConvertCertificateFromPEM, certFile, TargetCertPath);
+            var openSSLKeyArgs = string.Format(Constants.ExternalExecutableArguments.OpenSSLConvertKeyFromPEM, keyFile, TargetKeyPath);
             
             // act
             var result = _objectUnderTest.Execute(inputParams);
@@ -126,6 +133,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // assert
             Assert.IsTrue(result.Success);
             Assert.AreEqual(OutputText.ImportCertificateCommandSuccess,result.OutputMessages.First().Key);
+            _fileSystemMock.Verify(fs => fs.CreateDirectory(CertificateFolder), Times.Once);
             _fileSystemMock.Verify(fs => fs.CallExecutable(Constants.ExecutableName.OpenSSL, null, openSSLCertArgs), Times.Once);
             _fileSystemMock.Verify(fs => fs.CallExecutable(Constants.ExecutableName.OpenSSL, null, openSSLKeyArgs), Times.Once);
             _fileSystemMock.Verify(fs => fs.CopyFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
@@ -144,9 +152,13 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
         [TestCaseSource(nameof(ValidInputsDERClientServer))]
         public void ImportAsCorrectFileInClientServer(string[] inputParams)
         {
+            var prefix = string.Concat(inputParams[0].Skip(2)) + "_";
             var keyFile = inputParams[2];
             var certFile = inputParams[4];
             var project = inputParams[6];
+            
+            _fileSystemMock.Setup(fs => fs.CombinePaths(CertificateFolder, prefix + Constants.FileName.Certificate)).Returns(TargetCertPath);
+            _fileSystemMock.Setup(fs => fs.CombinePaths(CertificateFolder, prefix + Constants.FileName.PrivateKeyDER)).Returns(TargetKeyPath);
 
             // arrange
             MockPathCombine(project);
@@ -158,12 +170,13 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             
             // assert
             Assert.IsTrue(result.Success);
+            _fileSystemMock.Verify(fs => fs.CreateDirectory(CertificateFolder), Times.Once);
             Assert.AreEqual(OutputText.ImportCertificateCommandSuccess,result.OutputMessages.First().Key);
             _loggerListenerMock.Verify(l => l.Info(string.Format(LoggingText.ImportCertificateSuccess, certFile, keyFile)));
             _loggerListenerMock.VerifyNoOtherCalls();
             
-            _fileSystemMock.Verify(fs => fs.CopyFile(keyFile, project), Times.Once);
-            _fileSystemMock.Verify(fs => fs.CopyFile(certFile, project), Times.Once);
+            _fileSystemMock.Verify(fs => fs.CopyFile(keyFile, TargetKeyPath), Times.Once);
+            _fileSystemMock.Verify(fs => fs.CopyFile(certFile, TargetCertPath), Times.Once);
             
             stream.Close();
         }
@@ -247,6 +260,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
         private void MockPathCombine(string project)
         {
+            _fileSystemMock.Setup(fs => fs.CombinePaths(project, Constants.DirectoryName.Certificates)).Returns(CertificateFolder);
             _fileSystemMock.Setup(fs => fs.CombinePaths(project, project + Constants.FileExtension.OppoProject)).Returns(OppoprojPath);
         }
     }
