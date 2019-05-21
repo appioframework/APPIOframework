@@ -67,7 +67,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 
 			var opcuaappModel = (opcuaappData as IOpcuaServerApp).Models[0];
 			
-			if (!_nodesetGenerator.GenerateTypesSourceCodeFiles(projectName, opcuaappModel) || !_nodesetGenerator.GenerateNodesetSourceCodeFiles(projectName, opcuaappModel))
+			if (!_nodesetGenerator.GenerateTypesSourceCodeFiles(projectName, opcuaappModel) || !_nodesetGenerator.GenerateNodesetSourceCodeFiles(projectName, opcuaappModel, new List<RequiredModelsData>()))
 			{
 				outputMessages.Add(_nodesetGenerator.GetOutputMessage(), string.Empty);
 				return new CommandResult(false, outputMessages);

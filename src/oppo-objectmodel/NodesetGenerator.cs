@@ -9,7 +9,18 @@ using Oppo.Resources.text.logging;
 
 namespace Oppo.ObjectModel
 {
-    public class NodesetGenerator : INodesetGenerator
+	public struct RequiredModelsData
+	{
+		public string ModelName;
+		public bool RequiredTypes;
+		public RequiredModelsData(string modelName, bool requiredTypes)
+		{
+			ModelName = modelName;
+			RequiredTypes = requiredTypes;
+		}
+	}
+
+	public class NodesetGenerator : INodesetGenerator
     {
 		private readonly IFileSystem _fileSystem;
 		private readonly IModelValidator _modelValidator;
@@ -93,7 +104,7 @@ namespace Oppo.ObjectModel
 			}
 		}
 
-		public bool GenerateNodesetSourceCodeFiles(string projectName, IModelData modelData)
+		public bool GenerateNodesetSourceCodeFiles(string projectName, IModelData modelData, List<RequiredModelsData> requiredModelsData)
 		{
 			// Verify if nodeset file name is not empty
 			if (string.IsNullOrEmpty(modelData.Name))
@@ -131,21 +142,11 @@ namespace Oppo.ObjectModel
 			// Create a directory for generated C code
 			var srcDirectory = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp);
 			CreateNeededDirectories(srcDirectory);
-
-			// Build model source and target paths
-			var modelName = _fileSystem.GetFileNameWithoutExtension(modelData.Name);
-			var modelSourceRelativePath = @"../../" + _fileSystem.CombinePaths(Constants.DirectoryName.Models, modelData.Name);
-			var modelTargetRelativePath = _fileSystem.CombinePaths(Constants.DirectoryName.InformationModels, modelName);
-
+			
 			// Build nodeset compiler script arguments
-			var typesNameForScriptCall = string.IsNullOrEmpty(modelData.Types) ? Constants.ExecutableName.NodesetCompilerBasicTypes : (modelName + Constants.InformationModelsName.Types).ToUpper();
-			var nodesetCompilerArgs = Constants.ExecutableName.NodesetCompilerCompilerPath +
-										Constants.ExecutableName.NodesetCompilerInternalHeaders +
-										string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes) +
-										string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, typesNameForScriptCall) +
-										string.Format(Constants.ExecutableName.NodesetCompilerExisting, Constants.ExecutableName.NodesetCompilerBasicNodeset) +
-										string.Format(Constants.ExecutableName.NodesetCompilerXml, modelSourceRelativePath, modelTargetRelativePath);
-
+			var modelName = _fileSystem.GetFileNameWithoutExtension(modelData.Name);
+			var nodesetCompilerArgs = BuildNodesetCompilerArgs(modelName, modelData, requiredModelsData);
+			
 			// Execute nodeset compiler call
 			var nodesetResult = _fileSystem.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, nodesetCompilerArgs);
 			if (!nodesetResult)
@@ -165,6 +166,36 @@ namespace Oppo.ObjectModel
 			AdjustMainCallbacksCFile(srcDirectory, modelPath, modelData);
 			
 			return true;
+		}
+
+		private string BuildNodesetCompilerArgs(string modelName, IModelData modelData, List<RequiredModelsData> requiredModelsData)
+		{
+			// Build model source and target paths
+			var modelSourceRelativePath = @"../../" + _fileSystem.CombinePaths(Constants.DirectoryName.Models, modelData.Name);
+			var modelTargetRelativePath = _fileSystem.CombinePaths(Constants.DirectoryName.InformationModels, modelName);
+			
+			// Build nodeset compiler script arguments:
+			// add compiler path, internal headers flag and basic nodeset types
+			string compilerArgs = Constants.ExecutableName.NodesetCompilerCompilerPath + Constants.ExecutableName.NodesetCompilerInternalHeaders + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes);
+			// add types for each required nodeset
+			foreach(var nodeset in requiredModelsData)
+			{
+				var requiredModelTypes = nodeset.RequiredTypes ? (_fileSystem.GetFileNameWithoutExtension(nodeset.ModelName) + Constants.InformationModelsName.Types).ToUpper() : Constants.ExecutableName.NodesetCompilerBasicTypes;
+				compilerArgs += string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, requiredModelTypes);
+			}
+			// add currently compiled nodeset types and basic nodeset path
+			var typesNameForScriptCall = string.IsNullOrEmpty(modelData.Types) ? Constants.ExecutableName.NodesetCompilerBasicTypes : (modelName + Constants.InformationModelsName.Types).ToUpper();
+			compilerArgs += string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, typesNameForScriptCall) + string.Format(Constants.ExecutableName.NodesetCompilerExisting, Constants.ExecutableName.NodesetCompilerBasicNodeset);
+			// add nodeset path for each required nodeset
+			foreach(var nodeset in requiredModelsData)
+			{
+				var requiredModelRelativePath = @"../../" + _fileSystem.CombinePaths(Constants.DirectoryName.Models, nodeset.ModelName);
+				compilerArgs += string.Format(Constants.ExecutableName.NodesetCompilerExisting, requiredModelRelativePath);
+			}
+			// add currently compiled nodeset path
+			compilerArgs += string.Format(Constants.ExecutableName.NodesetCompilerXml, modelSourceRelativePath, modelTargetRelativePath);
+
+			return compilerArgs;
 		}
 
 		// Adding header file include to server's meson build

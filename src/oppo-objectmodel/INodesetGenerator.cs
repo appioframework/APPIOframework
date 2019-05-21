@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 namespace Oppo.ObjectModel
 {
@@ -6,6 +6,6 @@ namespace Oppo.ObjectModel
     {
 		string GetOutputMessage();
 		bool GenerateTypesSourceCodeFiles(string projectName, IModelData modelData);
-		bool GenerateNodesetSourceCodeFiles(string projectName, IModelData modelData);
+		bool GenerateNodesetSourceCodeFiles(string projectName, IModelData modelData, List<RequiredModelsData> requiredModelsData);
 	}
 }

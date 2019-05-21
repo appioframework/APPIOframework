@@ -16,6 +16,7 @@ namespace Oppo.ObjectModel.Tests
 		private readonly string _modelFullName = "model.xml";
 		private readonly string _typesFullName = "types.bsd";
 		private readonly string _namespaceVariable = "ns_model";
+		private readonly List<RequiredModelsData> _requiredModelData = new List<RequiredModelsData>{ new RequiredModelsData("requiredModel.xml", true) };
 
 		protected static string[] InvalidTypesFullNames()
 		{
@@ -207,7 +208,7 @@ namespace Oppo.ObjectModel.Tests
 			_loggerListenerMock.Setup(listener => listener.Warn(LoggingText.GenerateInformationModelFailureEmptyModelName)).Callback(delegate { _loggerWroteOut = true; });
 
 			// Act
-			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, new ModelData());
+			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, new ModelData(), new List<RequiredModelsData>());
 
 			// Assert
 			Assert.IsFalse(result);
@@ -222,7 +223,7 @@ namespace Oppo.ObjectModel.Tests
 			_loggerListenerMock.Setup(listener => listener.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidModelFile, invalidModelFullName))).Callback(delegate { _loggerWroteOut = true; });
 
 			// Act
-			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, new ModelData(invalidModelFullName, null, _typesFullName, null, null));
+			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, new ModelData(invalidModelFullName, null, _typesFullName, null, null), new List<RequiredModelsData>());
 
 			// Assert
 			Assert.IsFalse(result);
@@ -245,7 +246,7 @@ namespace Oppo.ObjectModel.Tests
 			_loggerListenerMock.Setup(listener => listener.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsMissingModelFile, _modelFullName))).Callback(delegate { _loggerWroteOut = true; });
 
 			// Act
-			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, _defaultModelData);
+			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, _defaultModelData, new List<RequiredModelsData>());
 
 			// Assert
 			Assert.IsFalse(result);
@@ -269,7 +270,7 @@ namespace Oppo.ObjectModel.Tests
 			_loggerListenerMock.Setup(listener => listener.Warn(string.Format(LoggingText.NodesetValidationFailure, _modelFullName))).Callback(delegate { _loggerWroteOut = true; });
 
 			// Act
-			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, _defaultModelData);
+			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, _defaultModelData, new List<RequiredModelsData>());
 
 			// Assert
 			Assert.IsFalse(result);
@@ -304,7 +305,7 @@ namespace Oppo.ObjectModel.Tests
 			OppoLogger.RegisterListener(_loggerListenerMock.Object);
 
 			// Act
-			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, _defaultModelData);
+			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, _defaultModelData, new List<RequiredModelsData>());
 
 			// Assert
 			Assert.IsFalse(result);
@@ -323,11 +324,15 @@ namespace Oppo.ObjectModel.Tests
 			var modelSourcePath = Path.Combine(Constants.DirectoryName.Models, _modelFullName);
 			var modelSourceRelativePath = @"../../" + modelSourcePath;
 			var modelTargetRelativePath = Path.Combine(Constants.DirectoryName.InformationModels, modelName.ToLower());
+			var requiredModelName = Path.GetFileNameWithoutExtension(_requiredModelData[0].ModelName);
+			var requiredModelRelativePath = Path.Combine(Constants.DirectoryName.Models, _requiredModelData[0].ModelName);
 			var nodesetCompilerArgs = Constants.ExecutableName.NodesetCompilerCompilerPath +
 										Constants.ExecutableName.NodesetCompilerInternalHeaders +
 										string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes) +
+										string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, (requiredModelName + Constants.InformationModelsName.Types).ToUpper()) +
 										string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes) +
 										string.Format(Constants.ExecutableName.NodesetCompilerExisting, Constants.ExecutableName.NodesetCompilerBasicNodeset) +
+										string.Format(Constants.ExecutableName.NodesetCompilerExisting, @"../../" + requiredModelRelativePath) +
 										string.Format(Constants.ExecutableName.NodesetCompilerXml, modelSourceRelativePath, modelTargetRelativePath);
 			var serverMesonBuildFilePath = Path.Combine(srcDirectory, Constants.FileName.SourceCode_meson_build);
 			var loadInformationModelsFilePath = Path.Combine(srcDirectory, Constants.FileName.SourceCode_loadInformationModels_c);
@@ -341,6 +346,8 @@ namespace Oppo.ObjectModel.Tests
 			_fileSystemMock.Setup(x => x.GetFileNameWithoutExtension(_modelFullName)).Returns(modelName);
 			_fileSystemMock.Setup(x => x.CombinePaths(Constants.DirectoryName.InformationModels, modelName.ToLower())).Returns(modelTargetRelativePath);
 			_fileSystemMock.Setup(x => x.CombinePaths(Constants.DirectoryName.Models, _modelFullName)).Returns(modelSourcePath);
+			_fileSystemMock.Setup(x => x.GetFileNameWithoutExtension(_requiredModelData[0].ModelName)).Returns(requiredModelName);
+			_fileSystemMock.Setup(x => x.CombinePaths(Constants.DirectoryName.Models, _requiredModelData[0].ModelName)).Returns(requiredModelRelativePath);
 			_fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, nodesetCompilerArgs)).Returns(true);
 			_fileSystemMock.Setup(x => x.CombinePaths(srcDirectory, Constants.FileName.SourceCode_meson_build)).Returns(serverMesonBuildFilePath);
 			_fileSystemMock.Setup(x => x.CombinePaths(srcDirectory, Constants.FileName.SourceCode_loadInformationModels_c)).Returns(loadInformationModelsFilePath);
@@ -357,7 +364,7 @@ namespace Oppo.ObjectModel.Tests
 				_fileSystemMock.Setup(x => x.ReadFile(mainCallbacksFilePath)).Returns(mainCallbacksFileStream);
 
 				// Act
-				var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, new ModelData(_modelFullName, null, null, _namespaceVariable, null));
+				var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, new ModelData(_modelFullName, null, null, _namespaceVariable, null), _requiredModelData);
 
 				// Assert
 				Assert.IsTrue(result);
@@ -413,7 +420,7 @@ namespace Oppo.ObjectModel.Tests
 				_fileSystemMock.Setup(x => x.ReadFile(modelPath)).Returns(nodesetFileStream);
 
 				// Act
-				var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, _defaultModelData);
+				var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, _defaultModelData, new List<RequiredModelsData>());
 
 				// Assert
 				Assert.IsTrue(result);

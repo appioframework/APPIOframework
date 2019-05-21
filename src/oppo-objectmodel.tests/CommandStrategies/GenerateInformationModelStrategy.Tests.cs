@@ -222,7 +222,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				_fileSystemMock.Setup(x => x.ReadFile(oppoprojFilePath)).Returns(oppoprojFileStream);
 
 				_nodesetGenerator.Setup(x => x.GenerateTypesSourceCodeFiles(It.IsAny<string>(), It.IsAny<IModelData>())).Returns(true);
-				_nodesetGenerator.Setup(x => x.GenerateNodesetSourceCodeFiles(It.IsAny<string>(), It.IsAny<IModelData>())).Returns(true);
+				_nodesetGenerator.Setup(x => x.GenerateNodesetSourceCodeFiles(It.IsAny<string>(), It.IsAny<IModelData>(), It.IsAny<List<RequiredModelsData>>())).Returns(true);
 
 				// Arrange logger listener
 				_loggerListenerMock.Setup(x => x.Info(LoggingText.GenerateInformationModelSuccess)).Callback(delegate { _loggerWroteOut = true; });
@@ -252,7 +252,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				_fileSystemMock.Setup(x => x.ReadFile(oppoprojFilePath)).Returns(oppoprojFileStream);
 
 				_nodesetGenerator.Setup(x => x.GenerateTypesSourceCodeFiles(It.IsAny<string>(), It.IsAny<IModelData>())).Returns(typesGeneratorResult);
-				_nodesetGenerator.Setup(x => x.GenerateNodesetSourceCodeFiles(It.IsAny<string>(), It.IsAny<IModelData>())).Returns(nodesetGeneratorResult);
+				_nodesetGenerator.Setup(x => x.GenerateNodesetSourceCodeFiles(It.IsAny<string>(), It.IsAny<IModelData>(), It.IsAny<List<RequiredModelsData>>())).Returns(nodesetGeneratorResult);
 			
 				// Act
 				var commandResult = _strategy.Execute(inputParams);
