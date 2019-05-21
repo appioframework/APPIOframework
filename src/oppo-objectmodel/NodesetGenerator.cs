@@ -1,6 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.IO;
 using System.Collections.Generic;
+using System.Xml;
+using System.Text.RegularExpressions;
 using Oppo.Resources.text.output;
 using Oppo.Resources.text.logging;
 
@@ -76,7 +79,7 @@ namespace Oppo.ObjectModel
 			}
 
 			// Add generated types header file to server's meson build
-			AdjustServerMesonBuildTemplate(srcDirectory, modelName.ToLower() + Constants.InformationModelsName.TypesGenerated);
+			AdjustServerMesonBuildCFile(srcDirectory, modelName.ToLower() + Constants.InformationModelsName.TypesGenerated);
 
 			return true;
 		}
@@ -153,16 +156,19 @@ namespace Oppo.ObjectModel
 			}
 
 			// Add nodeset header file to server's meson build
-			AdjustServerMesonBuildTemplate(srcDirectory, modelName);
+			AdjustServerMesonBuildCFile(srcDirectory, modelName);
 
 			// Add nodeset function call to server code
-			AdjustLoadInformationModelsTemplate(srcDirectory, modelName);
+			AdjustLoadInformationModelsCFile(srcDirectory, modelName);
+
+			// Add method callback functioncs to server code
+			AdjustMainCallbacksCFile(srcDirectory, modelPath, modelData);
 			
 			return true;
 		}
 
 		// Adding header file include to server's meson build
-		private void AdjustServerMesonBuildTemplate(string srcDirectory, string fileNameToInclude)
+		private void AdjustServerMesonBuildCFile(string srcDirectory, string fileNameToInclude)
 		{
 			var sourceFileSnippet = string.Format(Constants.InformationModelsName.FileSnippet, fileNameToInclude);
 
@@ -183,7 +189,7 @@ namespace Oppo.ObjectModel
 		}
 
 		// Adding nodeset function call to server code
-		private void AdjustLoadInformationModelsTemplate(string srcDirectory, string functionName)
+		private void AdjustLoadInformationModelsCFile(string srcDirectory, string functionName)
         {
             var functionSnippet = string.Format(Constants.LoadInformationModelsContent.FunctionSnippetPart1,functionName);
 
@@ -209,7 +215,67 @@ namespace Oppo.ObjectModel
 				_fileSystem.WriteFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_loadInformationModels_c), currentFileContentLineByLine);
 			}
 		}
-		
+
+		// Adding UAMethod callback functions to server source code
+		private void AdjustMainCallbacksCFile(string srcDirectory, string nodesetPath, IModelData modelData)
+		{
+			// read XML file
+			XmlDocument nodesetXml = new XmlDocument();
+			using (var nodesetStream = _fileSystem.ReadFile(nodesetPath))
+			{
+				StreamReader reader = new StreamReader(nodesetStream);
+				var xmlFileContent = reader.ReadToEnd();
+				nodesetXml.LoadXml(xmlFileContent);
+			}
+
+			// extract UAMethods
+			var nsmgr = new XmlNamespaceManager(nodesetXml.NameTable);
+			nsmgr.AddNamespace(Constants.NodesetXml.UANodeSetNamespaceShortcut, new UriBuilder(Constants.NodesetXml.UANodeSetNamespaceScheme, Constants.NodesetXml.UANodeSetNamespaceHost, -1, Constants.NodesetXml.UANodeSetNamespaceValuePath).ToString());
+			var methodNodes = nodesetXml.SelectNodes(string.Format(Constants.NodesetXml.UANodeSetUAMethod, Constants.NodesetXml.UANodeSetNamespaceShortcut), nsmgr);
+
+			// skip the rest of method if there are no UAMethod in nodeset file
+			if(methodNodes.Count == 0)
+			{
+				return;
+			}
+
+			// get content of mainCallbacks.c file
+			List<string> currentFileContentLineByLine = null;
+			var mainCallbacksCPath = _fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_mainCallbacks_c);
+			using (var mainCallbacksFileStream = _fileSystem.ReadFile(mainCallbacksCPath))
+			{
+				currentFileContentLineByLine = ReadFileContent(mainCallbacksFileStream).ToList();
+			}
+
+			// for each method found in nodeset generate callback functions
+			foreach(XmlNode node in methodNodes)
+			{
+				var methodBrowseName = node.Attributes[Constants.NodesetXml.UANodeSetUAMethodBrowseName].Value;
+				var methodNodeId = uint.Parse(Regex.Split(node.Attributes[Constants.NodesetXml.UANodeSetUaMethodNodeId].Value, @"\D+").Last());
+				
+				var lastUAMethodLinePosition = currentFileContentLineByLine.FindIndex(x => x.Contains(string.Format(Constants.UAMethodCallback.FunctionName, modelData.NamespaceVariable, methodNodeId)));
+				if (lastUAMethodLinePosition == -1)
+				{
+					// add callback function
+					var addCallbacksFunctionLinePosition = currentFileContentLineByLine.FindIndex(x => x.Contains(Constants.UAMethodCallback.AddCallbacks));
+					if (addCallbacksFunctionLinePosition != -1)
+					{
+						currentFileContentLineByLine.Insert(addCallbacksFunctionLinePosition, string.Format(Constants.UAMethodCallback.FunctionBody, methodBrowseName, modelData.Name, modelData.NamespaceVariable, methodNodeId));
+					}
+
+					// call callback function in addCallbacks function
+					var addCallbacksReturnLinePosition = currentFileContentLineByLine.FindLastIndex(x => x.Contains(Constants.UAMethodCallback.ReturnLine));
+					if (addCallbacksReturnLinePosition != -1)
+					{
+						currentFileContentLineByLine.Insert(addCallbacksReturnLinePosition, string.Format(Constants.UAMethodCallback.FunctionCall, methodBrowseName, modelData.Name, modelData.NamespaceVariable, methodNodeId));
+					}
+				}
+			}
+
+			// write new content to mainCallbacks.c file
+			_fileSystem.WriteFile(mainCallbacksCPath, currentFileContentLineByLine);
+		}
+
 		// Conversion of stream to List of strings
 		private List<string> ReadFileContent(Stream stream)
 		{

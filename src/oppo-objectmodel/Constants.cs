@@ -341,13 +341,13 @@ namespace Oppo.ObjectModel
 			public const string BrowseName = "BrowseName";
 			public const string NodeId = "NodeId";
 			public const string AddCallbacks = "addCallbacks";
-			public const string FunctionName = "ns{0}_i{1}_Callback";
-			public const string FunctionBody = "// callback function of {0} UAMethod\nUA_MethodCallback ns{1}_i{2}_Callback(UA_Server* server, const UA_NodeId* sessionId, void* sessionContext, const UA_NodeId* methodId, void* methodContext, const UA_NodeId* objectId, void* objectContext, size_t inputSize, const UA_Variant* input, size_t outputSize, UA_Variant* output)\n{{\n\t/* TODO: place your code here */\n\treturn UA_STATUSCODE_GOOD;\n}}\n";
-			public const string FunctionCall = "\t// {0} UAMethod\n\tif(UA_Server_setMethodNode_callback(server, UA_NODEID_NUMERIC({1}, {2}), ns{1}_i{2}_Callback) != UA_STATUSCODE_GOOD)\n\t{{\n\t\treturn UA_STATUSCODE_BADUNEXPECTEDERROR;\n\t}}\n";
+			public const string FunctionName = "{0}_i{1}_Callback";
+			public const string FunctionBody = "// callback function of: {0} UAMethod found in {1}\nUA_MethodCallback {2}_i{3}_Callback(UA_Server* server, const UA_NodeId* sessionId, void* sessionContext, const UA_NodeId* methodId, void* methodContext, const UA_NodeId* objectId, void* objectContext, size_t inputSize, const UA_Variant* input, size_t outputSize, UA_Variant* output)\n{{\n\t/* TODO: place your code here */\n\treturn UA_STATUSCODE_GOOD;\n}}\n";
+			public const string FunctionCall = "\t// set callback of: {0} UAMethod found in {1}\n\tif(UA_Server_setMethodNode_callback(server, UA_NODEID_NUMERIC({2}, {3}), {2}_i{3}_Callback) != UA_STATUSCODE_GOOD)\n\t{{\n\t\treturn UA_STATUSCODE_BADUNEXPECTEDERROR;\n\t}}\n";
 			public const string ReturnLine = "return UA_STATUSCODE_GOOD;";
 		}
 
-		public static class ImportModel
+		public static class NodesetXml
 		{
 			public const string NamespaceVariablePrefix = "ns_";
 			public const string UANodeSetNamespaceScheme = "http";
@@ -356,6 +356,9 @@ namespace Oppo.ObjectModel
 			public const string UANodeSetNamespaceShortcut = "ns";
 			public const string UANodeSetNamespaceFullPath = "//{0}:UANodeSet//{0}:Models//{0}:Model";
 			public const string UANodeSetNamespaceModelUri = "ModelUri";
+			public const string UANodeSetUAMethod = "//{0}:UANodeSet//{0}:UAMethod";
+			public const string UANodeSetUAMethodBrowseName = "BrowseName";
+			public const string UANodeSetUaMethodNodeId = "NodeId";
 		}
     }
 }

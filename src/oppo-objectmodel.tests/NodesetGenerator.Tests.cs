@@ -8,13 +8,14 @@ using Oppo.Resources.text.logging;
 
 namespace Oppo.ObjectModel.Tests
 {
-    public class NodesetGeneratorShould
-    {
+	public class NodesetGeneratorShould
+	{
 		NodesetGenerator _objectUnderTest;
 
 		private readonly string _projectName = "testApp";
 		private readonly string _modelFullName = "model.xml";
 		private readonly string _typesFullName = "types.bsd";
+		private readonly string _namespaceVariable = "ns_model";
 
 		protected static string[] InvalidTypesFullNames()
 		{
@@ -35,10 +36,34 @@ namespace Oppo.ObjectModel.Tests
 		private readonly string _defaultServerMesonBuild = "server_app_sources += [\n]";
 		private readonly string _defaultLoadInformationModelsC = "UA_StatusCode loadInformationModels(UA_Server* server)\n{\n\treturn UA_STATUSCODE_GOOD;\n}";
 
+		private readonly string _emptyNodesetContent = "<?xml version=\"1.0\" encoding=\"utf-8\"?><UANodeSet/>";
+		private readonly string _sampleNodesetContent = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
+														"<UANodeSet xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" LastModified=\"2012-12-31T00:00:00Z\" xmlns=\"http://opcfoundation.org/UA/2011/03/UANodeSet.xsd\">" +
+															"<NamespaceUris>" +
+																"<Uri>sample_namespace</Uri>" +
+																"<Uri>required_namespace</Uri>" +
+															"</NamespaceUris>" +
+															"<Models>" +
+																"<Model ModelUri = \"sample_namespace\" Version=\"1.01\" PublicationDate=\"2012-12-31T00:00:00Z\">" +
+																	"<RequiredModel ModelUri = \"http://opcfoundation.org/UA/\" Version=\"1.04\" PublicationDate=\"2016-12-31T00:00:00Z\" />" +
+																	"<RequiredModel ModelUri = \"required_namespace\" Version=\"1.01\" PublicationDate=\"2012-12-31T00:00:00Z\" />" +
+																"</Model>" +
+															"</Models>" +
+															"<UAMethod NodeId=\"ns=1;i=3000\" BrowseName=\"startPump\" ParentNodeId=\"ns=1;i=1000\">" +
+																"<DisplayName>StartPump</DisplayName>" +
+																"<References/>" +
+															"</UAMethod>" +
+															"<UAMethod NodeId = \"ns=1;i=3001\" BrowseName=\"stopPump\" ParentNodeId=\"ns=1;i=1000\">" +
+																"<DisplayName>StopPump</DisplayName>" +
+																"<References/>" +
+															"</UAMethod>" +
+														"</UANodeSet>";
+		private readonly string _defaultMainCallbakcsCFileContent = "UA_StatusCode addCallbacks(UA_Server *server)\n{\n\treturn UA_STATUSCODE_GOOD;\n}";
+
 		[SetUp]
-        public void SetupTest()
-        {
-			_defaultModelData = new ModelData(_modelFullName, null, _typesFullName, null, null);
+		public void SetupTest()
+		{
+			_defaultModelData = new ModelData(_modelFullName, null, _typesFullName, _namespaceVariable, null);
 			_fileSystemMock = new Mock<IFileSystem>();
 			_modelValidator = new Mock<IModelValidator>();
 			_loggerListenerMock = new Mock<ILoggerListener>();
@@ -47,12 +72,12 @@ namespace Oppo.ObjectModel.Tests
 			OppoLogger.RegisterListener(_loggerListenerMock.Object);
 		}
 
-        [TearDown]
-        public void CleanUpTest()
+		[TearDown]
+		public void CleanUpTest()
 		{
 			OppoLogger.RemoveListener(_loggerListenerMock.Object);
 		}
-		
+
 		[Test]
 		public void Success_OnGeneratingTypesWhenModelsTypesEmpty()
 		{
@@ -306,6 +331,7 @@ namespace Oppo.ObjectModel.Tests
 										string.Format(Constants.ExecutableName.NodesetCompilerXml, modelSourceRelativePath, modelTargetRelativePath);
 			var serverMesonBuildFilePath = Path.Combine(srcDirectory, Constants.FileName.SourceCode_meson_build);
 			var loadInformationModelsFilePath = Path.Combine(srcDirectory, Constants.FileName.SourceCode_loadInformationModels_c);
+			var mainCallbacksFilePath = Path.Combine(srcDirectory, Constants.FileName.SourceCode_mainCallbacks_c);
 
 			_fileSystemMock.Setup(x => x.GetExtension(_modelFullName)).Returns(Constants.FileExtension.InformationModel);
 			_fileSystemMock.Setup(x => x.CombinePaths(_projectName, Constants.DirectoryName.Models, _modelFullName)).Returns(modelPath);
@@ -318,15 +344,20 @@ namespace Oppo.ObjectModel.Tests
 			_fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, nodesetCompilerArgs)).Returns(true);
 			_fileSystemMock.Setup(x => x.CombinePaths(srcDirectory, Constants.FileName.SourceCode_meson_build)).Returns(serverMesonBuildFilePath);
 			_fileSystemMock.Setup(x => x.CombinePaths(srcDirectory, Constants.FileName.SourceCode_loadInformationModels_c)).Returns(loadInformationModelsFilePath);
+			_fileSystemMock.Setup(x => x.CombinePaths(srcDirectory, Constants.FileName.SourceCode_mainCallbacks_c)).Returns(mainCallbacksFilePath);
 
 			using (var serverMesonBuildFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_defaultServerMesonBuild)))
 			using (var loadInformationModelsFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_defaultLoadInformationModelsC)))
+			using (var nodesetFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleNodesetContent)))
+			using (var mainCallbacksFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_defaultMainCallbakcsCFileContent)))
 			{
 				_fileSystemMock.Setup(x => x.ReadFile(serverMesonBuildFilePath)).Returns(serverMesonBuildFileStream);
 				_fileSystemMock.Setup(x => x.ReadFile(loadInformationModelsFilePath)).Returns(loadInformationModelsFileStream);
+				_fileSystemMock.Setup(x => x.ReadFile(modelPath)).Returns(nodesetFileStream);
+				_fileSystemMock.Setup(x => x.ReadFile(mainCallbacksFilePath)).Returns(mainCallbacksFileStream);
 
 				// Act
-				var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, new ModelData(_modelFullName, null, null, null, null));
+				var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, new ModelData(_modelFullName, null, null, _namespaceVariable, null));
 
 				// Assert
 				Assert.IsTrue(result);
@@ -336,6 +367,9 @@ namespace Oppo.ObjectModel.Tests
 				_fileSystemMock.Verify(x => x.WriteFile(serverMesonBuildFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
 				_fileSystemMock.Verify(x => x.ReadFile(loadInformationModelsFilePath), Times.Once);
 				_fileSystemMock.Verify(x => x.WriteFile(loadInformationModelsFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
+				_fileSystemMock.Verify(x => x.ReadFile(modelPath), Times.Once);
+				_fileSystemMock.Verify(x => x.ReadFile(mainCallbacksFilePath), Times.Once);
+				_fileSystemMock.Verify(x => x.WriteFile(mainCallbacksFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
 			}
 		}
 
@@ -372,9 +406,11 @@ namespace Oppo.ObjectModel.Tests
 
 			using (var serverMesonBuildFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_defaultServerMesonBuild)))
 			using (var loadInformationModelsFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_defaultLoadInformationModelsC)))
+			using (var nodesetFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_emptyNodesetContent)))
 			{
 				_fileSystemMock.Setup(x => x.ReadFile(serverMesonBuildFilePath)).Returns(serverMesonBuildFileStream);
 				_fileSystemMock.Setup(x => x.ReadFile(loadInformationModelsFilePath)).Returns(loadInformationModelsFileStream);
+				_fileSystemMock.Setup(x => x.ReadFile(modelPath)).Returns(nodesetFileStream);
 
 				// Act
 				var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, _defaultModelData);
@@ -387,6 +423,7 @@ namespace Oppo.ObjectModel.Tests
 				_fileSystemMock.Verify(x => x.WriteFile(serverMesonBuildFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
 				_fileSystemMock.Verify(x => x.ReadFile(loadInformationModelsFilePath), Times.Once);
 				_fileSystemMock.Verify(x => x.WriteFile(loadInformationModelsFilePath, It.IsAny<IEnumerable<string>>()), Times.Once);
+				_fileSystemMock.Verify(x => x.ReadFile(modelPath), Times.Once);
 			}
 		}
 	}
