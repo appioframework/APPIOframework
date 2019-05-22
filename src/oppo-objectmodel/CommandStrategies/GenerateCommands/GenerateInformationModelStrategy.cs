@@ -89,7 +89,9 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 			// generate models
 			foreach (var model in opcuaappModels)
 			{
-				if (!_nodesetGenerator.GenerateTypesSourceCodeFiles(projectName, model) || !_nodesetGenerator.GenerateNodesetSourceCodeFiles(projectName, model, new List<RequiredModelsData>()))
+				var requiredModelData = GetListOfRequiredModels(opcuaappModels, model);
+
+				if (!_nodesetGenerator.GenerateTypesSourceCodeFiles(projectName, model) || !_nodesetGenerator.GenerateNodesetSourceCodeFiles(projectName, model, requiredModelData))
 				{
 					outputMessages.Add(_nodesetGenerator.GetOutputMessage(), string.Empty);
 					return new CommandResult(false, outputMessages);
@@ -180,6 +182,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 				{
 					for(int requiredModelIndex = 0; requiredModelIndex < models[firstModelIndex].RequiredModelUris.Count; requiredModelIndex++)
 					{
+						// swap models if required model of first model is equal to second model
 						if(models[firstModelIndex].RequiredModelUris[requiredModelIndex] == models[secondModelIndex].Uri)
 						{
 							(models[firstModelIndex], models[secondModelIndex]) = (models[secondModelIndex], models[firstModelIndex]);
@@ -197,6 +200,19 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 					firstModelIndex++;
 				}
 			}
+		}
+
+		private List<RequiredModelsData> GetListOfRequiredModels(List<IModelData> models, IModelData model)
+		{
+			var result = new List<RequiredModelsData>();
+
+			foreach(var requiredModelUri in model.RequiredModelUris)
+			{
+				var requiredModel = models.SingleOrDefault(x => x.Uri == requiredModelUri);
+				result.Add(new RequiredModelsData(requiredModel.Name, requiredModel.Types != string.Empty));
+			}
+
+			return result;
 		}
 
 		public string GetHelpText()
