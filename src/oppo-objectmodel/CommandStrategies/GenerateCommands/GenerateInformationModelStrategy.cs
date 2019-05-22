@@ -76,7 +76,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 				return new CommandResult(false, outputMessages);
 			}
 			
-			// TODO: check if there is a circular dependency between models
+			// check if there is a circular dependency between models
 
 			// generate models
 			foreach(var model in opcuaappModels)
@@ -100,7 +100,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 			for (int modelIndex = 0; modelIndex < models.Count; modelIndex++)
 			{
 				// check for model duplications
-				if (models.Where(x => x.Name == models[modelIndex].Name || x.Uri == models[modelIndex].Uri).Count() > 1)
+				if (models.Count(x => x.Name == models[modelIndex].Name || x.Uri == models[modelIndex].Uri) > 1)
 				{
 					return false;
 				}
