@@ -41,6 +41,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		private readonly string _oppoprojServerContent = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"localhost\",\"port\":\"4840\"}";
 		private readonly string _oppoprojClientContent = "{\"name\":\"clientApp\",\"type\":\"Client\",\"references\":[{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"localhost\",\"port\":\"4840\"}]}";
 
+		private readonly string _sampleServerConstantsFileContent = "const char* SERVER_APP_HOSTNAME = \"localhost\";\nconst UA_UInt16 SERVER_APP_PORT = 3000;";
+
 		[Test]
         public void BuildNameStrategy_Should_ImplementICommandOfBuildStrategy()
         {
@@ -122,11 +124,16 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
 			var oppoprojFilePath = Path.Combine(projectName, projectName + Constants.FileExtension.OppoProject);
 			fileSystemMock.Setup(x => x.CombinePaths(projectName, projectName + Constants.FileExtension.OppoProject)).Returns(oppoprojFilePath);
-			
+
+			var serverConstantsFilePath = Path.Combine();
+			fileSystemMock.Setup(x => x.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp, Constants.FileName.SourceCode_constants_h)).Returns(serverConstantsFilePath);
+
 			using (var oppoprojMemoryStreamFirstCall = new MemoryStream(Encoding.ASCII.GetBytes(_oppoprojServerContent)))
 			using (var oppoprojMemoryStreamSecondCall = new MemoryStream(Encoding.ASCII.GetBytes(_oppoprojServerContent)))
+			using (var serverConstantsMemoryStrean = new MemoryStream(Encoding.ASCII.GetBytes(string.Empty)))
 			{
 				fileSystemMock.SetupSequence(x => x.ReadFile(oppoprojFilePath)).Returns(oppoprojMemoryStreamFirstCall).Returns(oppoprojMemoryStreamSecondCall);
+				fileSystemMock.Setup(x => x.ReadFile(serverConstantsFilePath)).Returns(serverConstantsMemoryStrean);
 
 				var buildStrategy = new BuildNameStrategy(string.Empty, fileSystemMock.Object);
 				var loggerListenerMock = new Mock<ILoggerListener>();
@@ -194,11 +201,15 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			var oppoprojFilePath = Path.Combine(projectName, projectName + Constants.FileExtension.OppoProject);
 			fileSystemMock.Setup(x => x.CombinePaths(projectName, projectName + Constants.FileExtension.OppoProject)).Returns(oppoprojFilePath);
 
+			var serverConstantsFilePath = Path.Combine();
+			fileSystemMock.Setup(x => x.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp, Constants.FileName.SourceCode_constants_h)).Returns(serverConstantsFilePath);
 
 			using (var oppoprojMemoryStreamFirstCall = new MemoryStream(Encoding.ASCII.GetBytes(_oppoprojServerContent)))
 			using (var oppoprojMemoryStreamSecondCall = new MemoryStream(Encoding.ASCII.GetBytes(_oppoprojServerContent)))
+			using (var serverConstantsMemoryStrean = new MemoryStream(Encoding.ASCII.GetBytes(_sampleServerConstantsFileContent)))
 			{
 				fileSystemMock.SetupSequence(x => x.ReadFile(oppoprojFilePath)).Returns(oppoprojMemoryStreamFirstCall).Returns(oppoprojMemoryStreamSecondCall);
+				fileSystemMock.Setup(x => x.ReadFile(serverConstantsFilePath)).Returns(serverConstantsMemoryStrean);
 
 				var buildStrategy = new BuildNameStrategy(string.Empty, fileSystemMock.Object);
 

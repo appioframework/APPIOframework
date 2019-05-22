@@ -3,6 +3,7 @@ using System.Linq;
 using Oppo.Resources.text.output;
 using Oppo.Resources.text.logging;
 using System.Text;
+using System.IO;
 
 namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 {
@@ -66,8 +67,32 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 			{
 				var serverConstantsFilePath = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp, Constants.FileName.SourceCode_constants_h);
 
-				var constantsFileContent = Constants.ServerConstants.ServerAppHostname + " = \"" + oppoProjOpcuaapp.Url + "\";\n" + Constants.ServerConstants.ServerAppPort + " = " + oppoProjOpcuaapp.Port + ";";
-				_fileSystem.WriteFile(serverConstantsFilePath, new List<string> { constantsFileContent });
+				var constantsFileStream = _fileSystem.ReadFile(serverConstantsFilePath);
+				using (var reader = new StreamReader(constantsFileStream))
+				{
+					var constantsFileContent = new List<string>();
+					while(!reader.EndOfStream)
+					{
+						constantsFileContent.Add(reader.ReadLine());
+					}
+
+					var hostnameLineIndex = constantsFileContent.FindIndex(x => x.Contains(Constants.ServerConstants.ServerAppHostname));
+					if(hostnameLineIndex != -1)
+					{
+						constantsFileContent.RemoveAt(hostnameLineIndex);
+					}
+
+					var portLineIndex = constantsFileContent.FindIndex(x => x.Contains(Constants.ServerConstants.ServerAppPort));
+					if (portLineIndex != -1)
+					{
+						constantsFileContent.RemoveAt(portLineIndex);
+					}
+
+					constantsFileContent.Add(Constants.ServerConstants.ServerAppHostname + " = \"" + oppoProjOpcuaapp.Url + "\";");
+					constantsFileContent.Add(Constants.ServerConstants.ServerAppPort + " = " + oppoProjOpcuaapp.Port + ";");
+
+					_fileSystem.WriteFile(serverConstantsFilePath, constantsFileContent);
+				}
 			}
 		}
 

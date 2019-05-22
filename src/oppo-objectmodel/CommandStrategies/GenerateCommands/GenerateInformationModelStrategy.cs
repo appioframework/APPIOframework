@@ -2,10 +2,6 @@
 using System.Linq;
 using Oppo.Resources.text.output;
 using Oppo.Resources.text.logging;
-using System;
-using System.IO;
-using System.Xml;
-using System.Text;
 
 namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 {
