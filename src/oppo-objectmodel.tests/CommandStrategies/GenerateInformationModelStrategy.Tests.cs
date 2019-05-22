@@ -58,15 +58,24 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		private readonly string _uaMethodSample					= "<?xml version=\"1.0\" encoding=\"utf-8\"?><UANodeSet><NamespaceUris><Uri>test</Uri></NamespaceUris><UAMethod NodeId=\"ns=1;i=1000\" BrowseName=\"sampleBrowseName\"></UAMethod></UANodeSet>";
 		private readonly string _defaultMainCallbacsC			= "UA_StatusCode addCallbacks(UA_Server* server)\n{\n\treturn UA_STATUSCODE_GOOD;\n}";
 		
-		private readonly string _sampleOpcuaServerAppContent = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"models\":[{\"name\":\"model.xml\",\"uri\": \"sample_namespace\",\"types\": \"\",\"namespaceVariable\": \"\"}]}";
+		private readonly string _sampleOpcuaServerAppContent = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"models\":[" +
+																					"{\"name\":\"modelA.xml\",\"uri\": \"namespaceA\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[\"namespaceB\"]}," +
+																					"{\"name\":\"modelB.xml\",\"uri\": \"namespaceB\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[\"namespaceE\",\"namespaceD\"]}," +
+																					"{\"name\":\"modelC.xml\",\"uri\": \"namespaceC\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[\"namespaceA\",\"namespaceE\",\"namespaceD\"]}," +
+																					"{\"name\":\"modelD.xml\",\"uri\": \"namespaceD\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[]}," +
+																					"{\"name\":\"modelE.xml\",\"uri\": \"namespaceE\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[\"namespaceD\"]}," +
+																					"]}";
+
 		private static string _opcuaServerAppContentWithDuplicatedModels = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"models\":[" +
 																					"{\"name\":\"model.xml\",\"uri\": \"sample_namespace\",\"types\": \"\",\"namespaceVariable\": \"\"}," +
 																					"{\"name\":\"model.xml\",\"uri\": \"sample_namespace\",\"types\": \"\",\"namespaceVariable\": \"\"}" +
 																					"]}";
+
 		private static string _opcuaServerAppContentWithModelWhoRequiredItself = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"models\":[" +
 																					"{\"name\":\"model.xml\",\"uri\": \"sample_namespace\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[" +
 																					"\"sample_namespace\"" +
 																					"]}]}";
+
 		private static string _opcuaServerAppContentWithMissingRequiredModel = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"models\":[" +
 																					"{\"name\":\"model.xml\",\"uri\": \"sample_namespace\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[" +
 																					"\"sample_namespace1\"" +

@@ -84,9 +84,10 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 			}
 
 			// sort models
+			SortModels(opcuaappModels);
 
 			// generate models
-			foreach(var model in opcuaappModels)
+			foreach (var model in opcuaappModels)
 			{
 				if (!_nodesetGenerator.GenerateTypesSourceCodeFiles(projectName, model) || !_nodesetGenerator.GenerateNodesetSourceCodeFiles(projectName, model, new List<RequiredModelsData>()))
 				{
@@ -168,6 +169,34 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 				}
 			}
 			return false;
+		}
+
+		private void SortModels(List<IModelData> models)
+		{
+			for(int firstModelIndex = 0; firstModelIndex < models.Count - 1; )
+			{
+				bool swapped = false;
+				for(int secondModelIndex = firstModelIndex + 1; secondModelIndex < models.Count; secondModelIndex++)
+				{
+					for(int requiredModelIndex = 0; requiredModelIndex < models[firstModelIndex].RequiredModelUris.Count; requiredModelIndex++)
+					{
+						if(models[firstModelIndex].RequiredModelUris[requiredModelIndex] == models[secondModelIndex].Uri)
+						{
+							(models[firstModelIndex], models[secondModelIndex]) = (models[secondModelIndex], models[firstModelIndex]);
+							swapped = true;
+							break;
+						}
+					}
+					if(swapped)
+					{
+						break;
+					}
+				}
+				if(!swapped)
+				{
+					firstModelIndex++;
+				}
+			}
 		}
 
 		public string GetHelpText()
