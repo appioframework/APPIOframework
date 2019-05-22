@@ -67,17 +67,17 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 			{
 				var serverConstantsFilePath = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp, Constants.FileName.SourceCode_constants_h);
 
-				var constantsFileStream = _fileSystem.ReadFile(serverConstantsFilePath);
+				var constantsFileContent = new List<string>();
+				using (var constantsFileStream = _fileSystem.ReadFile(serverConstantsFilePath))
 				using (var reader = new StreamReader(constantsFileStream))
 				{
-					var constantsFileContent = new List<string>();
-					while(!reader.EndOfStream)
+					while (!reader.EndOfStream)
 					{
 						constantsFileContent.Add(reader.ReadLine());
 					}
 
 					var hostnameLineIndex = constantsFileContent.FindIndex(x => x.Contains(Constants.ServerConstants.ServerAppHostname));
-					if(hostnameLineIndex != -1)
+					if (hostnameLineIndex != -1)
 					{
 						constantsFileContent.RemoveAt(hostnameLineIndex);
 					}
@@ -90,9 +90,9 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 
 					constantsFileContent.Add(Constants.ServerConstants.ServerAppHostname + " = \"" + oppoProjOpcuaapp.Url + "\";");
 					constantsFileContent.Add(Constants.ServerConstants.ServerAppPort + " = " + oppoProjOpcuaapp.Port + ";");
-
-					_fileSystem.WriteFile(serverConstantsFilePath, constantsFileContent);
 				}
+
+				_fileSystem.WriteFile(serverConstantsFilePath, constantsFileContent);
 			}
 		}
 
