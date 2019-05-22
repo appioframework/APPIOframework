@@ -80,6 +80,13 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				_opcuaServerAppContentWithMissingRequiredModel
 			};
 		}
+		private readonly string _opcuaServerAppContentWithCircularDependency = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"models\":[" +
+																					"{\"name\":\"firstModel.xml\",\"uri\": \"fistNamespace\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[\"secondNamespace\"]}," +
+																					"{\"name\":\"secondModel.xml\",\"uri\": \"secondNamespace\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[\"thirdNamespace\"]}," +
+																					"{\"name\":\"thirdModel.xml\",\"uri\": \"thirdNamespace\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[\"fistNamespace\"]}" +
+																					"]}";
+
+
 		private readonly string _defaultOpcuaClientAppContent = "{\"name\":\"clientApp\",\"type\":\"Client\",\"references\": []}";
 
 		[SetUp]
@@ -283,6 +290,33 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				Assert.IsTrue(_loggerWroteOut);
 				Assert.IsNotNull(commandResult.OutputMessages);
 				Assert.AreEqual(string.Format(OutputText.GenerateInformationModelInvalidModelsList, projectName), commandResult.OutputMessages.First().Key);
+			}
+		}
+
+		[Test]
+		public void Fail_OnModelsCircularDependency([ValueSource(nameof(ValidInputs))] string[] inputParams)
+		{
+			// Arrange
+			var projectName = inputParams.ElementAtOrDefault(1);
+			var oppoprojFilePath = Path.Combine(projectName, projectName + Constants.FileExtension.OppoProject);
+
+			_fileSystemMock.Setup(x => x.CombinePaths(projectName, projectName + Constants.FileExtension.OppoProject)).Returns(oppoprojFilePath);
+
+			using (var oppoprojFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_opcuaServerAppContentWithCircularDependency)))
+			{
+				_fileSystemMock.Setup(x => x.ReadFile(oppoprojFilePath)).Returns(oppoprojFileStream);
+
+				// Arrange logger listener
+				_loggerListenerMock.Setup(x => x.Warn(LoggingText.GenerateInformationModelCircularDependency)).Callback(delegate { _loggerWroteOut = true; });
+
+				// Act
+				var commandResult = _strategy.Execute(inputParams);
+
+				// Assert
+				Assert.IsFalse(commandResult.Success);
+				Assert.IsTrue(_loggerWroteOut);
+				Assert.IsNotNull(commandResult.OutputMessages);
+				Assert.AreEqual(string.Format(OutputText.GenerateInformationModelCircularDependency, projectName), commandResult.OutputMessages.First().Key);
 			}
 		}
 

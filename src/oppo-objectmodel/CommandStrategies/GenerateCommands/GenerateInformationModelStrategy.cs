@@ -68,15 +68,22 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 			var opcuaappModels = (opcuaappData as IOpcuaServerApp).Models;
 
 			// check if models are valid
-			var modelsValid = ValidateModels(opcuaappModels);
-			if(!modelsValid)
+			if(!ValidateModels(opcuaappModels))
 			{
 				OppoLogger.Warn(LoggingText.GenerateInformationModelInvalidModelsList);
 				outputMessages.Add(string.Format(OutputText.GenerateInformationModelInvalidModelsList, projectName), string.Empty);
 				return new CommandResult(false, outputMessages);
 			}
-			
-			// check if there is a circular dependency between models
+
+			// check if there is any circular dependency between models
+			if(SearchForCircularDependencies(opcuaappModels))
+			{
+				OppoLogger.Warn(LoggingText.GenerateInformationModelCircularDependency);
+				outputMessages.Add(string.Format(OutputText.GenerateInformationModelCircularDependency, projectName), string.Empty);
+				return new CommandResult(false, outputMessages);
+			}
+
+			// sort models
 
 			// generate models
 			foreach(var model in opcuaappModels)
@@ -97,25 +104,70 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 		private bool ValidateModels(List<IModelData> models)
 		{
 			// validate each and every model
-			for (int modelIndex = 0; modelIndex < models.Count; modelIndex++)
+			foreach(var model in models)
 			{
 				// check for model duplications
-				if (models.Count(x => x.Name == models[modelIndex].Name || x.Uri == models[modelIndex].Uri) > 1)
+				if (models.Count(x => x.Name == model.Name || x.Uri == model.Uri) > 1)
 				{
 					return false;
 				}
 
 				// check if all required models exists
-				for (int requiredModelIndex = 0; requiredModelIndex < models[modelIndex].RequiredModelUris.Count; requiredModelIndex++)
+				foreach(var requiredModelUri in model.RequiredModelUris)
 				{
-					if (models.Where(x => x.Name != models[modelIndex].Name).SingleOrDefault(x => x.Uri == models[modelIndex].RequiredModelUris[requiredModelIndex]) == null)
+					if (models.Where(x => x.Name != model.Name).SingleOrDefault(x => x.Uri == requiredModelUri) == null)
 					{
 						return false;
 					}
 				}
 			}
-
 			return true;
+		}
+
+		private bool SearchForCircularDependencies(List<IModelData> models)
+		{
+			// check each and every model for circular dependencies
+			foreach(var model in models)
+			{
+				var visitedModelUris = new List<string>();
+				if(CheckSingleModelForCircularDependencies(models, model.Uri, ref visitedModelUris))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		private bool CheckSingleModelForCircularDependencies(List<IModelData> models, string uri, ref List<string> listOfRegistredUris)
+		{
+			// add currently checked uri to the stack
+			listOfRegistredUris.Add(uri);
+
+			// if currently checked uri appears more then once on the list then we have circular dependency
+			if(listOfRegistredUris.GroupBy(x => x).Any(x => x.Count() > 1))
+			{
+				return true;
+			}
+
+			// if there are any then repeat for required models of currently check model
+			var requiredModel = models.Find(x => x.Uri == uri);
+			if(requiredModel.RequiredModelUris.Count > 0)
+			{
+				foreach(var requiredModelUri in requiredModel.RequiredModelUris)
+				{
+					// pass true if circular dependency found in one of requried models
+					if(CheckSingleModelForCircularDependencies(models, requiredModelUri, ref listOfRegistredUris))
+					{
+						return true;
+					}
+					// clean last item on the stack if circular dependency not found
+					else
+					{
+						listOfRegistredUris.RemoveAt(listOfRegistredUris.Count - 1);
+					}
+				}
+			}
+			return false;
 		}
 
 		public string GetHelpText()
