@@ -65,19 +65,58 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 				return new CommandResult(false, outputMessages);
 			}
 
-			var opcuaappModel = (opcuaappData as IOpcuaServerApp).Models[0];
-			
-			if (!_nodesetGenerator.GenerateTypesSourceCodeFiles(projectName, opcuaappModel) || !_nodesetGenerator.GenerateNodesetSourceCodeFiles(projectName, opcuaappModel, new List<RequiredModelsData>()))
+			var opcuaappModels = (opcuaappData as IOpcuaServerApp).Models;
+
+			// check if models are valid
+			var modelsValid = ValidateModels(opcuaappModels);
+			if(!modelsValid)
 			{
-				outputMessages.Add(_nodesetGenerator.GetOutputMessage(), string.Empty);
+				OppoLogger.Warn(LoggingText.GenerateInformationModelInvalidModelsList);
+				outputMessages.Add(string.Format(OutputText.GenerateInformationModelInvalidModelsList, projectName), string.Empty);
 				return new CommandResult(false, outputMessages);
 			}
+			
+			// TODO: check if there is a circular dependency between models
 
+			// generate models
+			foreach(var model in opcuaappModels)
+			{
+				if (!_nodesetGenerator.GenerateTypesSourceCodeFiles(projectName, model) || !_nodesetGenerator.GenerateNodesetSourceCodeFiles(projectName, model, new List<RequiredModelsData>()))
+				{
+					outputMessages.Add(_nodesetGenerator.GetOutputMessage(), string.Empty);
+					return new CommandResult(false, outputMessages);
+				}
+			}
 
+			// exit method with positive result
 			OppoLogger.Info(LoggingText.GenerateInformationModelSuccess);
 			outputMessages.Add(string.Format(OutputText.GenerateInformationModelSuccess, projectName), string.Empty);
             return new CommandResult(true, outputMessages);           
         }
+
+		private bool ValidateModels(List<IModelData> models)
+		{
+			// validate each and every model
+			for (int modelIndex = 0; modelIndex < models.Count; modelIndex++)
+			{
+				// check for model duplications
+				if (models.Where(x => x.Name == models[modelIndex].Name || x.Uri == models[modelIndex].Uri).Count() > 1)
+				{
+					return false;
+				}
+
+				// check if all required models exists
+				for (int requiredModelIndex = 0; requiredModelIndex < models[modelIndex].RequiredModelUris.Count; requiredModelIndex++)
+				{
+					if (models.Where(x => x.Name != models[modelIndex].Name).SingleOrDefault(x => x.Uri == models[modelIndex].RequiredModelUris[requiredModelIndex]) == null)
+					{
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
 
 		public string GetHelpText()
         {

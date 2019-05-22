@@ -59,6 +59,27 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		private readonly string _defaultMainCallbacsC			= "UA_StatusCode addCallbacks(UA_Server* server)\n{\n\treturn UA_STATUSCODE_GOOD;\n}";
 		
 		private readonly string _sampleOpcuaServerAppContent = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"models\":[{\"name\":\"model.xml\",\"uri\": \"sample_namespace\",\"types\": \"\",\"namespaceVariable\": \"\"}]}";
+		private static string _opcuaServerAppContentWithDuplicatedModels = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"models\":[" +
+																					"{\"name\":\"model.xml\",\"uri\": \"sample_namespace\",\"types\": \"\",\"namespaceVariable\": \"\"}," +
+																					"{\"name\":\"model.xml\",\"uri\": \"sample_namespace\",\"types\": \"\",\"namespaceVariable\": \"\"}" +
+																					"]}";
+		private static string _opcuaServerAppContentWithModelWhoRequiredItself = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"models\":[" +
+																					"{\"name\":\"model.xml\",\"uri\": \"sample_namespace\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[" +
+																					"\"sample_namespace\"" +
+																					"]}]}";
+		private static string _opcuaServerAppContentWithMissingRequiredModel = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"models\":[" +
+																					"{\"name\":\"model.xml\",\"uri\": \"sample_namespace\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[" +
+																					"\"sample_namespace1\"" +
+																					"]}]}";
+		private static string[] InvalidOpcuaServerAppContent()
+		{
+			return new[]
+			{
+				_opcuaServerAppContentWithDuplicatedModels,
+				_opcuaServerAppContentWithModelWhoRequiredItself,
+				_opcuaServerAppContentWithMissingRequiredModel
+			};
+		}
 		private readonly string _defaultOpcuaClientAppContent = "{\"name\":\"clientApp\",\"type\":\"Client\",\"references\": []}";
 
 		[SetUp]
@@ -235,6 +256,33 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				Assert.IsTrue(_loggerWroteOut);
 				Assert.IsNotNull(commandResult.OutputMessages);
 				Assert.AreEqual(string.Format(OutputText.GenerateInformationModelSuccess, projectName), commandResult.OutputMessages.First().Key);
+			}
+		}
+		
+		[Test, Combinatorial]
+		public void Fail_OnInvalidModelList([ValueSource(nameof(ValidInputs))] string[] inputParams, [ValueSource(nameof(InvalidOpcuaServerAppContent))] string sampleOpcuaServerAppContent)
+		{
+			// Arrange
+			var projectName = inputParams.ElementAtOrDefault(1);
+			var oppoprojFilePath = Path.Combine(projectName, projectName + Constants.FileExtension.OppoProject);
+
+			_fileSystemMock.Setup(x => x.CombinePaths(projectName, projectName + Constants.FileExtension.OppoProject)).Returns(oppoprojFilePath);
+
+			using (var oppoprojFileStream = new MemoryStream(Encoding.ASCII.GetBytes(sampleOpcuaServerAppContent)))
+			{
+				_fileSystemMock.Setup(x => x.ReadFile(oppoprojFilePath)).Returns(oppoprojFileStream);
+				
+				// Arrange logger listener
+				_loggerListenerMock.Setup(x => x.Warn(LoggingText.GenerateInformationModelInvalidModelsList)).Callback(delegate { _loggerWroteOut = true; });
+
+				// Act
+				var commandResult = _strategy.Execute(inputParams);
+
+				// Assert
+				Assert.IsFalse(commandResult.Success);
+				Assert.IsTrue(_loggerWroteOut);
+				Assert.IsNotNull(commandResult.OutputMessages);
+				Assert.AreEqual(string.Format(OutputText.GenerateInformationModelInvalidModelsList, projectName), commandResult.OutputMessages.First().Key);
 			}
 		}
 

@@ -60,6 +60,7 @@ namespace Oppo.Resources.text.logging
 		public const string OppoHelpForGenerateCommand = "Help for generate <command> called";
 		public const string GenerateInformationModelFailureCouldntDeserliazeOpcuaapp = "Couldn't deserialize oppoproj file!";
 		public const string GenerateInformationModelFailuteOpcuaappIsAClient = "Generate information model failure, can not generate models for client!";
+		public const string GenerateInformationModelInvalidModelsList = "Generate information model failure, provided model list contains duplications or misses some models!";
 
 		public const string ValidatingModel = "Validating model '{0}' against '{1}'.";
         public const string ValidationError = "Validation error \n {0}";
