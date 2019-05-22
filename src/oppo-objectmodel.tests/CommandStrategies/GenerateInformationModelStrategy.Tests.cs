@@ -81,9 +81,11 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			};
 		}
 		private readonly string _opcuaServerAppContentWithCircularDependency = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"models\":[" +
-																					"{\"name\":\"firstModel.xml\",\"uri\": \"fistNamespace\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[\"secondNamespace\"]}," +
-																					"{\"name\":\"secondModel.xml\",\"uri\": \"secondNamespace\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[\"thirdNamespace\"]}," +
-																					"{\"name\":\"thirdModel.xml\",\"uri\": \"thirdNamespace\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[\"fistNamespace\"]}" +
+																					"{\"name\":\"modelA.xml\",\"uri\": \"namespaceA\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[\"namespaceB\"]}," +
+																					"{\"name\":\"modelB.xml\",\"uri\": \"namespaceB\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[]}," +
+																					"{\"name\":\"modelC.xml\",\"uri\": \"namespaceC\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[\"namespaceD\"]}," +
+																					"{\"name\":\"modelD.xml\",\"uri\": \"namespaceD\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[\"namespaceE\"]}," +
+																					"{\"name\":\"modelE.xml\",\"uri\": \"namespaceE\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[\"namespaceC\"]}," +
 																					"]}";
 
 
