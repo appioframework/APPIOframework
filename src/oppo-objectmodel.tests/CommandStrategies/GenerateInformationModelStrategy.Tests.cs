@@ -253,14 +253,16 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			// Arrange
 			var projectName = inputParams.ElementAtOrDefault(1);
 			var oppoprojFilePath = Path.Combine(projectName, projectName + Constants.FileExtension.OppoProject);
-			var serverConstantsFilePath = Path.Combine(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp, Constants.FileName.SourceCode_constants_h);
+			var mainCallbacksFilePath = Path.Combine(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp, Constants.FileName.SourceCode_mainCallbacks_c);
 
 			_fileSystemMock.Setup(x => x.CombinePaths(projectName, projectName + Constants.FileExtension.OppoProject)).Returns(oppoprojFilePath);
-			_fileSystemMock.Setup(x => x.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp, Constants.FileName.SourceCode_constants_h)).Returns(serverConstantsFilePath);
+			_fileSystemMock.Setup(x => x.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp, Constants.FileName.SourceCode_mainCallbacks_c)).Returns(mainCallbacksFilePath);
 
 			using (var oppoprojFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpcuaServerAppContent)))
+			using (var mainCallbacksFileStream = new MemoryStream(Encoding.ASCII.GetBytes("#include \"open62541.h\"")))
 			{
 				_fileSystemMock.Setup(x => x.ReadFile(oppoprojFilePath)).Returns(oppoprojFileStream);
+				_fileSystemMock.Setup(x => x.ReadFile(mainCallbacksFilePath)).Returns(mainCallbacksFileStream);
 
 				_nodesetGenerator.Setup(x => x.GenerateTypesSourceCodeFiles(It.IsAny<string>(), It.IsAny<IModelData>())).Returns(true);
 				_nodesetGenerator.Setup(x => x.GenerateNodesetSourceCodeFiles(It.IsAny<string>(), It.IsAny<IModelData>(), It.IsAny<List<RequiredModelsData>>())).Returns(true);
@@ -276,7 +278,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				Assert.IsTrue(_loggerWroteOut);
 				Assert.IsNotNull(commandResult.OutputMessages);
 				Assert.AreEqual(string.Format(OutputText.GenerateInformationModelSuccess, projectName), commandResult.OutputMessages.First().Key);
-				_fileSystemMock.Verify(x => x.WriteFile(serverConstantsFilePath, It.IsAny<List<string>>()), Times.Once);
+				_fileSystemMock.Verify(x => x.ReadFile(mainCallbacksFilePath), Times.Once);
+				_fileSystemMock.Verify(x => x.WriteFile(mainCallbacksFilePath, It.IsAny<List<string>>()), Times.Once);
 			}
 		}
 		

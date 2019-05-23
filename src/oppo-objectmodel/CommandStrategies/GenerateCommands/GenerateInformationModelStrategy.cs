@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.IO;
+using System.Collections.Generic;
 using System.Linq;
 using Oppo.Resources.text.output;
 using Oppo.Resources.text.logging;
@@ -117,7 +118,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 				// check if all required models exists
 				foreach(var requiredModelUri in model.RequiredModelUris)
 				{
-					if (models.Where(x => x.Name != model.Name).SingleOrDefault(x => x.Uri == requiredModelUri) == null)
+					if (!models.Where(x => x.Name != model.Name).Any(x => x.Uri == requiredModelUri))
 					{
 						return false;
 					}
@@ -221,17 +222,40 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 
 		private void CreateNamespaceVariables(string projectName, List<IModelData> models)
 		{
-			var namespaceVariables = new List<string>();
 			uint variableCounter = 2;
 
-			foreach(var model in models)
+			var mainCallbacksFilePath = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp, Constants.FileName.SourceCode_mainCallbacks_c);
+
+			var mainCallbacksFileContent = new List<string>();
+			using (var constantsFileStream = _fileSystem.ReadFile(mainCallbacksFilePath))
 			{
-				namespaceVariables.Add(string.Format(Constants.ServerConstants.ServerAppNamespaceVariable, model.NamespaceVariable, variableCounter));
-				variableCounter++;
+				var reader = new StreamReader(constantsFileStream);
+				while (!reader.EndOfStream)
+				{
+					mainCallbacksFileContent.Add(reader.ReadLine());
+				}
+				reader.Dispose();
+
+				foreach (var model in models)
+				{
+					var namespaceVariableTypeAndName = Constants.ServerConstants.ServerAppNamespaceVariable + model.NamespaceVariable;
+					var namespaceVariableFullDefinition = namespaceVariableTypeAndName +" = " + variableCounter + ";";
+					var namespaceVariableLineIndex = mainCallbacksFileContent.FindIndex(x => x.Contains(namespaceVariableTypeAndName));
+					if (namespaceVariableLineIndex != -1)
+					{
+						mainCallbacksFileContent.RemoveAt(namespaceVariableLineIndex);
+						mainCallbacksFileContent.Insert(namespaceVariableLineIndex, namespaceVariableFullDefinition);
+					}
+					else
+					{
+						var includeOpenHLineIndex = mainCallbacksFileContent.FindIndex(x => x.Contains(Constants.ServerConstants.ServerAppOpen62541Include));
+						mainCallbacksFileContent.Insert(includeOpenHLineIndex + 1, namespaceVariableFullDefinition);
+					}
+					variableCounter++;
+				}
 			}
 
-			var serverConstantsFilePath = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp, Constants.FileName.SourceCode_constants_h);
-			_fileSystem.WriteFile(serverConstantsFilePath, namespaceVariables);
+			_fileSystem.WriteFile(mainCallbacksFilePath, mainCallbacksFileContent);
 		}
     }
 }

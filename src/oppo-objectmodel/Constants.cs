@@ -326,7 +326,8 @@ namespace Oppo.ObjectModel
 		{
 			public const string ServerAppHostname = "const char* SERVER_APP_HOSTNAME";
 			public const string ServerAppPort = "const UA_UInt16 SERVER_APP_PORT";
-			public const string ServerAppNamespaceVariable = "const UA_UInt16 {0} = {1};";
+			public const string ServerAppNamespaceVariable = "const UA_UInt16 ";
+			public const string ServerAppOpen62541Include = "#include \"open62541.h\"";
 		}
 
 		public static class ClientGlobalVariables
