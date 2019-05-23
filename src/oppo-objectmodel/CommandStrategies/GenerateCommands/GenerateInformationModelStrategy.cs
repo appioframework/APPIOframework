@@ -94,6 +94,9 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 				}
 			}
 
+			// add noodeset variables
+			CreateNamespaceVariables(projectName, opcuaappModels);
+
 			// exit method with positive result
 			OppoLogger.Info(LoggingText.GenerateInformationModelSuccess);
 			outputMessages.Add(string.Format(OutputText.GenerateInformationModelSuccess, projectName), string.Empty);
@@ -215,5 +218,20 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
         {
             return Resources.text.help.HelpTextValues.GenerateInformationModelCommandDescription;
         }
+
+		private void CreateNamespaceVariables(string projectName, List<IModelData> models)
+		{
+			var namespaceVariables = new List<string>();
+			uint variableCounter = 2;
+
+			foreach(var model in models)
+			{
+				namespaceVariables.Add(string.Format(Constants.ServerConstants.ServerAppNamespaceVariable, model.NamespaceVariable, variableCounter));
+				variableCounter++;
+			}
+
+			var serverConstantsFilePath = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp, Constants.FileName.SourceCode_constants_h);
+			_fileSystem.WriteFile(serverConstantsFilePath, namespaceVariables);
+		}
     }
 }

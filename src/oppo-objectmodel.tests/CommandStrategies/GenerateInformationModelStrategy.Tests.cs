@@ -59,11 +59,11 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		private readonly string _defaultMainCallbacsC			= "UA_StatusCode addCallbacks(UA_Server* server)\n{\n\treturn UA_STATUSCODE_GOOD;\n}";
 		
 		private readonly string _sampleOpcuaServerAppContent = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"models\":[" +
-																					"{\"name\":\"modelA.xml\",\"uri\": \"namespaceA\",\"types\": \"someTypesA.bsd\",\"namespaceVariable\": \"\", \"requiredModelUris\":[\"namespaceB\"]}," +
-																					"{\"name\":\"modelB.xml\",\"uri\": \"namespaceB\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[\"namespaceE\",\"namespaceD\"]}," +
-																					"{\"name\":\"modelC.xml\",\"uri\": \"namespaceC\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[\"namespaceA\",\"namespaceE\",\"namespaceD\"]}," +
-																					"{\"name\":\"modelD.xml\",\"uri\": \"namespaceD\",\"types\": \"someTypesD.bsd\",\"namespaceVariable\": \"\", \"requiredModelUris\":[]}," +
-																					"{\"name\":\"modelE.xml\",\"uri\": \"namespaceE\",\"types\": \"someTypesD.bsd\",\"namespaceVariable\": \"\", \"requiredModelUris\":[\"namespaceD\"]}," +
+																					"{\"name\":\"modelA.xml\",\"uri\": \"namespaceA\",\"types\": \"someTypesA.bsd\",\"namespaceVariable\": \"ns_modelA\", \"requiredModelUris\":[\"namespaceB\"]}," +
+																					"{\"name\":\"modelB.xml\",\"uri\": \"namespaceB\",\"types\": \"\",\"namespaceVariable\": \"ns_modelB\", \"requiredModelUris\":[\"namespaceE\",\"namespaceD\"]}," +
+																					"{\"name\":\"modelC.xml\",\"uri\": \"namespaceC\",\"types\": \"\",\"namespaceVariable\": \"ns_modelC\", \"requiredModelUris\":[\"namespaceA\",\"namespaceE\",\"namespaceD\"]}," +
+																					"{\"name\":\"modelD.xml\",\"uri\": \"namespaceD\",\"types\": \"someTypesD.bsd\",\"namespaceVariable\": \"ns_modelD\", \"requiredModelUris\":[]}," +
+																					"{\"name\":\"modelE.xml\",\"uri\": \"namespaceE\",\"types\": \"someTypesD.bsd\",\"namespaceVariable\": \"ns_modelE\", \"requiredModelUris\":[\"namespaceD\"]}," +
 																					"]}";
 
 		private static string _opcuaServerAppContentWithDuplicatedModels = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"models\":[" +
@@ -253,8 +253,10 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			// Arrange
 			var projectName = inputParams.ElementAtOrDefault(1);
 			var oppoprojFilePath = Path.Combine(projectName, projectName + Constants.FileExtension.OppoProject);
+			var serverConstantsFilePath = Path.Combine(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp, Constants.FileName.SourceCode_constants_h);
 
 			_fileSystemMock.Setup(x => x.CombinePaths(projectName, projectName + Constants.FileExtension.OppoProject)).Returns(oppoprojFilePath);
+			_fileSystemMock.Setup(x => x.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp, Constants.FileName.SourceCode_constants_h)).Returns(serverConstantsFilePath);
 
 			using (var oppoprojFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpcuaServerAppContent)))
 			{
@@ -274,6 +276,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				Assert.IsTrue(_loggerWroteOut);
 				Assert.IsNotNull(commandResult.OutputMessages);
 				Assert.AreEqual(string.Format(OutputText.GenerateInformationModelSuccess, projectName), commandResult.OutputMessages.First().Key);
+				_fileSystemMock.Verify(x => x.WriteFile(serverConstantsFilePath, It.IsAny<List<string>>()), Times.Once);
 			}
 		}
 		
