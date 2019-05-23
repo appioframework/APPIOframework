@@ -259,7 +259,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			_fileSystemMock.Setup(x => x.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp, Constants.FileName.SourceCode_mainCallbacks_c)).Returns(mainCallbacksFilePath);
 
 			using (var oppoprojFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpcuaServerAppContent)))
-			using (var mainCallbacksFileStream = new MemoryStream(Encoding.ASCII.GetBytes("#include \"open62541.h\"")))
+			using (var mainCallbacksFileStream = new MemoryStream(Encoding.ASCII.GetBytes("#include \"open62541.h\"\nconst UA_UInt16 ns_modelA = 2;")))
 			{
 				_fileSystemMock.Setup(x => x.ReadFile(oppoprojFilePath)).Returns(oppoprojFileStream);
 				_fileSystemMock.Setup(x => x.ReadFile(mainCallbacksFilePath)).Returns(mainCallbacksFileStream);

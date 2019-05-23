@@ -287,8 +287,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 				for(int index = 0; index < modelNode.ChildNodes.Count; index++)
 				{
 					var requiredModelUri = modelNode.ChildNodes[index].Attributes[Constants.NodesetXml.UANodeSetNamespaceModelUri].Value;
-					var test = new UriBuilder(Constants.NodesetXml.UANodeSetNamespaceScheme, Constants.NodesetXml.UANodeSetNamespaceHost, -1, Constants.NodesetXml.UANodeSetNamespaceBasicValuePath).ToString();
-					if (requiredModelUri != test)
+					if (requiredModelUri != new UriBuilder(Constants.NodesetXml.UANodeSetNamespaceScheme, Constants.NodesetXml.UANodeSetNamespaceHost, -1, Constants.NodesetXml.UANodeSetNamespaceBasicValuePath).ToString())
 					{
 						modelData.RequiredModelUris.Add(requiredModelUri);
 					}
