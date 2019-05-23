@@ -353,6 +353,7 @@ namespace Oppo.ObjectModel
 			public const string NamespaceVariablePrefix = "ns_";
 			public const string UANodeSetNamespaceScheme = "http";
 			public const string UANodeSetNamespaceHost = "opcfoundation.org";
+			public const string UANodeSetNamespaceBasicValuePath = "UA/";
 			public const string UANodeSetNamespaceValuePath = "UA/2011/03/UANodeSet.xsd";
 			public const string UANodeSetNamespaceShortcut = "ns";
 			public const string UANodeSetNamespaceFullPath = "//{0}:UANodeSet//{0}:Models//{0}:Model";
