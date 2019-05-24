@@ -206,6 +206,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 		{
 			var result = new List<RequiredModelsData>();
 
+			// for each required model extract model name and set boolean flag if extra types are required
 			foreach(var requiredModelUri in model.RequiredModelUris)
 			{
 				var requiredModel = models.SingleOrDefault(x => x.Uri == requiredModelUri);
@@ -215,20 +216,17 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 			return result;
 		}
 
-		public string GetHelpText()
-        {
-            return Resources.text.help.HelpTextValues.GenerateInformationModelCommandDescription;
-        }
-
 		private void CreateNamespaceVariables(string projectName, List<IModelData> models)
 		{
 			uint variableCounter = 2;
 
+			// get content of mainCallbacks.c file
 			var mainCallbacksFilePath = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp, Constants.FileName.SourceCode_mainCallbacks_c);
-
+			
 			var mainCallbacksFileContent = new List<string>();
 			using (var constantsFileStream = _fileSystem.ReadFile(mainCallbacksFilePath))
 			{
+				// convert file stream to list of strings
 				var reader = new StreamReader(constantsFileStream);
 				while (!reader.EndOfStream)
 				{
@@ -236,6 +234,7 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 				}
 				reader.Dispose();
 
+				// for each model generate namespace variable and add it to mainCallbacks.c file
 				foreach (var model in models)
 				{
 					var namespaceVariableTypeAndName = Constants.ServerConstants.ServerAppNamespaceVariable + model.NamespaceVariable;
@@ -255,7 +254,13 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 				}
 			}
 
+			// write mainCallbacks.c content back to the file
 			_fileSystem.WriteFile(mainCallbacksFilePath, mainCallbacksFileContent);
 		}
+
+		public string GetHelpText()
+        {
+            return Resources.text.help.HelpTextValues.GenerateInformationModelCommandDescription;
+        }
     }
 }

@@ -101,11 +101,10 @@ echo "Testing generate-help--success"
 /bin/bash bash-gitlab-ci/integration-tests/run-generate-help--success.sh
 echo "Testing generate-help--failure"
 /bin/bash bash-gitlab-ci/integration-tests/run-generate-help--failure.sh
-# excluded until generate command is done
-# echo "Testing generate--failure"
-# /bin/bash bash-gitlab-ci/integration-tests/run-generate--failure.sh
-# echo "Testing generate-information-model--failure"
-# /bin/bash bash-gitlab-ci/integration-tests/run-generate-information-model--failure.sh
+echo "Testing generate--failure"
+/bin/bash bash-gitlab-ci/integration-tests/run-generate--failure.sh
+echo "Testing generate-information-model--failure"
+/bin/bash bash-gitlab-ci/integration-tests/run-generate-information-model--failure.sh
 # echo "Testing generate-information-model--success"
 # /bin/bash bash-gitlab-ci/integration-tests/run-generate-information-model--success.sh
 

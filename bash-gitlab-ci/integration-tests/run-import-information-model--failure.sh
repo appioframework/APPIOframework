@@ -21,7 +21,7 @@ do
   mkdir import-information-model--failure
   cd    import-information-model--failure
 
-  oppo new opcuaapp -n "my-app" -t "ClientServer" -u "127.0.0.1" -p "4840"
+  oppo new opcuaapp -n "my-app" -t "ClientServer" -u "127.0.0.1" -p "4840" --nocert
   rm --force "./oppo.log"
 
   precondition_oppo_log_file_is_not_existent

@@ -24,7 +24,7 @@ do
   precondition_oppo_log_file_is_not_existent
 
   cd my-app/models
-  echo "<UANodeSet><NamespaceUris><Uri>test</Uri></NamespaceUris></UANodeSet>" > minimumCompilableModel.xml
+  echo "<UANodeSet xmlns=\"http://opcfoundation.org/UA/2011/03/UANodeSet.xsd\"><Models><Model ModelUri=\"test\" Version=\"1.01\" PublicationDate=\"2012-12-31T00:00:00Z\"></Model></Models></UANodeSet>" > minimumCompilableModel.xml
   cd ../..
 
   ${VAR_COMMAND}
