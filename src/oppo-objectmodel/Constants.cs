@@ -364,5 +364,12 @@ namespace Oppo.ObjectModel
 			public const string UANodeSetUAMethodBrowseName = "BrowseName";
 			public const string UANodeSetUaMethodNodeId = "NodeId";
 		}
+
+		public static class NumericValues
+		{
+			public const int TextNotFound = -1;
+			public const int PortNumberNotSpecified = -1;
+			public const int StartInNewLine = 1;
+		}
     }
 }

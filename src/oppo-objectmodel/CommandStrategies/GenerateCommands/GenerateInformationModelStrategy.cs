@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Text;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using Oppo.Resources.text.output;
@@ -175,14 +176,16 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 
 		private void SortModels(List<IModelData> models)
 		{
+			// iterate through models from the first to one before the last (last model is skipped since there is no other model to compare with)
 			for(int firstModelIndex = 0; firstModelIndex < models.Count - 1; )
 			{
 				bool swapped = false;
+				// iterate through models from the currently selected to the last (currently selected model is skipped since there is no need to compare it to itself)
 				for(int secondModelIndex = firstModelIndex + 1; secondModelIndex < models.Count; secondModelIndex++)
 				{
 					for(int requiredModelIndex = 0; requiredModelIndex < models[firstModelIndex].RequiredModelUris.Count; requiredModelIndex++)
 					{
-						// swap models if required model of first model is equal to second model
+						// swap models if required model of first model is equal to second model (second model has to be higher in hierarchy)
 						if(models[firstModelIndex].RequiredModelUris[requiredModelIndex] == models[secondModelIndex].Uri)
 						{
 							(models[firstModelIndex], models[secondModelIndex]) = (models[secondModelIndex], models[firstModelIndex]);
@@ -218,8 +221,6 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 
 		private void CreateNamespaceVariables(string projectName, List<IModelData> models)
 		{
-			uint variableCounter = 2;
-
 			// get content of mainCallbacks.c file
 			var mainCallbacksFilePath = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp, Constants.FileName.SourceCode_mainCallbacks_c);
 			
@@ -227,35 +228,53 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 			using (var constantsFileStream = _fileSystem.ReadFile(mainCallbacksFilePath))
 			{
 				// convert file stream to list of strings
-				var reader = new StreamReader(constantsFileStream);
-				while (!reader.EndOfStream)
+				using (var reader = new StreamReader(constantsFileStream))
 				{
-					mainCallbacksFileContent.Add(reader.ReadLine());
+					while (!reader.EndOfStream)
+					{
+						mainCallbacksFileContent.Add(reader.ReadLine());
+					}
 				}
-				reader.Dispose();
 
-				// for each model generate namespace variable and add it to mainCallbacks.c file
-				foreach (var model in models)
-				{
-					var namespaceVariableTypeAndName = Constants.ServerConstants.ServerAppNamespaceVariable + model.NamespaceVariable;
-					var namespaceVariableFullDefinition = namespaceVariableTypeAndName +" = " + variableCounter + ";";
-					var namespaceVariableLineIndex = mainCallbacksFileContent.FindIndex(x => x.Contains(namespaceVariableTypeAndName));
-					if (namespaceVariableLineIndex != -1)
-					{
-						mainCallbacksFileContent.RemoveAt(namespaceVariableLineIndex);
-						mainCallbacksFileContent.Insert(namespaceVariableLineIndex, namespaceVariableFullDefinition);
-					}
-					else
-					{
-						var includeOpenHLineIndex = mainCallbacksFileContent.FindIndex(x => x.Contains(Constants.ServerConstants.ServerAppOpen62541Include));
-						mainCallbacksFileContent.Insert(includeOpenHLineIndex + 1, namespaceVariableFullDefinition);
-					}
-					variableCounter++;
-				}
+				// add namespace variables to content of mainCallbacks.c file
+				AddNamespaceVariablesToMainCallbacksFileContent(models, ref mainCallbacksFileContent);
 			}
 
 			// write mainCallbacks.c content back to the file
 			_fileSystem.WriteFile(mainCallbacksFilePath, mainCallbacksFileContent);
+		}
+
+		private void AddNamespaceVariablesToMainCallbacksFileContent(List<IModelData> models, ref List<string> mainCallbacksFileContent)
+		{
+			// model counter for namespace variable value
+			// 0 used by OPC UA basic nodeset
+			// 1 used by server application for own nodes
+			// first generated model starts with value of 2
+			uint variableCounter = 2;
+
+			// for each model generate namespace variable and add it to mainCallbacks.c file
+			foreach (var model in models)
+			{
+				var namespaceVariableTypeAndName = new StringBuilder(Constants.ServerConstants.ServerAppNamespaceVariable).Append(model.NamespaceVariable).ToString();
+				var namespaceVariableFullDefinition = new StringBuilder(namespaceVariableTypeAndName).Append(" = ").Append(variableCounter).Append(";").ToString();
+
+				// check if namespace variable already exists
+				var namespaceVariableLineIndex = mainCallbacksFileContent.FindIndex(x => x.Contains(namespaceVariableTypeAndName));
+
+				// if namespace variable already exists then rewrite it
+				if (namespaceVariableLineIndex != Constants.NumericValues.TextNotFound)
+				{
+					mainCallbacksFileContent.RemoveAt(namespaceVariableLineIndex);
+					mainCallbacksFileContent.Insert(namespaceVariableLineIndex, namespaceVariableFullDefinition);
+				}
+				// if namespace variable did not exist until now add it
+				else
+				{
+					var includeOpenHLineIndex = mainCallbacksFileContent.FindIndex(x => x.Contains(Constants.ServerConstants.ServerAppOpen62541Include));
+					mainCallbacksFileContent.Insert(includeOpenHLineIndex + Constants.NumericValues.StartInNewLine, namespaceVariableFullDefinition);
+				}
+				variableCounter++;
+			}
 		}
 
 		public string GetHelpText()

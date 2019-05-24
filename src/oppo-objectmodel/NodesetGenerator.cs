@@ -67,7 +67,7 @@ namespace Oppo.ObjectModel
 			
 			// Create a directory for generated C code
 			var srcDirectory = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp);
-			CreateNeededDirectories(srcDirectory);
+			CreateDirectoryForGeneratedModelsSourceCode(srcDirectory);
 
 			// Build types source file and target files directories
 			var modelName = _fileSystem.GetFileNameWithoutExtension(modelData.Name);
@@ -96,7 +96,7 @@ namespace Oppo.ObjectModel
 			return true;
 		}
 		
-		private void CreateNeededDirectories(string srcDirectory)
+		private void CreateDirectoryForGeneratedModelsSourceCode(string srcDirectory)
 		{
 			var pathToCreate = _fileSystem.CombinePaths(srcDirectory, Constants.DirectoryName.InformationModels);
 			if (!_fileSystem.DirectoryExists(pathToCreate))
@@ -142,7 +142,7 @@ namespace Oppo.ObjectModel
 			
 			// Create a directory for generated C code
 			var srcDirectory = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp);
-			CreateNeededDirectories(srcDirectory);
+			CreateDirectoryForGeneratedModelsSourceCode(srcDirectory);
 			
 			// Build nodeset compiler script arguments
 			var modelName = _fileSystem.GetFileNameWithoutExtension(modelData.Name);
@@ -206,7 +206,7 @@ namespace Oppo.ObjectModel
 
 			using (var modelsFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_meson_build)))
 			{
-				var currentFileContentLineByLine = ReadFileContent(modelsFileStream);
+				var currentFileContentLineByLine = ParseStreamToListOfString(modelsFileStream);
 
 				if (!currentFileContentLineByLine.Any(x => x.Contains(sourceFileSnippet)))
 				{
@@ -225,16 +225,16 @@ namespace Oppo.ObjectModel
         {
             var functionSnippet = string.Format(Constants.LoadInformationModelsContent.FunctionSnippetPart1,functionName);
 
-			var loadInformationModelsFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_loadInformationModels_c));
-			var currentFileContentLineByLine = ReadFileContent(loadInformationModelsFileStream);
-
-			loadInformationModelsFileStream.Close();
-			loadInformationModelsFileStream.Dispose();
-
+			var currentFileContentLineByLine = new List<string>();
+			using (var loadInformationModelsFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_loadInformationModels_c)))
+			{
+				currentFileContentLineByLine = ParseStreamToListOfString(loadInformationModelsFileStream);
+			}
+			
 			if (!currentFileContentLineByLine.Any(x => x.Contains(functionSnippet.Substring(1))))
 			{
 				var lastFunctionLinePosition = currentFileContentLineByLine.FindIndex(x => x.Contains(Constants.LoadInformationModelsContent.ReturnLine));
-				if (lastFunctionLinePosition != -1)
+				if (lastFunctionLinePosition != Constants.NumericValues.TextNotFound)
 				{
 					currentFileContentLineByLine.Insert(lastFunctionLinePosition, string.Empty);
 					currentFileContentLineByLine.Insert(lastFunctionLinePosition, Constants.LoadInformationModelsContent.FunctionSnippetPart5);
@@ -276,40 +276,46 @@ namespace Oppo.ObjectModel
 			var mainCallbacksCPath = _fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_mainCallbacks_c);
 			using (var mainCallbacksFileStream = _fileSystem.ReadFile(mainCallbacksCPath))
 			{
-				currentFileContentLineByLine = ReadFileContent(mainCallbacksFileStream).ToList();
+				currentFileContentLineByLine = ParseStreamToListOfString(mainCallbacksFileStream).ToList();
 			}
 
+			// generate method callbacks for each method
+			GenerateCallbackFunctions(methodNodes, modelData, ref currentFileContentLineByLine);
+
+			// write new content to mainCallbacks.c file
+			_fileSystem.WriteFile(mainCallbacksCPath, currentFileContentLineByLine);
+		}
+
+		private void GenerateCallbackFunctions(XmlNodeList methodNodes, IModelData modelData, ref List<string> currentFileContentLineByLine)
+		{
 			// for each method found in nodeset generate callback functions
-			foreach(XmlNode node in methodNodes)
+			foreach (XmlNode node in methodNodes)
 			{
 				var methodBrowseName = node.Attributes[Constants.NodesetXml.UANodeSetUAMethodBrowseName].Value;
 				var methodNodeId = uint.Parse(Regex.Split(node.Attributes[Constants.NodesetXml.UANodeSetUaMethodNodeId].Value, @"\D+").Last());
-				
+
 				var lastUAMethodLinePosition = currentFileContentLineByLine.FindIndex(x => x.Contains(string.Format(Constants.UAMethodCallback.FunctionName, modelData.NamespaceVariable, methodNodeId)));
-				if (lastUAMethodLinePosition == -1)
+				if (lastUAMethodLinePosition == Constants.NumericValues.TextNotFound)
 				{
 					// add callback function
 					var addCallbacksFunctionLinePosition = currentFileContentLineByLine.FindIndex(x => x.Contains(Constants.UAMethodCallback.AddCallbacks));
-					if (addCallbacksFunctionLinePosition != -1)
+					if (addCallbacksFunctionLinePosition != Constants.NumericValues.TextNotFound)
 					{
 						currentFileContentLineByLine.Insert(addCallbacksFunctionLinePosition, string.Format(Constants.UAMethodCallback.FunctionBody, methodBrowseName, modelData.Name, modelData.NamespaceVariable, methodNodeId));
 					}
 
 					// call callback function in addCallbacks function
 					var addCallbacksReturnLinePosition = currentFileContentLineByLine.FindLastIndex(x => x.Contains(Constants.UAMethodCallback.ReturnLine));
-					if (addCallbacksReturnLinePosition != -1)
+					if (addCallbacksReturnLinePosition != Constants.NumericValues.TextNotFound)
 					{
 						currentFileContentLineByLine.Insert(addCallbacksReturnLinePosition, string.Format(Constants.UAMethodCallback.FunctionCall, methodBrowseName, modelData.Name, modelData.NamespaceVariable, methodNodeId));
 					}
 				}
 			}
-
-			// write new content to mainCallbacks.c file
-			_fileSystem.WriteFile(mainCallbacksCPath, currentFileContentLineByLine);
 		}
 
 		// Conversion of stream to List of strings
-		private List<string> ReadFileContent(Stream stream)
+		private List<string> ParseStreamToListOfString(Stream stream)
 		{
 			var fileContent = new List<string>();
 			using (var sr = new StreamReader(stream))

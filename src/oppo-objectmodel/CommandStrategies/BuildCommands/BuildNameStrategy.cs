@@ -89,8 +89,11 @@ namespace Oppo.ObjectModel.CommandStrategies.BuildCommands
 						constantsFileContent.RemoveAt(portLineIndex);
 					}
 
-					constantsFileContent.Add(Constants.ServerConstants.ServerAppHostname + " = \"" + oppoProjOpcuaapp.Url + "\";");
-					constantsFileContent.Add(Constants.ServerConstants.ServerAppPort + " = " + oppoProjOpcuaapp.Port + ";");
+					var hostName = new StringBuilder(Constants.ServerConstants.ServerAppHostname).Append(" = \"").Append(oppoProjOpcuaapp.Url).Append("\";").ToString();
+					constantsFileContent.Add(hostName);
+
+					var portNumber = new StringBuilder(Constants.ServerConstants.ServerAppPort).Append(" = ").Append(oppoProjOpcuaapp.Port).Append(";").ToString();
+					constantsFileContent.Add(portNumber);
 				}
 				_fileSystem.WriteFile(serverConstantsFilePath, constantsFileContent);
 			}

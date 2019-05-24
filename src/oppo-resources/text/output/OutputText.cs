@@ -90,7 +90,7 @@ namespace Oppo.Resources.text.output
 		public const string GenerateInformationModelFailureCouldntDeserliazeOpcuaapp = "It was not possible to update opcuaapp with the name '{0}'! Couldn't read project file '{1}'!";
 		public const string GenerateInformationModelFailuteOpcuaappIsAClient = "It was not possible to update opcuaapp with the name '{0}'! Can not generate models for client!";
 		public const string GenerateInformationModelInvalidModelsList = "It was not possible to update opcuaapp with the name '{0}'! Provided model list contains duplications or misses some models!";
-		public const string GenerateInformationModelCircularDependency = "It was not possible to update opcuaapp with the name '{0}'! Provided model list contains circular dependency!";
+		public const string GenerateInformationModelCircularDependency = "It was not possible to update opcuaapp with the name '{0}'! Models refer to each other in endless loop!!";
 
 		// sln common <command>
 		public const string SlnOpposlnNotFound		= "The solution file '{0}' not found!";
