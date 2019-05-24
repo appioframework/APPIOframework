@@ -225,7 +225,7 @@ namespace Oppo.ObjectModel
         {
             var functionSnippet = string.Format(Constants.LoadInformationModelsContent.FunctionSnippetPart1,functionName);
 
-			var currentFileContentLineByLine = new List<string>();
+			List<string> currentFileContentLineByLine;
 			using (var loadInformationModelsFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_loadInformationModels_c)))
 			{
 				currentFileContentLineByLine = ParseStreamToListOfString(loadInformationModelsFileStream);
