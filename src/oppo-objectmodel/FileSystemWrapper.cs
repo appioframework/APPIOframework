@@ -58,6 +58,19 @@ namespace Oppo.ObjectModel
                 throw;
             }            
         }
+        
+        public void DeleteFile(string name)
+        {
+            try
+            {
+                File.Delete(name);
+            }
+            catch (Exception ex)
+            {
+                OppoLogger.Error(LoggingText.ExceptionOccured, ex);
+                throw;
+            }            
+        }
 
         public void DeleteDirectory(string name)
         {

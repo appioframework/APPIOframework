@@ -72,6 +72,8 @@ namespace Oppo.Resources.text.output
 
         // generate certificate <command>
         public const string GenerateCertificateCommandSuccess = "Generated new certificate(s) for opcuaapp '{0}'";
+        public const string GenerateCertificateCommandFailureNotParsable = "Certificate generation error, arguments could not be parsed!";
+        public const string GenerateCertificateCommandFailureNotFound = "Certificate generation error, project '{0}' could not be found!";
         
         // generate information model <command>
 		public const string GenerateInformationModelSuccess = "All information model were successfully generated got opcuaapp '{0}'.";

@@ -78,7 +78,8 @@ namespace Oppo.ObjectModel
 
 		public static class DirectoryName
         {
-            public const string SourceCode = "src";
+	        public const string Certificates = "certificates";
+	        public const string SourceCode = "src";
             public const string ClientApp = "client";
             public const string ServerApp = "server";
             public const string MesonBuild = "build";
