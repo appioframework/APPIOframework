@@ -56,14 +56,14 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 				outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureCouldntDeserliazeOpcuaapp, projectName, oppoprojFilePath), string.Empty);
 				return new CommandResult(false, outputMessages);
 			}
-			if (opcuaappData.Type == Constants.ApplicationType.Client)
+			if((opcuaappData as IOpcuaClientApp)?.Type == Constants.ApplicationType.Client)
 			{
 				OppoLogger.Warn(LoggingText.GenerateInformationModelFailuteOpcuaappIsAClient);
 				outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailuteOpcuaappIsAClient, projectName), string.Empty);
 				return new CommandResult(false, outputMessages);
 			}
 
-			var opcuaappModels = (opcuaappData as IOpcuaServerApp).Models;
+			var opcuaappModels = (opcuaappData as IOpcuaServerApp)?.Models;
 
 			// check if models are valid
 			if(!ValidateModels(opcuaappModels))

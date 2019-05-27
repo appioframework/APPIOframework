@@ -58,13 +58,31 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		private readonly string _uaMethodSample					= "<?xml version=\"1.0\" encoding=\"utf-8\"?><UANodeSet><NamespaceUris><Uri>test</Uri></NamespaceUris><UAMethod NodeId=\"ns=1;i=1000\" BrowseName=\"sampleBrowseName\"></UAMethod></UANodeSet>";
 		private readonly string _defaultMainCallbacsC			= "UA_StatusCode addCallbacks(UA_Server* server)\n{\n\treturn UA_STATUSCODE_GOOD;\n}";
 		
-		private readonly string _sampleOpcuaServerAppContent = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"models\":[" +
+		private static string _sampleOpcuaServerAppContent1 = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"models\":[" +
 																					"{\"name\":\"modelA.xml\",\"uri\": \"namespaceA\",\"types\": \"someTypesA.bsd\",\"namespaceVariable\": \"ns_modelA\", \"requiredModelUris\":[\"namespaceB\"]}," +
 																					"{\"name\":\"modelB.xml\",\"uri\": \"namespaceB\",\"types\": \"\",\"namespaceVariable\": \"ns_modelB\", \"requiredModelUris\":[\"namespaceE\",\"namespaceD\"]}," +
 																					"{\"name\":\"modelC.xml\",\"uri\": \"namespaceC\",\"types\": \"\",\"namespaceVariable\": \"ns_modelC\", \"requiredModelUris\":[\"namespaceA\",\"namespaceE\",\"namespaceD\"]}," +
 																					"{\"name\":\"modelD.xml\",\"uri\": \"namespaceD\",\"types\": \"someTypesD.bsd\",\"namespaceVariable\": \"ns_modelD\", \"requiredModelUris\":[]}," +
 																					"{\"name\":\"modelE.xml\",\"uri\": \"namespaceE\",\"types\": \"someTypesD.bsd\",\"namespaceVariable\": \"ns_modelE\", \"requiredModelUris\":[\"namespaceD\"]}," +
 																					"]}";
+
+		private static string _sampleOpcuaServerAppContent2 = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"models\":[" +
+																					"{\"name\":\"modelA.xml\",\"uri\": \"namespaceA\",\"types\": \"\",\"namespaceVariable\": \"ns_modelA\", \"requiredModelUris\":[\"namespaceB\"]}," +
+																					"{\"name\":\"modelB.xml\",\"uri\": \"namespaceB\",\"types\": \"\",\"namespaceVariable\": \"ns_modelB\", \"requiredModelUris\":[\"namespaceC\",\"namespaceF\"]}," +
+																					"{\"name\":\"modelD.xml\",\"uri\": \"namespaceD\",\"types\": \"\",\"namespaceVariable\": \"ns_modelD\", \"requiredModelUris\":[\"namespaceE\",\"namespaceF\"]}," +
+																					"{\"name\":\"modelE.xml\",\"uri\": \"namespaceE\",\"types\": \"\",\"namespaceVariable\": \"ns_modelE\", \"requiredModelUris\":[]}," +
+																					"{\"name\":\"modelC.xml\",\"uri\": \"namespaceC\",\"types\": \"\",\"namespaceVariable\": \"ns_modelC\", \"requiredModelUris\":[\"namespaceD\"]}," +
+																					"{\"name\":\"modelF.xml\",\"uri\": \"namespaceF\",\"types\": \"\",\"namespaceVariable\": \"ns_modelF\", \"requiredModelUris\":[]}," +
+																					"]}";
+
+		protected static string[] ValidOpcuaServerAppContent()
+		{
+			return new[]
+			{
+				_sampleOpcuaServerAppContent1,
+				_sampleOpcuaServerAppContent2
+			};
+		}
 
 		private static string _opcuaServerAppContentWithDuplicatedModels = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"models\":[" +
 																					"{\"name\":\"model.xml\",\"uri\": \"sample_namespace\",\"types\": \"\",\"namespaceVariable\": \"\"}," +
@@ -80,7 +98,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 																					"{\"name\":\"model.xml\",\"uri\": \"sample_namespace\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[" +
 																					"\"sample_namespace1\"" +
 																					"]}]}";
-		private static string[] InvalidOpcuaServerAppContent()
+		protected static string[] InvalidOpcuaServerAppContent()
 		{
 			return new[]
 			{
@@ -247,8 +265,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			}
 		}
 
-		[Test]
-		public void Success_OnGenerateInformationModel([ValueSource(nameof(ValidInputs))] string[] inputParams)
+		[Test, Combinatorial]
+		public void Success_OnGenerateInformationModel([ValueSource(nameof(ValidInputs))] string[] inputParams, [ValueSource(nameof(ValidOpcuaServerAppContent))] string sampleOpcuaServerAppContent)
 		{
 			// Arrange
 			var projectName = inputParams.ElementAtOrDefault(1);
@@ -258,7 +276,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			_fileSystemMock.Setup(x => x.CombinePaths(projectName, projectName + Constants.FileExtension.OppoProject)).Returns(oppoprojFilePath);
 			_fileSystemMock.Setup(x => x.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp, Constants.FileName.SourceCode_mainCallbacks_c)).Returns(mainCallbacksFilePath);
 
-			using (var oppoprojFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpcuaServerAppContent)))
+			using (var oppoprojFileStream = new MemoryStream(Encoding.ASCII.GetBytes(sampleOpcuaServerAppContent)))
 			using (var mainCallbacksFileStream = new MemoryStream(Encoding.ASCII.GetBytes("#include \"open62541.h\"\nconst UA_UInt16 ns_modelA = 2;")))
 			{
 				_fileSystemMock.Setup(x => x.ReadFile(oppoprojFilePath)).Returns(oppoprojFileStream);
@@ -346,7 +364,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 
 			_fileSystemMock.Setup(x => x.CombinePaths(projectName, projectName + Constants.FileExtension.OppoProject)).Returns(oppoprojFilePath);
 
-			using (var oppoprojFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpcuaServerAppContent)))
+			using (var oppoprojFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleOpcuaServerAppContent1)))
 			{
 				_fileSystemMock.Setup(x => x.ReadFile(oppoprojFilePath)).Returns(oppoprojFileStream);
 
