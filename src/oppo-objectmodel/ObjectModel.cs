@@ -439,10 +439,13 @@ namespace Oppo.ObjectModel
             generateHelpStrategyData.CommandName = Constants.GenerateCommandArguments.VerboseHelp;
 
             var generateHelpStrategyVerbose = new HelpStrategy<GenerateStrategy>(generateHelpStrategyData);
-            
-            var generateSubCommands = new ICommand<GenerateStrategy>[]
-            {
-                new GenerateInformationModelStrategy(Constants.CommandName.GenerateInformationModel, fileSystem, new ModelValidator(fileSystem)),
+
+			var modelValidator = new ModelValidator(fileSystem);
+			var nodesetGenerator = new NodesetGenerator(fileSystem, modelValidator);
+
+			var generateSubCommands = new ICommand<GenerateStrategy>[]
+			{
+				new GenerateInformationModelStrategy(Constants.CommandName.GenerateInformationModel, fileSystem, modelValidator, nodesetGenerator),
                 new GenerateCertificateStrategy(fileSystem, certificateGenerator),
                 generateHelpStrategy,
                 generateHelpStrategyVerbose

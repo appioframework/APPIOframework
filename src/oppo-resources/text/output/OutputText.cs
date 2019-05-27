@@ -44,9 +44,9 @@ namespace Oppo.Resources.text.output
         public const string OpcuaappDeploySuccess = "Deploy '{0}' success!";
         public const string OpcuaappDeployFailure = "Deploy failure!";
         public const string OpcuaappDeployWithNameFailure = "Deploy '{0}' failure!";
-
-        // import <command>
-        public const string ImportInformationModelCommandSuccess = "Import information model '{0}' success!";
+		
+		// import <command>
+		public const string ImportInformationModelCommandSuccess = "Import information model '{0}' success!";
         public const string ImportInformationModelCommandUnknownParamFailure = "Import information model failure!";
         public const string ImportInformationModelCommandInvalidOpcuaappName = "Import information model for opcuaapp '{0}' failure!";
         public const string ImportInformationModelCommandInvalidModelPath = "Import information model failure, invalid character in model path '{0}'!";
@@ -63,10 +63,11 @@ namespace Oppo.Resources.text.output
 		public const string ImportInformationModelCommandFailureTypesFileDoesNotExist = "Import information model failute, types file '{0}' does not exist!";
 		public const string ImportInformationModelCommandFailureTypesHasInvalidExtension = "Import information model failute, types file has invalid extension '{0}'!";
 
+		// import sample <command>
 		public const string ImportCertificateCommandSuccess = "Imported key & certificate successfully!";
         public const string ImportCertificateCommandUnknownFormat = "Invalid format specified!";
         public const string ImportCertificateCommandUnknownFileExtension = "Unknown file extension. Please provide an explicit format parameter!";
-        public const string ImportCertificateCommandWrongServerClient = "Specified --server/--client incorrectly!";// import sample <command>
+        public const string ImportCertificateCommandWrongServerClient = "Specified --server/--client incorrectly!";
 		public const string ImportSampleInformationModelSuccess = "Sample information model '{0}' import success!";
 
         // generate certificate <command>
@@ -75,19 +76,24 @@ namespace Oppo.Resources.text.output
         public const string GenerateCertificateCommandFailureNotFound = "Certificate generation error, project '{0}' could not be found!";
         
         // generate information model <command>
-        public const string GenerateInformationModelSuccess = "The opcuaapp with the name '{0}' was succesfully updated with the Information model '{1}'.";
+		public const string GenerateInformationModelSuccess = "All information model were successfully generated got opcuaapp '{0}'.";
         public const string GenerateInformationModelFailure = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'.";
         public const string GenerateInformationModelGenerateTypesFailure = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Can't generate datatypes '{2}'!";
         public const string GenerateInformationModelFailureMissingModel = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Can't find the model '{2}'!";
         public const string GenerateInformationModelFailureMissingFile = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Can't find the file '{2}'!";
-        public const string GenerateInformationModelFailureInvalidModel = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Invalid model extension '{2}'!";
+        public const string GenerateInformationModelFailureInvalidModel = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Invalid model extension '{1}'!";
         public const string GenerateInformationModelFailureInvalidFile = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Invalid file extension '{2}'!";
         public const string GenerateInformationModelFailureUnknownParam = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Unknown command parameter '{2}'!";
         public const string GenerateInformationModelFailureEmptyOpcuaAppName = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Empty opcuaapp name!";
+		public const string GenerateInformationModelFailureEmptyModelName = "It was not possible to update opcuaapp with the name '{0}'! Empty model name!";
 		public const string GenerateInformationModelRequiredModelFailure = "It was not possible to update opcuaapp with the name '{0}' with the Information model '{1}'! Can't use required model '{2}'!";
+		public const string GenerateInformationModelFailureCouldntDeserliazeOpcuaapp = "It was not possible to update opcuaapp with the name '{0}'! Couldn't read project file '{1}'!";
+		public const string GenerateInformationModelFailuteOpcuaappIsAClient = "It was not possible to update opcuaapp with the name '{0}'! Can not generate models for client!";
+		public const string GenerateInformationModelInvalidModelsList = "It was not possible to update opcuaapp with the name '{0}'! Provided model list contains duplications or misses some models!";
+		public const string GenerateInformationModelCircularDependency = "It was not possible to update opcuaapp with the name '{0}'! Models refer to each other in endless loop!!";
 
-        // sln common <command>
-        public const string SlnOpposlnNotFound		= "The solution file '{0}' not found!";
+		// sln common <command>
+		public const string SlnOpposlnNotFound		= "The solution file '{0}' not found!";
         public const string SlnUnknownParameter		= "Unknown command parameter '{0}'!";
 		public const string SlnCouldntDeserliazeSln = "The solution file '{0}' has invalid content!";
 		// sln add <command>

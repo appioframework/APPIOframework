@@ -1,65 +1,40 @@
-﻿using System.Collections.Generic;
+﻿using System.Text;
+using System.IO;
+using System.Collections.Generic;
 using System.Linq;
 using Oppo.Resources.text.output;
 using Oppo.Resources.text.logging;
-using System;
-using System.IO;
-using System.Xml;
-using System.Text;
 
 namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
 {
     public class GenerateInformationModelStrategy : ICommand<GenerateStrategy>
-    {
-        private enum ParamId {AppName, ModelFullName, TypesFullName, RequiredModelFullName}
+	{
+		private readonly IFileSystem _fileSystem;
+		private readonly INodesetGenerator _nodesetGenerator;
+
+		private enum ParamId {AppName, ModelFullName, TypesFullName, RequiredModelFullName}
 
         private readonly ParameterResolver<ParamId> _resolver;
-        private readonly IFileSystem _fileSystem;
-        private readonly IModelValidator _modelValidator;
 
-        public GenerateInformationModelStrategy(string commandName, IFileSystem fileSystem, IModelValidator modelValidator)
+        public GenerateInformationModelStrategy(string commandName, IFileSystem fileSystem, IModelValidator modelValidator, INodesetGenerator nodesetGenerator)
         {
-            _fileSystem = fileSystem;
-            _modelValidator = modelValidator;
             Name = commandName;
-            _resolver = new ParameterResolver<ParamId>(Constants.CommandName.Generate + " " + Name, new []
+			_fileSystem = fileSystem;
+			_nodesetGenerator = nodesetGenerator;
+
+			_resolver = new ParameterResolver<ParamId>(Constants.CommandName.Generate + " " + Name, new []
             {
+
                 new StringParameterSpecification<ParamId>
                 {
                     Identifier = ParamId.AppName,
                     Short = Constants.GenerateInformationModeCommandArguments.Name,
                     Verbose = Constants.GenerateInformationModeCommandArguments.VerboseName
-                },
-                new StringParameterSpecification<ParamId>
-                {
-                    Identifier = ParamId.ModelFullName,
-                    Short = Constants.GenerateInformationModeCommandArguments.Model,
-                    Verbose = Constants.GenerateInformationModeCommandArguments.VerboseModel
-                },
-                new StringParameterSpecification<ParamId>
-                {
-                    Identifier = ParamId.TypesFullName,
-                    Short = Constants.GenerateInformationModeCommandArguments.Types,
-                    Verbose = Constants.GenerateInformationModeCommandArguments.VerboseTypes,
-                    Default = string.Empty
-                },
-                new StringParameterSpecification<ParamId>
-                {
-                    Identifier = ParamId.RequiredModelFullName,
-                    Short = Constants.GenerateInformationModeCommandArguments.RequiredModel,
-                    Verbose = Constants.GenerateInformationModeCommandArguments.VerboseRequiredModel,
-                    Default = string.Empty
                 }
             });
         }
 
         public string Name { get; private set; }
-
-        private struct ArgumentsCheckMessages
-        {
-            public string outputMessage;
-            public string loggerMessage;
-        }
 
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
@@ -68,396 +43,238 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
             if (error != null)
                 return new CommandResult(false, new MessageLines{{error, string.Empty}});
 
-            var opcuaAppName = stringParams[ParamId.AppName];
-            var modelFullName = stringParams[ParamId.ModelFullName];
-            var requiredFullName = stringParams[ParamId.RequiredModelFullName];
-            var typesFullName = stringParams[ParamId.TypesFullName];
+            var projectName = stringParams[ParamId.AppName];
 
             var outputMessages = new MessageLines();
-            var argumentsCheckMesseges = new ArgumentsCheckMessages();
 
-            // validate model flag and file
-            if (!ValidateModelFile(ref argumentsCheckMesseges, opcuaAppName, modelFullName))
-            {
-                OppoLogger.Warn(argumentsCheckMesseges.loggerMessage);
-                outputMessages.Add(argumentsCheckMesseges.outputMessage, string.Empty);
-                return new CommandResult(false, outputMessages);
-            }
+			// deserialize oppoproj file
+			var oppoprojFilePath = _fileSystem.CombinePaths(projectName, projectName + Constants.FileExtension.OppoProject);
+			var opcuaappData = Deserialize.Opcuaapp(oppoprojFilePath, _fileSystem);
+			if (opcuaappData == null)
+			{
+				OppoLogger.Warn(LoggingText.GenerateInformationModelFailureCouldntDeserliazeOpcuaapp);
+				outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailureCouldntDeserliazeOpcuaapp, projectName, oppoprojFilePath), string.Empty);
+				return new CommandResult(false, outputMessages);
+			}
+			if((opcuaappData as IOpcuaClientApp)?.Type == Constants.ApplicationType.Client)
+			{
+				OppoLogger.Warn(LoggingText.GenerateInformationModelFailuteOpcuaappIsAClient);
+				outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailuteOpcuaappIsAClient, projectName), string.Empty);
+				return new CommandResult(false, outputMessages);
+			}
 
-            // validate types file
-            if (!ValidateTypesFile(ref argumentsCheckMesseges, typesFullName, opcuaAppName, modelFullName))
-            {
-                OppoLogger.Warn(argumentsCheckMesseges.loggerMessage);
-                outputMessages.Add(argumentsCheckMesseges.outputMessage, string.Empty);
-                return new CommandResult(false, outputMessages);
-            }
+			var opcuaappModels = (opcuaappData as IOpcuaServerApp)?.Models;
 
-            // validate required model file
-            if (!ValidateRequiredModelFile(ref argumentsCheckMesseges, opcuaAppName, modelFullName, requiredFullName))
-            {
-                OppoLogger.Warn(argumentsCheckMesseges.loggerMessage);
-                outputMessages.Add(argumentsCheckMesseges.outputMessage, string.Empty);
-                return new CommandResult(false, outputMessages);
-            }
-            
-            // prepare source location ./src/server 
-            var srcDirectory = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp);
+			// check if models are valid
+			if(!ValidateModels(opcuaappModels))
+			{
+				OppoLogger.Warn(LoggingText.GenerateInformationModelInvalidModelsList);
+				outputMessages.Add(string.Format(OutputText.GenerateInformationModelInvalidModelsList, projectName), string.Empty);
+				return new CommandResult(false, outputMessages);
+			}
 
-            // create inside src/server the information-models directory if it is not already created
-            CreateNeededDirectories(srcDirectory);
+			// check if there is any circular dependency between models
+			if(SearchForCircularDependencies(opcuaappModels))
+			{
+				OppoLogger.Warn(LoggingText.GenerateInformationModelCircularDependency);
+				outputMessages.Add(string.Format(OutputText.GenerateInformationModelCircularDependency, projectName), string.Empty);
+				return new CommandResult(false, outputMessages);
+			}
 
-            // execute generate datatypes python script if external types are required
-            var modelName = System.IO.Path.GetFileNameWithoutExtension(modelFullName);
-            if (typesFullName != string.Empty)
-            {
-                var typesSourceLocation = @"../../" + _fileSystem.CombinePaths(Constants.DirectoryName.Models, typesFullName);
-                var typesTargetLocation = _fileSystem.CombinePaths(Constants.DirectoryName.InformationModels, modelName.ToLower());
+			// sort models
+			SortModels(opcuaappModels);
 
-                var generatedTypesArgs = Constants.ExecutableName.GenerateDatatypesScriptPath + string.Format(Constants.ExecutableName.GenerateDatatypesTypeBsd, typesSourceLocation) + " " + typesTargetLocation + Constants.InformationModelsName.Types;
-                var generatedTypesResult = _fileSystem.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, generatedTypesArgs);
-                if (!generatedTypesResult)
-                {
-                    OppoLogger.Warn(LoggingText.GeneratedTypesExecutableFails);
-                    outputMessages.Add(string.Format(OutputText.GenerateInformationModelGenerateTypesFailure, opcuaAppName, modelFullName, typesFullName), string.Empty);
-                    return new CommandResult(false, outputMessages);
-                }
-            }
+			// generate models
+			foreach (var model in opcuaappModels)
+			{
+				var requiredModelData = GetListOfRequiredModels(opcuaappModels, model);
 
-            // prepare model paths
-            var modelTargetLocation = _fileSystem.CombinePaths(Constants.DirectoryName.InformationModels, modelName);
-            var sourceModelRelativePath = @"../../" + _fileSystem.CombinePaths(Constants.DirectoryName.Models, modelFullName);
+				if (!_nodesetGenerator.GenerateTypesSourceCodeFiles(projectName, model) || !_nodesetGenerator.GenerateNodesetSourceCodeFiles(projectName, model, requiredModelData))
+				{
+					outputMessages.Add(_nodesetGenerator.GetOutputMessage(), string.Empty);
+					return new CommandResult(false, outputMessages);
+				}
+			}
 
-            // prepare nodeset compiler call arguments
-            var nodesetCompilerArgs = BuildNodesetCompilerArgs(opcuaAppName, modelName, typesFullName, requiredFullName, sourceModelRelativePath, modelTargetLocation);
+			// add noodeset variables
+			CreateNamespaceVariables(projectName, opcuaappModels);
 
-            // execute nodeset compiler python script
-            var nodesetResult = _fileSystem.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, nodesetCompilerArgs);
-            if (!nodesetResult)
-            {
-                OppoLogger.Warn(LoggingText.NodesetCompilerExecutableFails);
-                outputMessages.Add(string.Format(OutputText.GenerateInformationModelFailure, opcuaAppName, modelFullName), string.Empty);
-                return new CommandResult(false, outputMessages);
-            }
-
-			// generate UA_Method callbacks
-			CreateUAMethodCallbacks(srcDirectory, opcuaAppName, modelFullName);
-
-			// adjust server meson.build file with new libraries
-			AdjustServerMesonBuildTemplate(srcDirectory, modelName);
-            if (typesFullName != string.Empty)
-            {
-                AdjustServerMesonBuildTemplate(srcDirectory, modelName.ToLower() + Constants.InformationModelsName.TypesGenerated);
-            }
-
-            // adjust loadInformationModels.c with new functions
-            AdjustLoadInformationModelsTemplate(srcDirectory, modelName);
-
-            outputMessages.Add(string.Format(OutputText.GenerateInformationModelSuccess, opcuaAppName, modelFullName), string.Empty);
-            OppoLogger.Info(LoggingText.GenerateInformationModelSuccess);
+			// exit method with positive result
+			OppoLogger.Info(LoggingText.GenerateInformationModelSuccess);
+			outputMessages.Add(string.Format(OutputText.GenerateInformationModelSuccess, projectName), string.Empty);
             return new CommandResult(true, outputMessages);           
         }
-        private bool ValidateModelFile(ref ArgumentsCheckMessages messages, string opcuaAppName, string modelFullName)
-        {
-            // check if model file exists
-            var calculatedModelFilePath = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.Models, modelFullName);
-            if (!_fileSystem.FileExists(calculatedModelFilePath))
-            {
-                messages.loggerMessage = string.Format(LoggingText.NodesetCompilerExecutableFailsMissingModelFile, calculatedModelFilePath);
-                messages.outputMessage = string.Format(OutputText.GenerateInformationModelFailureMissingModel, opcuaAppName, modelFullName, calculatedModelFilePath);
-                return false;
-            }
 
-            // check if model file is an *.xml file
-            var modelFileExtension = _fileSystem.GetExtension(modelFullName);
-            if (modelFileExtension != Constants.FileExtension.InformationModel)
-            {
-                messages.loggerMessage = string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidModelFile, modelFullName);
-                messages.outputMessage = string.Format(OutputText.GenerateInformationModelFailureInvalidModel, opcuaAppName, modelFullName, modelFileExtension);
-                return false;
-            }
-
-            // validate model
-            if (!_modelValidator.Validate(calculatedModelFilePath, Resources.Resources.UANodeSetXsdFileName))
-            {
-                messages.loggerMessage = string.Format(LoggingText.NodesetValidationFailure, modelFullName);
-                messages.outputMessage = string.Format(OutputText.NodesetValidationFailure, modelFullName);
-                return false;
-            }
-            
-            return true;
-        }
-
-        private bool ValidateTypesFile(ref ArgumentsCheckMessages messages, string typesFullName, string opcuaAppName, string modelFullName)
-        { 
-            // proceed only if user defined required extra types
-            if (typesFullName != string.Empty)
-            {
-                // check if types file exists
-                var calculatedRequiredTypesPath = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.Models, typesFullName);
-                if (!_fileSystem.FileExists(calculatedRequiredTypesPath))
-                {
-                    messages.loggerMessage = string.Format(LoggingText.NodesetCompilerExecutableFailsMissingFile, calculatedRequiredTypesPath);
-                    messages.outputMessage = string.Format(OutputText.GenerateInformationModelFailureMissingFile, opcuaAppName, modelFullName, calculatedRequiredTypesPath);
-                    return false;
-                }
-
-                // check if types file is a *.bsd
-                var requiredTypesFileExtension = _fileSystem.GetExtension(typesFullName);
-                if (requiredTypesFileExtension != Constants.FileExtension.ModelTypes)
-                {
-                    messages.loggerMessage = string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidFile, typesFullName);
-                    messages.outputMessage = string.Format(OutputText.GenerateInformationModelFailureInvalidFile, opcuaAppName, modelFullName, typesFullName);
-                    return false;
-                }
-            }
-            
-            return true;
-        }
-
-        private bool ValidateRequiredModelFile(ref ArgumentsCheckMessages messages, string opcuaAppName,
-            string modelFullName, string requiredFullName)
-        { 
-            if (requiredFullName != string.Empty)
-            {
-                // check if required model file exists
-                var calculatedRequiredModelPath = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.Models, requiredFullName);
-                if (!_fileSystem.FileExists(calculatedRequiredModelPath))
-                {
-                    messages.loggerMessage = string.Format(LoggingText.NodesetCompilerExecutableFailsMissingFile, calculatedRequiredModelPath);
-                    messages.outputMessage = string.Format(OutputText.GenerateInformationModelFailureMissingFile, opcuaAppName, modelFullName, calculatedRequiredModelPath);
-                    return false;
-                }
-
-                // check if required model file is a *.xml
-                var requiredModelFileExtension = _fileSystem.GetExtension(requiredFullName);
-                if (requiredModelFileExtension != Constants.FileExtension.InformationModel)
-                {
-                    messages.loggerMessage = string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidFile, requiredFullName);
-                    messages.outputMessage = string.Format(OutputText.GenerateInformationModelFailureInvalidFile, opcuaAppName, modelFullName, requiredFullName);
-                    return false;
-                }
-
-                // validate model
-                if (!_modelValidator.Validate(calculatedRequiredModelPath, Resources.Resources.UANodeSetXsdFileName))
-                {
-                    messages.loggerMessage = string.Format(LoggingText.NodesetValidationFailure, requiredFullName);
-                    messages.outputMessage = string.Format(OutputText.NodesetValidationFailure, requiredFullName);
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        private string BuildNodesetCompilerArgs(string opcuaAppName, string typesName, string typesFullName, string requiredFullName, string modelSourceLocation,
-            string modelTargetLocation)
-        {
-            // add nodeset compiler script path and basic ua types for basic ua nodeset
-            var outputString = Constants.ExecutableName.NodesetCompilerCompilerPath + Constants.ExecutableName.NodesetCompilerInternalHeaders + string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes);
-
-            // add required model types
-            if (requiredFullName != string.Empty)
-            {
-                var requiredModelPath = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.Models, requiredFullName);
-                if (CheckIfModelRequiresTypes(requiredModelPath))
-                {
-                    var requiredModelName = _fileSystem.GetFileNameWithoutExtension(requiredFullName);
-                    outputString += string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, (requiredModelName + Constants.InformationModelsName.Types).ToUpper());
-                }
-                else
-                {
-                    outputString += string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes);
-                }
-            }
-
-            // add model extra types
-            if (typesFullName != string.Empty)
-            {
-                outputString += string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, (typesName + Constants.InformationModelsName.Types).ToUpper());
-            }
-            else
-            {
-                outputString += string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, Constants.ExecutableName.NodesetCompilerBasicTypes);
-            }
-
-            // add basic nodeset and required model files
-            outputString += string.Format(Constants.ExecutableName.NodesetCompilerExisting, Constants.ExecutableName.NodesetCompilerBasicNodeset);
-            if (requiredFullName != string.Empty)
-            {
-                var requiredModelSourceLocation = @"../../" + _fileSystem.CombinePaths(Constants.DirectoryName.Models, requiredFullName);
-                outputString += string.Format(Constants.ExecutableName.NodesetCompilerExisting, requiredModelSourceLocation);
-            }
-
-            // add information-model nodeset file
-            outputString += string.Format(Constants.ExecutableName.NodesetCompilerXml, modelSourceLocation, modelTargetLocation);
-
-            return outputString;
-        }
-
-        private bool CheckIfModelRequiresTypes(string modelPath)
-        {
-            // read content of information-model file
-            var modelFileStream = _fileSystem.ReadFile(modelPath);
-            var currentFileContentLineByLine = ReadFileContent(modelFileStream).ToList();
-
-            // look for definition xml element which indicates that extra types are required
-            foreach(var line in currentFileContentLineByLine)
-            {
-                if(line.Contains(Constants.definitionXmlElement))
-                {
-                    modelFileStream.Close();
-                    modelFileStream.Dispose();
-                    return true;
-                }
-            }
-
-            modelFileStream.Close();
-            modelFileStream.Dispose();
-            return false;
-        }
-        
-        /// <summary>
-        /// meson.build stored in src/server template should files('fileName') line for-each generated information-model source code.
-        /// Like for myModel.c, myModel.h -> "files('information-models/myModel.c'),".
-        /// </summary>
-        /// <param name="srcDirectory">Server source directory for current opcuaapp project.</param>
-        /// <param name="fileNameToInclude">Generated file name without extension to be included.</param>
-        private void AdjustServerMesonBuildTemplate(string srcDirectory, string fileNameToInclude)
-        {
-            var sourceFileSnippet = string.Format(Constants.InformationModelsName.FileSnippet, fileNameToInclude);
-
-			using (var modelsFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_meson_build)))
+		private bool ValidateModels(List<IModelData> models)
+		{
+			// validate each and every model
+			foreach(var model in models)
 			{
-				var currentFileContentLineByLine = ReadFileContent(modelsFileStream);
-
-				if (!currentFileContentLineByLine.Any(x => x.Contains(sourceFileSnippet)))
+				// check for model duplications
+				if (models.Count(x => x.Name == model.Name || x.Uri == model.Uri) > 1)
 				{
-					using (var sw = new StreamWriter(modelsFileStream))
-					{
-						foreach (var previousTextLine in currentFileContentLineByLine)
-						{
-							if (previousTextLine.Contains("]"))
-							{
-								sw.WriteLine(sourceFileSnippet);
-							}
+					return false;
+				}
 
-							sw.WriteLine(previousTextLine);
-						}
+				// check if all required models exists
+				foreach(var requiredModelUri in model.RequiredModelUris)
+				{
+					if (!models.Where(x => x.Name != model.Name).Any(x => x.Uri == requiredModelUri))
+					{
+						return false;
 					}
 				}
 			}
-        }
-
-        private void AdjustLoadInformationModelsTemplate(string srcDirectory, string functionName)
-        {
-            var functionSnippet = string.Format(Constants.LoadInformationModelsContent.FunctionSnippetPart1,functionName);
-
-			var loadInformationModelsFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_loadInformationModels_c));
-			var currentFileContentLineByLine = ReadFileContent(loadInformationModelsFileStream).ToList();
-
-			loadInformationModelsFileStream.Close();
-			loadInformationModelsFileStream.Dispose();
-
-			if (!currentFileContentLineByLine.Any(x => x.Contains(functionSnippet.Substring(1))))
-			{
-				var lastFunctionLinePosition = currentFileContentLineByLine.FindIndex(x => x.Contains(Constants.LoadInformationModelsContent.ReturnLine));
-				if (lastFunctionLinePosition != -1)
-				{
-					currentFileContentLineByLine.Insert(lastFunctionLinePosition, string.Empty);
-					currentFileContentLineByLine.Insert(lastFunctionLinePosition, Constants.LoadInformationModelsContent.FunctionSnippetPart5);
-					currentFileContentLineByLine.Insert(lastFunctionLinePosition, Constants.LoadInformationModelsContent.FunctionSnippetPart4);
-					currentFileContentLineByLine.Insert(lastFunctionLinePosition, string.Format(Constants.LoadInformationModelsContent.FunctionSnippetPart3, functionName));
-					currentFileContentLineByLine.Insert(lastFunctionLinePosition, Constants.LoadInformationModelsContent.FunctionSnippetPart2);
-					currentFileContentLineByLine.Insert(lastFunctionLinePosition, string.Format(Constants.LoadInformationModelsContent.FunctionSnippetPart1, functionName));
-				}
-
-				_fileSystem.WriteFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_loadInformationModels_c), currentFileContentLineByLine);
-			}
-        }
-
-        
-        private IEnumerable<string> ReadFileContent(Stream stream)
-        {
-            var fileContent = new List<string>();
-            var sr = new StreamReader(stream);
-            string lineOfText;
-            while ((lineOfText = sr.ReadLine()) != null)
-            {
-                fileContent.Add(lineOfText);
-            }
-
-            stream.Position = 0;
-            return fileContent;
-        }
-
-        private void CreateNeededDirectories(string srcDirectory)
-        {
-            var pathToCreate = Path.Combine(srcDirectory, Constants.DirectoryName.InformationModels);
-            if (!_fileSystem.DirectoryExists(pathToCreate))
-            {
-                _fileSystem.CreateDirectory(pathToCreate);
-            }            
-        }
-
-		private struct UAMethod
-		{
-			public string BrowseName;
-			public int NamespaceId;
-			public int NodeId;
+			return true;
 		}
 
-		private void CreateUAMethodCallbacks(string srcDirectory, string opcuaAppName, string modelFullName)
+		private bool SearchForCircularDependencies(List<IModelData> models)
 		{
-			// find all UA_Methods in generated nodeset
-			List<UAMethod> uaMethodCollection = new List<UAMethod>();
-			var nodesetFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.Models, modelFullName));
-			using (XmlReader reader = XmlReader.Create(nodesetFileStream))
+			// check each and every model for circular dependencies
+			foreach(var model in models)
 			{
-				reader.MoveToContent();
-				while (reader.Read())
+				var visitedModelUris = new List<string>();
+				if(CheckSingleModelForCircularDependencies(models, model.Uri, ref visitedModelUris))
 				{
-					if (reader.Name == Constants.UAMethodCallback.UAMethod && reader.IsStartElement() && reader.AttributeCount > 0)
+					return true;
+				}
+			}
+			return false;
+		}
+
+		private bool CheckSingleModelForCircularDependencies(List<IModelData> models, string uri, ref List<string> listOfRegistredUris)
+		{
+			// add currently checked uri to the stack
+			listOfRegistredUris.Add(uri);
+
+			// if currently checked uri appears more then once on the list then we have circular dependency
+			if(listOfRegistredUris.GroupBy(x => x).Any(x => x.Count() > 1))
+			{
+				return true;
+			}
+
+			// if there are any then repeat for required models of currently check model
+			var requiredModel = models.Find(x => x.Uri == uri);
+			if(requiredModel.RequiredModelUris.Count > 0)
+			{
+				foreach(var requiredModelUri in requiredModel.RequiredModelUris)
+				{
+					// pass true if circular dependency found in one of requried models
+					if(CheckSingleModelForCircularDependencies(models, requiredModelUri, ref listOfRegistredUris))
 					{
-						var uaMethod = new UAMethod();
-
-						uaMethod.BrowseName = reader.GetAttribute(Constants.UAMethodCallback.BrowseName);
-						var idValues = reader.GetAttribute(Constants.UAMethodCallback.NodeId).Split(';');
-						uaMethod.NamespaceId = int.Parse(string.Concat(idValues[0].Where(char.IsDigit)));
-						uaMethod.NodeId = int.Parse(string.Concat(idValues[1].Where(char.IsDigit)));
-
-						uaMethodCollection.Add(uaMethod);
+						return true;
+					}
+					// clean last item on the stack if circular dependency not found
+					else
+					{
+						listOfRegistredUris.RemoveAt(listOfRegistredUris.Count - 1);
 					}
 				}
 			}
+			return false;
+		}
 
-			// foreach found UA_Method generate callback function and call it in "addCallbacks" function
-			List<string> currentFileContentLineByLine = null;
-			using (var mainCallbacksFileStream = _fileSystem.ReadFile(_fileSystem.CombinePaths(srcDirectory, Constants.FileName.SourceCode_mainCallbacks_c)))
+		private void SortModels(List<IModelData> models)
+		{
+			// iterate through models from the first to one before the last (last model is skipped since there is no other model to compare with)
+			for(int firstModelIndex = 0; firstModelIndex < models.Count - 1; )
 			{
-				currentFileContentLineByLine = ReadFileContent(mainCallbacksFileStream).ToList();
-			}
-			foreach (var uaMethod in uaMethodCollection)
-			{
-				var lastUAMethodLinePosition = currentFileContentLineByLine.FindIndex(x => x.Contains(string.Format(Constants.UAMethodCallback.FunctionName, uaMethod.NamespaceId, uaMethod.NodeId)));
-				if (lastUAMethodLinePosition == -1)
+				bool swapped = false;
+				// iterate through models from the currently selected to the last (currently selected model is skipped since there is no need to compare it to itself)
+				for(int secondModelIndex = firstModelIndex + 1; secondModelIndex < models.Count; secondModelIndex++)
 				{
-					// add callback function
-					var addCallbacksFunctionLinePosition = currentFileContentLineByLine.FindIndex(x => x.Contains(Constants.UAMethodCallback.AddCallbacks));
-					if (addCallbacksFunctionLinePosition != -1)
+					for(int requiredModelIndex = 0; requiredModelIndex < models[firstModelIndex].RequiredModelUris.Count; requiredModelIndex++)
 					{
-						currentFileContentLineByLine.Insert(addCallbacksFunctionLinePosition, string.Format(Constants.UAMethodCallback.FunctionBody, uaMethod.BrowseName, uaMethod.NamespaceId, uaMethod.NodeId));
+						// swap models if required model of first model is equal to second model (second model has to be higher in hierarchy)
+						if(models[firstModelIndex].RequiredModelUris[requiredModelIndex] == models[secondModelIndex].Uri)
+						{
+							(models[firstModelIndex], models[secondModelIndex]) = (models[secondModelIndex], models[firstModelIndex]);
+							swapped = true;
+							break;
+						}
 					}
-
-					// call callback function in addCallbacks function
-					var addCallbacksReturnLinePosition = currentFileContentLineByLine.FindLastIndex(x => x.Contains(Constants.UAMethodCallback.ReturnLine));
-					if (addCallbacksReturnLinePosition != -1)
+					if(swapped)
 					{
-						currentFileContentLineByLine.Insert(addCallbacksReturnLinePosition, string.Format(Constants.UAMethodCallback.FunctionCall, uaMethod.BrowseName, uaMethod.NamespaceId, uaMethod.NodeId));
+						break;
 					}
 				}
+				if(!swapped)
+				{
+					firstModelIndex++;
+				}
+			}
+		}
+
+		private List<RequiredModelsData> GetListOfRequiredModels(List<IModelData> models, IModelData model)
+		{
+			var result = new List<RequiredModelsData>();
+
+			// for each required model extract model name and set boolean flag if extra types are required
+			foreach(var requiredModelUri in model.RequiredModelUris)
+			{
+				var requiredModel = models.SingleOrDefault(x => x.Uri == requiredModelUri);
+				result.Add(new RequiredModelsData(requiredModel.Name, requiredModel.Types != string.Empty));
 			}
 
-			// write mainCallbacks.c file skipped for not due to problems with UAMethod namespace. Write command should be placed here.
+			return result;
+		}
+
+		private void CreateNamespaceVariables(string projectName, List<IModelData> models)
+		{
+			// get content of mainCallbacks.c file
+			var mainCallbacksFilePath = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp, Constants.FileName.SourceCode_mainCallbacks_c);
+			
+			var mainCallbacksFileContent = new List<string>();
+			using (var constantsFileStream = _fileSystem.ReadFile(mainCallbacksFilePath))
+			{
+				// convert file stream to list of strings
+				using (var reader = new StreamReader(constantsFileStream))
+				{
+					while (!reader.EndOfStream)
+					{
+						mainCallbacksFileContent.Add(reader.ReadLine());
+					}
+				}
+
+				// add namespace variables to content of mainCallbacks.c file
+				AddNamespaceVariablesToMainCallbacksFileContent(models, ref mainCallbacksFileContent);
+			}
+
+			// write mainCallbacks.c content back to the file
+			_fileSystem.WriteFile(mainCallbacksFilePath, mainCallbacksFileContent);
+		}
+
+		private void AddNamespaceVariablesToMainCallbacksFileContent(List<IModelData> models, ref List<string> mainCallbacksFileContent)
+		{
+			// model counter for namespace variable value
+			// 0 used by OPC UA basic nodeset
+			// 1 used by server application for own nodes
+			// first generated model starts with value of 2
+			uint variableCounter = 2;
+
+			// for each model generate namespace variable and add it to mainCallbacks.c file
+			foreach (var model in models)
+			{
+				var namespaceVariableTypeAndName = new StringBuilder(Constants.ServerConstants.ServerAppNamespaceVariable).Append(model.NamespaceVariable).ToString();
+				var namespaceVariableFullDefinition = new StringBuilder(namespaceVariableTypeAndName).Append(" = ").Append(variableCounter).Append(";").ToString();
+
+				// check if namespace variable already exists
+				var namespaceVariableLineIndex = mainCallbacksFileContent.FindIndex(x => x.Contains(namespaceVariableTypeAndName));
+
+				// if namespace variable already exists then rewrite it
+				if (namespaceVariableLineIndex != Constants.NumericValues.TextNotFound)
+				{
+					mainCallbacksFileContent.RemoveAt(namespaceVariableLineIndex);
+					mainCallbacksFileContent.Insert(namespaceVariableLineIndex, namespaceVariableFullDefinition);
+				}
+				// if namespace variable did not exist until now add it
+				else
+				{
+					var includeOpenHLineIndex = mainCallbacksFileContent.FindIndex(x => x.Contains(Constants.ServerConstants.ServerAppOpen62541Include));
+					mainCallbacksFileContent.Insert(includeOpenHLineIndex + Constants.NumericValues.StartInNewLine, namespaceVariableFullDefinition);
+				}
+				variableCounter++;
+			}
 		}
 
 		public string GetHelpText()

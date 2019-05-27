@@ -96,7 +96,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 				return new CommandResult(false, _outputMessages);
 			}
 			modelData.Types = typesFileName;
-			modelData.NamespaceVariable = Constants.ImportModel.NamespaceVariablePrefix + _fileSystem.GetFileNameWithoutExtension(modelFileName);
+			modelData.NamespaceVariable = Constants.NodesetXml.NamespaceVariablePrefix + _fileSystem.GetFileNameWithoutExtension(modelFileName);
 
 
 			var opcuaappDataAsServer = opcuaappData as IOpcuaServerApp;
@@ -267,11 +267,11 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 			
 			// extract namespace uri
 			var nsmgr = new XmlNamespaceManager(nodesetXml.NameTable);
-			nsmgr.AddNamespace(Constants.ImportModel.UANodeSetNamespaceShortcut, new UriBuilder(Constants.ImportModel.UANodeSetNamespaceScheme, Constants.ImportModel.UANodeSetNamespaceHost, -1, Constants.ImportModel.UANodeSetNamespaceValuePath).ToString());
-			var modelNode = nodesetXml.SelectSingleNode(string.Format(Constants.ImportModel.UANodeSetNamespaceFullPath, Constants.ImportModel.UANodeSetNamespaceShortcut), nsmgr);
+			nsmgr.AddNamespace(Constants.NodesetXml.UANodeSetNamespaceShortcut, new UriBuilder(Constants.NodesetXml.UANodeSetNamespaceScheme, Constants.NodesetXml.UANodeSetNamespaceHost, Constants.NumericValues.PortNumberNotSpecified, Constants.NodesetXml.UANodeSetNamespaceValuePath).ToString());
+			var modelNode = nodesetXml.SelectSingleNode(string.Format(Constants.NodesetXml.UANodeSetNamespaceFullPath, Constants.NodesetXml.UANodeSetNamespaceShortcut), nsmgr);
 
 			// validate namespace uri
-			if(modelNode == null || modelNode.Attributes == null || modelNode.Attributes[Constants.ImportModel.UANodeSetNamespaceModelUri] == null)
+			if(modelNode == null || modelNode.Attributes == null || modelNode.Attributes[Constants.NodesetXml.UANodeSetNamespaceModelUri] == null)
 			{
 				OppoLogger.Warn(LoggingText.ImportInforamtionModelCommandFailureModelMissingUri);
 				_outputMessages.Add(string.Format(OutputText.ImportInforamtionModelCommandFailureModelMissingUri, nodesetPath), string.Empty);
@@ -279,14 +279,18 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 			}
 
 			// write namespace uri to model data
-			modelData.Uri = modelNode.Attributes[Constants.ImportModel.UANodeSetNamespaceModelUri].Value;
+			modelData.Uri = modelNode.Attributes[Constants.NodesetXml.UANodeSetNamespaceModelUri].Value;
 
 			// find required model uris and write them to model data
 			if(modelNode.ChildNodes.Count > 0)
 			{
 				for(int index = 0; index < modelNode.ChildNodes.Count; index++)
 				{
-					modelData.RequiredModelUris.Add(modelNode.ChildNodes[index].Attributes[Constants.ImportModel.UANodeSetNamespaceModelUri].Value);
+					var requiredModelUri = modelNode.ChildNodes[index].Attributes[Constants.NodesetXml.UANodeSetNamespaceModelUri].Value;
+					if (requiredModelUri != new UriBuilder(Constants.NodesetXml.UANodeSetNamespaceScheme, Constants.NodesetXml.UANodeSetNamespaceHost, Constants.NumericValues.PortNumberNotSpecified, Constants.NodesetXml.UANodeSetNamespaceBasicValuePath).ToString())
+					{
+						modelData.RequiredModelUris.Add(requiredModelUri);
+					}
 				}
 			}
 
