@@ -70,26 +70,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			};
 		}
 
-		private static string[][] InvalidInputsInvalidPathFlag()
-		{
-			return new[]
-			{
-				new[] { "-n", "myApp", "-P", ""},
-				new[] { "-n", "myApp", "--p", ""},
-				new[] { "-n", "myApp", "--Path", ""},
-				new[] { "-n", "myApp", "-path", "" }
-			};
-		}
-
-		private static string[][] InvalidInputsMissingOpcuaappName()
-		{
-			return new[]
-			{
-				new[] { "-n", "", "-p", "model.xml"},
-				new[] { "--name", "", "--path", "model.xml"}
-			};
-		}
-
 		private static string[][] InvalidInputsInvalidOpcuaappName()
 		{
 			return new[]
@@ -107,6 +87,17 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				new[] { "-n", "myApp", "--path"}
 			};
 		}
+		
+		private static string[][] InvalidInputsMissingPath()
+		{
+			return new[]
+			{
+				new[] { "-n", "myApp", "-t", "types.bsd" },
+				new[] { "-n", "myApp", "--types", "types.bsd" },
+				new[] { "-n", "myApp", "-t", "types.bsd" },
+				new[] { "-n", "myApp", "--types", "types.bsd" }
+			};
+		}
 
 		private static string[][] InvalidInputsInvalidNameArgument()
 		{
@@ -116,17 +107,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				new[] { "--n", "myApp", "-p", "model.xml"},
 				new[] { "-name", "myApp", "--path", "model.xml"},
 				new[] { "--Name", "myApp", "--path", "model.xml"}
-			};
-		}
-
-		private static string[][] InvalidInputsInvalidExtraTypesFlag()
-		{
-			return new[]
-			{
-				new[] { "-n", "myApp", "-p", "model.xml", "-T", "types.bsd" },
-				new[] { "-n", "myApp", "-p", "model.xml", "--t", "types.bsd" },
-				new[] { "-n", "myApp", "-p", "model.xml", "--Types", "types.bsd" },
-				new[] { "-n", "myApp", "-p", "model.xml", "-types", "types.bsd" }
 			};
 		}
 
@@ -256,8 +236,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				var result = _objectUnderTest.Execute(inputParams);
 
 				// Assert
-				Assert.IsTrue(infoWrittenOut);
 				Assert.IsTrue(result.Success);
+				Assert.IsTrue(infoWrittenOut);
 				Assert.AreEqual(string.Format(OutputText.ImportInformationModelCommandSuccess, inputParams.ElementAt(3)), result.OutputMessages.First().Key);
 				_fileSystemMock.Verify(x => x.CopyFile(modelFilePath, modelTargetPath), Times.Once);
 				OppoLogger.RemoveListener(loggerListenerMock.Object);
@@ -301,64 +281,13 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 				var result = _objectUnderTest.Execute(inputParams);
 
 				// Assert
-				Assert.IsTrue(infoWrittenOut);
 				Assert.IsTrue(result.Success);
+				Assert.IsTrue(infoWrittenOut);
 				Assert.AreEqual(string.Format(OutputText.ImportInformationModelCommandSuccess, inputParams.ElementAt(3)), result.OutputMessages.First().Key);
 				_fileSystemMock.Verify(x => x.CopyFile(modelFilePath, modelTargetPath), Times.Once);
 				OppoLogger.RemoveListener(loggerListenerMock.Object);
 			}
 		}
-
-		[Test]
-        public void Fail_OnInvalidPathFlag([ValueSource(nameof(InvalidInputsInvalidPathFlag))]string[] inputParams)
-        {
-            // Arrange
-            var warnWrittenOut = false;
-            var projectDirectory = $"{inputParams.ElementAtOrDefault(1)}";
-            var modelsDirectory = "models";
-            _fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.DirectoryName.Models)).Returns(modelsDirectory);
-            var modelFilePath = $"{inputParams.ElementAtOrDefault(3)}";
-			_fileSystemMock.Setup(x => x.DirectoryExists(projectDirectory)).Returns(true);
-
-			var loggerListenerMock = new Mock<ILoggerListener>();
-            loggerListenerMock.Setup(listener => listener.Warn(LoggingText.UnknownImportInfomrationModelCommandParam)).Callback(delegate { warnWrittenOut = true; });
-            OppoLogger.RegisterListener(loggerListenerMock.Object);
-
-            // Act
-            var result = _objectUnderTest.Execute(inputParams);
-
-            // Assert
-            Assert.IsTrue(warnWrittenOut);
-            Assert.IsFalse(result.Success);
-            Assert.AreEqual(OutputText.ImportInformationModelCommandUnknownParamFailure, result.OutputMessages.First().Key);
-            _fileSystemMock.Verify(x => x.CopyFile(modelFilePath, modelsDirectory), Times.Never);
-            OppoLogger.RemoveListener(loggerListenerMock.Object);
-        }
-
-        [Test]
-        public void Fail_OnMissingOpcuaappName([ValueSource(nameof(InvalidInputsMissingOpcuaappName))]string[] inputParams)
-        {
-            // Arrange
-            var warnWrittenOut = false;
-            var projectDirectory = $"{inputParams.ElementAtOrDefault(1)}";
-            var modelsDirectory = "models";
-            _fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.DirectoryName.Models)).Returns(modelsDirectory);
-            var modelFilePath = $"{inputParams.ElementAtOrDefault(3)}";
-
-            var loggerListenerMock = new Mock<ILoggerListener>();
-            loggerListenerMock.Setup(listener => listener.Warn(LoggingText.EmptyOpcuaappName)).Callback(delegate { warnWrittenOut = true; });
-            OppoLogger.RegisterListener(loggerListenerMock.Object);
-
-            // Act
-            var result = _objectUnderTest.Execute(inputParams);
-
-            // Assert
-            Assert.IsTrue(warnWrittenOut);
-            Assert.IsFalse(result.Success);
-            Assert.AreEqual(OutputText.ImportInformationModelCommandUnknownParamFailure, result.OutputMessages.First().Key);
-            _fileSystemMock.Verify(x => x.CopyFile(modelFilePath, modelsDirectory), Times.Never);
-            OppoLogger.RemoveListener(loggerListenerMock.Object);
-        }
 
         [Test]
         public void Fail_OnInvalidOpcuaappName([ValueSource(nameof(InvalidInputsInvalidOpcuaappName))]string[] inputParams)
@@ -507,7 +436,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			_fileSystemMock.Setup(x => x.DirectoryExists(opcuaAppName)).Returns(true);
 
 			var loggerListenerMock = new Mock<ILoggerListener>();
-            loggerListenerMock.Setup(listener => listener.Warn(LoggingText.InvalidInformationModelMissingModelFile)).Callback(delegate { warnWrittenOut = true; });
+            loggerListenerMock.Setup(listener => listener.Warn(It.IsAny<string>())).Callback(delegate { warnWrittenOut = true; });
             OppoLogger.RegisterListener(loggerListenerMock.Object);
 
             // Act
@@ -516,8 +445,31 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             Assert.IsTrue(warnWrittenOut);
             Assert.IsFalse(result.Success);
-            Assert.AreEqual(OutputText.ImportInformationModelCommandMissingModelPath, result.OutputMessages.First().Key);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
+        }
+        
+        [Test]
+        public void Fail_OnMissingPathParam([ValueSource(nameof(InvalidInputsMissingPath))]string[] inputParams)
+        {
+	        // Arrange
+	        var warnWrittenOut = false;
+	        var opcuaAppName = $"{inputParams.ElementAtOrDefault(1)}";
+	        var modelsDirectory = "models";           
+            
+	        _fileSystemMock.Setup(x => x.CombinePaths(opcuaAppName, Constants.DirectoryName.Models)).Returns(modelsDirectory);
+	        _fileSystemMock.Setup(x => x.DirectoryExists(opcuaAppName)).Returns(true);
+
+	        var loggerListenerMock = new Mock<ILoggerListener>();
+	        loggerListenerMock.Setup(listener => listener.Warn(It.IsAny<string>())).Callback(delegate { warnWrittenOut = true; });
+	        OppoLogger.RegisterListener(loggerListenerMock.Object);
+
+	        // Act
+	        var result = _objectUnderTest.Execute(inputParams);
+
+	        // Assert
+	        Assert.IsTrue(warnWrittenOut);
+	        Assert.IsFalse(result.Success);
+	        OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
 
         [Test]
@@ -550,8 +502,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var result = _objectUnderTest.Execute(inputParams);
 
             // Assert
-            Assert.IsTrue(infoWrittenOut);
             Assert.IsTrue(result.Success);
+            Assert.IsTrue(infoWrittenOut);
             Assert.AreEqual(string.Format(OutputText.ImportSampleInformationModelSuccess, modelFilePath), result.OutputMessages.First().Key);
             _fileSystemMock.Verify(x => x.CreateFile(modelTargetPath, loadedModel), Times.Once);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
@@ -564,7 +516,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var warnWrittenOut = false;
 
             var loggerListenerMock = new Mock<ILoggerListener>();
-            loggerListenerMock.Setup(listener => listener.Warn(LoggingText.UnknownImportInfomrationModelCommandParam)).Callback(delegate { warnWrittenOut = true; });
+            loggerListenerMock.Setup(listener => listener.Warn(It.IsAny<string>())).Callback(delegate { warnWrittenOut = true; });
             OppoLogger.RegisterListener(loggerListenerMock.Object);
 
             // Act
@@ -573,7 +525,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             // Assert
             Assert.IsTrue(warnWrittenOut);
             Assert.IsFalse(result.Success);
-            Assert.AreEqual(OutputText.ImportInformationModelCommandUnknownParamFailure, result.OutputMessages.First().Key);
             OppoLogger.RemoveListener(loggerListenerMock.Object);
         }
 
@@ -757,28 +708,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		}
 
 		[Test]
-		public void Fail_OnInvalidTypesFlag([ValueSource(nameof(InvalidInputsInvalidExtraTypesFlag))] string[] inputParams)
-		{
-			// Arrange
-			var projectName = inputParams.ElementAtOrDefault(1);
-			var modelFilePath = inputParams.ElementAtOrDefault(3);
-			var typesFlag = inputParams.ElementAtOrDefault(4);
-
-			_fileSystemMock.Setup(x => x.DirectoryExists(projectName)).Returns(true);
-			_fileSystemMock.Setup(x => x.FileExists(modelFilePath)).Returns(true);
-			_fileSystemMock.Setup(x => x.GetExtension(modelFilePath)).Returns(_validModelExtension);
-			_modelValidatorMock.Setup(x => x.Validate(modelFilePath, It.IsAny<string>())).Returns(true);
-
-			// Act
-			var commandResult = _objectUnderTest.Execute(inputParams);
-
-			// Assert
-			Assert.IsFalse(commandResult.Success);
-			Assert.IsNotNull(commandResult.OutputMessages);
-			Assert.AreEqual(string.Format(OutputText.ImportInformationModelCommandFailureInvalidTypesFlag, typesFlag), commandResult.OutputMessages.First().Key);
-		}
-
-		[Test]
 		public void Fail_OnMissingExtraTypesName([ValueSource(nameof(InvalidInputsMissingExtraTypesName))] string[] inputParams)
 		{
 			// Arrange
@@ -797,7 +726,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			// Assert
 			Assert.IsFalse(commandResult.Success);
 			Assert.IsNotNull(commandResult.OutputMessages);
-			Assert.AreEqual(OutputText.ImportInformationModelCommandFailureMissingTypesName, commandResult.OutputMessages.First().Key);
 		}
 
 		[Test]
