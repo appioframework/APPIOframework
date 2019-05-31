@@ -44,7 +44,7 @@
         public const string PublishCallDescription = "oppo publish <Options>";
 
         //Deploy command
-        public const string DeployFirstLine = "Builds and installs package(.deb) containing the opcuuaapp ready for deployment.";
+        public const string DeployFirstLine = "Builds an installer package(.deb) containing the opcuuaapp ready for deployment.";
         public const string DeployCallDescription = "oppo deploy <Options>";
 
         //Import command
@@ -53,8 +53,8 @@
         public const string ImportArguments = "information-model";
 
         //New command
-        public const string NewFirstLine = "Creates a new oppo project.";
-        public const string NewCallDescription = "oppo new <Arguments> <Options>";
+        public const string NewFirstLine = "Creates a new oppo project or solution.";
+        public const string NewCallDescription = "oppo new <Argument> <Options>";
         public const string NewArgumentsObject = "<Object> The object to create, can either be:";
         public const string NewArgumentsSln = "sln";
         public const string NewArgumentsOpcuaapp = "opcuapp";
@@ -110,5 +110,13 @@
 		// Help option descriptions
 		public const string OptionHelpDescription = "prints this help";
 		public const string OptionNameDescription = "oppo project name";
+
+		// New options description
+		public const string NewCommandOptionNameDescription = "oppo project or solution name";
+		public const string NewCommandOptionTypeDescription = "oppo project type: Client, Server, ClientServer (arg: opcuaapp)";
+		public const string NewCommandOptionPortDescription = "server port number (arg: opcuaapp)";
+		public const string NewCommandOptionUrlDescription = "server url (arg: opcuaapp)";
+		public const string NewCommandOptionNoCertDescription = "when set then no security certificates created (arg: opcuaapp)";
+
 	}
 }

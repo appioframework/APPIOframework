@@ -50,14 +50,6 @@ namespace Oppo.ObjectModel
             public static string Failure { get; set; } = "failure";
         }
 
-        public static class NewCommandName
-        {
-            public const string Help = "-h";
-            public const string VerboseHelp = "--help";
-            public const string Sln = "sln";
-            public const string OpcuaApp = "opcuaapp";
-        }
-
         public static class SlnCommandName
         {
             public const string Help = "-h";
@@ -150,14 +142,8 @@ namespace Oppo.ObjectModel
             public const string OpenSSLConvertCertificateFromPEM = "x509 -inform PEM -outform DER -in {0} -out {1}";
             public const string OpenSSLConvertKeyFromPEM = "rsa -outform der -in {0} -out {1}";
         }
-
-        public static class NewSlnCommandArguments
-        {
-            public const string Name = "-n";
-            public const string VerboseName = "--name";
-        }
         
-        public static class NewOpcuaAppCommandArguments
+        public static class NewCommandOptions
         {
             public const string Name = "-n";
             public const string VerboseName = "--name";
@@ -168,10 +154,18 @@ namespace Oppo.ObjectModel
 			public const string Port = "-p";
 			public const string VerbosePort = "--port";
             public const string VerboseNoCert = "--nocert";
-        }
+			public const string Help = "-h";
+			public const string VerboseHelp = "--help";
+		}
+
+		public static class NewCommandArguments
+		{
+			public const string Sln = "sln";
+			public const string OpcuaApp = "opcuaapp";
+		}
 
 
-        public static class BuildCommandArguments
+		public static class BuildCommandOptions
         {
             public const string Name = "-n";
             public const string VerboseName = "--name";
@@ -179,7 +173,7 @@ namespace Oppo.ObjectModel
             public const string Help = "-h";
         }
 
-        public static class PublishCommandArguments
+        public static class PublishCommandOptions
         {
             public const string Help = "-h";
             public const string VerboseHelp = "--help";
@@ -195,7 +189,7 @@ namespace Oppo.ObjectModel
             public const string VerboseName = "--name";
         }
 
-        public static class DeployCommandArguments
+        public static class DeployCommandOptions
         {
             public const string Help = "-h";
             public const string VerboseHelp = "--help";

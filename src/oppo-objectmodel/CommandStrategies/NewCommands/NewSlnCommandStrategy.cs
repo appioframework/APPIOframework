@@ -20,13 +20,13 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
                 new StringParameterSpecification<ParamId>
                 {
                     Identifier = ParamId.SolutionName,
-                    Short = Constants.NewSlnCommandArguments.Name,
-                    Verbose = Constants.NewSlnCommandArguments.VerboseName
+                    Short = Constants.NewCommandOptions.Name,
+                    Verbose = Constants.NewCommandOptions.VerboseName
                 }
             });
         }
 
-        public string Name => Constants.NewCommandName.Sln;
+        public string Name => Constants.NewCommandArguments.Sln;
 
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
