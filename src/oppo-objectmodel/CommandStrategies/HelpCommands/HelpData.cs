@@ -10,12 +10,6 @@
 		public string LogMessage { get; set; }
 		public string HelpText { get; set; }
 
-        /*public string CommandName { get; set; }
-        public MessageLines HelpTextFirstLine { get; set; }
-        public MessageLines HelpTextLastLine { get; set; }
-        public string LogMessage { get; set; }
-        public string HelpText { get; set; }*/
-
         public HelpData()
         {
             HelpTextFirstLine = new MessageLines();
