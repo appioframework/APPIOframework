@@ -106,5 +106,9 @@
 		public const string ReferenceAddNameArgumentCommandDescription = "Add reference server to client";
 		public const string ReferenceRemoveNameArgumentCommandDescription = "Remove reference server from client";
 		public const string ReferenceHelpArgumentCommandDescription = "Reference help";
+
+		// Help option descriptions
+		public const string OptionHelpDescription = "prints this help";
+		public const string OptionNameDescription = "oppo project name";
 	}
 }

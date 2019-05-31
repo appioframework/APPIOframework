@@ -7,6 +7,7 @@ namespace Oppo.ObjectModel
         public const string server = "server";
         public const string definitionXmlElement = "<Definition";
 		public const string opcuaappConverterSerializationException = "Use default serialization.";
+		public const string HelpOptionSeparator = " | ";
 
         public static class FileExtension
         {
@@ -186,7 +187,7 @@ namespace Oppo.ObjectModel
             public const string VerboseName = "--name";
         }
 
-        public static class CleanCommandArguments
+        public static class CleanCommandOptions
         {
             public const string Help = "-h";
             public const string VerboseHelp = "--help";

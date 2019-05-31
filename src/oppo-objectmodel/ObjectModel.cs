@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using System.Text;
 using Oppo.Resources.text.logging;
 using Oppo.Resources.text.output;
+using Oppo.Resources.text.help;
 using Oppo.ObjectModel.CommandStrategies.BuildCommands;
 using Oppo.ObjectModel.CommandStrategies.CleanCommands;
 using Oppo.ObjectModel.CommandStrategies.DeployCommands;
@@ -112,26 +114,26 @@ namespace Oppo.ObjectModel
             // generic help data
             var helpStrategyFirstLineText = new MessageLines
             {
-                { string.Empty, Resources.text.help.HelpTextValues.HelpStartWelcome },
+                { string.Empty, HelpTextValues.HelpStartWelcome },
                 { string.Empty, string.Empty },
-                { string.Empty, Resources.text.help.HelpTextValues.HelpStartDocuLink },
+                { string.Empty, HelpTextValues.HelpStartDocuLink },
                 { string.Empty, string.Empty },
-                { string.Empty, Resources.text.help.HelpTextValues.GeneralUsage },
-                { string.Empty, Resources.text.help.HelpTextValues.HelpStartUsageDescription },
+                { string.Empty, HelpTextValues.GeneralUsage },
+                { string.Empty, HelpTextValues.HelpStartUsageDescription },
                 { string.Empty, string.Empty },
-                { string.Empty, Resources.text.help.HelpTextValues.HelpStartTerminology },
-                { string.Empty, Resources.text.help.HelpTextValues.HelpStartOpcuaapp },
-                { string.Empty, Resources.text.help.HelpTextValues.HelpStartOpcuaappDescription },
+                { string.Empty, HelpTextValues.HelpStartTerminology },
+                { string.Empty, HelpTextValues.HelpStartOpcuaapp },
+                { string.Empty, HelpTextValues.HelpStartOpcuaappDescription },
                 { string.Empty, string.Empty },
-                { string.Empty, Resources.text.help.HelpTextValues.HelpStartOppoOptions },
+                { string.Empty, HelpTextValues.HelpStartOppoOptions },
                 { string.Empty, string.Empty },
-                { string.Empty, Resources.text.help.HelpTextValues.HelpStartCommand },
+                { string.Empty, HelpTextValues.HelpStartCommand },
             };
 
             var helpStrategyLastLineText = new MessageLines
             {
                 { string.Empty, string.Empty },
-                { string.Empty, Resources.text.help.HelpTextValues.HelpEndCommand },
+                { string.Empty, HelpTextValues.HelpEndCommand },
             };
 
             return new HelpData
@@ -140,7 +142,7 @@ namespace Oppo.ObjectModel
                 HelpTextFirstLine = helpStrategyFirstLineText,
                 HelpTextLastLine = helpStrategyLastLineText,
                 LogMessage = LoggingText.OppoHelpCalled,
-                HelpText = Resources.text.help.HelpTextValues.HelpCommand,
+                HelpText = HelpTextValues.HelpCommand,
             };
         }
 
@@ -149,12 +151,12 @@ namespace Oppo.ObjectModel
             // oppo build <command>
             var buildHelpStrategyHelpText = new MessageLines
             {
-                { string.Empty, Resources.text.help.HelpTextValues.BuildFirstLine },
+                { string.Empty, HelpTextValues.BuildFirstLine },
                 { string.Empty, string.Empty },
-                { string.Empty, Resources.text.help.HelpTextValues.GeneralUsage },
-                { string.Empty, Resources.text.help.HelpTextValues.BuildCallDescription },
+                { string.Empty, HelpTextValues.GeneralUsage },
+                { string.Empty, HelpTextValues.BuildCallDescription },
                 { string.Empty, string.Empty },
-                { string.Empty, Resources.text.help.HelpTextValues.GeneralOptions },
+                { string.Empty, HelpTextValues.GeneralOptions },
             };
 
             var buildHelpStrategyData = new HelpData
@@ -162,7 +164,7 @@ namespace Oppo.ObjectModel
                 CommandName = Constants.BuildCommandArguments.Help,
                 HelpTextFirstLine = buildHelpStrategyHelpText,
                 LogMessage = LoggingText.OppoHelpForBuildCommandCalled,
-                HelpText = Resources.text.help.HelpTextValues.BuildHelpArgumentCommandDescription,
+                HelpText = HelpTextValues.BuildHelpArgumentCommandDescription,
             };
 
             var buildHelpStrategy = new HelpStrategy<BuildStrategy>(buildHelpStrategyData);
@@ -191,17 +193,17 @@ namespace Oppo.ObjectModel
             // oppo new <command>
             var newHelpStrategyHelpText = new MessageLines
             {
-                { string.Empty, Resources.text.help.HelpTextValues.NewFirstLine },
+                { string.Empty, HelpTextValues.NewFirstLine },
                 { string.Empty, string.Empty},
-                { string.Empty, Resources.text.help.HelpTextValues.GeneralUsage },
-                { string.Empty, Resources.text.help.HelpTextValues.NewCallDescription },
+                { string.Empty, HelpTextValues.GeneralUsage },
+                { string.Empty, HelpTextValues.NewCallDescription },
                 { string.Empty, string.Empty },
-                { string.Empty, Resources.text.help.HelpTextValues.GeneralArguments },
-                { string.Empty, Resources.text.help.HelpTextValues.NewArgumentsObject },
-                { string.Empty, Resources.text.help.HelpTextValues.NewArgumentsSln },
-                { string.Empty, Resources.text.help.HelpTextValues.NewArgumentsOpcuaapp },
+                { string.Empty, HelpTextValues.GeneralArguments },
+                { string.Empty, HelpTextValues.NewArgumentsObject },
+                { string.Empty, HelpTextValues.NewArgumentsSln },
+                { string.Empty, HelpTextValues.NewArgumentsOpcuaapp },
                 { string.Empty, string.Empty },
-                { string.Empty, Resources.text.help.HelpTextValues.GeneralOptions },
+                { string.Empty, HelpTextValues.GeneralOptions },
             };
 
             var newHelpStrategyData = new HelpData
@@ -209,7 +211,7 @@ namespace Oppo.ObjectModel
                 CommandName = Constants.NewCommandName.Help,
                 HelpTextFirstLine = newHelpStrategyHelpText,
                 LogMessage = LoggingText.OppoHelpForNewCommandCalled,
-                HelpText = Resources.text.help.HelpTextValues.NewHelpArgumentCommandDescription,
+                HelpText = HelpTextValues.NewHelpArgumentCommandDescription,
             };
 
             var newHelpStrategy = new HelpStrategy<NewStrategy>(newHelpStrategyData);
@@ -238,12 +240,12 @@ namespace Oppo.ObjectModel
             // oppo publish <command>
             var publishHelpStrategyHelpText = new MessageLines
             {
-                { string.Empty, Resources.text.help.HelpTextValues.PublishFirstLine },
+                { string.Empty, HelpTextValues.PublishFirstLine },
                 { string.Empty, string.Empty },
-                { string.Empty, Resources.text.help.HelpTextValues.GeneralUsage },
-                { string.Empty, Resources.text.help.HelpTextValues.PublishCallDescription },
+                { string.Empty, HelpTextValues.GeneralUsage },
+                { string.Empty, HelpTextValues.PublishCallDescription },
                 { string.Empty, string.Empty },
-                { string.Empty, Resources.text.help.HelpTextValues.GeneralOptions },
+                { string.Empty, HelpTextValues.GeneralOptions },
             };
 
             var publishHelpStrategyData = new HelpData
@@ -251,7 +253,7 @@ namespace Oppo.ObjectModel
                 CommandName = Constants.PublishCommandArguments.Help,
                 HelpTextFirstLine = publishHelpStrategyHelpText,
                 LogMessage = LoggingText.OpcuaappPublishHelpCalled,
-                HelpText = Resources.text.help.HelpTextValues.PublishHelpArgumentCommandDescription,
+                HelpText = HelpTextValues.PublishHelpArgumentCommandDescription,
             };
 
             var publishHelpStrategy = new HelpStrategy<PublishStrategy>(publishHelpStrategyData);
@@ -280,12 +282,12 @@ namespace Oppo.ObjectModel
             // oppo deploy <command>
             var deployHelpStrategyHelpText = new MessageLines
             {
-                { string.Empty, Resources.text.help.HelpTextValues.DeployFirstLine },
+                { string.Empty, HelpTextValues.DeployFirstLine },
                 { string.Empty, string.Empty },
-                { string.Empty, Resources.text.help.HelpTextValues.GeneralUsage },
-                { string.Empty, Resources.text.help.HelpTextValues.DeployCallDescription },
+                { string.Empty, HelpTextValues.GeneralUsage },
+                { string.Empty, HelpTextValues.DeployCallDescription },
                 { string.Empty, string.Empty },
-                { string.Empty, Resources.text.help.HelpTextValues.GeneralOptions },
+                { string.Empty, HelpTextValues.GeneralOptions },
             };
 
             var deployHelpStrategyData = new HelpData
@@ -293,7 +295,7 @@ namespace Oppo.ObjectModel
                 CommandName = Constants.DeployCommandArguments.Help,
                 HelpTextFirstLine = deployHelpStrategyHelpText,
                 LogMessage = LoggingText.OppoHelpForDeployCommandCalled,
-                HelpText = Resources.text.help.HelpTextValues.DeployHelpArgumentCommandDescription,
+                HelpText = HelpTextValues.DeployHelpArgumentCommandDescription,
             };
 
             var deployHelpStrategy = new HelpStrategy<DeployStrategy>(deployHelpStrategyData);
@@ -317,41 +319,51 @@ namespace Oppo.ObjectModel
             return new DeployStrategy(deployStrategyCommandFactory);
         }
 
+		// OPPO Clean command
         private static CleanStrategy CreateCleanStrategy(IFileSystem fileSystem)
         {
-            // oppo clean <command>
+            // Clean command help first lines
             var cleanHelpStrategyHelpText = new MessageLines
             {
-                { string.Empty, Resources.text.help.HelpTextValues.CleanFirstLine },
-                { string.Empty, string.Empty },
-                { string.Empty, Resources.text.help.HelpTextValues.GeneralUsage },
-                { string.Empty, Resources.text.help.HelpTextValues.CleanCallDescription },
-                { string.Empty, string.Empty },
-                { string.Empty, Resources.text.help.HelpTextValues.GeneralOptions },
-            };
+                { string.Empty, HelpTextValues.CleanFirstLine },
+				{ string.Empty, string.Empty },
+				{ string.Empty, HelpTextValues.GeneralUsage },
+				{ string.Empty, HelpTextValues.CleanCallDescription }
+			};
+			
+			// Clean command options
+			var nameOption = new StringBuilder(Constants.CleanCommandOptions.Name).Append(Constants.HelpOptionSeparator).Append(Constants.CleanCommandOptions.VerboseName).ToString();
+			var helpOption = new StringBuilder(Constants.CleanCommandOptions.Help).Append(Constants.HelpOptionSeparator).Append(Constants.CleanCommandOptions.VerboseHelp).ToString();
+			var cleanHelpOptions = new MessageLines
+			{
+				{ nameOption, HelpTextValues.OptionNameDescription },
+				{ helpOption, HelpTextValues.OptionHelpDescription }
+			};
 
-            var cleanHelpStrategyData = new HelpData
-            {
-                CommandName = Constants.CleanCommandArguments.Help,
-                HelpTextFirstLine = cleanHelpStrategyHelpText,
+			// Clean help strategy
+			var cleanHelpStrategyData = new HelpData
+			{
+				CommandName = Constants.CleanCommandOptions.Help,
+				HelpTextFirstLine = cleanHelpStrategyHelpText,
+				Options = cleanHelpOptions,
                 LogMessage = LoggingText.OppoHelpForCleanCommandCalled,
-                HelpText = Resources.text.help.HelpTextValues.CleanHelpArgumentCommandDescription,
+                HelpText = HelpTextValues.CleanHelpArgumentCommandDescription,
             };
 
             var cleanHelpStrategy = new HelpStrategy<CleanStrategy>(cleanHelpStrategyData);
 
-            cleanHelpStrategyData.CommandName = Constants.CleanCommandArguments.VerboseHelp;
+            cleanHelpStrategyData.CommandName = Constants.CleanCommandOptions.VerboseHelp;
 
             var cleanHelpVerboseStrategy = new HelpStrategy<CleanStrategy>(cleanHelpStrategyData);
 
             var cleanStrategies = new ICommand<CleanStrategy>[]
             {
-                new CleanNameStrategy(Constants.CleanCommandArguments.Name, fileSystem),
-                new CleanNameStrategy(Constants.CleanCommandArguments.VerboseName, fileSystem),
+                new CleanNameStrategy(Constants.CleanCommandOptions.Name, fileSystem),
+                new CleanNameStrategy(Constants.CleanCommandOptions.VerboseName, fileSystem),
                 cleanHelpStrategy,
                 cleanHelpVerboseStrategy,
             };
-            var cleanStrategyCommandFactory = new CommandFactory<CleanStrategy>(cleanStrategies, Constants.CleanCommandArguments.Help);
+            var cleanStrategyCommandFactory = new CommandFactory<CleanStrategy>(cleanStrategies, Constants.CleanCommandOptions.Help);
             cleanHelpStrategy.CommandFactory = cleanStrategyCommandFactory;
             cleanHelpVerboseStrategy.CommandFactory = cleanStrategyCommandFactory;
 
@@ -363,15 +375,15 @@ namespace Oppo.ObjectModel
             // oppo import <command>
             var importHelpStrategyHelpText = new MessageLines
             {
-                { string.Empty, Resources.text.help.HelpTextValues.ImportFirstLine },
+                { string.Empty, HelpTextValues.ImportFirstLine },
                 { string.Empty, string.Empty },
-                { string.Empty, Resources.text.help.HelpTextValues.GeneralUsage },
-                { string.Empty, Resources.text.help.HelpTextValues.ImportCallDescription },
+                { string.Empty, HelpTextValues.GeneralUsage },
+                { string.Empty, HelpTextValues.ImportCallDescription },
                 { string.Empty, string.Empty },
-                { string.Empty, Resources.text.help.HelpTextValues.GeneralArguments },
-                { string.Empty, Resources.text.help.HelpTextValues.ImportArguments },
+                { string.Empty, HelpTextValues.GeneralArguments },
+                { string.Empty, HelpTextValues.ImportArguments },
                 { string.Empty, string.Empty },
-                { string.Empty, Resources.text.help.HelpTextValues.GeneralOptions },
+                { string.Empty, HelpTextValues.GeneralOptions },
                 { "-n", "The name to opcuapp to use" },
                 { "--name", "The name to opcuapp to use" },
                 { "-p", "Information models path to use" },
@@ -383,7 +395,7 @@ namespace Oppo.ObjectModel
                 CommandName = Constants.ImportInformationModelCommandArguments.Help,
                 HelpTextFirstLine = importHelpStrategyHelpText,
                 LogMessage = LoggingText.OppoHelpForImportInformationModel,
-                HelpText = Resources.text.help.HelpTextValues.ImportHelpArgumentCommandDescription,
+                HelpText = HelpTextValues.ImportHelpArgumentCommandDescription,
             };
 
             var importHelpStrategy = new HelpStrategy<ImportStrategy>(importHelpStrategyData);
@@ -411,15 +423,15 @@ namespace Oppo.ObjectModel
             // oppo generate <command>
             var generateHelpStrategyHelpText = new MessageLines
             {
-                { string.Empty, Resources.text.help.HelpTextValues.GenerateFirstLine },
+                { string.Empty, HelpTextValues.GenerateFirstLine },
                 { string.Empty, string.Empty },
-                { string.Empty, Resources.text.help.HelpTextValues.GeneralUsage },
-                { string.Empty, Resources.text.help.HelpTextValues.GenerateCallDescription },
+                { string.Empty, HelpTextValues.GeneralUsage },
+                { string.Empty, HelpTextValues.GenerateCallDescription },
                 { string.Empty, string.Empty },
-                { string.Empty, Resources.text.help.HelpTextValues.GeneralArguments },
-                { string.Empty, Resources.text.help.HelpTextValues.GenerateArguments },
+                { string.Empty, HelpTextValues.GeneralArguments },
+                { string.Empty, HelpTextValues.GenerateArguments },
                 { string.Empty, string.Empty },
-                { string.Empty, Resources.text.help.HelpTextValues.GeneralOptions },
+                { string.Empty, HelpTextValues.GeneralOptions },
                 { "-n", "The name to opcuapp to use" },
                 { "--name", "The name to opcuapp to use" },
                 { "-m", "Information model to use" },
@@ -431,7 +443,7 @@ namespace Oppo.ObjectModel
                 CommandName = Constants.GenerateCommandArguments.Help,
                 HelpTextFirstLine = generateHelpStrategyHelpText,
                 LogMessage = LoggingText.OppoHelpForGenerateCommand,
-                HelpText = Resources.text.help.HelpTextValues.GenerateHelpArgumentCommandDescription,
+                HelpText = HelpTextValues.GenerateHelpArgumentCommandDescription,
             };
 
             var generateHelpStrategy = new HelpStrategy<GenerateStrategy>(generateHelpStrategyData);
@@ -462,19 +474,19 @@ namespace Oppo.ObjectModel
 		{
 			var slnHelpStrategyHelpText = new MessageLines
 			{
-				{ string.Empty, Resources.text.help.HelpTextValues.SlnFirstLine },
+				{ string.Empty, HelpTextValues.SlnFirstLine },
 				{ string.Empty, string.Empty },
-				{ string.Empty, Resources.text.help.HelpTextValues.GeneralUsage },
-				{ string.Empty, Resources.text.help.HelpTextValues.SlnCallDescription },
+				{ string.Empty, HelpTextValues.GeneralUsage },
+				{ string.Empty, HelpTextValues.SlnCallDescription },
 				{ string.Empty, string.Empty },
-				{ string.Empty, Resources.text.help.HelpTextValues.GeneralArguments },
-				{ string.Empty, Resources.text.help.HelpTextValues.SlnArgumentAdd },
-				{ string.Empty, Resources.text.help.HelpTextValues.SlnArgumentBuild },
-				{ string.Empty, Resources.text.help.HelpTextValues.SlnArgumentDeploy },
-				{ string.Empty, Resources.text.help.HelpTextValues.SlnArgumentPublish },
-				{ string.Empty, Resources.text.help.HelpTextValues.SlnArgumentRemove },
+				{ string.Empty, HelpTextValues.GeneralArguments },
+				{ string.Empty, HelpTextValues.SlnArgumentAdd },
+				{ string.Empty, HelpTextValues.SlnArgumentBuild },
+				{ string.Empty, HelpTextValues.SlnArgumentDeploy },
+				{ string.Empty, HelpTextValues.SlnArgumentPublish },
+				{ string.Empty, HelpTextValues.SlnArgumentRemove },
 				{ string.Empty, string.Empty },
-				{ string.Empty, Resources.text.help.HelpTextValues.GeneralOptions },
+				{ string.Empty, HelpTextValues.GeneralOptions },
 			};
 
 			var slnHelpStrategyData = new HelpData
@@ -482,7 +494,7 @@ namespace Oppo.ObjectModel
 				CommandName = Constants.SlnCommandName.Help,
 				HelpTextFirstLine = slnHelpStrategyHelpText,
 				LogMessage = LoggingText.OppoHelpForSlnCommand,
-				HelpText = Resources.text.help.HelpTextValues.SlnHelpArgumentCommandDescription,
+				HelpText = HelpTextValues.SlnHelpArgumentCommandDescription,
 			};
 
 			var slnHelpStrategy = new HelpStrategy<SlnStrategy>(slnHelpStrategyData);
@@ -497,7 +509,7 @@ namespace Oppo.ObjectModel
 			SlnBuildCommandData.Subcommand			 = new BuildNameStrategy(Constants.CommandName.Build, fileSystem);
 			SlnBuildCommandData.SuccessLoggerMessage = LoggingText.SlnBuildSuccess;
 			SlnBuildCommandData.SuccessOutputMessage = OutputText.SlnBuildSuccess;
-			SlnBuildCommandData.HelpText			 = Resources.text.help.HelpTextValues.SlnBuildNameArgumentCommandDescription;
+			SlnBuildCommandData.HelpText			 = HelpTextValues.SlnBuildNameArgumentCommandDescription;
 
 			var SlnDeployCommandData				  = new SlnOperationData();
 			SlnDeployCommandData.CommandName		  = Constants.CommandName.Deploy;
@@ -505,7 +517,7 @@ namespace Oppo.ObjectModel
 			SlnDeployCommandData.Subcommand			  = new DeployNameStrategy(Constants.CommandName.Deploy, fileSystem);
 			SlnDeployCommandData.SuccessLoggerMessage = LoggingText.SlnDeploySuccess;
 			SlnDeployCommandData.SuccessOutputMessage = OutputText.SlnDeploySuccess;
-			SlnDeployCommandData.HelpText			  = Resources.text.help.HelpTextValues.SlnDeployNameArgumentCommandDescription;
+			SlnDeployCommandData.HelpText			  = HelpTextValues.SlnDeployNameArgumentCommandDescription;
 
 			var SlnPublishCommandData				   = new SlnOperationData();
 			SlnPublishCommandData.CommandName		   = Constants.CommandName.Publish;
@@ -513,7 +525,7 @@ namespace Oppo.ObjectModel
 			SlnPublishCommandData.Subcommand		   = new PublishNameStrategy(Constants.CommandName.Publish, fileSystem);
 			SlnPublishCommandData.SuccessLoggerMessage = LoggingText.SlnPublishSuccess;
 			SlnPublishCommandData.SuccessOutputMessage = OutputText.SlnPublishSuccess;
-			SlnPublishCommandData.HelpText             = Resources.text.help.HelpTextValues.SlnPublishNameArgumentCommandDescription;
+			SlnPublishCommandData.HelpText             = HelpTextValues.SlnPublishNameArgumentCommandDescription;
 
 			var slnStrategies = new ICommand<SlnStrategy>[]
 			{
@@ -537,16 +549,16 @@ namespace Oppo.ObjectModel
 		{
 			var referenceHelpStrategyHelpText = new MessageLines
 			{
-				{ string.Empty, Resources.text.help.HelpTextValues.ReferenceFirstLine },
+				{ string.Empty, HelpTextValues.ReferenceFirstLine },
 				{ string.Empty, string.Empty },
-				{ string.Empty, Resources.text.help.HelpTextValues.GeneralUsage },
-				{ string.Empty, Resources.text.help.HelpTextValues.ReferenceCallDescription },
+				{ string.Empty, HelpTextValues.GeneralUsage },
+				{ string.Empty, HelpTextValues.ReferenceCallDescription },
 				{ string.Empty, string.Empty },
-				{ string.Empty, Resources.text.help.HelpTextValues.GeneralArguments },
-				{ string.Empty, Resources.text.help.HelpTextValues.ReferenceArgumentAdd },
-				{ string.Empty, Resources.text.help.HelpTextValues.ReferenceArgumentRemove },
+				{ string.Empty, HelpTextValues.GeneralArguments },
+				{ string.Empty, HelpTextValues.ReferenceArgumentAdd },
+				{ string.Empty, HelpTextValues.ReferenceArgumentRemove },
 				{ string.Empty, string.Empty },
-				{ string.Empty, Resources.text.help.HelpTextValues.GeneralOptions },
+				{ string.Empty, HelpTextValues.GeneralOptions },
 			};
 
 			var referenceHelpStrategyData = new HelpData
@@ -554,7 +566,7 @@ namespace Oppo.ObjectModel
 				CommandName = Constants.ReferenceCommandName.Help,
 				HelpTextFirstLine = referenceHelpStrategyHelpText,
 				LogMessage = LoggingText.OppoHelpForReferenceCommand,
-				HelpText = Resources.text.help.HelpTextValues.ReferenceHelpArgumentCommandDescription,
+				HelpText = HelpTextValues.ReferenceHelpArgumentCommandDescription,
 			};
 
 			var referenceHelpStrategy = new HelpStrategy<ReferenceStrategy>(referenceHelpStrategyData);
