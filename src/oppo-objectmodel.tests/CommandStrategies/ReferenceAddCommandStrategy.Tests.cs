@@ -80,7 +80,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			var name = _objectUnderTest.Name;
 
 			// Assert
-			Assert.AreEqual(Constants.ReferenceCommandName.Add, name);
+			Assert.AreEqual(Constants.ReferenceCommandArguments.Add, name);
 		}
 
 		[Test]
