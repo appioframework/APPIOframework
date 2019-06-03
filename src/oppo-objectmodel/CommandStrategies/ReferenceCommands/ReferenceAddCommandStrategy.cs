@@ -10,7 +10,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 	{
 		public ReferenceAddCommandStrategy(IFileSystem fileSystem) : base(fileSystem) {	}
 
-		public override string Name => Constants.ReferenceCommandName.Add;
+		public override string Name => Constants.ReferenceCommandArguments.Add;
 
 		public override CommandResult Execute(IEnumerable<string> inputParams)
 		{

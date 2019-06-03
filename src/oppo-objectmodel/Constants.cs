@@ -50,10 +50,8 @@ namespace Oppo.ObjectModel
             public static string Failure { get; set; } = "failure";
         }
 
-        public static class SlnCommandName
+        public static class SlnCommandArguments
         {
-            public const string Help = "-h";
-            public const string VerboseHelp = "--help";
             public const string Add = "add";
             public const string Remove = "remove";
 			public const string Build = "build";
@@ -61,10 +59,8 @@ namespace Oppo.ObjectModel
 			public const string Deploy = "deploy";
         }
 		
-		public static class ReferenceCommandName
+		public static class ReferenceCommandArguments
 		{
-			public const string Help = "-h";
-			public const string VerboseHelp = "--help";
 			public const string Add = "add";
 			public const string Remove = "remove";
 		}
@@ -197,7 +193,7 @@ namespace Oppo.ObjectModel
             public const string VerboseName = "--name";
         }
 
-        public static class GenerateInformationModeCommandArguments
+        public static class GenerateCommandOptions
         {
             public const string Name                    = "-n";
             public const string VerboseName             = "--name";
@@ -214,25 +210,19 @@ namespace Oppo.ObjectModel
             public const string VerboseOrganization                 = "--organization";
         }
 
+        public static class ImportCommandArguments
+        {
+            public const string InformationModel = "information-model";
+			public const string Certificate = "certificate";
+        }
+
         public static class GenerateCommandArguments
         {
             public const string InformationModel = "information-model";
-            public const string Certificate = "certificate";
-            public const string VerboseHelp = "--help";
-            public const string Help = "-h";
+			public const string Certificate = "certificate";
         }
 
-        public static class ImportInformationModelCommandName
-        {
-            public const string InformationModel = "information-model";
-        }
-
-        public static class GenerateInformationModelCommandName
-        {
-            public const string InformationModel = "information-model";
-        }
-
-        public static class ImportInformationModelCommandArguments
+        public static class ImportCommandOptions
         {
             public const string Name = "-n";
             public const string VerboseName = "--name";
@@ -276,39 +266,25 @@ namespace Oppo.ObjectModel
             public const string FunctionSnippetPart5 = "\t}";
         }
 
-        public static class SlnAddCommandArguments
+        public static class SlnCommandOptions
         {
             public const string Solution = "-s";
             public const string VerboseSolution = "--solution";
             public const string Project = "-p";
             public const string VerboseProject = "--project";
+			public const string Help = "-h";
+			public const string VerboseHelp = "--help";
             
         }
-        public static class SlnRemoveCommandArguments
-        {
-            public const string Solution = "-s";
-            public const string VerboseSolution = "--solution";
-            public const string Project = "-p";
-            public const string VerboseProject = "--project";
 
-        }
-		
-		public static class ReferenceAddCommandArguments
+		public static class ReferenceCommandOptions
 		{
 			public const string Server = "-s";
 			public const string VerboseServer = "--server";
 			public const string Client = "-c";
 			public const string VerboseClient = "--client";
-
-		}
-
-		public static class ReferenceRemoveCommandArguments
-		{
-			public const string Server = "-s";
-			public const string VerboseServer = "--server";
-			public const string Client = "-c";
-			public const string VerboseClient = "--client";
-
+			public const string Help = "-h";
+			public const string VerboseHelp = "--help";
 		}
 
 		public static class ApplicationType

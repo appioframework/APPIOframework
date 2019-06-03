@@ -28,8 +28,8 @@ namespace Oppo.ObjectModel.CommandStrategies.GenerateCommands
                 new StringParameterSpecification<ParamId>
                 {
                     Identifier = ParamId.AppName,
-                    Short = Constants.GenerateInformationModeCommandArguments.Name,
-                    Verbose = Constants.GenerateInformationModeCommandArguments.VerboseName
+                    Short = Constants.GenerateCommandOptions.Name,
+                    Verbose = Constants.GenerateCommandOptions.VerboseName
                 }
             });
         }

@@ -30,14 +30,14 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 				new StringParameterSpecification<ParamId>
 				{
 					Identifier = ParamId.ClientName,
-					Short = Constants.ReferenceAddCommandArguments.Client,
-					Verbose = Constants.ReferenceAddCommandArguments.VerboseClient
+					Short = Constants.ReferenceCommandOptions.Client,
+					Verbose = Constants.ReferenceCommandOptions.VerboseClient
 				},
 				new StringParameterSpecification<ParamId>
 				{
 					Identifier = ParamId.ServerName,
-					Short = Constants.ReferenceAddCommandArguments.Server,
-					Verbose = Constants.ReferenceAddCommandArguments.VerboseServer
+					Short = Constants.ReferenceCommandOptions.Server,
+					Verbose = Constants.ReferenceCommandOptions.VerboseServer
 				}
 			});
 

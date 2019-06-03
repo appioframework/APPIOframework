@@ -52,11 +52,6 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 		private bool _loggerWroteOut;
 		private string _commandName;
 		private Mock<INodesetGenerator> _nodesetGenerator;
-		private readonly string _srcDir = @"src\server";
-        private readonly string _defaultServerMesonBuild        = "server_app_sources += [\n]";
-        private readonly string _defaultLoadInformationModelsC  = "UA_StatusCode loadInformationModels(UA_Server* server)\n{\n\treturn UA_STATUSCODE_GOOD;\n}";
-		private readonly string _uaMethodSample					= "<?xml version=\"1.0\" encoding=\"utf-8\"?><UANodeSet><NamespaceUris><Uri>test</Uri></NamespaceUris><UAMethod NodeId=\"ns=1;i=1000\" BrowseName=\"sampleBrowseName\"></UAMethod></UANodeSet>";
-		private readonly string _defaultMainCallbacsC			= "UA_StatusCode addCallbacks(UA_Server* server)\n{\n\treturn UA_STATUSCODE_GOOD;\n}";
 		
 		private static string _sampleOpcuaServerAppContent1 = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"models\":[" +
 																					"{\"name\":\"modelA.xml\",\"uri\": \"namespaceA\",\"types\": \"someTypesA.bsd\",\"namespaceVariable\": \"ns_modelA\", \"requiredModelUris\":[\"namespaceB\"]}," +
@@ -125,9 +120,9 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			_modelValidator = new Mock<IModelValidator>();
             _loggerListenerMock = new Mock<ILoggerListener>();
 			_loggerWroteOut = false;
-			_commandName = Constants.CommandName.Generate + " " + Constants.GenerateInformationModeCommandArguments.Name;
+			_commandName = Constants.CommandName.Generate + " " + Constants.GenerateCommandOptions.Name;
 			_nodesetGenerator = new Mock<INodesetGenerator>();
-			_strategy = new GenerateInformationModelStrategy(Constants.GenerateInformationModeCommandArguments.Name, _fileSystemMock.Object, _modelValidator.Object, _nodesetGenerator.Object);
+			_strategy = new GenerateInformationModelStrategy(Constants.GenerateCommandOptions.Name, _fileSystemMock.Object, _modelValidator.Object, _nodesetGenerator.Object);
 
 			OppoLogger.RegisterListener(_loggerListenerMock.Object);
 		}
@@ -158,7 +153,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandName = _strategy.Name;
 
             // Assert
-            Assert.AreEqual(Constants.GenerateInformationModeCommandArguments.Name, commandName);
+            Assert.AreEqual(Constants.GenerateCommandOptions.Name, commandName);
         }
 
         [Test]

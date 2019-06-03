@@ -204,7 +204,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			var commandName = _objectUnderTest.Name;
 
 			// Assert
-			Assert.AreEqual(Constants.ImportInformationModelCommandName.InformationModel, commandName);
+			Assert.AreEqual(Constants.ImportCommandArguments.InformationModel, commandName);
 		}
 
 		[Test]

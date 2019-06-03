@@ -22,7 +22,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 			_outputMessages = new MessageLines();
 		}
 
-        public string Name => Constants.ImportInformationModelCommandName.InformationModel;
+        public string Name => Constants.ImportCommandArguments.InformationModel;
 
 		public CommandResult Execute(IEnumerable<string> inputParams)
 		{
@@ -41,7 +41,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 			}
 
 			// -s flag (temporary solution for now -> needs bigger design changes)
-			if (pathFlag == Constants.ImportInformationModelCommandArguments.Sample || pathFlag == Constants.ImportInformationModelCommandArguments.VerboseSample)
+			if (pathFlag == Constants.ImportCommandOptions.Sample || pathFlag == Constants.ImportCommandOptions.VerboseSample)
 			{
 				var modelsDir = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.Models);
 
@@ -141,7 +141,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 		private bool ValidateOpcuaAppName(string nameFlag, string opcuaAppName)
 		{
 			// opcuaapp name flag validation
-			if (nameFlag != Constants.ImportInformationModelCommandArguments.Name && nameFlag != Constants.ImportInformationModelCommandArguments.VerboseName)
+			if (nameFlag != Constants.ImportCommandOptions.Name && nameFlag != Constants.ImportCommandOptions.VerboseName)
 			{
 				OppoLogger.Warn(LoggingText.UnknownImportInfomrationModelCommandParam);
 				_outputMessages.Add(OutputText.ImportInformationModelCommandUnknownParamFailure, string.Empty);
@@ -169,7 +169,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 		private bool ValidateModel(string pathFlag, string modelPath)
 		{
 			// path flag validation
-			if (pathFlag != Constants.ImportInformationModelCommandArguments.Path && pathFlag != Constants.ImportInformationModelCommandArguments.VerbosePath)
+			if (pathFlag != Constants.ImportCommandOptions.Path && pathFlag != Constants.ImportCommandOptions.VerbosePath)
 			{
 				OppoLogger.Warn(LoggingText.UnknownImportInfomrationModelCommandParam);
 				_outputMessages.Add(OutputText.ImportInformationModelCommandUnknownParamFailure, string.Empty);
@@ -221,7 +221,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 		private bool ValidateTypes(ref string typesFileName, string typesFlag, string typesPath)
 		{
 			// types flag validation
-			if(typesFlag != Constants.ImportInformationModelCommandArguments.Types && typesFlag != Constants.ImportInformationModelCommandArguments.VerboseTypes)
+			if(typesFlag != Constants.ImportCommandOptions.Types && typesFlag != Constants.ImportCommandOptions.VerboseTypes)
 			{
 				OppoLogger.Warn(LoggingText.ImportInformationModelCommandFailureInvalidTypesFlag);
 				_outputMessages.Add(string.Format(OutputText.ImportInformationModelCommandFailureInvalidTypesFlag, typesFlag), string.Empty);
