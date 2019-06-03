@@ -18,9 +18,9 @@ namespace Oppo.ObjectModel.CommandStrategies.HelpCommands
 
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
-			_helpData.Arguments.Sort();
 			if (_helpData.Arguments.Count() != 0)
 			{
+				_helpData.Arguments.Sort();
 				_helpData.Arguments = new MessageLines()
 				{
 					{string.Empty, string.Empty },
@@ -29,9 +29,9 @@ namespace Oppo.ObjectModel.CommandStrategies.HelpCommands
 				};
 			}
 
-			_helpData.Options.Sort();
 			if (_helpData.Options.Count() != 0)
 			{
+				_helpData.Options.Sort();
 				_helpData.Options = new MessageLines()
 				{
 					{string.Empty, string.Empty },
