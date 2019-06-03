@@ -341,6 +341,7 @@ namespace Oppo.ObjectModel
 			public const int TextNotFound = -1;
 			public const int PortNumberNotSpecified = -1;
 			public const int StartInNewLine = 1;
+			public const int HelpAlignmentSpace = 3;
 		}
     }
 }

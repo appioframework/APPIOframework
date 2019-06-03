@@ -41,7 +41,7 @@ namespace Oppo.Terminal
 
 		private static void WriteParameterWithDescription(KeyValuePair<string, string> message, int longestKey)
 		{
-			System.Console.WriteLine(string.Format("{0}{1}", message.Key.PadRight(longestKey + 3, ' '), message.Value));
+			System.Console.WriteLine(string.Format("{0}{1}", message.Key.PadRight(longestKey + Constants.NumericValues.HelpAlignmentSpace, ' '), message.Value));
 		}
 		private static void WriteSingleTextLine(KeyValuePair<string, string> message)
 		{
