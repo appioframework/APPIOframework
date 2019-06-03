@@ -21,6 +21,7 @@ namespace Oppo.ObjectModel.CommandStrategies.HelpCommands
 			if (_helpData.Arguments.Count() != 0)
 			{
 				_helpData.Arguments.Sort();
+				// add arguments header
 				_helpData.Arguments = new MessageLines()
 				{
 					{string.Empty, string.Empty },
@@ -32,6 +33,7 @@ namespace Oppo.ObjectModel.CommandStrategies.HelpCommands
 			if (_helpData.Options.Count() != 0)
 			{
 				_helpData.Options.Sort();
+				// add options header
 				_helpData.Options = new MessageLines()
 				{
 					{string.Empty, string.Empty },
@@ -40,6 +42,7 @@ namespace Oppo.ObjectModel.CommandStrategies.HelpCommands
 				};
 			}
 
+			// put all help data into one structure
             var outputMessages = new MessageLines
             {
                 _helpData.HelpTextFirstLine,
