@@ -11,6 +11,9 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 {
     public class ImportInformationModelCommandStrategy : ICommand<ImportStrategy>
     {
+	    enum ParamId {AppName, ModelPath, TypesPath, Sample}
+
+	    private readonly ParameterResolver<ParamId> _resolver;
         private readonly IFileSystem _fileSystem;
 		private readonly IModelValidator _modelValidator;
 		private readonly MessageLines _outputMessages;
@@ -20,28 +23,65 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
             _fileSystem = fileSystem;
 			_modelValidator = modelValidator;
 			_outputMessages = new MessageLines();
+			
+			_resolver = new ParameterResolver<ParamId>(Constants.CommandName.Import + " " + Name, new []
+			{
+				new StringParameterSpecification<ParamId>
+				{
+					Identifier = ParamId.AppName,
+					Short = Constants.ImportInformationModelCommandArguments.Name,
+					Verbose = Constants.ImportInformationModelCommandArguments.VerboseName
+				},
+				new StringParameterSpecification<ParamId>
+				{
+					Identifier = ParamId.ModelPath,
+					Short = Constants.ImportInformationModelCommandArguments.Path,
+					Verbose = Constants.ImportInformationModelCommandArguments.VerbosePath,
+					Default = string.Empty
+				},
+				new StringParameterSpecification<ParamId>
+				{
+					Identifier = ParamId.TypesPath,
+					Short = Constants.ImportInformationModelCommandArguments.Types,
+					Verbose = Constants.ImportInformationModelCommandArguments.VerboseTypes,
+					Default = string.Empty
+				}
+			}, new []
+			{
+				new BoolParameterSpecification<ParamId>
+				{
+					Identifier = ParamId.Sample,
+					Short = Constants.ImportInformationModelCommandArguments.Sample,
+					Verbose = Constants.ImportInformationModelCommandArguments.VerboseSample
+				}, 
+			});
 		}
 
         public string Name => Constants.ImportCommandArguments.InformationModel;
 
 		public CommandResult Execute(IEnumerable<string> inputParams)
 		{
-			var inputParamsList = inputParams.ToList();
-			var nameFlag = inputParamsList.ElementAtOrDefault(0);
-			var opcuaAppName = inputParamsList.ElementAtOrDefault(1);
-			var pathFlag = inputParams.ElementAtOrDefault(2);
-			var modelPath = inputParamsList.ElementAtOrDefault(3);
-			var typesFlag = inputParamsList.ElementAtOrDefault(4);
-			var typesPath = inputParamsList.ElementAtOrDefault(5);
+			var (error, parameters, options) = _resolver.ResolveParams(inputParams);
+			
+			if (error != null)
+				return new CommandResult(false, new MessageLines {{error, string.Empty}});
+			
+			var opcuaAppName = parameters[ParamId.AppName];
+			var modelPath = parameters[ParamId.ModelPath];
+			var typesPath = parameters[ParamId.TypesPath];
 			
 			// opcuaapp name validation
-			if (!ValidateOpcuaAppName(nameFlag, opcuaAppName))
+			if (!ValidateOpcuaAppName(opcuaAppName))
 			{
 				return new CommandResult(false, _outputMessages);
 			}
 
+<<<<<<< src/oppo-objectmodel/CommandStrategies/ImportCommands/ImportInformationModelCommandStrategy.cs
 			// -s flag (temporary solution for now -> needs bigger design changes)
 			if (pathFlag == Constants.ImportCommandOptions.Sample || pathFlag == Constants.ImportCommandOptions.VerboseSample)
+=======
+			if (options[ParamId.Sample])
+>>>>>>> src/oppo-objectmodel/CommandStrategies/ImportCommands/ImportInformationModelCommandStrategy.cs
 			{
 				var modelsDir = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.Models);
 
@@ -59,15 +99,15 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 			}
 
 			// nodeset validation
-			if (!ValidateModel(pathFlag, modelPath))
+			if (!ValidateModel(modelPath))
 			{
 				return new CommandResult(false, _outputMessages);
 			}
 			var modelFileName = _fileSystem.GetFileName(modelPath);
 
 			// types validation
-			string typesFileName = string.Empty;
-			if(typesFlag != null && !ValidateTypes(ref typesFileName, typesFlag, typesPath))
+			var typesFileName = string.Empty;
+			if (typesPath != string.Empty && !ValidateTypes(out typesFileName, typesPath))
 			{
 				return new CommandResult(false, _outputMessages);
 			}
@@ -126,7 +166,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
             _fileSystem.CopyFile(modelPath, targetModelFilePath);
 
 			// copy types file
-			if (typesFlag != null)
+			if (typesPath != string.Empty)
 			{
 				var targetTypesFilePath = _fileSystem.CombinePaths(modelsDirectory, typesFileName);
 				_fileSystem.CopyFile(typesPath, targetTypesFilePath);
@@ -138,8 +178,9 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
             return new CommandResult(true, _outputMessages);
         }
 
-		private bool ValidateOpcuaAppName(string nameFlag, string opcuaAppName)
+		private bool ValidateOpcuaAppName(string opcuaAppName)
 		{
+<<<<<<< src/oppo-objectmodel/CommandStrategies/ImportCommands/ImportInformationModelCommandStrategy.cs
 			// opcuaapp name flag validation
 			if (nameFlag != Constants.ImportCommandOptions.Name && nameFlag != Constants.ImportCommandOptions.VerboseName)
 			{
@@ -156,6 +197,8 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 				return false;
 			}
 
+=======
+>>>>>>> src/oppo-objectmodel/CommandStrategies/ImportCommands/ImportInformationModelCommandStrategy.cs
 			if (_fileSystem.GetInvalidFileNameChars().Any(opcuaAppName.Contains) || !_fileSystem.DirectoryExists(opcuaAppName))
 			{
 				OppoLogger.Warn(LoggingText.InvalidOpcuaappName);
@@ -166,8 +209,9 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 			return true;
 		}
 
-		private bool ValidateModel(string pathFlag, string modelPath)
+		private bool ValidateModel(string modelPath)
 		{
+<<<<<<< src/oppo-objectmodel/CommandStrategies/ImportCommands/ImportInformationModelCommandStrategy.cs
 			// path flag validation
 			if (pathFlag != Constants.ImportCommandOptions.Path && pathFlag != Constants.ImportCommandOptions.VerbosePath)
 			{
@@ -176,8 +220,10 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 				return false;
 			}
 
+=======
+>>>>>>> src/oppo-objectmodel/CommandStrategies/ImportCommands/ImportInformationModelCommandStrategy.cs
 			// model path validation
-			if (string.IsNullOrEmpty(modelPath))
+			if (modelPath == string.Empty)
 			{
 				OppoLogger.Warn(LoggingText.InvalidInformationModelMissingModelFile);
 				_outputMessages.Add(OutputText.ImportInformationModelCommandMissingModelPath, string.Empty);
@@ -218,8 +264,9 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 			return true;
 		}
 
-		private bool ValidateTypes(ref string typesFileName, string typesFlag, string typesPath)
+		private bool ValidateTypes(out string typesFileName, string typesPath)
 		{
+<<<<<<< src/oppo-objectmodel/CommandStrategies/ImportCommands/ImportInformationModelCommandStrategy.cs
 			// types flag validation
 			if(typesFlag != Constants.ImportCommandOptions.Types && typesFlag != Constants.ImportCommandOptions.VerboseTypes)
 			{
@@ -236,6 +283,8 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 				return false;
 			}
 
+=======
+>>>>>>> src/oppo-objectmodel/CommandStrategies/ImportCommands/ImportInformationModelCommandStrategy.cs
 			typesFileName = _fileSystem.GetFileName(typesPath);
 			if (_fileSystem.GetExtension(typesPath) != Constants.FileExtension.ModelTypes)
 			{
