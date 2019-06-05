@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -euo pipefail
+
+dotnet /usr/bin/appio-terminal.dll ${@:1}

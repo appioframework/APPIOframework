@@ -1,5 +1,0 @@
-#!/bin/bash
-
-set -euo pipefail
-
-dotnet /usr/bin/oppo-terminal.dll ${@:1}

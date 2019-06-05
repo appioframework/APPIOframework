@@ -4,7 +4,7 @@ set -euo pipefail
 
 export PATH="$PATH:/root/.dotnet/tools"                                                                       \
    && dotnet sonarscanner begin                                                                               \
-                          /k:"oppo"                                                                           \
+                          /k:"appio"                                                                           \
                           /d:sonar.host.url="https://sonarqube.talsen.team"                                   \
                           /d:sonar.login=${SONAR_LOGIN}                                                       \
                           /d:sonar.gitlab.commit_sha=${CI_COMMIT_SHA}                                         \

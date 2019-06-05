@@ -30,13 +30,13 @@ debian-installer:
   artifacts:
     paths:
       -  'installer/open62541--v0.3.0.deb'
-      -  'installer/oppo-terminal.deb'
+      -  'installer/appio-terminal.deb'
   stage: 'installer'
   tags:
     - 'debian-installer'
   script:
     - /bin/bash bash-gitlab-ci/run-dpkg-build--open62541--v0.3.0.sh
-    - /bin/bash bash-gitlab-ci/run-dpkg-build--oppo-terminal.sh
+    - /bin/bash bash-gitlab-ci/run-dpkg-build--appio-terminal.sh
 
 run-integration-test:
   dependencies: 
@@ -47,5 +47,5 @@ run-integration-test:
     - 'integration-test'
   script:
     - /bin/bash bash-gitlab-ci/run-dpkg-install--open62541--v0.3.0.sh
-    - /bin/bash bash-gitlab-ci/run-dpkg-install--oppo-terminal.sh
+    - /bin/bash bash-gitlab-ci/run-dpkg-install--appio-terminal.sh
     - /bin/bash bash-gitlab-ci/run-integration-tests.sh

@@ -2,4 +2,4 @@
 
 set -euo pipefail
 
-oppo hello
+appio hello

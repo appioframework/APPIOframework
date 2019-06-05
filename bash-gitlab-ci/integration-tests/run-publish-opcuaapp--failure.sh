@@ -2,12 +2,12 @@
 
 set -uo pipefail
 
-VAR_COMMANDS[0]="oppo publish --name \"my/\-app\""
-VAR_COMMANDS[1]="oppo publish -n     \"my/\-app\""
-VAR_COMMANDS[2]="oppo publish --name"
-VAR_COMMANDS[3]="oppo publish -n"
-VAR_COMMANDS[4]="oppo publish --exit"
-VAR_COMMANDS[5]="oppo publish -x"
+VAR_COMMANDS[0]="appio publish --name \"my/\-app\""
+VAR_COMMANDS[1]="appio publish -n     \"my/\-app\""
+VAR_COMMANDS[2]="appio publish --name"
+VAR_COMMANDS[3]="appio publish -n"
+VAR_COMMANDS[4]="appio publish --exit"
+VAR_COMMANDS[5]="appio publish -x"
 
 for INDEX in "${!VAR_COMMANDS[@]}";
 do
@@ -18,13 +18,13 @@ do
   mkdir publish-opcuaapp--failure
   cd    publish-opcuaapp--failure
 
-  precondition_oppo_log_file_is_not_existent
+  precondition_appio_log_file_is_not_existent
 
   ${VAR_COMMAND}
 
   check_for_non_zero_error_code
   
-  check_for_exisiting_oppo_log_file
+  check_for_exisiting_appio_log_file
 
   cd ..
   rm -rf publish-opcuaapp--failure

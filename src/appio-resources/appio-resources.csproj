@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <RootNamespace>Appio.Resources</RootNamespace>
+    <AssemblyName>appio-resources</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="information_models\UANodeSet.xsd" />
+    <None Remove="open62541\constants-server.h" />
+    <None Remove="open62541\globalVariables-client.h" />
+    <None Remove="open62541\loadInformationModels-server.c" />
+    <None Remove="open62541\main-client.c" />
+    <None Remove="open62541\mainCallbacks-server.c" />
+    <None Remove="open62541\meson-server.build" />
+    <None Remove="open62541\meson_ClientServerType.build" />
+    <None Remove="open62541\meson_ClientType.build" />
+    <None Remove="open62541\meson_ServerType.build" />
+    <None Remove="templates\template.appiosln" />
+    <None Remove="templates\template.cnf" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<EmbeddedResource Include="information_models\DiNodeset.xml" />
+	<EmbeddedResource Include="information_models\DiTypes.bsd" />
+	<EmbeddedResource Include="information_models\UANodeSet.xsd" />
+    <EmbeddedResource Include="installer\opcuaapp\appio-opcuaapp.zip" />
+    <EmbeddedResource Include="open62541\globalVariables-client.h" />
+    <EmbeddedResource Include="open62541\mainCallbacks-server.c" />
+    <EmbeddedResource Include="open62541\main-client.c" />
+    <EmbeddedResource Include="open62541\constants-server.h" />
+    <EmbeddedResource Include="open62541\main-server.c" />
+    <EmbeddedResource Include="open62541\meson_ClientType.build" />
+    <EmbeddedResource Include="open62541\meson_ServerType.build" />
+    <EmbeddedResource Include="open62541\meson_ClientServerType.build" />
+	<EmbeddedResource Include="open62541\meson-server.build" />
+    <EmbeddedResource Include="open62541\loadInformationModels-server.c" />
+    <EmbeddedResource Include="templates\template.cnf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="templates\template.appioproj" />
+    <EmbeddedResource Include="templates\template.appiosln" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="StringResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>StringResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="StringResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>StringResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>

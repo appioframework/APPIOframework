@@ -4,8 +4,8 @@ set -euo pipefail
 
 source bash-gitlab-ci/util-integration-tests.sh
 
-VAR_COMMANDS[0]="oppo sln build -s testSln"
-VAR_COMMANDS[1]="oppo sln build --solution testSln"
+VAR_COMMANDS[0]="appio sln build -s testSln"
+VAR_COMMANDS[1]="appio sln build --solution testSln"
 
 for INDEX in "${!VAR_COMMANDS[@]}";
 do
@@ -16,19 +16,19 @@ do
   mkdir sln-build--success
   cd    sln-build--success
 
-  oppo new opcuaapp -n "testProj" -t "ClientServer" -u "127.0.0.1" -p "4840"
-  oppo new sln -n "testSln"
-  oppo sln add -s "testSln" -p "testProj"
-  rm --force "./oppo.log"
+  appio new opcuaapp -n "testProj" -t "ClientServer" -u "127.0.0.1" -p "4840"
+  appio new sln -n "testSln"
+  appio sln add -s "testSln" -p "testProj"
+  rm --force "./appio.log"
 
-  precondition_oppo_log_file_is_not_existent
+  precondition_appio_log_file_is_not_existent
 
   ${VAR_COMMAND}
 
   check_for_exisiting_directory_named "./testProj/build/" \
                                  "meson output directory does not exist ..."
 
-  check_for_exisiting_oppo_log_file
+  check_for_exisiting_appio_log_file
 
   cd ..
   rm -rf sln-build--success
