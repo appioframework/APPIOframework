@@ -2,5 +2,5 @@
 
 set -euo pipefail
 
-cd src/oppo-terminal
+cd src/appio-terminal
 dotnet publish -c Release -o ../../publish

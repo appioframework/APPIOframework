@@ -28,12 +28,12 @@
             "problemMatcher": [ ]         
         },
         {
-            "label":         "dpkg-reinstall--oppo-terminal",
+            "label":         "dpkg-reinstall--appio-terminal",
             "type":          "shell",
             "command":       "/bin/bash",
             "args":
             [
-                             "bash-developer/run-reinstall--oppo-terminal--local.sh"
+                             "bash-developer/run-reinstall--appio-terminal--local.sh"
             ],
             "problemMatcher": [ ]         
         },

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26124.0
+MinimumVisualStudioVersion = 15.0.26124.0
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "appio-objectmodel.tests", "src\appio-objectmodel.tests\appio-objectmodel.tests.csproj", "{4EC40B63-3297-42DB-8BE1-B015073AE89A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "appio-terminal.tests", "src\appio-terminal.tests\appio-terminal.tests.csproj", "{F9A3C5C9-C0E1-41D4-A62E-A68A3BC06ECA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4EC40B63-3297-42DB-8BE1-B015073AE89A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EC40B63-3297-42DB-8BE1-B015073AE89A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EC40B63-3297-42DB-8BE1-B015073AE89A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EC40B63-3297-42DB-8BE1-B015073AE89A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9A3C5C9-C0E1-41D4-A62E-A68A3BC06ECA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9A3C5C9-C0E1-41D4-A62E-A68A3BC06ECA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9A3C5C9-C0E1-41D4-A62E-A68A3BC06ECA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9A3C5C9-C0E1-41D4-A62E-A68A3BC06ECA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {23267A03-C4FC-4911-ADE1-6826B99BF49B}
+	EndGlobalSection
+EndGlobal

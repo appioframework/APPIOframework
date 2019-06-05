@@ -1,0 +1,8 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: APPIO-terminal
+Upstream-Contact: Talsen Team <sales@talsen.team>
+Source: https://www.talsen.team
+
+Files: *
+Copyright: 2018 Talsen Team
+License: MPL-2.0
