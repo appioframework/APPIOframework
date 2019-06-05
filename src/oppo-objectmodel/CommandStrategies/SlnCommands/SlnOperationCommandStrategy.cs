@@ -32,8 +32,8 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
 				new StringParameterSpecification<ParamId>
 				{
 					Identifier = ParamId.SolutionName,
-					Short = Constants.SlnAddCommandArguments.Solution,
-					Verbose = Constants.SlnAddCommandArguments.VerboseSolution
+					Short = Constants.SlnCommandOptions.Solution,
+					Verbose = Constants.SlnCommandOptions.VerboseSolution
 				}
 			});
         }

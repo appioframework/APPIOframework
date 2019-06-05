@@ -147,7 +147,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var commandName = objectUnderTest.Name;
 
             // Assert
-            Assert.AreEqual(Constants.NewCommandName.Sln, commandName);
+            Assert.AreEqual(Constants.NewCommandArguments.Sln, commandName);
         }
 
         [Test]

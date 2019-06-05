@@ -21,19 +21,19 @@ namespace Oppo.ObjectModel.CommandStrategies.SlnCommands
                 new StringParameterSpecification<ParamId>
                 {
                     Identifier = ParamId.SolutionName,
-                    Short = Constants.SlnRemoveCommandArguments.Solution,
-                    Verbose = Constants.SlnRemoveCommandArguments.VerboseSolution
+                    Short = Constants.SlnCommandOptions.Solution,
+                    Verbose = Constants.SlnCommandOptions.VerboseSolution
                 },
                 new StringParameterSpecification<ParamId>
                 {
                     Identifier = ParamId.ProjectName,
-                    Short = Constants.SlnRemoveCommandArguments.Project,
-                    Verbose = Constants.SlnRemoveCommandArguments.VerboseProject
+                    Short = Constants.SlnCommandOptions.Project,
+                    Verbose = Constants.SlnCommandOptions.VerboseProject
                 }
             });
         }
 
-        public string Name => Constants.SlnCommandName.Remove;
+        public string Name => Constants.SlnCommandArguments.Remove;
 
         public CommandResult Execute(IEnumerable<string> inputParams)
         {

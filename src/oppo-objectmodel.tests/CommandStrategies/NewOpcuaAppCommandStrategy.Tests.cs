@@ -189,7 +189,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			var commandName = _objectUnderTest.Name;
 
 			// Assert
-			Assert.AreEqual(Constants.NewCommandName.OpcuaApp, commandName);
+			Assert.AreEqual(Constants.NewCommandArguments.OpcuaApp, commandName);
 		}
 
 		[Test]

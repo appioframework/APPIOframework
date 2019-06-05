@@ -24,28 +24,28 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 				new StringParameterSpecification<ParamId>
 				{
 					Identifier = ParamId.OpcuaAppName,
-					Short = Constants.NewOpcuaAppCommandArguments.Name,
-					Verbose = Constants.NewOpcuaAppCommandArguments.VerboseName
+					Short = Constants.NewCommandOptions.Name,
+					Verbose = Constants.NewCommandOptions.VerboseName
 				}, 
 				new StringParameterSpecification<ParamId>
 				{
 					Identifier = ParamId.ApplicationType,
-					Short = Constants.NewOpcuaAppCommandArguments.Type,
-					Verbose = Constants.NewOpcuaAppCommandArguments.VerboseType,
+					Short = Constants.NewCommandOptions.Type,
+					Verbose = Constants.NewCommandOptions.VerboseType,
 					Default = Constants.ApplicationType.ClientServer
 				},
 				new StringParameterSpecification<ParamId>
 				{
 					Identifier = ParamId.Url,
-					Short = Constants.NewOpcuaAppCommandArguments.Url,
-					Verbose = Constants.NewOpcuaAppCommandArguments.VerboseUrl,
+					Short = Constants.NewCommandOptions.Url,
+					Verbose = Constants.NewCommandOptions.VerboseUrl,
 					Default = string.Empty
 				},
 				new StringParameterSpecification<ParamId>
 				{
 					Identifier = ParamId.Port,
-					Short = Constants.NewOpcuaAppCommandArguments.Port,
-					Verbose = Constants.NewOpcuaAppCommandArguments.VerbosePort,
+					Short = Constants.NewCommandOptions.Port,
+					Verbose = Constants.NewCommandOptions.VerbosePort,
 					Default = string.Empty
 				}
 			}, new []
@@ -53,7 +53,7 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 				new BoolParameterSpecification<ParamId>
 				{
 					Identifier = ParamId.NoCert,
-					Verbose = Constants.NewOpcuaAppCommandArguments.VerboseNoCert
+					Verbose = Constants.NewCommandOptions.VerboseNoCert
 				}
 			});
 		}
@@ -64,7 +64,7 @@ namespace Oppo.ObjectModel.CommandStrategies.NewCommands
 			public string loggerMessage;
 		}
 
-		public string Name => Constants.NewCommandName.OpcuaApp;
+		public string Name => Constants.NewCommandArguments.OpcuaApp;
 
 		public CommandResult Execute(IEnumerable<string> inputParams)
 		{

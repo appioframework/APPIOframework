@@ -21,7 +21,7 @@ namespace Oppo.ObjectModel.CommandStrategies.DeployCommands
 
         public string GetHelpText()
         {
-            return Resources.text.help.HelpTextValues.DeployStrategy;
+            return Resources.text.help.HelpTextValues.DeployCommand;
         }
     }
 }

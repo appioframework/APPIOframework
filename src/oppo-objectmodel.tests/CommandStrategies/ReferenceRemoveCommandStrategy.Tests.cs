@@ -76,7 +76,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
 			var name = _objectUnderTest.Name;
 
 			// Assert
-			Assert.AreEqual(Constants.ReferenceCommandName.Remove, name);
+			Assert.AreEqual(Constants.ReferenceCommandArguments.Remove, name);
 		}
 
 		[Test]

@@ -82,7 +82,7 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var mockCommandResult = new CommandResult(true, new MessageLines());
             var mockCommand = new Mock<ICommand<GenerateStrategy>>();
             mockCommand.Setup(command => command.Execute(It.IsAny<IEnumerable<string>>())).Returns(mockCommandResult);
-            _mockFactory.Setup(facory => facory.GetCommand(GenerateInformationModelCommandName.InformationModel)).Returns(mockCommand.Object);
+            _mockFactory.Setup(facory => facory.GetCommand(GenerateCommandArguments.InformationModel)).Returns(mockCommand.Object);
             
             // Act
             var commandResult = _strategy.Execute(inputParams);
@@ -104,8 +104,8 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             var mockInvalidCommand = new Mock<ICommand<GenerateStrategy>>();
             mockInvalidCommand.Setup(command => command.Execute(It.IsAny<IEnumerable<string>>())).Returns(mockInvalidCommandResult);
 
-            _mockFactory.Setup(facory => facory.GetCommand(GenerateInformationModelCommandName.InformationModel)).Returns(mockCommand.Object);
-            _mockFactory.Setup(facory => facory.GetCommand(It.Is<string>(s=>s != GenerateInformationModelCommandName.InformationModel))).Returns(mockInvalidCommand.Object);
+            _mockFactory.Setup(facory => facory.GetCommand(GenerateCommandArguments.InformationModel)).Returns(mockCommand.Object);
+            _mockFactory.Setup(facory => facory.GetCommand(It.Is<string>(s=>s != GenerateCommandArguments.InformationModel))).Returns(mockInvalidCommand.Object);
 
             // Act
             var commandResult = _strategy.Execute(inputParams);

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Oppo.ObjectModel.CommandStrategies.HelpCommands
 {
@@ -17,19 +18,38 @@ namespace Oppo.ObjectModel.CommandStrategies.HelpCommands
 
         public CommandResult Execute(IEnumerable<string> inputParams)
         {
-            var commandLines = new MessageLines();
-            foreach (var command in CommandFactory?.Commands ?? new ICommand<TDependance>[0])
-            {
-                commandLines.Add(command.Name, command.GetHelpText());
-            }
-            commandLines.Sort();
+			if (_helpData.Arguments.Count() != 0)
+			{
+				_helpData.Arguments.Sort();
+				// add arguments header
+				_helpData.Arguments = new MessageLines()
+				{
+					{string.Empty, string.Empty },
+					{ Resources.text.help.HelpTextValues.GeneralArguments, string.Empty },
+					_helpData.Arguments
+				};
+			}
 
+			if (_helpData.Options.Count() != 0)
+			{
+				_helpData.Options.Sort();
+				// add options header
+				_helpData.Options = new MessageLines()
+				{
+					{string.Empty, string.Empty },
+					{ Resources.text.help.HelpTextValues.GeneralOptions, string.Empty },
+					_helpData.Options
+				};
+			}
+
+			// put all help data into one structure
             var outputMessages = new MessageLines
             {
                 _helpData.HelpTextFirstLine,
-                commandLines,
+				_helpData.Arguments,
+				_helpData.Options,
                 _helpData.HelpTextLastLine
-            };
+			};
 
             OppoLogger.Info(_helpData.LogMessage);
             return new CommandResult(true, outputMessages);            

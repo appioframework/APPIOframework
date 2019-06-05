@@ -10,7 +10,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ReferenceCommands
 	{
 		public ReferenceRemoveCommandStrategy(IFileSystem fileSystem) : base(fileSystem) { }
 
-		public override string Name => Constants.ReferenceCommandName.Remove;
+		public override string Name => Constants.ReferenceCommandArguments.Remove;
 
 		public override CommandResult Execute(IEnumerable<string> inputParams)
 		{

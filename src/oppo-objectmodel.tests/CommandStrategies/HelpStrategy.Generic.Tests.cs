@@ -66,50 +66,101 @@ namespace Oppo.ObjectModel.Tests.CommandStrategies
             Assert.IsInstanceOf<ICommand<object>>(objectUnderTest);
         }
 
-        [Test]
-        public void HelpStrategy_Should_WriteHelpText()
-        {
-            // Arrange
-            var helpData = new HelpData
-            {
-                CommandName = "any-name",
-                HelpTextFirstLine = { { "any-text", "" } },
-                HelpTextLastLine = { { "", "any-other-text" } },
-                LogMessage = "any-message",
-                HelpText = "any-text",
-            };
 
-            const string commandName = "any-name-2";
-            const string commandHelpText = "any help text \r\n maybe with multiple lines ...";
+		private Mock<ILoggerListener> _loggerListenerMock;
+		private Mock<ICommand<object>> _commandMock;
+		private Mock<ICommandFactory<object>> _factoryMock;
 
-            var loggerListenerMock = new Mock<ILoggerListener>();
-            loggerListenerMock.Setup(x => x.Info("any-message"));
-            OppoLogger.RegisterListener(loggerListenerMock.Object);
+		private readonly string sampleCommandName			= "sampleCommandName";
+		private readonly string sampleFirstLineText			= "sampleFirstLineText";
+		private readonly string sampleOption				= "sampleOption";
+		private readonly string	sampleOptionDescription		= "sampleOptionDescription";
+		private readonly string sampleArgument				= "sampleArgument";
+		private readonly string sampleArgumentDescription	= "sampleArgumentDescription";
+		private readonly string sampleLastLineText			= "sampleLastLineText";
+		private readonly string sampleLogMessage			= "sampleLogMessage";
+		private readonly string sampleHelpText				= "sampleHelpText";
 
-            var commandMock = new Mock<ICommand<object>>();
-            commandMock.Setup(x => x.Name).Returns(commandName);
-            commandMock.Setup(x => x.GetHelpText()).Returns(commandHelpText);
+		[SetUp]
+		public void HelpStrategy_Setup()
+		{
+			_loggerListenerMock = new Mock<ILoggerListener>();
+			_commandMock = new Mock<ICommand<object>>();
+			_commandMock.Setup(x => x.Name).Returns("any name");
+			_commandMock.Setup(x => x.GetHelpText()).Returns("any \n help \n text");
+			_factoryMock = new Mock<ICommandFactory<object>>();
+			_factoryMock.Setup(x => x.Commands).Returns(new[] { _commandMock.Object });
+		}
 
-            var factoryMock = new Mock<ICommandFactory<object>>();
-            factoryMock.Setup(x => x.Commands).Returns(new[] {commandMock.Object});
+		[Test]
+		public void HelpStrategy_Should_WriteHelpTextWithArguments()
+		{
+			// Arrange help data
+			var helpData = new HelpData
+			{
+				CommandName = sampleCommandName,
+				HelpTextFirstLine = { { sampleFirstLineText, string.Empty } },
+				Arguments = { { sampleArgument, sampleArgumentDescription } },
+				HelpTextLastLine = { { string.Empty, sampleLastLineText } },
+				LogMessage = sampleLogMessage,
+				HelpText = sampleHelpText,
+			};
 
-            var helpStrategy = new HelpStrategy<object>(helpData);
-            helpStrategy.CommandFactory = factoryMock.Object;
+			OppoLogger.RegisterListener(_loggerListenerMock.Object);
 
-            // Act
-            var strategyResult = helpStrategy.Execute(new string[] { });
+			var helpStrategy = new HelpStrategy<object>(helpData);
+			helpStrategy.CommandFactory = _factoryMock.Object;
 
-            // Assert
-            Assert.IsTrue(strategyResult.Success);
-            Assert.IsNotNull(strategyResult.OutputMessages);
-           
-            Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>("any-text", string.Empty)));
-            Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>(commandName, commandHelpText)));
-            Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>(string.Empty, "any-other-text")));
+			// Act
+			var strategyResult = helpStrategy.Execute(new string[] { });
 
-            loggerListenerMock.Verify(x => x.Info("any-message"), Times.Once);
-            OppoLogger.RemoveListener(loggerListenerMock.Object);
-        }
+			// Assert
+			Assert.IsTrue(strategyResult.Success);
+			Assert.IsNotNull(strategyResult.OutputMessages);
+
+			Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>(sampleFirstLineText, string.Empty)));
+			Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>("Arguments:", string.Empty)));
+			Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>(sampleArgument, sampleArgumentDescription)));
+			Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>(string.Empty, sampleLastLineText)));
+
+			_loggerListenerMock.Verify(x => x.Info(sampleLogMessage), Times.Once);
+			OppoLogger.RemoveListener(_loggerListenerMock.Object);
+		}
+
+		[Test]
+		public void HelpStrategy_Should_WriteHelpTextWithOptions()
+		{
+			// Arrange help data
+			var helpData = new HelpData
+			{
+				CommandName = sampleCommandName,
+				HelpTextFirstLine = { { sampleFirstLineText, string.Empty } },
+				Options = { { sampleOption, sampleOptionDescription } },
+				HelpTextLastLine = { { string.Empty, sampleLastLineText } },
+				LogMessage = sampleLogMessage,
+				HelpText = sampleHelpText,
+			};
+
+			OppoLogger.RegisterListener(_loggerListenerMock.Object);
+			
+			var helpStrategy = new HelpStrategy<object>(helpData);
+			helpStrategy.CommandFactory = _factoryMock.Object;
+
+			// Act
+			var strategyResult = helpStrategy.Execute(new string[] { });
+
+			// Assert
+			Assert.IsTrue(strategyResult.Success);
+			Assert.IsNotNull(strategyResult.OutputMessages);
+
+			Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>(sampleFirstLineText, string.Empty)));
+			Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>("Options:", string.Empty)));
+			Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>(sampleOption, sampleOptionDescription)));
+			Assert.IsTrue(strategyResult.OutputMessages.Contains(new KeyValuePair<string, string>(string.Empty, sampleLastLineText)));
+
+			_loggerListenerMock.Verify(x => x.Info(sampleLogMessage), Times.Once);
+			OppoLogger.RemoveListener(_loggerListenerMock.Object);
+		}
 
         [Test]
         public void HelpStrategy_Should_WriteSparseHelpTextIfNoCommandFactoryIsProvided()

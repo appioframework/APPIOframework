@@ -25,7 +25,7 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 
         public string GetHelpText()
         {
-            return HelpTextValues.ImportStrategy;
+            return HelpTextValues.ImportCommand;
         }
     }
 }

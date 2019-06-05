@@ -29,21 +29,21 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 				new StringParameterSpecification<ParamId>
 				{
 					Identifier = ParamId.AppName,
-					Short = Constants.ImportInformationModelCommandArguments.Name,
-					Verbose = Constants.ImportInformationModelCommandArguments.VerboseName
+					Short = Constants.ImportCommandOptions.Name,
+					Verbose = Constants.ImportCommandOptions.VerboseName
 				},
 				new StringParameterSpecification<ParamId>
 				{
 					Identifier = ParamId.ModelPath,
-					Short = Constants.ImportInformationModelCommandArguments.Path,
-					Verbose = Constants.ImportInformationModelCommandArguments.VerbosePath,
+					Short = Constants.ImportCommandOptions.Path,
+					Verbose = Constants.ImportCommandOptions.VerbosePath,
 					Default = string.Empty
 				},
 				new StringParameterSpecification<ParamId>
 				{
 					Identifier = ParamId.TypesPath,
-					Short = Constants.ImportInformationModelCommandArguments.Types,
-					Verbose = Constants.ImportInformationModelCommandArguments.VerboseTypes,
+					Short = Constants.ImportCommandOptions.Types,
+					Verbose = Constants.ImportCommandOptions.VerboseTypes,
 					Default = string.Empty
 				}
 			}, new []
@@ -51,13 +51,13 @@ namespace Oppo.ObjectModel.CommandStrategies.ImportCommands
 				new BoolParameterSpecification<ParamId>
 				{
 					Identifier = ParamId.Sample,
-					Short = Constants.ImportInformationModelCommandArguments.Sample,
-					Verbose = Constants.ImportInformationModelCommandArguments.VerboseSample
+					Short = Constants.ImportCommandOptions.Sample,
+					Verbose = Constants.ImportCommandOptions.VerboseSample
 				}, 
 			});
 		}
 
-        public string Name => Constants.ImportInformationModelCommandName.InformationModel;
+        public string Name => Constants.ImportCommandArguments.InformationModel;
 
 		public CommandResult Execute(IEnumerable<string> inputParams)
 		{
