@@ -37,8 +37,8 @@ namespace Appio.ObjectModel.CommandStrategies.ImportCommands
                 new StringParameterSpecification<ParamId>
                 {
                     Identifier = ParamId.Project,
-                    Short = Constants.ImportCertificateCommandArguments.Project,
-                    Verbose = Constants.ImportCertificateCommandArguments.VerboseProject,
+                    Short = Constants.ImportCertificateCommandArguments.Name,
+                    Verbose = Constants.ImportCertificateCommandArguments.VerboseName,
                 }
             }, new []
             {

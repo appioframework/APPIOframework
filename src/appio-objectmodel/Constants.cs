@@ -243,8 +243,8 @@ namespace Appio.ObjectModel
             public const string VerboseKey = "--key";
             public const string Certificate = "-c";
             public const string VerboseCertificate = "--certificate";
-            public const string Project = "-p";
-            public const string VerboseProject = "--project";
+            public const string Name = "-n";
+            public const string VerboseName = "--name";
             public const string VerboseServer = "--server";
             public const string VerboseClient = "--client";
         }

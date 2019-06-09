@@ -48,11 +48,10 @@
 		public const string ImportFirstLine = "Import files to APPIO project. Depends on used argument server certificates or information models will be imported to the projct.";
         public const string ImportCallDescription = "appio import <Argument> <Options>";
         public const string ImportArguments = "information-model";
-		public const string ImportCommandOptionNameDescription = "appio project name (arg: information-model)";
+		public const string ImportCommandOptionNameDescription = "appio project name";
 		public const string ImportCommandOptionPathDescription = "the path of the information model (arg: information-model)";
 		public const string ImportCommandOptionTypesDescription = "(optional) necessary data types for imported information model. Has to be bsd file (arg: information-model)";
 		public const string ImportCommandOptionSampleDescription = "imports a sample information model to project (arg: information-model)";
-		public const string ImportCommandOptionProjectDescription = "appio project name (arg: certificate)";
 		public const string ImportCommandOptionKeyDescription = "the path to key file (arg: certificate)";
 		public const string ImportCommandOptionCertificateDescription = "the path to certificate file (arg: certificate)";
 		public const string ImportCommandOptionClientServerDescription = "(optional) specifies to which application (server or client) file will be imported in case of opc ua ClientServer application (arg: certificate)";
