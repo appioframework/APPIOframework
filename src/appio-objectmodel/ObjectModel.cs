@@ -123,10 +123,6 @@ namespace Appio.ObjectModel
                 { string.Empty, HelpTextValues.GeneralUsage },
                 { string.Empty, HelpTextValues.HelpStartUsageDescription },
                 { string.Empty, string.Empty },
-                { string.Empty, HelpTextValues.HelpStartTerminology },
-                { string.Empty, HelpTextValues.HelpStartOpcuaapp },
-                { string.Empty, HelpTextValues.HelpStartOpcuaappDescription },
-                { string.Empty, string.Empty },
                 { string.Empty, HelpTextValues.HelpStartAppioOptions },
 				{ helpOption, HelpTextValues.HelpCommand },
 				{ Constants.CommandName.Version, HelpTextValues.VersionCommand },
@@ -186,6 +182,7 @@ namespace Appio.ObjectModel
             {
                 CommandName = Constants.BuildCommandOptions.Help,
                 HelpTextFirstLine = buildHelpStrategyHelpText,
+				Options = buildOptions,
                 LogMessage = LoggingText.AppioHelpForBuildCommandCalled,
                 HelpText = HelpTextValues.BuildHelpArgumentCommandDescription,
             };
@@ -457,7 +454,7 @@ namespace Appio.ObjectModel
 			var pathOption = new StringBuilder(Constants.ImportCommandOptions.Path).Append(Constants.HelpOptionSeparator).Append(Constants.ImportCommandOptions.VerbosePath).ToString();
 			var typesOption = new StringBuilder(Constants.ImportCommandOptions.Types).Append(Constants.HelpOptionSeparator).Append(Constants.ImportCommandOptions.VerboseTypes).ToString();
 			var helpOption = new StringBuilder(Constants.ImportCommandOptions.Help).Append(Constants.HelpOptionSeparator).Append(Constants.ImportCommandOptions.VerboseHelp).ToString();
-			var sampleOption = new StringBuilder(Constants.ImportCommandOptions.Sample).Append(Constants.HelpOptionSeparator).Append(Constants.ImportCommandOptions.VerboseHelp).ToString();
+			var sampleOption = new StringBuilder(Constants.ImportCommandOptions.Sample).Append(Constants.HelpOptionSeparator).Append(Constants.ImportCommandOptions.VerboseSample).ToString();
 			var keyOption = new StringBuilder(Constants.ImportCertificateCommandArguments.Key).Append(Constants.HelpOptionSeparator).Append(Constants.ImportCertificateCommandArguments.VerboseKey).ToString();
 			var projectOption = new StringBuilder(Constants.ImportCertificateCommandArguments.Project).Append(Constants.HelpOptionSeparator).Append(Constants.ImportCertificateCommandArguments.VerboseProject).ToString();
 			var certiciateOption = new StringBuilder(Constants.ImportCertificateCommandArguments.Certificate).Append(Constants.HelpOptionSeparator).Append(Constants.ImportCertificateCommandArguments.VerboseCertificate).ToString();
@@ -589,11 +586,11 @@ namespace Appio.ObjectModel
 			// Sln command arguments
 			var slnArguments = new MessageLines
 			{
-				{ Constants.SlnCommandArguments.Add, string.Empty },
-				{ Constants.SlnCommandArguments.Remove, string.Empty },
-				{ Constants.SlnCommandArguments.Build, string.Empty },
-				{ Constants.SlnCommandArguments.Publish, string.Empty },
-				{ Constants.SlnCommandArguments.Deploy, string.Empty }
+				{ Constants.SlnCommandArguments.Add, HelpTextValues.SlnCommandArgumentAddDescription },
+				{ Constants.SlnCommandArguments.Remove, HelpTextValues.SlnCommandArtgumentRemoveDescription },
+				{ Constants.SlnCommandArguments.Build, HelpTextValues.SlnCommandArtgumentBuildDescription },
+				{ Constants.SlnCommandArguments.Publish, HelpTextValues.SlnCommandArtgumentPublishDescription },
+				{ Constants.SlnCommandArguments.Deploy, HelpTextValues.SlnCommandArtgumentDeployDescription }
 			};
 
 			// Sln command options
