@@ -4,9 +4,9 @@ set -euo pipefail
 
 source bash-gitlab-ci/util-integration-tests.sh
 
-VAR_COMMANDS[0]="appio import certificate -p my-app --certificate mycert.der --key mykey.der"
-VAR_COMMANDS[1]="appio import certificate -p my-app --certificate mycert.pem --key mykey.der"
-VAR_COMMANDS[2]="appio import certificate -p my-app --certificate mycert.pem --key mykey.key"
+VAR_COMMANDS[0]="appio import certificate -n my-app --certificate mycert.der --key mykey.der"
+VAR_COMMANDS[1]="appio import certificate -n my-app --certificate mycert.pem --key mykey.der"
+VAR_COMMANDS[2]="appio import certificate -n my-app --certificate mycert.pem --key mykey.key"
 
 for INDEX in "${!VAR_COMMANDS[@]}";
 do

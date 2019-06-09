@@ -19,32 +19,32 @@ namespace Appio.ObjectModel.Tests.CommandStrategies
         
         private static object[] ValidInputsDER =
         {
-            new [] {"--key", "myfile.der", "--certificate", "mycert.der", "-p", "myproject"}
+            new [] {"--key", "myfile.der", "--certificate", "mycert.der", "-n", "myproject"}
         };
         
         private static object[] ValidInputsPEMFormat =
         {
-            new [] {"--key", "myfile.key", "--certificate", "mycert.pem", "-p", "myproject"},
-            new [] {"-k", "myfile.key", "-c", "mycert.pem", "-p", "myproject"},
-            new [] {"-k", "myfile.key", "--certificate", "mycert.pem", "-p", "myproject"},
-            new [] {"-k", "myfile.key", "--certificate", "mycert.crt", "-p", "myproject"}
+            new [] {"--key", "myfile.key", "--certificate", "mycert.pem", "-n", "myproject"},
+            new [] {"-k", "myfile.key", "-c", "mycert.pem", "-n", "myproject"},
+            new [] {"-k", "myfile.key", "--certificate", "mycert.pem", "-n", "myproject"},
+            new [] {"-k", "myfile.key", "--certificate", "mycert.crt", "-n", "myproject"}
         };
 
         private static object[] InvalidInputsCaughtByCommandLineParser =
         {
-            new[] {"-Key", "myfile.der", "--certificate", "mycert.der", "-p", "myproject"},
+            new[] {"-Key", "myfile.der", "--certificate", "mycert.der", "-n", "myproject"},
             new[] {"-k", "myfile.der", "--certificate", "mycert.der"},
         };
 
         private static object[] ValidInputsDERClientServer =
         {
-            new [] {"--client", "--key", "myfile.der", "--certificate", "mycert.der", "-p", "myproject"},
-            new [] {"--server", "--key", "myfile.der", "--certificate", "mycert.der", "-p", "myproject"}
+            new [] {"--client", "--key", "myfile.der", "--certificate", "mycert.der", "-n", "myproject"},
+            new [] {"--server", "--key", "myfile.der", "--certificate", "mycert.der", "-n", "myproject"}
         };
         
         private static object[] InvalidBothClientServer =
         {
-            new [] {"--client", "--server", "--key", "myfile.der", "--certificate", "mycert.der", "-p", "myproject"}
+            new [] {"--client", "--server", "--key", "myfile.der", "--certificate", "mycert.der", "-n", "myproject"}
         };
         
         private static readonly string SampleClientServerAppProject = $"{{\"name\": \"App\",\"type\": \"{Constants.ApplicationType.ClientServer}\"}}";

@@ -456,7 +456,6 @@ namespace Appio.ObjectModel
 			var helpOption = new StringBuilder(Constants.ImportCommandOptions.Help).Append(Constants.HelpOptionSeparator).Append(Constants.ImportCommandOptions.VerboseHelp).ToString();
 			var sampleOption = new StringBuilder(Constants.ImportCommandOptions.Sample).Append(Constants.HelpOptionSeparator).Append(Constants.ImportCommandOptions.VerboseSample).ToString();
 			var keyOption = new StringBuilder(Constants.ImportCertificateCommandArguments.Key).Append(Constants.HelpOptionSeparator).Append(Constants.ImportCertificateCommandArguments.VerboseKey).ToString();
-			var projectOption = new StringBuilder(Constants.ImportCertificateCommandArguments.Project).Append(Constants.HelpOptionSeparator).Append(Constants.ImportCertificateCommandArguments.VerboseProject).ToString();
 			var certiciateOption = new StringBuilder(Constants.ImportCertificateCommandArguments.Certificate).Append(Constants.HelpOptionSeparator).Append(Constants.ImportCertificateCommandArguments.VerboseCertificate).ToString();
 			var clientServerOption = new StringBuilder(Constants.ImportCertificateCommandArguments.VerboseClient).Append(" or ").Append(Constants.ImportCertificateCommandArguments.VerboseServer).ToString();
 
@@ -468,7 +467,6 @@ namespace Appio.ObjectModel
 				{ helpOption, HelpTextValues.OptionHelpDescription },
 				{ sampleOption, HelpTextValues.ImportCommandOptionSampleDescription },
 				{ keyOption, HelpTextValues.ImportCommandOptionKeyDescription },
-				{ projectOption, HelpTextValues.ImportCommandOptionProjectDescription },
 				{ certiciateOption, HelpTextValues.ImportCommandOptionCertificateDescription },
 				{ clientServerOption, HelpTextValues.ImportCommandOptionClientServerDescription }
 			};
