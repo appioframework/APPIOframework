@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 using System.Text;
 using Moq;
@@ -477,36 +478,48 @@ namespace Appio.ObjectModel.Tests.CommandStrategies
         {
             // Arrange
             var infoWrittenOut = false;
-            var projectDirectory = $"{inputParams.ElementAt(1)}";
-            var modelsDirectory = "models";
-            var loadedModel = "anyString";
-            var modelFilePath = Constants.FileName.SampleInformationModelFile;
-            var modelTargetPath = projectDirectory + "\\" + _modelName;
+			var projectName = inputParams.ElementAtOrDefault(1);
+            var modelsDirectory = projectName + "\\" + "models";
+			var appioprojFilePath = projectName + "\\" + projectName + ".appioproj";
+			var loadedModel = "anyModelName";
+			var loadedTypes = "anyTypesName";
+			var sampleModelName = "DiNodeset.xml";
+			var sampleTypesName = "DiTypes.bsd";
+			var modelTargetPath = modelsDirectory + "\\" + sampleModelName;
+			var typesTargetPath = modelsDirectory + "\\" + sampleTypesName;
 
-            _fileSystemMock.Setup(x => x.LoadTemplateFile(Resources.Resources.SampleInformationModelFileName)).Returns(loadedModel);
-
-            _fileSystemMock.Setup(x => x.FileExists(modelFilePath)).Returns(true);
-            _fileSystemMock.Setup(x => x.GetFileName(modelFilePath)).Returns(_modelName);
-            _fileSystemMock.Setup(x => x.GetExtension(modelFilePath)).Returns(_validModelExtension);
-            _fileSystemMock.Setup(x => x.CombinePaths(projectDirectory, Constants.DirectoryName.Models)).Returns(modelsDirectory);
-			_fileSystemMock.Setup(x => x.DirectoryExists(projectDirectory)).Returns(true);
-
-			_fileSystemMock.Setup(x => x.CombinePaths(modelsDirectory, Constants.FileName.SampleInformationModelFile)).Returns(modelTargetPath);            
-
-
-            var loggerListenerMock = new Mock<ILoggerListener>();
-            loggerListenerMock.Setup(listener => listener.Info(string.Format(LoggingText.ImportInforamtionModelCommandSuccess, modelFilePath))).Callback(delegate { infoWrittenOut = true; });
+			 _fileSystemMock.Setup(x => x.DirectoryExists(projectName)).Returns(true);
+			_fileSystemMock.Setup(x => x.CombinePaths(projectName, projectName + Constants.FileExtension.Appioproject)).Returns(appioprojFilePath);
+			_fileSystemMock.Setup(x => x.CombinePaths(projectName, Constants.DirectoryName.Models)).Returns(modelsDirectory);
+			_fileSystemMock.Setup(x => x.LoadTemplateFile(Resources.Resources.SampleInformationModelFileName)).Returns(loadedModel);
+			_fileSystemMock.Setup(x => x.CombinePaths(modelsDirectory, sampleModelName)).Returns(modelTargetPath);
+			_fileSystemMock.Setup(x => x.LoadTemplateFile(Resources.Resources.SampleInformationModelTypesFileName)).Returns(loadedTypes);
+			_fileSystemMock.Setup(x => x.CombinePaths(modelsDirectory, sampleTypesName)).Returns(typesTargetPath);
+			
+			var loggerListenerMock = new Mock<ILoggerListener>();
+            loggerListenerMock.Setup(listener => listener.Info(string.Format(LoggingText.ImportInforamtionModelCommandSuccess, sampleModelName))).Callback(delegate { infoWrittenOut = true; });
             AppioLogger.RegisterListener(loggerListenerMock.Object);
 
-            // Act
-            var result = _objectUnderTest.Execute(inputParams);
 
-            // Assert
-            Assert.IsTrue(result.Success);
-            Assert.IsTrue(infoWrittenOut);
-            Assert.AreEqual(string.Format(OutputText.ImportSampleInformationModelSuccess, modelFilePath), result.OutputMessages.First().Key);
-            _fileSystemMock.Verify(x => x.CreateFile(modelTargetPath, loadedModel), Times.Once);
-            AppioLogger.RemoveListener(loggerListenerMock.Object);
+			using (var serverAppioprojFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_defaultOpcuaServerAppContent)))
+			using (var nodesetFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleNodesetContent)))
+			{
+				_fileSystemMock.Setup(x => x.ReadFile(appioprojFilePath)).Returns(serverAppioprojFileStream);
+				_fileSystemMock.Setup(x => x.ReadFile(modelTargetPath)).Returns(nodesetFileStream);
+
+				// Act
+				var result = _objectUnderTest.Execute(inputParams);
+
+				// Assert
+				Assert.IsTrue(result.Success);
+				Assert.IsTrue(infoWrittenOut);
+				Assert.AreEqual(string.Format(OutputText.ImportSampleInformationModelSuccess, sampleModelName), result.OutputMessages.First().Key);
+				_fileSystemMock.Verify(x => x.CreateFile(modelTargetPath, loadedModel), Times.Once);
+				_fileSystemMock.Verify(x => x.CreateFile(typesTargetPath, loadedTypes), Times.Once);
+				_fileSystemMock.Verify(x => x.ReadFile(appioprojFilePath), Times.Once);
+				_fileSystemMock.Verify(x => x.WriteFile(appioprojFilePath, It.IsAny<IEnumerable<string>>()));
+				AppioLogger.RemoveListener(loggerListenerMock.Object);
+			}
         }
 
         [Test]

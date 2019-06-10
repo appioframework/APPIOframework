@@ -76,6 +76,10 @@ namespace Appio.ObjectModel.CommandStrategies.ImportCommands
 				return new CommandResult(false, _outputMessages);
 			}
 
+
+			var appioprojFilePath = _fileSystem.CombinePaths(opcuaAppName, opcuaAppName + Constants.FileExtension.Appioproject);
+			var modelData = new ModelData();
+
 			if (options[ParamId.Sample])
 			{
 				var modelsDir = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.Models);
@@ -87,6 +91,9 @@ namespace Appio.ObjectModel.CommandStrategies.ImportCommands
 				var typesContent = _fileSystem.LoadTemplateFile(Resources.Resources.SampleInformationModelTypesFileName);
 				var typesFilePath = _fileSystem.CombinePaths(modelsDir, Constants.FileName.SampleInformationModelTypesFile);
 				_fileSystem.CreateFile(typesFilePath, typesContent);
+
+				if (!UpdateAppioProjFile(appioprojFilePath, modelData, opcuaAppName, Constants.FileName.SampleInformationModelFile, nodesetFilePath, Constants.FileName.SampleInformationModelTypesFile))
+					return new CommandResult(false, _outputMessages);
 
 				_outputMessages.Add(string.Format(OutputText.ImportSampleInformationModelSuccess, Constants.FileName.SampleInformationModelFile), string.Empty);
 				AppioLogger.Info(string.Format(LoggingText.ImportInforamtionModelCommandSuccess, Constants.FileName.SampleInformationModelFile));
@@ -106,54 +113,9 @@ namespace Appio.ObjectModel.CommandStrategies.ImportCommands
 			{
 				return new CommandResult(false, _outputMessages);
 			}
-			
-			// deserialize appioproj file
-			var appioprojFilePath = _fileSystem.CombinePaths(opcuaAppName, opcuaAppName + Constants.FileExtension.Appioproject);
-			var opcuaappData = Deserialize.Opcuaapp(appioprojFilePath, _fileSystem);
-			if (opcuaappData == null)
-			{
-				AppioLogger.Warn(LoggingText.ImportInforamtionModelCommandFailureCannotReadAppioprojFile);
-				_outputMessages.Add(OutputText.ImportInforamtionModelCommandFailureCannotReadAppioprojFile, string.Empty);
-				return new CommandResult(false, _outputMessages);
-			}
-			if (opcuaappData.Type == Constants.ApplicationType.Client)
-			{
-				AppioLogger.Warn(LoggingText.ImportInformationModelCommandOpcuaappIsAClient);
-				_outputMessages.Add(OutputText.ImportInformationModelCommandOpcuaappIsAClient, string.Empty);
-				return new CommandResult(false, _outputMessages);
-			}
 
-			// build model data
-			var modelData = new ModelData();
-			modelData.Name = _fileSystem.GetFileName(modelFileName);
-			if (!ExtractNodesetUris(ref modelData, modelPath))
-			{
+			if (!UpdateAppioProjFile(appioprojFilePath, modelData, opcuaAppName, modelFileName, modelPath, typesFileName))
 				return new CommandResult(false, _outputMessages);
-			}
-			modelData.Types = typesFileName;
-			modelData.NamespaceVariable = Constants.NodesetXml.NamespaceVariablePrefix + _fileSystem.GetFileNameWithoutExtension(modelFileName);
-
-
-			var opcuaappDataAsServer = opcuaappData as IOpcuaServerApp;
-			// check if appioproj file already contains model with imported model name
-			if (opcuaappDataAsServer.Models.Any(x => x.Name == modelData.Name))
-			{
-				AppioLogger.Warn(LoggingText.ImportInforamtionModelCommandFailureModelDuplication);
-				_outputMessages.Add(string.Format(OutputText.ImportInforamtionModelCommandFailureModelNameDuplication, opcuaAppName, modelFileName), string.Empty);
-				return new CommandResult(false, _outputMessages);
-			}
-			// check if appioproj file already contains model with imported model namespace uri
-			if(opcuaappDataAsServer.Models.Any(x => x.Uri == modelData.Uri))
-			{
-				AppioLogger.Warn(LoggingText.ImportInforamtionModelCommandFailureModelDuplication);
-				_outputMessages.Add(string.Format(OutputText.ImportInforamtionModelCommandFailureModelUriDuplication, opcuaAppName, modelData.Uri), string.Empty);
-				return new CommandResult(false, _outputMessages);
-			}
-
-			// add model to project structure, serialize structure and write to appioproj file
-			opcuaappDataAsServer.Models.Add(modelData);
-			var appioprojNewContent = JsonConvert.SerializeObject(opcuaappData, Newtonsoft.Json.Formatting.Indented);
-			_fileSystem.WriteFile(appioprojFilePath, new List<string> { appioprojNewContent });
 
 			// copy model file
 			var modelsDirectory = _fileSystem.CombinePaths(opcuaAppName, Constants.DirectoryName.Models);            
@@ -172,6 +134,29 @@ namespace Appio.ObjectModel.CommandStrategies.ImportCommands
 			_outputMessages.Add(string.Format(OutputText.ImportInformationModelCommandSuccess, modelPath), string.Empty);
             return new CommandResult(true, _outputMessages);
         }
+
+		private bool UpdateAppioProjFile(string appioprojFilePath, ModelData modelData,
+			string opcuaAppName, string modelFileName, string modelPath, string typesFileName)
+		{
+			// deserialize appioproj file
+			if (!DeserializeAppioprojFile(appioprojFilePath, out var opcuaappData))
+			{
+				return false;
+			}
+
+			// build model data
+			var opcuaappDataAsServer = opcuaappData as IOpcuaServerApp;
+			if (!BuildModelData(ref modelData, opcuaappDataAsServer, opcuaAppName, modelFileName, modelPath, typesFileName))
+			{
+				return false;
+			}
+
+			// add model to project structure, serialize structure and write to appioproj file
+			opcuaappDataAsServer.Models.Add(modelData);
+			var appioprojNewContent = JsonConvert.SerializeObject(opcuaappData, Newtonsoft.Json.Formatting.Indented);
+			_fileSystem.WriteFile(appioprojFilePath, new List<string> {appioprojNewContent});
+			return true;
+		}
 
 		private bool ValidateOpcuaAppName(string opcuaAppName)
 		{
@@ -287,6 +272,57 @@ namespace Appio.ObjectModel.CommandStrategies.ImportCommands
 						modelData.RequiredModelUris.Add(requiredModelUri);
 					}
 				}
+			}
+
+			return true;
+		}
+
+		private bool DeserializeAppioprojFile(string appioprojFilePath, out IOpcuaapp opcuaappData)
+		{
+			// deserialize appioproj file
+			opcuaappData = Deserialize.Opcuaapp(appioprojFilePath, _fileSystem);
+			if (opcuaappData == null)
+			{
+				AppioLogger.Warn(LoggingText.ImportInforamtionModelCommandFailureCannotReadAppioprojFile);
+				_outputMessages.Add(OutputText.ImportInforamtionModelCommandFailureCannotReadAppioprojFile, string.Empty);
+				return false;
+			}
+			if (opcuaappData.Type == Constants.ApplicationType.Client)
+			{
+				AppioLogger.Warn(LoggingText.ImportInformationModelCommandOpcuaappIsAClient);
+				_outputMessages.Add(OutputText.ImportInformationModelCommandOpcuaappIsAClient, string.Empty);
+				return false;
+			}
+
+			return true;
+		}
+
+		private bool BuildModelData(ref ModelData modelData, IOpcuaServerApp opcuaServerData, string opcuaAppName, string modelFileName, string modelPath, string typesFileName)
+		{
+			// build model data
+			modelData.Name = modelFileName;
+			if (!ExtractNodesetUris(ref modelData, modelPath))
+			{
+				return false;
+			}
+			modelData.Types = typesFileName;
+			modelData.NamespaceVariable = Constants.NodesetXml.NamespaceVariablePrefix + _fileSystem.GetFileNameWithoutExtension(modelFileName);
+
+			// check if appioproj file already contains model with imported model name
+			var modelName = modelData.Name;
+			if (opcuaServerData.Models.Any(x => x.Name == modelName))
+			{
+				AppioLogger.Warn(LoggingText.ImportInforamtionModelCommandFailureModelDuplication);
+				_outputMessages.Add(string.Format(OutputText.ImportInforamtionModelCommandFailureModelNameDuplication, opcuaAppName, modelFileName), string.Empty);
+				return false;
+			}
+			// check if appioproj file already contains model with imported model namespace uri
+			var modelUri = modelData.Uri;
+			if (opcuaServerData.Models.Any(x => x.Uri == modelUri))
+			{
+				AppioLogger.Warn(LoggingText.ImportInforamtionModelCommandFailureModelDuplication);
+				_outputMessages.Add(string.Format(OutputText.ImportInforamtionModelCommandFailureModelUriDuplication, opcuaAppName, modelData.Uri), string.Empty);
+				return false;
 			}
 
 			return true;
