@@ -1,0 +1,27 @@
+---
+# tasks file for appiocreateexampleopcuaserver
+
+- name: Create APPIO folder
+  file:
+    path: appio/
+    state: directory
+
+- name: Create APPIO opcuaapp
+  command: appio new opcuaapp --name appiotutorial --type Server --url 127.0.0.1 --port 3000 --nocert
+  args:
+    chdir: appio/
+
+- name: Build APPIO opcuaapp
+  command: appio build --name appiotutorial
+  args:
+    chdir: appio/
+
+- name: publish APPIO opcuaapp
+  command: appio publish --name appiotutorial
+  args:
+    chdir: appio/
+
+- name: deploy appio opcuaapp
+  command: appio deploy --name appiotutorial
+  args:
+    chdir: appio/

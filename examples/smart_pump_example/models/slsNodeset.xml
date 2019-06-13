@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UANodeSet xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" LastModified="2012-12-31T00:00:00Z" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+  
+  <NamespaceUris>
+    <Uri>smart_liter_sensor</Uri>
+    <Uri>http://opcfoundation.org/UA/DI/</Uri>
+  </NamespaceUris>
+  
+  <Models>
+    <Model ModelUri="smart_liter_sensor" Version="1.01" PublicationDate="2012-12-31T00:00:00Z">
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.04" PublicationDate="2016-12-31T00:00:00Z" />
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/DI/" Version="1.01" PublicationDate="2012-12-31T00:00:00Z" />
+    </Model>
+  </Models>
+  
+	<UAObjectType NodeId="ns=1;i=1000" BrowseName="1:SmartLiterSensorType">
+		<DisplayName>SmartLiterSensorType</DisplayName>
+		<References>
+      		<Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=1001</Reference>
+		    <Reference ReferenceType="HasComponent">ns=1;i=1001</Reference>
+		</References>
+	</UAObjectType>
+
+	<UAVariable NodeId="ns=1;i=1001" BrowseName="LiquidLevel" ParentNodeId="ns=1;i=1000" DataType="UInt32" UserAccessLevel="3" AccessLevel="3">
+		<DisplayName>LiquidLevel</DisplayName>
+		<References>
+      		<Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+			<Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1000</Reference>
+		</References>
+		<Value>
+		  <UInt32 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">0</UInt32>
+		</Value>
+	</UAVariable>
+    
+	<UAObject NodeId="ns=1;i=2000" BrowseName="1:SmartLiterSensor">
+		<DisplayName>SmartLiterSensor</DisplayName>
+		<References>
+			<Reference ReferenceType="Organizes" IsForward="false">ns=2;i=5001</Reference>
+			<Reference ReferenceType="HasTypeDefinition">ns=1;i=1000</Reference>
+			<Reference ReferenceType="HasComponent">ns=1;i=1001</Reference>
+		</References>
+	</UAObject>
+  
+</UANodeSet>
