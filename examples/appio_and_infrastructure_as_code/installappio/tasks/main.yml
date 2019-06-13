@@ -1,0 +1,88 @@
+---
+- name: install gpg
+  apt:
+    pkg: "gnupg2"
+    state: present
+    update_cache: yes
+  become: true
+
+- name: add .net sdk key
+  apt_key:
+    url: https://packages.microsoft.com/keys/microsoft.asc
+    state: present
+  become: true
+
+- name: add .net sdk key 1
+  apt_key:
+    keyserver: packages.microsoft.com
+    id: EB3E94ADBE1229CF
+  become: true
+
+- name: add .net sdk key 2
+  apt_key:
+    keyserver: packages.microsoft.com
+    id: 52E16F86FEE04B979B07E28DB02C46DF417A0893
+  become: true
+
+- name: add .net repo
+  apt_repository:
+    repo: "deb https://packages.microsoft.com/repos/microsoft-ubuntu-bionic-prod bionic main"
+    state: present
+    filename: /etc/apt/sources.list.d/dotnetdev.list
+    update_cache: yes
+  become: true
+
+- name: install .net sdk
+  apt:
+    pkg: "dotnet-runtime-2.1"
+    state: present
+    update_cache: yes
+  become: true
+
+- name: install gcc
+  apt:
+    pkg: "build-essential"
+    state: present
+    update_cache: yes
+  become: true
+
+- name: install pip
+  apt:
+    pkg: "python3-pip"
+    state: present
+    update_cache: yes
+  become: true
+
+- name: install pip
+  apt:
+    pkg: "python-pip"
+    state: present
+    update_cache: yes
+  become: true
+
+- name: install meson
+  pip:
+    name: "meson"
+    state: present
+    executable: "pip3"
+  become: true
+
+- name: Copy installer
+  copy:
+    src: "~/installer"
+    dest: "/"
+  become: true
+
+- name: Install open62541
+  apt:
+    deb: "/installer/open62541--v0.3.0.deb"
+    state: present
+    update_cache: yes
+  become: true
+
+- name: Install APPIO
+  apt:
+    deb: "/installer/appio-terminal.deb"
+    state: present
+    update_cache: yes
+  become: true

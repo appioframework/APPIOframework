@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UANodeSet xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" LastModified="2012-12-31T00:00:00Z" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+  
+  <NamespaceUris>
+    <Uri>smart_pump</Uri>
+    <Uri>http://opcfoundation.org/UA/DI/</Uri>
+  </NamespaceUris>
+  
+  <Models>
+    <Model ModelUri="smart_pump" Version="1.01" PublicationDate="2012-12-31T00:00:00Z">
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.04" PublicationDate="2016-12-31T00:00:00Z" />
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/DI/" Version="1.01" PublicationDate="2012-12-31T00:00:00Z" />
+    </Model>
+  </Models>
+  
+	<UAObjectType NodeId="ns=1;i=1000" BrowseName="1:SmartPumpType">
+		<DisplayName>SmartPumpType</DisplayName>
+		<References>
+      		<Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=1001</Reference>
+		    <Reference ReferenceType="HasComponent">ns=1;i=1001</Reference>
+			<Reference ReferenceType="HasComponent">ns=1;i=3000</Reference>
+			<Reference ReferenceType="HasComponent">ns=1;i=3001</Reference>
+			<Reference ReferenceType="HasComponent">ns=1;i=3002</Reference>
+		</References>
+	</UAObjectType>
+
+	<UAVariable NodeId="ns=1;i=1001" BrowseName="VolumeStream" ParentNodeId="ns=1;i=1000" DataType="UInt32" UserAccessLevel="3" AccessLevel="3">
+		<DisplayName>volumeStream</DisplayName>
+		<References>
+      		<Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+			<Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1000</Reference>
+		</References>
+		<Value>
+		  <UInt32 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">0</UInt32>
+		</Value>
+	</UAVariable>
+    
+	<UAObject NodeId="ns=1;i=2000" BrowseName="1:SmartPump">
+		<DisplayName>SmartPump</DisplayName>
+		<References>
+			<Reference ReferenceType="Organizes" IsForward="false">ns=2;i=5001</Reference>
+			<Reference ReferenceType="HasTypeDefinition">ns=1;i=1000</Reference>
+			<Reference ReferenceType="HasComponent">ns=1;i=1001</Reference>
+			<Reference ReferenceType="HasComponent">ns=1;i=3000</Reference>
+			<Reference ReferenceType="HasComponent">ns=1;i=3001</Reference>
+			<Reference ReferenceType="HasComponent">ns=1;i=3002</Reference>
+		</References>
+	</UAObject>
+	
+	<UAMethod NodeId="ns=1;i=3000" BrowseName="startPump" ParentNodeId="ns=1;i=1000">
+		<DisplayName>StartPump</DisplayName>
+		<References>
+			<Reference ReferenceType="HasModellingRule">i=80</Reference>
+			<Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1000</Reference>
+		</References>
+	</UAMethod>
+	
+	<UAMethod NodeId="ns=1;i=3001" BrowseName="stopPump" ParentNodeId="ns=1;i=1000">
+        <DisplayName>StopPump</DisplayName>
+        <References>
+            <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1000</Reference>
+        </References>
+    </UAMethod>
+	
+	<UAMethod NodeId="ns=1;i=3002" BrowseName="setVolumeStream" ParentNodeId="ns=1;i=1000">
+		<DisplayName>SetVolumeStream</DisplayName>
+		<References>
+			<Reference ReferenceType="HasProperty">ns=1;i=3100</Reference>
+			<Reference ReferenceType="HasModellingRule">i=80</Reference>
+			<Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1000</Reference>
+		</References>
+	</UAMethod>
+  
+	<UAVariable NodeId="ns=1;i=3100" BrowseName="InputArguments" ParentNodeId="ns=1;i=3002" DataType="i=296" ValueRank="1">
+		<DisplayName>InputArguments</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+			<Reference ReferenceType="HasModellingRule">i=78</Reference>
+			<Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=3002</Reference>
+		</References>
+		<Value>
+			<ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+				<ExtensionObject>
+					<TypeId>
+						<Identifier>i=297</Identifier>
+					</TypeId>
+					<Body>
+						<Argument>
+							<Name>volumeStream</Name>
+							<DataType>
+								<Identifier>i=7</Identifier>
+							</DataType>
+							<ValueRank>-1</ValueRank>
+							<ArrayDimensions />
+							<Description p5:nil="true" xmlns:p5="http://www.w3.org/2001/XMLSchema-instance" />
+						</Argument>
+					</Body>
+				</ExtensionObject>
+			</ListOfExtensionObject>
+		</Value>
+	</UAVariable>
+  
+</UANodeSet>

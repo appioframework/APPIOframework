@@ -1,0 +1,6 @@
+---
+
+- name: Create APPIO OPC UA Example Server
+  hosts: local
+  roles:
+    - role: appiocreateexampleopcuaserver

@@ -1,0 +1,5 @@
+---
+- name: Prepare
+  hosts: all
+  roles:
+    - role: /home/user/DocuTalsenTeam/oppo-terminal/examples/appio_and_infrastructure_as_code/installappio

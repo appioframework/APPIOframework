@@ -1,0 +1,6 @@
+---
+
+- name: Install APPIO Example Server
+  hosts: opcuaserver
+  roles:
+    - role: installopcuaexampletestserver

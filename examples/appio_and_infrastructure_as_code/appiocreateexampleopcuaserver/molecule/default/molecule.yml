@@ -1,0 +1,31 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint:
+  name: yamllint
+platforms:
+  - name: instance
+    image: ubuntu
+provisioner:
+  name: ansible
+  playbooks:
+    prepare: prepare.yml
+  lint:
+    name: ansible-lint
+    enabled: False
+scenario:
+  name: default
+  test_sequence:
+    - lint
+    - destroy
+    - create
+    - prepare
+    - converge
+    # - idempotence
+    - verify
+verifier:
+  name: testinfra
+  lint:
+    name: flake8

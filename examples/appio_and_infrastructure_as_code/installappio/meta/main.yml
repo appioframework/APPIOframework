@@ -1,0 +1,14 @@
+---
+galaxy_info:
+  author: APPIO-Dev
+  description: Installs APPIO
+  company: APPIO.org
+
+
+  license: GPLv2
+
+  min_ansible_version: 1.2
+  platforms:
+    - name: Ubuntu
+      versions:
+        - bionic

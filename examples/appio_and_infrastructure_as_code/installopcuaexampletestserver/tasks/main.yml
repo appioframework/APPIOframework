@@ -1,0 +1,16 @@
+---
+# tasks file for installopcuaexampletestserver
+- name: Copy OPC UA Example Server
+  copy:
+    src: "appio-opcuaapp.deb"
+    dest: "/home/user/"
+
+- name: Install OPC UA Example Server
+  apt:
+    deb: "/home/user/appio-opcuaapp.deb"
+    state: present
+    update_cache: yes
+  become: true
+
+- name: Start OPC UA Example Server
+  shell: nohup server-app &

@@ -1,0 +1,6 @@
+---
+
+- name: Install APPIO 
+  hosts: local
+  roles:
+    - role: installappio
