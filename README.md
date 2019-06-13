@@ -1,31 +1,72 @@
-# oppo - oppo-terminal
+# APPIO framework
 
-The terminal project used to create / build and deploy oppo applications.
+## Adaptable Plug & Produce Industrial Orchestration Framework
 
-[![build status](https://git.talsen.team/TTAF/oppo-terminal/badges/master/build.svg)](https://git.talsen.team/TTAF/oppo-terminal/badges/master/build.svg)
-[![coverage report](https://git.talsen.team/TTAF/oppo-terminal/badges/master/coverage.svg)](https://git.talsen.team/TTAF/oppo-terminal/badges/master/coverage.svg)
+<a href="http://apppioframework.org" target="_blank">
+<img style="float: right;" src="logo.png">
+</a>
 
-## debian installer - local developer re-install
+**APPIO is a command-line utility for managing an OPC UA infrastructure. It is built on [open62541](https://github.com/open62541/open62541/), an open-source implementation of OPC UA, and it is published under the Mozilla Public License.**
 
-1. Ensure that a SSH askpass is installed.  
-   There are three packages available:
-   - ssh-askpass
-   - ssh-askpass-fullscreen
-   - ssh-askpass-gnome  
-   Just install one of them:  
-   sudo apt-get update  
-   sudo apt-get install &lt;ssh-askpass-package-name&gt;
-2. Navigate with the terminal to the project root.
-3. Call  
-   /bin/bash bash-developer/run-reinstall--oppo-terminal--local.sh
-4. Call  
-   dpkg --list | grep "oppo-terminal"  
-   to print the debian package information for oppo terminal
+## Debian/Ubuntu Installation Instructions
 
-## debian installer - purge oppo-terminal package manually
+After cloning the project and installing all dependencies listed below, simply call 
 
-1. Call  
-   dpkg --list | grep "oppo-*"  
-   to print the debian package information for oppo terminal (and possibly other oppo packages)
-2. Call  
-   sudo dpkg --purge &lt;oppo-terminal-package-name&gt;
+```bash
+bash bash-developer/run-reinstall--appio-terminal--local.sh
+```
+
+at the project root.
+
+### Dependencies
+
+APPIO is built on dotnet 2.1. Install it by following the instructions by Microsoft: https://dotnet.microsoft.com/download/linux-package-manager/ubuntu19-04/runtime-2.1.11 
+
+Certain features of APPIO require additional dependencies:
+
+- Python with Meson & GCC for building projects
+- Python3 for information model management
+- OpenSSL for certificate management
+
+---
+
+You can print the debian package information for APPIO by calling
+
+```bash
+dpkg --list | grep appio-terminal
+```
+
+and you can purge APPIO with
+
+```bash
+dpkg --purge appio-terminal
+```
+
+## Documentation
+
+Documentation can be found at https://appio.readthedocs.io
+
+## Contributing
+
+Please use GitHub's issue and pull request system for submitting bugs, suggestions and changes to APPIO.
+
+If you want to contribute to APPIO, you will need further development dependencies, namely the dotnet SDK and SSH askpass.
+
+The installation instructions for the dotnet SDK can be found here: https://dotnet.microsoft.com/download/linux-package-manager/ubuntu19-04/sdk-2.1.700.
+
+For SSH askpass there are three packages available:
+
+- `ssh-askpass`
+- `ssh-askpass-fullscreen`
+- `ssh-askpass-gnome`
+
+Just install one of them:  
+
+```bash
+apt-get update  
+apt-get install <ssh-askpass-package-name>
+```
+
+## License
+
+APPIO is released under the Mozilla Public License. You can find details in [LICENSE](LICENSE).
