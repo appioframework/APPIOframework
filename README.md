@@ -44,7 +44,7 @@ dpkg --purge appio-terminal
 
 ## Documentation
 
-Documentation can be found at https://appio.readthedocs.io
+Documentation can be found at https://appioframework.readthedocs.io
 
 ## Contributing
 
