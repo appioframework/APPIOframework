@@ -9,7 +9,7 @@
 
         //Help command
         public const string HelpStartWelcome = "Welcome to the Adaptable Plug & Produce Industrial Orchestration Framework!";
-        public const string HelpStartDocuLink = "For a more detailed documentation visit https://appio.readthedocs.io";
+        public const string HelpStartDocuLink = "For a more detailed documentation visit https://appioframework.readthedocs.io/";
         public const string HelpStartUsageDescription = "appio [command] <Argument 1> <Argument n> <Options>";
         public const string HelpStartAppioOptions = "APPIO options:";
         public const string HelpStartCommand = "APPIO commands:";
