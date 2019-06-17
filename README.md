@@ -1,4 +1,5 @@
 # APPIO framework
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/appioframework/APPIOframework.svg)
 
 ## Adaptable Plug & Produce Industrial Orchestration Framework
 
