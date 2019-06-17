@@ -1,6 +1,6 @@
 # APPIO framework
 
-[![Build Status](https://travis-ci.org/appioframework/APPIOframework.svg?branch=master)](https://travis-ci.org/appioframework/APPIOframework)
+
 ![Read the Docs](https://img.shields.io/readthedocs/appioframework.svg)
 ![GitHub top language](https://img.shields.io/github/languages/top/appioframework/APPIOframework.svg)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/appioframework/APPIOframework.svg)
