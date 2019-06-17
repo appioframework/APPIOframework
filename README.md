@@ -3,6 +3,7 @@
 ![Read the Docs](https://img.shields.io/readthedocs/appioframework.svg)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/appioframework/APPIOframework.svg)
 ![GitHub](https://img.shields.io/github/license/appioframework/APPIOframework.svg)
+![GitHub top language](https://img.shields.io/github/languages/top/appioframework/APPIOframework.svg)
 
 ## Adaptable Plug & Produce Industrial Orchestration Framework
 
