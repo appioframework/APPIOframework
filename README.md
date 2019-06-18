@@ -17,7 +17,7 @@
 
 ## Debian/Ubuntu Installation Instructions
 
-After cloning the project and installing all dependencies listed below, simply call 
+After cloning the project and installing all dependencies listed below, simply call: 
 
 ```bash
 bash bash-developer/run-reinstall--appio-terminal--local.sh
