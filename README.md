@@ -20,7 +20,7 @@ at the project root.
 
 ### Dependencies
 
-APPIO is built on dotnet 2.1. Install it by following the instructions by Microsoft: https://dotnet.microsoft.com/download/linux-package-manager/ubuntu19-04/runtime-2.1.11 
+APPIO is built on dotnet 2.1. Install it by following the instructions by Microsoft: https://dotnet.microsoft.com/download/linux-package-manager/ubuntu19-04/sdk-2.1.700. 
 
 Certain features of APPIO require additional dependencies:
 
