@@ -7,8 +7,7 @@ stages:
 build-and-test-dotnet-application:
   stage: 'build-test'
   tags:
-    - 'dotnet-core'
-    - 'build'
+    - 'dotnet-core--sdk-2.1'
   script:    
     - /bin/bash bash-gitlab-ci/run-dotnet-tests.sh
     - /bin/bash bash-gitlab-ci/run-sonarscanner.sh
@@ -16,8 +15,7 @@ build-and-test-dotnet-application:
 publish-dotnet-application:
   stage: 'publish'
   tags:
-    - 'dotnet-core'
-    - 'build'
+    - 'dotnet-core--sdk-2.1'
   artifacts:
     paths:
       -  'publish'
@@ -43,8 +41,7 @@ run-integration-test:
     - 'debian-installer'
   stage: 'integration-test'
   tags:
-    - 'dotnet-core'
-    - 'integration-test'
+    - 'dotnet-core--runtime-2.1'
   script:
     - /bin/bash bash-gitlab-ci/run-dpkg-install--open62541--v0.3.0.sh
     - /bin/bash bash-gitlab-ci/run-dpkg-install--appio-terminal.sh
