@@ -6,14 +6,14 @@ stages:
 
 build-and-test-dotnet-application:
   stage: 'build-test'
-  image: 'talsenteam/docker-dotnet-core:v2.1-sdk'
+  image: 'talsenteam/docker-ci-image-dotnet-core-sdk:v2.1'
   script:    
     - /bin/bash bash-gitlab-ci/run-dotnet-tests.sh
     - /bin/bash bash-gitlab-ci/run-sonarscanner.sh
 
 publish-dotnet-application:
   stage: 'publish'
-  image: 'talsenteam/docker-dotnet-core:v2.1-sdk'
+  image: 'talsenteam/docker-ci-image-dotnet-core-sdk:v2.1'
   artifacts:
     paths:
       -  'publish'
@@ -37,7 +37,7 @@ run-integration-test:
   dependencies: 
     - 'debian-installer'
   stage: 'integration-test'
-  image: 'talsenteam/docker-dotnet-core:v2.1-runtime'
+  image: 'talsenteam/docker-ci-image-dotnet-core-runtime:v2.1'
   script:
     - /bin/bash bash-gitlab-ci/run-dpkg-install--open62541--v0.3.0.sh
     - /bin/bash bash-gitlab-ci/run-dpkg-install--appio-terminal.sh
