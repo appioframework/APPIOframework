@@ -9,8 +9,8 @@ build-and-test-dotnet-application:
   image: 'talsenteam/docker-ci-image-dotnet-core-sdk:v2.1'
   script:    
     - /bin/bash bash-gitlab-ci/run-dotnet-tests.sh
-    #- /bin/bash bash-gitlab-ci/run-sonarscanner.sh # replaced due to sonarqube permissions
-    - /bin/bash bash-gitlab-ci/run-dotnet-build.sh 
+    - /bin/bash bash-gitlab-ci/run-sonarscanner.sh # replaced due to sonarqube permissions
+    #- /bin/bash bash-gitlab-ci/run-dotnet-build.sh 
 
 publish-dotnet-application:
   stage: 'publish'

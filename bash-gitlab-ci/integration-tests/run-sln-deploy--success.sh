@@ -35,8 +35,7 @@ do
   check_for_missing_directory_named "./testProj/deploy/temp" \
                                     "deploy temp directory is still existing ..."
 
- # dpkg --install ./testProj/deploy/appio-opcuaapp.deb
-  sudo apt install ./testProj/deploy/appio-opcuaapp.deb
+ dpkg --install ./testProj/deploy/appio-opcuaapp.deb
 
   check_for_exisiting_file_named "/usr/bin/client-app" \
                                  "installed client application is missing ..."
@@ -44,8 +43,7 @@ do
   check_for_exisiting_file_named "/usr/bin/server-app" \
                                  "installed server application is missing ..."
 
-  #dpkg --purge appio-opcuaapp-installer
-  sudo apt-get purge -y appio-opcuaapp-installer
+  dpkg --purge appio-opcuaapp-installer
 
   check_for_missing_file_named "/usr/bin/client-app" \
                                "un-installed client application is still existent ..."
