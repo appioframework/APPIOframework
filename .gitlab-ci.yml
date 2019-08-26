@@ -9,7 +9,8 @@ build-and-test-dotnet-application:
   image: 'talsenteam/docker-ci-image-dotnet-core-sdk:v2.1'
   script:    
     - /bin/bash bash-gitlab-ci/run-dotnet-tests.sh
-    - /bin/bash bash-gitlab-ci/run-sonarscanner.sh
+    #- /bin/bash bash-gitlab-ci/run-sonarscanner.sh # replaced due to sonarqube permissions
+    - /bin/bash bash-gitlab-ci/run-dotnet-build.sh 
 
 publish-dotnet-application:
   stage: 'publish'
@@ -25,12 +26,12 @@ debian-installer:
     - 'publish-dotnet-application'
   artifacts:
     paths:
-      -  'installer/open62541--v0.3.0.deb'
+      -  'installer/open62541--v1.0.0.deb'
       -  'installer/appio-terminal.deb'
   stage: 'installer'
   image: 'ubuntu:bionic'
   script:
-    - /bin/bash bash-gitlab-ci/run-dpkg-build--open62541--v0.3.0.sh
+    - /bin/bash bash-gitlab-ci/run-dpkg-build--open62541--v1.0.0.sh
     - /bin/bash bash-gitlab-ci/run-dpkg-build--appio-terminal.sh
 
 run-integration-test:
@@ -39,6 +40,8 @@ run-integration-test:
   stage: 'integration-test'
   image: 'talsenteam/docker-ci-image-dotnet-core-runtime:v2.1'
   script:
-    - /bin/bash bash-gitlab-ci/run-dpkg-install--open62541--v0.3.0.sh
+    - sudo apt-get install -y libmbedtls-dev
+    - /bin/bash bash-gitlab-ci/run-dpkg-install--open62541--v1.0.0.sh
     - /bin/bash bash-gitlab-ci/run-dpkg-install--appio-terminal.sh
+    - 'chmod 777 /usr/bin/appio' # changed becasue permissions problems
     - /bin/bash bash-gitlab-ci/run-integration-tests.sh

@@ -1,7 +1,7 @@
 Package: APPIO-terminal
 Architecture: all
 Maintainer: Talsen Team
-Depends: debconf (>= 0.5.00), dotnet-runtime-2.1, gcc (>= 7), g++ (>= 7), meson (>= 0.45), open62541--v0.3.0 (= 0.3.0)
+Depends: debconf (>= 0.5.00), dotnet-runtime-2.1, gcc (>= 7), g++ (>= 7), meson (>= 0.45), open62541--v1.0.0 (= 1.0.0)
 Priority: optional
 Version: 0.1
 Description: APPIO-Terminal is used to create APPIO artefacts in your local file storage.
