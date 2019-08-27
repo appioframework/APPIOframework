@@ -3,9 +3,7 @@
 
 // volumeStream callback function
 static void volumeStreamReadValue(UA_Server *server, const UA_NodeId *sessionId, void *sessionContext, const UA_NodeId *nodeid, void *nodeContext, const UA_NumericRange *range, const UA_DataValue *data)
-{  
-	updateFile();
-
+{
     UA_UInt32 value = gVolumeStream;
     UA_Variant myVar;
     UA_Variant_setScalar(&myVar, &value, &UA_TYPES[UA_TYPES_UINT32]);
@@ -52,6 +50,9 @@ UA_MethodCallback setVolumeStreamCallback(UA_Server *server, const UA_NodeId *se
 // setting callbacks
 UA_StatusCode addCallbacks(UA_Server *server)
 {
+	// initialize simulation text file
+	updateFile();
+
     addValueCallbackToVolumeStreamVariable(server);
     // startPump
     if(UA_Server_setMethodNode_callback(server, UA_NODEID_NUMERIC(3, 3000), startPumpCallback) != UA_STATUSCODE_GOOD)

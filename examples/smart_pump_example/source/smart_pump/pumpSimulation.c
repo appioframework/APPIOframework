@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-uint32_t gVolumeStream;
+uint32_t gVolumeStream = 0;
 
 void updateFile()
 {
@@ -23,6 +23,7 @@ void setVolumeStream(uint32_t volume)
     {
         gVolumeStream = volume;
     }
+    updateFile();
 }
 
 void startPump()
@@ -36,4 +37,3 @@ void stopPump()
 }
 
 #endif
-
