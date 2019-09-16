@@ -8,6 +8,8 @@
 
 **APPIO is a command-line utility for managing an OPC UA infrastructure. It is built on [open62541](https://github.com/open62541/open62541/), an open-source implementation of OPC UA, and it is published under the Mozilla Public License.**
 
+![Travis (.org)](https://img.shields.io/travis/appioframework/APPIOframework?style=for-the-badge)
+
 ## Debian/Ubuntu Installation Instructions
 
 After cloning the project and installing all dependencies listed below, simply call 
