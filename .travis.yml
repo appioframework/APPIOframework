@@ -10,6 +10,7 @@ sudo: required
 jobs:
   include:
     before_script:
+      - mkdir --parents ./artifacts
       - sudo docker pull talsenteam/docker-ci-image-dotnet-core-sdk:v2.1
     script:
       - echo "Build and test dotnet application ..."
@@ -19,5 +20,12 @@ jobs:
       - sudo docker exec stage-1-build-and-test /bin/bash bash-gitlab-ci/run-dotnet-build.sh
       - sudo docker stop stage-1-build-and-test
       - echo "Build and test dotnet application ... done"
+      - echo "Publish dotnet application ..."
+      - sudo docker run --detach --rm --name=stage-2-publish --workdir=/APPIOframework talsenteam/docker-ci-image-dotnet-core-sdk:v2.1 sleep infinity
+      - sudo docker cp --archive . stage-2-publish:/APPIOframework
+      - sudo docker exec stage-2-publish /bin/bash bash-gitlab-ci/run-dotnet-publish.sh
+      - sudo docker cp --archive stage-2-publish:/APPIOframework/publish ./artifacts
+      - echo "Publish dotnet application ... done"
+      - ls -Al artifacts
     after_script:
       - sudo docker rmi talsenteam/docker-ci-image-dotnet-core-sdk:v2.1
