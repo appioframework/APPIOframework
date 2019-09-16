@@ -7,6 +7,12 @@ services:
 
 sudo: required
 
+install:
+  - sudo apt-get update && sudo apt-get install --no-install-recommends --yes build-essential python3 python3-pip python3-setuptools
+  - pip3 install --upgrade --user setuptools
+  - pip3 install --upgrade --user wheel
+  - pip3 install --user ansible docker==3.7.3 molecule requests==2.20.1
+
 jobs:
   include:
     before_script:
@@ -14,10 +20,6 @@ jobs:
       - sudo docker pull talsenteam/docker-ci-image-dotnet-core-runtime:v2.1
       - sudo docker pull talsenteam/docker-ci-image-dotnet-core-sdk:v2.1
       - sudo docker pull ubuntu:bionic
-      - sudo apt-get update && sudo apt-get install --no-install-recommends --yes build-essential python3 python3-pip python3-setuptools
-      - pip3 install --upgrade --user setuptools
-      - pip3 install --upgrade --user wheel
-      - pip3 install --user ansible docker==3.7.3 molecule requests==2.20.1
     script:
       - echo "Build and test dotnet application ..."
       - sudo docker run --detach --name=stage-1-build-and-test --workdir=/APPIOframework talsenteam/docker-ci-image-dotnet-core-sdk:v2.1 sleep infinity
