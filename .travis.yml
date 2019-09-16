@@ -11,31 +11,43 @@ jobs:
   include:
     before_script:
       - mkdir --parents ./artifacts/installer
+      - sudo docker pull talsenteam/docker-ci-image-dotnet-core-runtime:v2.1
       - sudo docker pull talsenteam/docker-ci-image-dotnet-core-sdk:v2.1
       - sudo docker pull ubuntu:bionic
     script:
       - echo "Build and test dotnet application ..."
-      - sudo docker run --detach --rm --name=stage-1-build-and-test --workdir=/APPIOframework talsenteam/docker-ci-image-dotnet-core-sdk:v2.1 sleep infinity
+      - sudo docker run --detach --name=stage-1-build-and-test --workdir=/APPIOframework talsenteam/docker-ci-image-dotnet-core-sdk:v2.1 sleep infinity
       - sudo docker cp --archive . stage-1-build-and-test:/APPIOframework
       - sudo docker exec stage-1-build-and-test /bin/bash bash-gitlab-ci/run-dotnet-tests.sh
       - sudo docker exec stage-1-build-and-test /bin/bash bash-gitlab-ci/run-dotnet-build.sh
-      - sudo docker stop stage-1-build-and-test
+      - sudo docker stop stage-1-build-and-test | xargs docker rm
       - echo "Build and test dotnet application ... done"
       - echo "Publish dotnet application ..."
-      - sudo docker run --detach --rm --name=stage-2-publish --workdir=/APPIOframework talsenteam/docker-ci-image-dotnet-core-sdk:v2.1 sleep infinity
+      - sudo docker run --detach --name=stage-2-publish --workdir=/APPIOframework talsenteam/docker-ci-image-dotnet-core-sdk:v2.1 sleep infinity
       - sudo docker cp --archive . stage-2-publish:/APPIOframework
       - sudo docker exec stage-2-publish /bin/bash bash-gitlab-ci/run-dotnet-publish.sh
       - sudo docker cp --archive stage-2-publish:/APPIOframework/publish ./artifacts
+      - sudo docker stop stage-2-publish | xargs docker rm
       - echo "Publish dotnet application ... done"
       - echo "Build debian installer ..."
-      - sudo docker run --detach --rm --name=stage-3-build-debian-installer --workdir=/APPIOframework ubuntu:bionic sleep infinity
+      - sudo docker run --detach --name=stage-3-build-debian-installer --workdir=/APPIOframework ubuntu:bionic sleep infinity
       - sudo docker cp --archive . stage-3-build-debian-installer:/APPIOframework
       - sudo docker exec stage-3-build-debian-installer mv artifacts/publish .
       - sudo docker exec stage-3-build-debian-installer /bin/bash bash-gitlab-ci/run-dpkg-build--open62541--v0.3.0.sh
       - sudo docker exec stage-3-build-debian-installer /bin/bash bash-gitlab-ci/run-dpkg-build--appio-terminal.sh
       - sudo docker cp --archive stage-3-build-debian-installer:/APPIOframework/installer/open62541--v0.3.0.deb ./artifacts/installer
       - sudo docker cp --archive stage-3-build-debian-installer:/APPIOframework/installer/appio-terminal.deb ./artifacts/installer
+      - sudo docker stop stage-3-build-debian-installer | xargs docker rm
       - echo "Build debian installer ... done"
+      - echo "Run system tests (via bash) ..."
+      - sudo docker run --detach --name=stage-4-system-test --workdir=/APPIOframework talsenteam/docker-ci-image-dotnet-core-runtime:v2.1 sleep infinity
+      - sudo docker cp --archive . stage-4-system-test:/APPIOframework
+      - sudo docker exec stage-4-system-test mv artifacts/installer .
+      - sudo docker exec stage-4-system-test /bin/bash bash-gitlab-ci/run-dpkg-install--open62541--v0.3.0.sh
+      - sudo docker exec stage-4-system-test /bin/bash bash-gitlab-ci/run-dpkg-install--appio-terminal.sh
+      - sudo docker exec stage-4-system-test /bin/bash bash-gitlab-ci/run-integration-tests.sh
+      - sudo docker stop stage-4-system-test | xargs docker rm
+      - echo "Run system tests (via bash) ... done"
       - ls -Al artifacts
       - ls -Al artifacts/installer
     after_script:
