@@ -1,3 +1,5 @@
+language: bash
+
 stages:
   - build-test
   - publish
