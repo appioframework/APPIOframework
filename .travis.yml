@@ -11,7 +11,10 @@ jobs:
   include:
     stage: 'build-and-test'
     name: 'build-and-test-dotnet-application'
-    image: 'talsenteam/docker-ci-image-dotnet-core-sdk:v2.1'
+    before_script:
+      - sudo docker pull talsenteam/docker-ci-image-dotnet-core-sdk:v2.1
     script:
       - /bin/bash bash-gitlab-ci/run-dotnet-tests.sh
       - /bin/bash bash-gitlab-ci/run-dotnet-build.sh
+    after_script:
+      - sudo docker rmi talsenteam/docker-ci-image-dotnet-core-sdk:v2.1
