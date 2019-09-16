@@ -52,7 +52,7 @@ Documentation can be found at https://appioframework.readthedocs.io
 
 Please use GitHub's issue and pull request system for submitting bugs, suggestions and changes to APPIO.
 
-If you want to contribute to APPIO, you will need further development dependencies, namely the dotnet SDK and SSH askpass.
+If you want to contribute to APPIO, you will need further development dependencies, namely the dotnet SDK v2.1, the meson build system, ninja build, gcc and a SSH askpass.
 
 The installation instructions for the dotnet SDK can be found here: https://dotnet.microsoft.com/download/linux-package-manager/ubuntu19-04/sdk-2.1.700.
 
