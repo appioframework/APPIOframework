@@ -5,10 +5,6 @@ language: minimal
 services:
   - docker
 
-branches:
-  only:
-    - master
-
 sudo: required
 
 jobs:
@@ -16,6 +12,6 @@ jobs:
     stage: 'build-and-test'
     name: 'build-and-test-dotnet-application'
     image: 'talsenteam/docker-ci-image-dotnet-core-sdk:v2.1'
-      script:
-        - /bin/bash bash-gitlab-ci/run-dotnet-tests.sh
-        - /bin/bash bash-gitlab-ci/run-dotnet-build.sh
+    script:
+      - /bin/bash bash-gitlab-ci/run-dotnet-tests.sh
+      - /bin/bash bash-gitlab-ci/run-dotnet-build.sh
