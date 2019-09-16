@@ -14,8 +14,9 @@ jobs:
       - sudo docker pull talsenteam/docker-ci-image-dotnet-core-runtime:v2.1
       - sudo docker pull talsenteam/docker-ci-image-dotnet-core-sdk:v2.1
       - sudo docker pull ubuntu:bionic
-      - sudo apt update && apt-get install --no-install-recommends --yes build-essential python3 python3-dev python3-pip python3-setuptools
-      - pip3 pip3 install --upgrade --user setuptools wheel
+      - sudo apt-get update && sudo apt-get install --no-install-recommends --yes build-essential python3 python3-pip python3-setuptools
+      - pip3 install --upgrade --user setuptools
+      - pip3 install --upgrade --user wheel
       - pip3 install --user ansible docker==3.7.3 molecule requests==2.20.1
     script:
       - echo "Build and test dotnet application ..."
