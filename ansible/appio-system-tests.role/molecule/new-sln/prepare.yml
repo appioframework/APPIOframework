@@ -1,0 +1,16 @@
+---
+- name: prepare
+  hosts: all
+  connection: docker
+  gather_facts: false
+  tasks:
+    - name: install_python3_pip
+      apt:
+        name: "{{ item.name }}"
+      with_items:
+        - name: python3-pip
+        - name: python3-setuptools
+    - name: install_ansible_via_pip3
+      command: pip3 install ansible
+  vars:
+    ansible_python_interpreter: /usr/bin/python3

@@ -1,0 +1,7 @@
+---
+- name: import_debian_installer_for_appio_terminal
+  copy:
+    dest: /tmp/appio-terminal.deb
+    validate: dpkg --info %s
+    src: ./../../installer/appio-terminal.deb
+  notify: install_appio_terminal
