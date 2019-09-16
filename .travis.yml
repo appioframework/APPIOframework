@@ -10,8 +10,9 @@ sudo: required
 jobs:
   include:
     before_script:
-      - mkdir --parents ./artifacts
+      - mkdir --parents ./artifacts/installer
       - sudo docker pull talsenteam/docker-ci-image-dotnet-core-sdk:v2.1
+      - sudo docker pull ubuntu:bionic
     script:
       - echo "Build and test dotnet application ..."
       - sudo docker run --detach --rm --name=stage-1-build-and-test --workdir=/APPIOframework talsenteam/docker-ci-image-dotnet-core-sdk:v2.1 sleep infinity
@@ -26,6 +27,17 @@ jobs:
       - sudo docker exec stage-2-publish /bin/bash bash-gitlab-ci/run-dotnet-publish.sh
       - sudo docker cp --archive stage-2-publish:/APPIOframework/publish ./artifacts
       - echo "Publish dotnet application ... done"
+      - echo "Build debian installer ..."
+      - sudo docker run --detach --rm --name=stage-3-build-debian-installer --workdir=/APPIOframework ubuntu:bionic sleep infinity
+      - sudo docker cp --archive . stage-3-build-debian-installer:/APPIOframework
+      - sudo docker exec stage-3-build-debian-installer mv artifacts/publish .
+      - sudo docker exec stage-3-build-debian-installer /bin/bash bash-gitlab-ci/run-dpkg-build--open62541--v0.3.0.sh
+      - sudo docker exec stage-3-build-debian-installer /bin/bash bash-gitlab-ci/run-dpkg-build--appio-terminal.sh
+      - sudo docker cp --archive stage-3-build-debian-installer:/APPIOframework/installer/open62541--v0.3.0.deb ./artifacts/installer
+      - sudo docker cp --archive stage-3-build-debian-installer:/APPIOframework/installer/appio-terminal.deb ./artifacts/installer
+      - echo "Build debian installer ... done"
       - ls -Al artifacts
+      - ls -Al artifacts/installer
     after_script:
       - sudo docker rmi talsenteam/docker-ci-image-dotnet-core-sdk:v2.1
+      - sudo docker rmi ubuntu:bionic
