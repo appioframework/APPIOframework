@@ -42,8 +42,8 @@ def test_that_appio_new_sln_is_succeeding(host, case, command):
 
 
 @pytest.mark.parametrize('case, command', [
-    ['1f', 'appio new sln --name test\\\\-solution'],
-    ['2f', 'appio new sln -n     test\\\\-solution'],
+    ['1f', 'appio new sln --name test/-solution'],
+    ['2f', 'appio new sln -n     test/-solution'],
     ['3f', 'appio new sln --name'],
     ['4f', 'appio new sln -n'],
     ['5f', 'appio new sln --exit'],
