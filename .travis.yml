@@ -42,14 +42,13 @@ jobs:
       - echo "Run system tests (via bash) ..."
       - sudo docker run --detach --name=stage-4-system-test --workdir=/APPIOframework talsenteam/docker-ci-image-dotnet-core-runtime:v2.1 sleep infinity
       - sudo docker cp --archive . stage-4-system-test:/APPIOframework
-      - sudo docker exec stage-4-system-test mv artifacts/installer .
+      - sudo docker exec stage-4-system-test cp artifacts/installer/* ./installer
       - sudo docker exec stage-4-system-test /bin/bash bash-gitlab-ci/run-dpkg-install--open62541--v0.3.0.sh
       - sudo docker exec stage-4-system-test /bin/bash bash-gitlab-ci/run-dpkg-install--appio-terminal.sh
       - sudo docker exec stage-4-system-test /bin/bash bash-gitlab-ci/run-integration-tests.sh
       - sudo docker stop stage-4-system-test | xargs docker rm
       - echo "Run system tests (via bash) ... done"
-      - ls -Al artifacts
-      - ls -Al artifacts/installer
     after_script:
+      - sudo docker rmi talsenteam/docker-ci-image-dotnet-core-runtime:v2.1
       - sudo docker rmi talsenteam/docker-ci-image-dotnet-core-sdk:v2.1
       - sudo docker rmi ubuntu:bionic
