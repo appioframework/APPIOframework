@@ -43,8 +43,8 @@ echo "Testing deploy-opcuaapp--failure--extended"
 echo "Testing hello--success"
 /bin/bash bash-gitlab-ci/integration-tests/run-hello--success.sh
 
-echo "Testing help--success"
-/bin/bash bash-gitlab-ci/integration-tests/run-help--success.sh
+# echo "Testing help--success"
+# /bin/bash bash-gitlab-ci/integration-tests/run-help--success.sh
 
 echo "Testing new-help--success -"
 /bin/bash bash-gitlab-ci/integration-tests/run-new-help--success.sh -
@@ -62,12 +62,12 @@ echo "Testing new-opcuaapp-Server--success"
 echo "Testing new-opcuaapp--failure"
 /bin/bash bash-gitlab-ci/integration-tests/run-new-opcuaapp--failure.sh
 
-echo "Testing new-sln--success -"
-/bin/bash bash-gitlab-ci/integration-tests/run-new-sln--success.sh -
-echo "Testing new-sln--success verbose"
-/bin/bash bash-gitlab-ci/integration-tests/run-new-sln--success.sh verbose
-echo "Testing new-sln--failure"
-/bin/bash bash-gitlab-ci/integration-tests/run-new-sln--failure.sh
+# echo "Testing new-sln--success -"
+# /bin/bash bash-gitlab-ci/integration-tests/run-new-sln--success.sh -
+# echo "Testing new-sln--success verbose"
+# /bin/bash bash-gitlab-ci/integration-tests/run-new-sln--success.sh verbose
+# echo "Testing new-sln--failure"
+# /bin/bash bash-gitlab-ci/integration-tests/run-new-sln--failure.sh
 
 echo "Testing publish-help--success -"
 /bin/bash bash-gitlab-ci/integration-tests/run-publish-help--success.sh -
@@ -81,8 +81,8 @@ echo "Testing publish-opcuaapp--success verbose"
 echo "Testing publish-opcuaapp--failure"
 /bin/bash bash-gitlab-ci/integration-tests/run-publish-opcuaapp--failure.sh
 
-echo "Testing version--success"
-/bin/bash bash-gitlab-ci/integration-tests/run-version--success.sh
+# echo "Testing version--success"
+# /bin/bash bash-gitlab-ci/integration-tests/run-version--success.sh
 
 echo "Testing import information-model--success"
 /bin/bash bash-gitlab-ci/integration-tests/run-import-information-model--success.sh
