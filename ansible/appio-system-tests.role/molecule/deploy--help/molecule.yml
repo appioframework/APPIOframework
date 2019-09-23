@@ -13,7 +13,7 @@ provisioner:
   lint:
     name: ansible-lint
 scenario:
-  name: build--help
+  name: deploy--help
   test_sequence:
     - lint
     - syntax
