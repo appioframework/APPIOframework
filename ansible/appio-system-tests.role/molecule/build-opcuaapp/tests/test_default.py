@@ -29,7 +29,7 @@ def test_that_appio_build_opcuaapp_is_succeeding(host, case, command):
         'appio new opcuaapp -n my-app -t ClientServer -u 127.0.0.1 -p 4840',
         'rm -f appio.log',
     ):
-        prepare = host.run('cd ' + test_dir_path + ' && ' + command)
+        prepare = host.run('cd ' + test_dir_path + ' && ' + prepare_command)
 
         assert prepare.rc == 0
 
@@ -111,7 +111,7 @@ def test_that_appio_build_opcuaapp_is_failing_when_meson_call_fails(host, case, 
         'rm -f my-app/meson.build',
         'rm -f appio.log',
     ):
-        prepare = host.run('cd ' + test_dir_path + ' && ' + command)
+        prepare = host.run('cd ' + test_dir_path + ' && ' + prepare_command)
 
         assert prepare.rc == 0
 
@@ -150,7 +150,7 @@ def test_that_appio_build_opcuaapp_is_failing_when_ninja_call_fails(host, case, 
         'rm -f my-app/src/server/main.c',
         'rm -f appio.log',
     ):
-        prepare = host.run('cd ' + test_dir_path + ' && ' + command)
+        prepare = host.run('cd ' + test_dir_path + ' && ' + prepare_command)
 
         assert prepare.rc == 0
 
