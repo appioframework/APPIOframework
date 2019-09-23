@@ -40,8 +40,8 @@ echo "Testing deploy-opcuaapp--failure"
 echo "Testing deploy-opcuaapp--failure--extended"
 /bin/bash bash-gitlab-ci/integration-tests/run-deploy-opcuaapp--failure--extended.sh
 
-echo "Testing hello--success"
-/bin/bash bash-gitlab-ci/integration-tests/run-hello--success.sh
+# echo "Testing hello--success"
+# /bin/bash bash-gitlab-ci/integration-tests/run-hello--success.sh
 
 # echo "Testing help--success"
 # /bin/bash bash-gitlab-ci/integration-tests/run-help--success.sh
