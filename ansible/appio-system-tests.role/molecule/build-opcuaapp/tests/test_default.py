@@ -93,7 +93,7 @@ def test_that_appio_build_opcuaapp_is_failing(host, case, command):
 @pytest.mark.parametrize('case, command', [
     ['1f_meson', 'appio build --name my-app'],
 ])
-def test_that_appio_build_opcuaapp_is_failing_when_meson_call_fails(host):
+def test_that_appio_build_opcuaapp_is_failing_when_meson_call_fails(host, case, command):
     # prepare
     test_dir_path = case + '/'
 
@@ -132,7 +132,7 @@ def test_that_appio_build_opcuaapp_is_failing_when_meson_call_fails(host):
 @pytest.mark.parametrize('case, command', [
     ['1f_ninja', 'appio build --name my-app'],
 ])
-def test_that_appio_build_opcuaapp_is_failing_when_ninja_call_fails(host):
+def test_that_appio_build_opcuaapp_is_failing_when_ninja_call_fails(host, case, command):
     # prepare
     test_dir_path = case + '/'
 
