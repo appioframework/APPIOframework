@@ -13,7 +13,7 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
     ['2', 'appio build -h'],
     ['3', 'appio build'],
 ])
-def test_that_appio_help_is_succeeding(host, case, command):
+def test_that_appio_build_help_is_succeeding(host, case, command):
     # prepare
     test_dir_path = case + '/'
 
