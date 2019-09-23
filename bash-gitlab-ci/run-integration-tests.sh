@@ -46,10 +46,10 @@ echo "Testing deploy-opcuaapp--failure--extended"
 # echo "Testing help--success"
 # /bin/bash bash-gitlab-ci/integration-tests/run-help--success.sh
 
-echo "Testing new-help--success -"
-/bin/bash bash-gitlab-ci/integration-tests/run-new-help--success.sh -
-echo "Testing new-help--success verbose"
-/bin/bash bash-gitlab-ci/integration-tests/run-new-help--success.sh verbose
+# echo "Testing new-help--success -"
+# /bin/bash bash-gitlab-ci/integration-tests/run-new-help--success.sh -
+# echo "Testing new-help--success verbose"
+# /bin/bash bash-gitlab-ci/integration-tests/run-new-help--success.sh verbose
 
 echo "Testing new-opcuaapp-ClientServer--success -"
 /bin/bash bash-gitlab-ci/integration-tests/run-new-opcuaapp-ClientServer--success.sh -
