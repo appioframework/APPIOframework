@@ -69,10 +69,10 @@ echo "Testing new-opcuaapp--failure"
 # echo "Testing new-sln--failure"
 # /bin/bash bash-gitlab-ci/integration-tests/run-new-sln--failure.sh
 
-echo "Testing publish-help--success -"
-/bin/bash bash-gitlab-ci/integration-tests/run-publish-help--success.sh -
-echo "Testing publish-help--success verbose"
-/bin/bash bash-gitlab-ci/integration-tests/run-publish-help--success.sh verbose
+# echo "Testing publish-help--success -"
+# /bin/bash bash-gitlab-ci/integration-tests/run-publish-help--success.sh -
+# echo "Testing publish-help--success verbose"
+# /bin/bash bash-gitlab-ci/integration-tests/run-publish-help--success.sh verbose
 
 echo "Testing publish-opcuaapp--success -"
 /bin/bash bash-gitlab-ci/integration-tests/run-publish-opcuaapp--success.sh -
