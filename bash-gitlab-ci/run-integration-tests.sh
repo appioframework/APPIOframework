@@ -97,10 +97,10 @@ echo "Testing import information-model sample--failure"
 echo "Testing import--failure"
 /bin/bash bash-gitlab-ci/integration-tests/run-import--failure.sh
 
-echo "Testing generate-help--success"
-/bin/bash bash-gitlab-ci/integration-tests/run-generate-help--success.sh
-echo "Testing generate-help--failure"
-/bin/bash bash-gitlab-ci/integration-tests/run-generate-help--failure.sh
+# echo "Testing generate-help--success"
+# /bin/bash bash-gitlab-ci/integration-tests/run-generate-help--success.sh
+# echo "Testing generate-help--failure"
+# /bin/bash bash-gitlab-ci/integration-tests/run-generate-help--failure.sh
 echo "Testing generate--failure"
 /bin/bash bash-gitlab-ci/integration-tests/run-generate--failure.sh
 echo "Testing generate-information-model--failure"
