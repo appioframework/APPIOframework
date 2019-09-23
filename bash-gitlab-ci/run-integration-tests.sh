@@ -2,35 +2,6 @@
 
 set -euo pipefail
 
-# echo "Testing build-help--success"
-# /bin/bash bash-gitlab-ci/integration-tests/run-build-help--success.sh
-
-# echo "Testing build-opcuaapp--success"
-# /bin/bash bash-gitlab-ci/integration-tests/run-build-opcuaapp--success.sh
-# echo "Testing build-opcuaapp--failure"
-# /bin/bash bash-gitlab-ci/integration-tests/run-build-opcuaapp--failure.sh
-# echo "Testing build-opcuaapp--failure--extended"
-# /bin/bash bash-gitlab-ci/integration-tests/run-build-opcuaapp--failure--extended.sh
-
-# echo "Testing clean-help--success -"
-# /bin/bash bash-gitlab-ci/integration-tests/run-clean-help--success.sh -
-# echo "Testing clean-help--success verbose"
-# /bin/bash bash-gitlab-ci/integration-tests/run-clean-help--success.sh verbose
-
-echo "Testing clean-opcuaapp--success -"
-/bin/bash bash-gitlab-ci/integration-tests/run-clean-opcuaapp--success.sh -
-echo "Testing clean-opcuaapp--success verbose"
-/bin/bash bash-gitlab-ci/integration-tests/run-clean-opcuaapp--success.sh verbose
-echo "Testing clean-opcuaapp--failure"
-/bin/bash bash-gitlab-ci/integration-tests/run-clean-opcuaapp--failure.sh
-echo "Testing clean-opcuaapp--failure--extended"
-/bin/bash bash-gitlab-ci/integration-tests/run-clean-opcuaapp--failure--extended.sh
-
-# echo "Testing deploy-help--success -"
-# /bin/bash bash-gitlab-ci/integration-tests/run-deploy-help--success.sh -
-# echo "Testing deploy-help--success verbose"
-# /bin/bash bash-gitlab-ci/integration-tests/run-deploy-help--success.sh verbose
-
 echo "Testing deploy-opcuaapp--success -"
 /bin/bash bash-gitlab-ci/integration-tests/run-deploy-opcuaapp--success.sh -
 echo "Testing deploy-opcuaapp--success verbose"
@@ -39,17 +10,6 @@ echo "Testing deploy-opcuaapp--failure"
 /bin/bash bash-gitlab-ci/integration-tests/run-deploy-opcuaapp--failure.sh
 echo "Testing deploy-opcuaapp--failure--extended"
 /bin/bash bash-gitlab-ci/integration-tests/run-deploy-opcuaapp--failure--extended.sh
-
-# echo "Testing hello--success"
-# /bin/bash bash-gitlab-ci/integration-tests/run-hello--success.sh
-
-# echo "Testing help--success"
-# /bin/bash bash-gitlab-ci/integration-tests/run-help--success.sh
-
-# echo "Testing new-help--success -"
-# /bin/bash bash-gitlab-ci/integration-tests/run-new-help--success.sh -
-# echo "Testing new-help--success verbose"
-# /bin/bash bash-gitlab-ci/integration-tests/run-new-help--success.sh verbose
 
 echo "Testing new-opcuaapp-ClientServer--success -"
 /bin/bash bash-gitlab-ci/integration-tests/run-new-opcuaapp-ClientServer--success.sh -
@@ -62,27 +22,12 @@ echo "Testing new-opcuaapp-Server--success"
 echo "Testing new-opcuaapp--failure"
 /bin/bash bash-gitlab-ci/integration-tests/run-new-opcuaapp--failure.sh
 
-# echo "Testing new-sln--success -"
-# /bin/bash bash-gitlab-ci/integration-tests/run-new-sln--success.sh -
-# echo "Testing new-sln--success verbose"
-# /bin/bash bash-gitlab-ci/integration-tests/run-new-sln--success.sh verbose
-# echo "Testing new-sln--failure"
-# /bin/bash bash-gitlab-ci/integration-tests/run-new-sln--failure.sh
-
-# echo "Testing publish-help--success -"
-# /bin/bash bash-gitlab-ci/integration-tests/run-publish-help--success.sh -
-# echo "Testing publish-help--success verbose"
-# /bin/bash bash-gitlab-ci/integration-tests/run-publish-help--success.sh verbose
-
 echo "Testing publish-opcuaapp--success -"
 /bin/bash bash-gitlab-ci/integration-tests/run-publish-opcuaapp--success.sh -
 echo "Testing publish-opcuaapp--success verbose"
 /bin/bash bash-gitlab-ci/integration-tests/run-publish-opcuaapp--success.sh verbose
 echo "Testing publish-opcuaapp--failure"
 /bin/bash bash-gitlab-ci/integration-tests/run-publish-opcuaapp--failure.sh
-
-# echo "Testing version--success"
-# /bin/bash bash-gitlab-ci/integration-tests/run-version--success.sh
 
 echo "Testing import information-model--success"
 /bin/bash bash-gitlab-ci/integration-tests/run-import-information-model--success.sh
@@ -97,10 +42,6 @@ echo "Testing import information-model sample--failure"
 echo "Testing import--failure"
 /bin/bash bash-gitlab-ci/integration-tests/run-import--failure.sh
 
-# echo "Testing generate-help--success"
-# /bin/bash bash-gitlab-ci/integration-tests/run-generate-help--success.sh
-# echo "Testing generate-help--failure"
-# /bin/bash bash-gitlab-ci/integration-tests/run-generate-help--failure.sh
 echo "Testing generate--failure"
 /bin/bash bash-gitlab-ci/integration-tests/run-generate--failure.sh
 echo "Testing generate-information-model--failure"
@@ -108,8 +49,6 @@ echo "Testing generate-information-model--failure"
 echo "Testing generate-information-model--success"
 /bin/bash bash-gitlab-ci/integration-tests/run-generate-information-model--success.sh
 
-# echo "Testing sln-help--success"
-# /bin/bash bash-gitlab-ci/integration-tests/run-sln-help--success.sh
 echo "Testing sln-add--failure"
 /bin/bash bash-gitlab-ci/integration-tests/run-sln-add--failure.sh
 echo "Testing sln-add--success"
