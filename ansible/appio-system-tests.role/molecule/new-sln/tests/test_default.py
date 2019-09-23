@@ -8,12 +8,7 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
 ).get_hosts('all')
 
 
-@pytest.mark.parametrize('case, command', [
-    ['1', 'appio new sln --name test-solution'],
-    ['2', 'appio new sln -n     test-solution'],
-])
-def test_that_appio_new_sln_is_succeeding(host, case, command):
-    # prepare
+def prepare_provide_test_directory(host, case):
     test_dir_path = case + '/'
 
     mk_test_dir = host.run('mkdir --parents ' + test_dir_path)
@@ -25,8 +20,22 @@ def test_that_appio_new_sln_is_succeeding(host, case, command):
     assert test_dir.exists
     assert test_dir.is_directory
 
+    return test_dir_path
+
+
+@pytest.mark.parametrize('case, command, sln_file_name', [
+    ['1', 'appio new sln --name test-solution', 'test-solution.appiosln'],
+    ['2', 'appio new sln -n     test-solution', 'test-solution.appiosln'],
+])
+def test_that_appio_new_sln_is_succeeding(host, case, command, sln_file_name):
+    # prepare
+    test_dir_path = prepare_provide_test_directory(host, case)
+
+    log_file_path = test_dir_path + 'appio.log'
+    sln_file_path = test_dir_path + sln_file_name
+
     # arrange
-    log_file = host.file(test_dir_path + 'appio.log')
+    log_file = host.file(log_file_path)
     assert not log_file.exists
 
     # act
@@ -35,9 +44,11 @@ def test_that_appio_new_sln_is_succeeding(host, case, command):
     # assert
     assert appio.rc == 0
     assert appio.stdout != ''
-    log_file = host.file(test_dir_path + 'appio.log')
+
+    log_file = host.file(log_file_path)
     assert log_file.exists
-    sln_file = host.file(test_dir_path + 'test-solution.appiosln')
+
+    sln_file = host.file(sln_file_path)
     assert sln_file.exists
 
 
@@ -51,19 +62,12 @@ def test_that_appio_new_sln_is_succeeding(host, case, command):
 ])
 def test_that_appio_new_sln_is_failing(host, case, command):
     # prepare
-    test_dir_path = case + '/'
+    test_dir_path = prepare_provide_test_directory(host, case)
 
-    mk_test_dir = host.run('mkdir --parents ' + test_dir_path)
-
-    assert mk_test_dir.rc == 0
-
-    test_dir = host.file(test_dir_path)
-
-    assert test_dir.exists
-    assert test_dir.is_directory
+    log_file_path = test_dir_path + 'appio.log'
 
     # arrange
-    log_file = host.file(test_dir_path + 'appio.log')
+    log_file = host.file(log_file_path)
     assert not log_file.exists
 
     # act
@@ -72,5 +76,6 @@ def test_that_appio_new_sln_is_failing(host, case, command):
     # assert
     assert appio.rc != 0
     assert appio.stdout != ''
-    log_file = host.file(test_dir_path + 'appio.log')
+
+    log_file = host.file(log_file_path)
     assert log_file.exists

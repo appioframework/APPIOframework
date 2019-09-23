@@ -8,11 +8,7 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
 ).get_hosts('all')
 
 
-@pytest.mark.parametrize('case, command', [
-    ['1', 'appio version'],
-])
-def test_that_appio_version_is_succeeding(host, case, command):
-    # prepare
+def prepare_provide_test_directory(host, case):
     test_dir_path = case + '/'
 
     mk_test_dir = host.run('mkdir --parents ' + test_dir_path)
@@ -24,8 +20,20 @@ def test_that_appio_version_is_succeeding(host, case, command):
     assert test_dir.exists
     assert test_dir.is_directory
 
+    return test_dir_path
+
+
+@pytest.mark.parametrize('case, command', [
+    ['1', 'appio version'],
+])
+def test_that_appio_version_is_succeeding(host, case, command):
+    # prepare
+    test_dir_path = prepare_provide_test_directory(host, case)
+
+    log_file_path = test_dir_path + 'appio.log'
+
     # arrange
-    log_file = host.file(test_dir_path + 'appio.log')
+    log_file = host.file(log_file_path)
     assert not log_file.exists
 
     # act
@@ -34,5 +42,6 @@ def test_that_appio_version_is_succeeding(host, case, command):
     # assert
     assert appio.rc == 0
     assert appio.stdout != ''
-    log_file = host.file(test_dir_path + 'appio.log')
+
+    log_file = host.file(log_file_path)
     assert log_file.exists

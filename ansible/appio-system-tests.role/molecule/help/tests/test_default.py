@@ -8,7 +8,7 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
 ).get_hosts('all')
 
 
-def prepare_provide_test_directory(case):
+def prepare_provide_test_directory(host, case):
     test_dir_path = case + '/'
 
     mk_test_dir = host.run('mkdir --parents ' + test_dir_path)
@@ -32,19 +32,20 @@ def prepare_provide_test_directory(case):
 ])
 def test_that_appio_help_is_succeeding(host, case, command):
     # prepare
-    test_dir_path = prepare_provide_test_directory(case)
-    command_line = 'cd ' + test_dir_path + ' && ' + command
+    test_dir_path = prepare_provide_test_directory(host, case)
+
+    log_file_path = test_dir_path + 'appio.log'
 
     # arrange
-    log_file_path = test_dir_path + 'appio.log'
     log_file = host.file(log_file_path)
     assert not log_file.exists
 
     # act
-    appio = host.run(command_line)
+    appio = host.run('cd ' + test_dir_path + ' && ' + command)
 
     # assert
     assert appio.rc == 0
     assert appio.stdout != ''
+
     log_file = host.file(log_file_path)
     assert log_file.exists
