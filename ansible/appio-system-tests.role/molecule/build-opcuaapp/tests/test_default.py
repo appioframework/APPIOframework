@@ -56,8 +56,8 @@ def test_that_appio_build_opcuaapp_is_succeeding(host, case, command):
 @pytest.mark.parametrize('case, command', [
     ['1f', 'appio build --name my-app-5263452364'],
     ['2f', 'appio build -n     my-app-5263452364'],
-    ['3f', 'appio build --name my-a\/pp'],
-    ['4f', 'appio build -n     my-a\/pp'],
+    ['3f', 'appio build --name my/-app'],
+    ['4f', 'appio build -n     my/-app'],
     ['5f', 'appio build --name'],
     ['6f', 'appio build -n'],
     ['7f', 'appio build --exit'],
@@ -93,7 +93,7 @@ def test_that_appio_build_opcuaapp_is_failing(host, case, command):
 @pytest.mark.parametrize('case, command', [
     ['1f_meson', 'appio build --name my-app'],
 ])
-def test_that_appio_build_opcuaapp_is_failing_when_meson_call_fails(host, case, command):
+def test_that_appio_build_opcuaapp_is_failing_when_meson_call_fails(host, case, command):  # noqa: #501
     # prepare
     test_dir_path = case + '/'
 
@@ -132,7 +132,7 @@ def test_that_appio_build_opcuaapp_is_failing_when_meson_call_fails(host, case, 
 @pytest.mark.parametrize('case, command', [
     ['1f_ninja', 'appio build --name my-app'],
 ])
-def test_that_appio_build_opcuaapp_is_failing_when_ninja_call_fails(host, case, command):
+def test_that_appio_build_opcuaapp_is_failing_when_ninja_call_fails(host, case, command):  # noqa: #501
     # prepare
     test_dir_path = case + '/'
 
