@@ -12,10 +12,10 @@ set -euo pipefail
 # echo "Testing build-opcuaapp--failure--extended"
 # /bin/bash bash-gitlab-ci/integration-tests/run-build-opcuaapp--failure--extended.sh
 
-echo "Testing clean-help--success -"
-/bin/bash bash-gitlab-ci/integration-tests/run-clean-help--success.sh -
-echo "Testing clean-help--success verbose"
-/bin/bash bash-gitlab-ci/integration-tests/run-clean-help--success.sh verbose
+# echo "Testing clean-help--success -"
+# /bin/bash bash-gitlab-ci/integration-tests/run-clean-help--success.sh -
+# echo "Testing clean-help--success verbose"
+# /bin/bash bash-gitlab-ci/integration-tests/run-clean-help--success.sh verbose
 
 echo "Testing clean-opcuaapp--success -"
 /bin/bash bash-gitlab-ci/integration-tests/run-clean-opcuaapp--success.sh -
