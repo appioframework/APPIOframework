@@ -23,20 +23,20 @@ def prepare_provide_test_directory(host, case):
     return test_dir_path
 
 
-@pytest.mark.parametrize('case, command', [
-    ['1', 'appio build --name my-app'],
-    ['2', 'appio build -n     my-app'],
+@pytest.mark.parametrize('case, command, name', [
+    ['1', 'appio build --name my-app', 'my-app'],
+    ['2', 'appio build -n     my-app', 'my-app'],
 ])
-def test_that_appio_build_opcuaapp_is_succeeding(host, case, command):
+def test_that_appio_build_opcuaapp_is_succeeding(host, case, command, name):
     # prepare
     test_dir_path = prepare_provide_test_directory(host, case)
 
     log_file_path = test_dir_path + 'appio.log'
-    client_app_exe_file_path = test_dir_path + 'my-app/build/client-app'
-    server_app_exe_file_path = test_dir_path + 'my-app/build/server-app'
+    client_app_exe_file_path = test_dir_path + name + '/build/client-app'
+    server_app_exe_file_path = test_dir_path + name + '/build/server-app'
 
     for prepare_command in (
-        'appio new opcuaapp -n my-app -t ClientServer -u 127.0.0.1 -p 4840',
+        'appio new opcuaapp -n' + name + '-t ClientServer -u 127.0.0.1 -p 4840',
         'rm -f appio.log',
     ):
         prepare = host.run('cd ' + test_dir_path + ' && ' + prepare_command)
@@ -97,18 +97,18 @@ def test_that_appio_build_opcuaapp_is_failing(host, case, command):
     assert log_file.exists
 
 
-@pytest.mark.parametrize('case, command', [
-    ['1f_meson', 'appio build --name my-app'],
+@pytest.mark.parametrize('case, command, name', [
+    ['1f_meson', 'appio build --name my-app', 'my-app'],
 ])
-def test_that_appio_build_opcuaapp_is_failing_when_meson_call_fails(host, case, command):  # noqa: #501
+def test_that_appio_build_opcuaapp_is_failing_when_meson_call_fails(host, case, command, name):  # noqa: #501
     # prepare
     test_dir_path = prepare_provide_test_directory(host, case)
 
     log_file_path = test_dir_path + 'appio.log'
 
     for prepare_command in (
-        'appio new opcuaapp -n my-app -t ClientServer -u 127.0.0.1 -p 4840',
-        'rm -f my-app/meson.build',
+        'appio new opcuaapp -n ' + name + ' -t ClientServer -u 127.0.0.1 -p 4840',
+        'rm -f ' + name + '/meson.build',
         'rm -f appio.log',
     ):
         prepare = host.run('cd ' + test_dir_path + ' && ' + prepare_command)
@@ -130,18 +130,18 @@ def test_that_appio_build_opcuaapp_is_failing_when_meson_call_fails(host, case, 
     assert log_file.exists
 
 
-@pytest.mark.parametrize('case, command', [
-    ['1f_ninja', 'appio build --name my-app'],
+@pytest.mark.parametrize('case, command, name', [
+    ['1f_ninja', 'appio build --name my-app', 'my-app'],
 ])
-def test_that_appio_build_opcuaapp_is_failing_when_ninja_call_fails(host, case, command):  # noqa: #501
+def test_that_appio_build_opcuaapp_is_failing_when_ninja_call_fails(host, case, command, name):  # noqa: #501
     # prepare
     test_dir_path = prepare_provide_test_directory(host, case)
 
     log_file_path = test_dir_path + 'appio.log'
 
     for prepare_command in (
-        'appio new opcuaapp -n my-app -t ClientServer -u 127.0.0.1 -p 4840',
-        'rm -f my-app/src/server/main.c',
+        'appio new opcuaapp -n ' + name + ' -t ClientServer -u 127.0.0.1 -p 4840',
+        'rm -f ' + name + '/src/server/main.c',
         'rm -f appio.log',
     ):
         prepare = host.run('cd ' + test_dir_path + ' && ' + prepare_command)
