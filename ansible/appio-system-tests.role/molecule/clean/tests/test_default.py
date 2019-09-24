@@ -42,7 +42,7 @@ def test_that_appio_clean_is_succeeding(host, case, command, app_name):
 
     for file_path in missing_file_paths:
         f = host.file(file_path)
-        assert not f.exists
+        assert f.exists
 
     # act
     appio = host.run('cd ' + test_dir_path + ' && ' + command)
