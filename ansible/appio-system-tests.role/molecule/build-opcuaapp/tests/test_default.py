@@ -36,7 +36,7 @@ def test_that_appio_build_opcuaapp_is_succeeding(host, case, command, app_name):
     server_app_exe_file_path = test_dir_path + app_name + '/build/server-app'
 
     for prepare_command in (
-        'appio new opcuaapp -n' + app_name + '-t ClientServer -u 127.0.0.1 -p 4840',  # noqa: #501
+        'appio new opcuaapp -n ' + app_name + '-t ClientServer -u 127.0.0.1 -p 4840',  # noqa: #501
         'rm -f appio.log',
     ):
         prepare = host.run('cd ' + test_dir_path + ' && ' + prepare_command)
