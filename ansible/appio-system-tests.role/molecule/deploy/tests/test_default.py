@@ -37,7 +37,7 @@ def test_that_deploy_clean_is_succeeding(host, case, command, app_name):
     server_app_exe_path = '/usr/bin/server-app'
 
     for prepare_command in (
-        'appio new opcuaapp -n ' + app_name + ' -t ClientServer -u 127.0.0.1 -p 4840',
+        'appio new opcuaapp -n ' + app_name + ' -t ClientServer -u 127.0.0.1 -p 4840',  # noqa: #501
         'appio build -n ' + app_name,
         'appio publish -n ' + app_name,
         'rm -f appio.log',
@@ -121,15 +121,15 @@ def test_that_appio_clean_is_failing(host, case, command):
     ['1', 'appio deploy --name my-app', 'my-app'],
     ['2', 'appio deploy -n     my-app', 'my-app'],
 ])
-def test_that_deploy_clean_is_failing_when_published_files_are_missing(host, case, command, app_name):
+def test_that_deploy_clean_is_failing_when_published_files_are_missing(host, case, command, app_name):  # noqa: #501
     # prepare
     test_dir_path = prepare_provide_test_directory(host, case)
 
     log_file_path = test_dir_path + 'appio.log'
-    deb_file_path = test_dir_path + app_name + 'deploy/appio-opcuaapp.deb'
+    deb_file_path = test_dir_path + app_name + 'deploy/appio-opcuaapp.deb'  # noqa: #501
 
     for prepare_command in (
-        'appio new opcuaapp -n ' + app_name + ' -t ClientServer -u 127.0.0.1 -p 4840',
+        'appio new opcuaapp -n ' + app_name + ' -t ClientServer -u 127.0.0.1 -p 4840',  # noqa: #501
         'appio build -n ' + app_name,
         'appio publish -n ' + app_name,
         'rm -f appio.log',
@@ -153,4 +153,3 @@ def test_that_deploy_clean_is_failing_when_published_files_are_missing(host, cas
 
     log_file = host.file(log_file_path)
     assert log_file.exists
-

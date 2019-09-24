@@ -35,7 +35,7 @@ def test_that_appio_clean_is_succeeding(host, case, command, app_name):
     build_dir_path = test_dir_path + app_name + '/build'
 
     for prepare_command in (
-        'appio new opcuaapp -n ' + app_name + ' -t ClientServer -u 127.0.0.1 -p 4840',
+        'appio new opcuaapp -n ' + app_name + ' -t ClientServer -u 127.0.0.1 -p 4840',  # noqa: #501
         'appio build -n ' + app_name,
         'rm -f appio.log',
     ):
