@@ -2,17 +2,6 @@
 
 set -euo pipefail
 
-echo "Testing new-opcuaapp-ClientServer--success -"
-/bin/bash bash-gitlab-ci/integration-tests/run-new-opcuaapp-ClientServer--success.sh -
-echo "Testing new-opcuaapp-ClientServer--success verbose"
-/bin/bash bash-gitlab-ci/integration-tests/run-new-opcuaapp-ClientServer--success.sh verbose
-echo "Testing new-opcuaapp-Client--success"
-/bin/bash bash-gitlab-ci/integration-tests/run-new-opcuaapp-Client--success.sh
-echo "Testing new-opcuaapp-Server--success"
-/bin/bash bash-gitlab-ci/integration-tests/run-new-opcuaapp-Server--success.sh
-echo "Testing new-opcuaapp--failure"
-/bin/bash bash-gitlab-ci/integration-tests/run-new-opcuaapp--failure.sh
-
 echo "Testing publish-opcuaapp--success -"
 /bin/bash bash-gitlab-ci/integration-tests/run-publish-opcuaapp--success.sh -
 echo "Testing publish-opcuaapp--success verbose"

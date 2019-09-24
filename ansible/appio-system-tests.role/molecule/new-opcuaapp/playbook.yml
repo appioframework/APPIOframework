@@ -1,0 +1,7 @@
+---
+- name: converge
+  hosts: all
+  roles:
+    - role: appio-system-tests.role
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
