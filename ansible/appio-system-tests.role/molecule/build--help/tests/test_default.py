@@ -3,7 +3,7 @@ import os
 
 import testinfra.utils.ansible_runner
 
-from ....python.prepare import prepare_provide_test_directory
+from .util.prepare import prepare_provide_test_directory
 
 testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
     os.environ['MOLECULE_INVENTORY_FILE']
