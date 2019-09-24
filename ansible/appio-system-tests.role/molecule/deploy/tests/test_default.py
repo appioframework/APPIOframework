@@ -27,12 +27,12 @@ def prepare_provide_test_directory(host, case):
     ['1', 'appio deploy --name my-app', 'my-app'],
     ['2', 'appio deploy -n     my-app', 'my-app'],
 ])
-def test_that_deploy_clean_is_succeeding(host, case, command, app_name):
+def test_that_appio_deploy_is_succeeding(host, case, command, app_name):
     # prepare
     test_dir_path = prepare_provide_test_directory(host, case)
 
     log_file_path = test_dir_path + 'appio.log'
-    deb_file_path = test_dir_path + app_name + 'deploy/appio-opcuaapp.deb'
+    deb_file_path = test_dir_path + app_name + '/deploy/appio-opcuaapp.deb'
     client_app_exe_path = '/usr/bin/client-app'
     server_app_exe_path = '/usr/bin/server-app'
 
@@ -96,7 +96,7 @@ def test_that_deploy_clean_is_succeeding(host, case, command, app_name):
     ['7f', 'appio deploy --exit'],
     ['8f', 'appio deploy -x'],
 ])
-def test_that_appio_clean_is_failing(host, case, command):
+def test_that_appio_deploy_is_failing(host, case, command):
     # prepare
     test_dir_path = prepare_provide_test_directory(host, case)
 
