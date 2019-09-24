@@ -106,7 +106,7 @@ def test_that_appio_new_opcuaapp_server_is_succeeding(host, case, command, app_n
         test_dir_path + app_name + '/src/server/main.c',
         test_dir_path + app_name + '/src/server/meson.build',
         test_dir_path + app_name + '/src/server/loadInformationModels.c',
-        test_dir_path + app_name + '/src/server/constants.c',
+        test_dir_path + app_name + '/src/server/constants.h',
         test_dir_path + app_name + '/src/server/mainCallbacks.c',
     ]
 
@@ -186,7 +186,7 @@ def test_that_appio_new_opcuaapp_clientserver_is_succeeding(host, case, command,
         test_dir_path + app_name + '/src/server/main.c',
         test_dir_path + app_name + '/src/server/meson.build',
         test_dir_path + app_name + '/src/server/loadInformationModels.c',
-        test_dir_path + app_name + '/src/server/constants.c',
+        test_dir_path + app_name + '/src/server/constants.h',
         test_dir_path + app_name + '/src/server/mainCallbacks.c',
     ]
 
