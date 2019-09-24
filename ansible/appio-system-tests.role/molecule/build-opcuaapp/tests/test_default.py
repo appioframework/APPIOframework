@@ -27,7 +27,7 @@ def prepare_provide_test_directory(host, case):
     ['1', 'appio build --name my-app', 'my-app'],
     ['2', 'appio build -n     my-app', 'my-app'],
 ])
-def test_that_appio_build_opcuaapp_is_succeeding(host, case, command, app_name):
+def test_that_appio_build_opcuaapp_is_succeeding(host, case, command, app_name):  # noqa: #501
     # prepare
     test_dir_path = prepare_provide_test_directory(host, case)
 
@@ -36,7 +36,7 @@ def test_that_appio_build_opcuaapp_is_succeeding(host, case, command, app_name):
     server_app_exe_file_path = test_dir_path + app_name + '/build/server-app'
 
     for prepare_command in (
-        'appio new opcuaapp -n' + app_name + '-t ClientServer -u 127.0.0.1 -p 4840',
+        'appio new opcuaapp -n' + app_name + '-t ClientServer -u 127.0.0.1 -p 4840',  # noqa: #501
         'rm -f appio.log',
     ):
         prepare = host.run('cd ' + test_dir_path + ' && ' + prepare_command)
@@ -107,7 +107,7 @@ def test_that_appio_build_opcuaapp_is_failing_when_meson_call_fails(host, case, 
     log_file_path = test_dir_path + 'appio.log'
 
     for prepare_command in (
-        'appio new opcuaapp -n ' + app_name + ' -t ClientServer -u 127.0.0.1 -p 4840',
+        'appio new opcuaapp -n ' + app_name + ' -t ClientServer -u 127.0.0.1 -p 4840',  # noqa: #501
         'rm -f ' + app_name + '/meson.build',
         'rm -f appio.log',
     ):
@@ -140,7 +140,7 @@ def test_that_appio_build_opcuaapp_is_failing_when_ninja_call_fails(host, case, 
     log_file_path = test_dir_path + 'appio.log'
 
     for prepare_command in (
-        'appio new opcuaapp -n ' + app_name + ' -t ClientServer -u 127.0.0.1 -p 4840',
+        'appio new opcuaapp -n ' + app_name + ' -t ClientServer -u 127.0.0.1 -p 4840',  # noqa: #501
         'rm -f ' + app_name + '/src/server/main.c',
         'rm -f appio.log',
     ):
