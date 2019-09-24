@@ -39,11 +39,11 @@ def test_that_appio_new_opcuaapp_client_is_succeeding(host, case, command, app_n
     file_paths = [
         priv_der_file_path,
         cert_der_file_path,
-        'appio.log',
-        app_name + '/' + app_name + '.appioproj',
-        app_name + '/meson.build',
-        app_name + '/src/client/main.c',
-        app_name + '/src/client/globalVariables.h',
+        test_dir_path + 'appio.log',
+        test_dir_path + app_name + '/' + app_name + '.appioproj',
+        test_dir_path + app_name + '/meson.build',
+        test_dir_path + app_name + '/src/client/main.c',
+        test_dir_path + app_name + '/src/client/globalVariables.h',
     ]
 
     # arrange
@@ -94,20 +94,20 @@ def test_that_appio_new_opcuaapp_server_is_succeeding(host, case, command, app_n
     cert_der_file_path = test_dir_path + app_name + '/certificates/cert.der'  # noqa: #501
 
     dir_paths = [
-        app_name + '/models',
+        test_dir_path + app_name + '/models',
     ]
 
     file_paths = [
         priv_der_file_path,
         cert_der_file_path,
-        'appio.log',
-        app_name + '/' + app_name + '.appioproj',
-        app_name + '/meson.build',
-        app_name + '/src/server/main.c',
-        app_name + '/src/server/meson.build',
-        app_name + '/src/server/loadInformationModels.c',
-        app_name + '/src/server/constants.c',
-        app_name + '/src/server/mainCallbacks.c',
+        test_dir_path + 'appio.log',
+        test_dir_path + app_name + '/' + app_name + '.appioproj',
+        test_dir_path + app_name + '/meson.build',
+        test_dir_path + app_name + '/src/server/main.c',
+        test_dir_path + app_name + '/src/server/meson.build',
+        test_dir_path + app_name + '/src/server/loadInformationModels.c',
+        test_dir_path + app_name + '/src/server/constants.c',
+        test_dir_path + app_name + '/src/server/mainCallbacks.c',
     ]
 
     # arrange
@@ -170,7 +170,7 @@ def test_that_appio_new_opcuaapp_clientserver_is_succeeding(host, case, command,
     server_cert_der_file_path = test_dir_path + app_name + '/certificates/server_cert.der'  # noqa: #501
 
     dir_paths = [
-        app_name + '/models',
+        test_dir_path + app_name + '/models',
     ]
 
     file_paths = [
@@ -178,16 +178,16 @@ def test_that_appio_new_opcuaapp_clientserver_is_succeeding(host, case, command,
         client_cert_der_file_path,
         server_priv_der_file_path,
         server_cert_der_file_path,
-        'appio.log',
-        app_name + '/' + app_name + '.appioproj',
-        app_name + '/meson.build',
-        app_name + '/src/client/main.c',
-        app_name + '/src/client/globalVariables.h',
-        app_name + '/src/server/main.c',
-        app_name + '/src/server/meson.build',
-        app_name + '/src/server/loadInformationModels.c',
-        app_name + '/src/server/constants.c',
-        app_name + '/src/server/mainCallbacks.c',
+        test_dir_path + 'appio.log',
+        test_dir_path + app_name + '/' + app_name + '.appioproj',
+        test_dir_path + app_name + '/meson.build',
+        test_dir_path + app_name + '/src/client/main.c',
+        test_dir_path + app_name + '/src/client/globalVariables.h',
+        test_dir_path + app_name + '/src/server/main.c',
+        test_dir_path + app_name + '/src/server/meson.build',
+        test_dir_path + app_name + '/src/server/loadInformationModels.c',
+        test_dir_path + app_name + '/src/server/constants.c',
+        test_dir_path + app_name + '/src/server/mainCallbacks.c',
     ]
 
     # arrange
@@ -240,11 +240,14 @@ def test_that_appio_new_opcuaapp_is_failing(host, case, command):
     # prepare
     test_dir_path = prepare_provide_test_directory(host, case)
 
-    log_file_path = test_dir_path + 'appio.log'
+    file_paths = [
+        test_dir_path + 'appio.log'
+    ]
 
     # arrange
-    log_file = host.file(log_file_path)
-    assert not log_file.exists
+    for file_path in file_paths:
+        f = host.file(file_path)
+        assert not f.exists
 
     # act
     appio = host.run('cd ' + test_dir_path + ' && ' + command)
@@ -253,5 +256,6 @@ def test_that_appio_new_opcuaapp_is_failing(host, case, command):
     assert appio.rc != 0
     assert appio.stdout != ''
 
-    log_file = host.file(log_file_path)
-    assert log_file.exists
+    for file_path in file_paths:
+        f = host.file(file_path)
+        assert f.exists
