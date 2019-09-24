@@ -20,12 +20,12 @@ def test_that_appio_build_help_is_succeeding(host, case, command):
     test_dir_path = prepare_provide_test_directory(host, case)
 
     file_paths = [
-        'appio.log'
+        test_dir_path + 'appio.log'
     ]
 
     # arrange
     for file_path in file_paths:
-        f = host.file(test_dir_path + file_path)
+        f = host.file(file_path)
         assert not f.exists
 
     # act
@@ -36,5 +36,5 @@ def test_that_appio_build_help_is_succeeding(host, case, command):
     assert appio.stdout != ''
 
     for file_path in file_paths:
-        f = host.file(test_dir_path + file_path)
+        f = host.file(file_path)
         assert f.exists
