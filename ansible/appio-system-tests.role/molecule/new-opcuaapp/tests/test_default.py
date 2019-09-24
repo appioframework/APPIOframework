@@ -142,22 +142,22 @@ def test_that_appio_new_opcuaapp_server_is_succeeding(host, case, command, app_n
 
 
 @pytest.mark.parametrize('case, command, app_name', [
-    ['1_server', 'appio new opcuaapp -n my-app -t ClientServer -u 127.0.0.1 -p 4840', 'my-app'],  # noqa: #501
-    ['2_server', 'appio new opcuaapp -n my-app -t ClientServer -u 127.0.0.1 --port 4840', 'my-app'],  # noqa: #501
-    ['3_server', 'appio new opcuaapp -n my-app -t ClientServer --url 127.0.0.1 -p 4840', 'my-app'],  # noqa: #501
-    ['4_server', 'appio new opcuaapp -n my-app -t ClientServer --url 127.0.0.1 --port 4840', 'my-app'],  # noqa: #501
-    ['5_server', 'appio new opcuaapp -n my-app --type ClientServer -u 127.0.0.1 -p 4840', 'my-app'],  # noqa: #501
-    ['6_server', 'appio new opcuaapp -n my-app --type ClientServer -u 127.0.0.1 --port 4840', 'my-app'],  # noqa: #501
-    ['7_server', 'appio new opcuaapp -n my-app --type ClientServer --url 127.0.0.1 -p 4840', 'my-app'],  # noqa: #501
-    ['8_server', 'appio new opcuaapp -n my-app --type ClientServer --url 127.0.0.1 --port 4840', 'my-app'],  # noqa: #501
-    ['9_server', 'appio new opcuaapp --name my-app -t ClientServer -u 127.0.0.1 -p 4840', 'my-app'],  # noqa: #501
-    ['10_server', 'appio new opcuaapp --name my-app -t ClientServer -u 127.0.0.1 --port 4840', 'my-app'],  # noqa: #501
-    ['11_server', 'appio new opcuaapp --name my-app -t ClientServer --url 127.0.0.1 -p 4840', 'my-app'],  # noqa: #501
-    ['12_server', 'appio new opcuaapp --name my-app -t ClientServer --url 127.0.0.1 --port 4840', 'my-app'],  # noqa: #501
-    ['13_server', 'appio new opcuaapp --name my-app --type ClientServer -u 127.0.0.1 -p 4840', 'my-app'],  # noqa: #501
-    ['14_server', 'appio new opcuaapp --name my-app --type ClientServer -u 127.0.0.1 --port 4840', 'my-app'],  # noqa: #501
-    ['15_server', 'appio new opcuaapp --name my-app --type ClientServer --url 127.0.0.1 -p 4840', 'my-app'],  # noqa: #501
-    ['16_server', 'appio new opcuaapp --name my-app --type ClientServer --url 127.0.0.1 --port 4840', 'my-app'],  # noqa: #501
+    ['1_client_server', 'appio new opcuaapp -n my-app -t ClientServer -u 127.0.0.1 -p 4840', 'my-app'],  # noqa: #501
+    ['2_client_server', 'appio new opcuaapp -n my-app -t ClientServer -u 127.0.0.1 --port 4840', 'my-app'],  # noqa: #501
+    ['3_client_server', 'appio new opcuaapp -n my-app -t ClientServer --url 127.0.0.1 -p 4840', 'my-app'],  # noqa: #501
+    ['4_client_server', 'appio new opcuaapp -n my-app -t ClientServer --url 127.0.0.1 --port 4840', 'my-app'],  # noqa: #501
+    ['5_client_server', 'appio new opcuaapp -n my-app --type ClientServer -u 127.0.0.1 -p 4840', 'my-app'],  # noqa: #501
+    ['6_client_server', 'appio new opcuaapp -n my-app --type ClientServer -u 127.0.0.1 --port 4840', 'my-app'],  # noqa: #501
+    ['7_client_server', 'appio new opcuaapp -n my-app --type ClientServer --url 127.0.0.1 -p 4840', 'my-app'],  # noqa: #501
+    ['8_client_server', 'appio new opcuaapp -n my-app --type ClientServer --url 127.0.0.1 --port 4840', 'my-app'],  # noqa: #501
+    ['9_client_server', 'appio new opcuaapp --name my-app -t ClientServer -u 127.0.0.1 -p 4840', 'my-app'],  # noqa: #501
+    ['10_client_server', 'appio new opcuaapp --name my-app -t ClientServer -u 127.0.0.1 --port 4840', 'my-app'],  # noqa: #501
+    ['11_client_server', 'appio new opcuaapp --name my-app -t ClientServer --url 127.0.0.1 -p 4840', 'my-app'],  # noqa: #501
+    ['12_client_server', 'appio new opcuaapp --name my-app -t ClientServer --url 127.0.0.1 --port 4840', 'my-app'],  # noqa: #501
+    ['13_client_server', 'appio new opcuaapp --name my-app --type ClientServer -u 127.0.0.1 -p 4840', 'my-app'],  # noqa: #501
+    ['14_client_server', 'appio new opcuaapp --name my-app --type ClientServer -u 127.0.0.1 --port 4840', 'my-app'],  # noqa: #501
+    ['15_client_server', 'appio new opcuaapp --name my-app --type ClientServer --url 127.0.0.1 -p 4840', 'my-app'],  # noqa: #501
+    ['16_client_server', 'appio new opcuaapp --name my-app --type ClientServer --url 127.0.0.1 --port 4840', 'my-app'],  # noqa: #501
 ])
 def test_that_appio_new_opcuaapp_clientserver_is_succeeding(host, case, command, app_name):  # noqa: #501
     # prepare
