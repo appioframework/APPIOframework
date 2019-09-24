@@ -3,24 +3,11 @@ import os
 
 import testinfra.utils.ansible_runner
 
+from .util.prepare import prepare_provide_test_directory
+
 testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
     os.environ['MOLECULE_INVENTORY_FILE']
 ).get_hosts('all')
-
-
-def prepare_provide_test_directory(host, case):
-    test_dir_path = case + '/'
-
-    mk_test_dir = host.run('mkdir --parents ' + test_dir_path)
-
-    assert mk_test_dir.rc == 0
-
-    test_dir = host.file(test_dir_path)
-
-    assert test_dir.exists
-    assert test_dir.is_directory
-
-    return test_dir_path
 
 
 @pytest.mark.parametrize('case, command, app_name', [
@@ -31,10 +18,17 @@ def test_that_appio_deploy_is_succeeding(host, case, command, app_name):
     # prepare
     test_dir_path = prepare_provide_test_directory(host, case)
 
-    log_file_path = test_dir_path + 'appio.log'
     deb_file_path = test_dir_path + app_name + '/deploy/appio-opcuaapp.deb'
-    client_app_exe_path = '/usr/bin/client-app'
-    server_app_exe_path = '/usr/bin/server-app'
+
+    file_paths = [
+        test_dir_path + 'appio.log',
+        deb_file_path
+    ]
+
+    installed_file_paths = [
+        '/usr/bin/client-app',
+        '/usr/bin/server-app',
+    ]
 
     for prepare_command in (
         'appio new opcuaapp -n ' + app_name + ' -t ClientServer -u 127.0.0.1 -p 4840',  # noqa: #501
@@ -47,14 +41,13 @@ def test_that_appio_deploy_is_succeeding(host, case, command, app_name):
         assert prepare.rc == 0
 
     # arrange
-    log_file = host.file(log_file_path)
-    assert not log_file.exists
+    for file_path in file_paths:
+        f = host.file(file_path)
+        assert not f.exists
 
-    client_app_exe = host.file(client_app_exe_path)
-    assert not client_app_exe.exists
-
-    server_app_exe = host.file(server_app_exe_path)
-    assert not server_app_exe.exists
+    for file_path in installed_file_paths:
+        f = host.file(file_path)
+        assert not f.exists
 
     # act
     appio = host.run('cd ' + test_dir_path + ' && ' + command)
@@ -63,11 +56,9 @@ def test_that_appio_deploy_is_succeeding(host, case, command, app_name):
     assert appio.rc == 0
     assert appio.stdout != ''
 
-    log_file = host.file(log_file_path)
-    assert log_file.exists
-
-    deb_file = host.file(deb_file_path)
-    assert deb_file.exists
+    for file_path in file_paths:
+        f = host.file(file_path)
+        assert f.exists
 
     # act installer
     dpkg_install = host.run('dpkg --install ' + deb_file_path)
@@ -75,11 +66,10 @@ def test_that_appio_deploy_is_succeeding(host, case, command, app_name):
     # assert installer
     assert dpkg_install.rc == 0
 
-    client_app_exe = host.file(client_app_exe_path)
-    assert client_app_exe.exists
-
-    server_app_exe = host.file(server_app_exe_path)
-    assert server_app_exe.exists
+    for file_path in installed_file_paths:
+        f = host.file(file_path)
+        assert f.exists
+        assert f.mode == 0o755
 
     # cleanup
     dpkg_purge = host.run('dpkg --purge appio-opcuaapp-installer')
@@ -100,11 +90,14 @@ def test_that_appio_deploy_is_failing(host, case, command):
     # prepare
     test_dir_path = prepare_provide_test_directory(host, case)
 
-    log_file_path = test_dir_path + 'appio.log'
+    file_paths = [
+        test_dir_path + 'appio.log',
+    ]
 
     # arrange
-    log_file = host.file(log_file_path)
-    assert not log_file.exists
+    for file_path in file_paths:
+        f = host.file(file_path)
+        assert not f.exists
 
     # act
     appio = host.run('cd ' + test_dir_path + ' && ' + command)
@@ -113,8 +106,9 @@ def test_that_appio_deploy_is_failing(host, case, command):
     assert appio.rc != 0
     assert appio.stdout != ''
 
-    log_file = host.file(log_file_path)
-    assert log_file.exists
+    for file_path in file_paths:
+        f = host.file(file_path)
+        assert f.exists
 
 
 @pytest.mark.parametrize('case, command, app_name', [
@@ -125,8 +119,13 @@ def test_that_deploy_clean_is_failing_when_published_files_are_missing(host, cas
     # prepare
     test_dir_path = prepare_provide_test_directory(host, case)
 
-    log_file_path = test_dir_path + 'appio.log'
-    deb_file_path = test_dir_path + app_name + 'deploy/appio-opcuaapp.deb'  # noqa: #501
+    file_paths = [
+        test_dir_path + 'appio.log',
+    ]
+
+    missing_file_paths = [
+        test_dir_path + app_name + '/deploy/appio-opcuaapp.deb',
+    ]
 
     for prepare_command in (
         'appio new opcuaapp -n ' + app_name + ' -t ClientServer -u 127.0.0.1 -p 4840',  # noqa: #501
@@ -141,8 +140,13 @@ def test_that_deploy_clean_is_failing_when_published_files_are_missing(host, cas
         assert prepare.rc == 0
 
     # arrange
-    log_file = host.file(log_file_path)
-    assert not log_file.exists
+    for file_path in file_paths:
+        f = host.file(file_path)
+        assert not f.exists
+
+    for file_path in missing_file_paths:
+        f = host.file(file_path)
+        assert not f.exists
 
     # act
     appio = host.run('cd ' + test_dir_path + ' && ' + command)
@@ -151,5 +155,10 @@ def test_that_deploy_clean_is_failing_when_published_files_are_missing(host, cas
     assert appio.rc != 0
     assert appio.stdout != ''
 
-    log_file = host.file(log_file_path)
-    assert log_file.exists
+    for file_path in file_paths:
+        f = host.file(file_path)
+        assert f.exists
+
+    for file_path in missing_file_paths:
+        f = host.file(file_path)
+        assert not f.exists
