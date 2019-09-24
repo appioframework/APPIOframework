@@ -44,4 +44,4 @@ def test_that_appio_hello_is_succeeding(host, case, command):
     assert appio.stdout != ''
 
     log_file = host.file(log_file_path)
-    assert not log_file.exists
+    assert log_file.exists
