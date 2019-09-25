@@ -56,16 +56,16 @@ def test_that_appio_build_opcuaapp_is_succeeding(host, case, command, app_name, 
         test_dir_path + 'appio.log',
     ]
 
+    exe_file_paths = [
+    ]
+
     if has_client:
         file_paths.append(test_dir_path + app_name + '/build/client-app')
+        exe_file_paths.append(test_dir_path + app_name + '/build/client-app')
 
     if has_server:
         file_paths.append(test_dir_path + app_name + '/build/server-app')
-
-    exe_file_paths = [
-        file_paths[1],
-        file_paths[2],
-    ]
+        exe_file_paths.append(test_dir_path + app_name + '/build/server-app')
 
     for prepare_command in (
         new_command,
