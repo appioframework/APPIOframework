@@ -49,8 +49,8 @@ def test_that_appio_publish_is_succeeding(host, case, command):
 
     file_paths = [
         test_dir_path + 'appio.log',
-        test_dir_path + app_name + 'publish/client-app',
-        test_dir_path + app_name + 'publish/server-app',
+        test_dir_path + app_name + '/publish/server-app',
+        test_dir_path + app_name + '/publish/client-app',
     ]
 
     exe_file_paths = [
