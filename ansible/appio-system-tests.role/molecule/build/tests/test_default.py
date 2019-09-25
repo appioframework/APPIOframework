@@ -41,12 +41,12 @@ def test_that_appio_build_help_is_succeeding(host, case, command):
 
 
 @pytest.mark.parametrize('case, command, app_name, new_command, has_client, has_server', [  # noqa: #501
-    ['1_c', 'appio build --name my-app', 'my-app', 'appio new opcuaapp -n my-app -t Client', true, false],  # noqa: #501
-    ['2_c', 'appio build -n     my-app', 'my-app', 'appio new opcuaapp -n my-app -t Client', true, false],  # noqa: #501
-    ['1_cs', 'appio build --name my-app', 'my-app', 'appio new opcuaapp -n my-app -t ClientServer -u 127.0.0.1 -p 4840', true, true],  # noqa: #501
-    ['2_cs', 'appio build -n     my-app', 'my-app', 'appio new opcuaapp -n my-app -t ClientServer -u 127.0.0.1 -p 4840', true, true],  # noqa: #501
-    ['1_s', 'appio build --name my-app', 'my-app', 'appio new opcuaapp -n my-app -t Server -u 127.0.0.1 -p 4840', false, true],  # noqa: #501
-    ['2_s', 'appio build -n     my-app', 'my-app', 'appio new opcuaapp -n my-app -t Server -u 127.0.0.1 -p 4840', false, true],  # noqa: #501
+    ['1_c', 'appio build --name my-app', 'my-app', 'appio new opcuaapp -n my-app -t Client', True, False],  # noqa: #501
+    ['2_c', 'appio build -n     my-app', 'my-app', 'appio new opcuaapp -n my-app -t Client', True, False],  # noqa: #501
+    ['1_cs', 'appio build --name my-app', 'my-app', 'appio new opcuaapp -n my-app -t ClientServer -u 127.0.0.1 -p 4840', True, True],  # noqa: #501
+    ['2_cs', 'appio build -n     my-app', 'my-app', 'appio new opcuaapp -n my-app -t ClientServer -u 127.0.0.1 -p 4840', True, True],  # noqa: #501
+    ['1_s', 'appio build --name my-app', 'my-app', 'appio new opcuaapp -n my-app -t Server -u 127.0.0.1 -p 4840', False, True],  # noqa: #501
+    ['2_s', 'appio build -n     my-app', 'my-app', 'appio new opcuaapp -n my-app -t Server -u 127.0.0.1 -p 4840', False, True],  # noqa: #501
 ])
 def test_that_appio_build_opcuaapp_is_succeeding(host, case, command, app_name, new_command, has_client, has_server):  # noqa: #501
     # prepare
