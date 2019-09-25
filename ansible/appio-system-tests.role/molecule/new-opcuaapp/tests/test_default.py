@@ -3,24 +3,11 @@ import os
 
 import testinfra.utils.ansible_runner
 
+from .util.prepare import prepare_provide_test_directory
+
 testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
     os.environ['MOLECULE_INVENTORY_FILE']
 ).get_hosts('all')
-
-
-def prepare_provide_test_directory(host, case):
-    test_dir_path = case + '/'
-
-    mk_test_dir = host.run('mkdir --parents ' + test_dir_path)
-
-    assert mk_test_dir.rc == 0
-
-    test_dir = host.file(test_dir_path)
-
-    assert test_dir.exists
-    assert test_dir.is_directory
-
-    return test_dir_path
 
 
 @pytest.mark.parametrize('case, command, app_name', [
