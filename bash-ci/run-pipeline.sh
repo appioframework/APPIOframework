@@ -31,7 +31,7 @@ function run_pipeline_using_docker() {
     local CI_TEST_NAMES[0]="Build and test dotnet application"
     local CI_TEST_IDS[0]="build-and-test"
     local CI_TEST_IMAGES[0]="talsenteam/docker-ci-image-dotnet-core-sdk:v2.1"
-    local CI_JOB_ARTIFACTS[0]="-"
+    local CI_JOB_ARTIFACTS[0]=""
 
     local CI_TEST_NAMES[1]="Publish dotnet application"
     local CI_TEST_IDS[1]="publish"
@@ -68,9 +68,12 @@ function run_pipeline_using_docker() {
 
         ${CI_JOB_SCRIPT} ${CI_JOB_ID}
 
-        for ARTIFACT in ${CI_JOB_ARTIFACT//\~/\ }
+        for ARTIFACT in ${CI_JOB_ARTIFACT}
         do
-            sudo docker cp --archive ${CI_JOB_ID}:${CI_JOB_WORKDIR}/${ARTIFACT} ${CI_ARTIFACT_DIR}/${ARTIFACT}
+            if [ "${ARTIFACT}" != "" ];
+            then
+                sudo docker cp --archive ${CI_JOB_ID}:${CI_JOB_WORKDIR}/${ARTIFACT} ${CI_ARTIFACT_DIR}/${ARTIFACT}
+            fi
         done
 
         sudo docker stop ${CI_JOB_ID} | xargs sudo docker rm &> /dev/null
