@@ -131,7 +131,7 @@ def test_that_appio_deploy_is_failing_when_published_files_are_missing(host, cas
         'appio new opcuaapp -n ' + app_name + ' -t ClientServer -u 127.0.0.1 -p 4840',  # noqa: #501
         'appio build -n ' + app_name,
         'appio publish -n ' + app_name,
-        'rm -f ' + file_paths[0],
+        'rm -f appio.log',
         'rm -f ' + app_name + '/publish/client-app',
         'rm -f ' + app_name + '/publish/server-app',
     ):
