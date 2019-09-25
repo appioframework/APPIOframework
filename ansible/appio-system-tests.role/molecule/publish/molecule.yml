@@ -6,14 +6,14 @@ driver:
 lint:
   name: yamllint
 platforms:
-  - name: test-appio-publish--help
+  - name: test-appio-publish
     image: talsenteam/docker-ci-image-dotnet-core-runtime:v2.1
 provisioner:
   name: ansible
   lint:
     name: ansible-lint
 scenario:
-  name: publish--help
+  name: publish
   test_sequence:
     - lint
     - syntax
