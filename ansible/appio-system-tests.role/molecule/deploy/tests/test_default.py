@@ -132,8 +132,8 @@ def test_that_appio_deploy_is_failing_when_published_files_are_missing(host, cas
         'appio build -n ' + app_name,
         'appio publish -n ' + app_name,
         file_paths[0],
-        test_dir_path + 'rm -f ' + app_name + '/publish/client-app',
-        test_dir_path + 'rm -f ' + app_name + '/publish/server-app',
+        'rm -f ' + test_dir_path + app_name + '/publish/client-app',
+        'rm -f ' + test_dir_path + app_name + '/publish/server-app',
     ):
         prepare = host.run('cd ' + test_dir_path + ' && ' + prepare_command)
 
