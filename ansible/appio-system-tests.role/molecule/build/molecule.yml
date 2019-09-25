@@ -6,14 +6,14 @@ driver:
 lint:
   name: yamllint
 platforms:
-  - name: test-appio-build-opcuaapp
+  - name: test-appio-build
     image: talsenteam/docker-ci-image-dotnet-core-runtime:v2.1
 provisioner:
   name: ansible
   lint:
     name: ansible-lint
 scenario:
-  name: build-opcuaapp
+  name: build
   test_sequence:
     - lint
     - syntax
