@@ -10,6 +10,36 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
 ).get_hosts('all')
 
 
+@pytest.mark.parametrize('case, command', [
+    ['1_help', 'appio deploy --help'],
+    ['2_help', 'appio deploy -h'],
+    ['3_help', 'appio deploy'],
+])
+def test_that_appio_deploy_help_is_succeeding(host, case, command):
+    # prepare
+    test_dir_path = prepare_provide_test_directory(host, case)
+
+    file_paths = [
+        test_dir_path + 'appio.log'
+    ]
+
+    # arrange
+    for file_path in file_paths:
+        f = host.file(file_path)
+        assert not f.exists
+
+    # act
+    appio = host.run('cd ' + test_dir_path + ' && ' + command)
+
+    # assert
+    assert appio.rc == 0
+    assert appio.stdout != ''
+
+    for file_path in file_paths:
+        f = host.file(file_path)
+        assert f.exists
+
+
 @pytest.mark.parametrize('case, command, app_name', [
     ['1', 'appio deploy --name my-app', 'my-app'],
     ['2', 'appio deploy -n     my-app', 'my-app'],
