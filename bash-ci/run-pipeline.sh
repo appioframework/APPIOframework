@@ -57,11 +57,12 @@ function run_pipeline_using_docker() {
         set +e
         if [ $( sudo docker ps --all --quiet --filter name=${CI_JOB_ID} ) ];
         then
-            sudo docker kill ${CI_JOB_ID} &> /dev/null | xargs sudo docker rm &> /dev/null
+            sudo docker kill ${CI_JOB_ID} &> /dev/null
+            sudo docker rm ${CI_JOB_ID} > /dev/null
         fi
         set -e
 
-        sudo docker run --detach --name=${CI_JOB_ID} --workdir=${CI_JOB_WORKDIR} ${CI_JOB_IMAGE} sleep infinity &> /dev/null
+        sudo docker run --detach --name=${CI_JOB_ID} --workdir=${CI_JOB_WORKDIR} ${CI_JOB_IMAGE} sleep infinity > /dev/null
 
         sudo docker cp --archive . ${CI_JOB_ID}:${CI_JOB_WORKDIR}
 
