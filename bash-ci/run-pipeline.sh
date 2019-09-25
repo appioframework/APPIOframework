@@ -55,7 +55,7 @@ function run_pipeline_using_docker() {
         echo "${CI_JOB_NAME} ..."
 
         set +e
-        if [ $( sudo docker inspect --format '{{.State.Running}}' ${CI_JOB_ID} ) = "true" ];
+        if [ $( sudo docker ps --all --quiet --filter name=${CI_JOB_ID} ) ];
         then
             sudo docker kill ${CI_JOB_ID} &> /dev/null | xargs sudo docker rm &> /dev/null
         fi
