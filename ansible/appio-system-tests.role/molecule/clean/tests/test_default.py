@@ -3,6 +3,8 @@ import os
 
 import testinfra.utils.ansible_runner
 
+from .util.prepare import assert_that_files_are_existing
+from .util.prepare import assert_that_files_are_missing
 from .util.prepare import prepare_provide_test_directory
 
 testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
@@ -24,9 +26,7 @@ def test_that_appio_clean_help_is_succeeding(host, case, command):
     ]
 
     # arrange
-    for file_path in file_paths:
-        f = host.file(file_path)
-        assert not f.exists
+    assert_that_files_are_missing(host, file_paths)
 
     # act
     appio = host.run('cd ' + test_dir_path + ' && ' + command)
@@ -35,9 +35,7 @@ def test_that_appio_clean_help_is_succeeding(host, case, command):
     assert appio.rc == 0
     assert appio.stdout != ''
 
-    for file_path in file_paths:
-        f = host.file(file_path)
-        assert f.exists
+    assert_that_files_are_existing(host, file_paths)
 
 
 @pytest.mark.parametrize('case, command, app_name', [
@@ -52,7 +50,7 @@ def test_that_appio_clean_is_succeeding(host, case, command, app_name):
         test_dir_path + 'appio.log',
     ]
 
-    missing_file_paths = [
+    removed_file_paths = [
         test_dir_path + app_name + '/build',
     ]
 
@@ -66,13 +64,8 @@ def test_that_appio_clean_is_succeeding(host, case, command, app_name):
         assert prepare.rc == 0
 
     # arrange
-    for file_path in file_paths:
-        f = host.file(file_path)
-        assert not f.exists
-
-    for file_path in missing_file_paths:
-        f = host.file(file_path)
-        assert f.exists
+    assert_that_files_are_missing(host, file_paths)
+    assert_that_files_are_existing(host, removed_file_paths)
 
     # act
     appio = host.run('cd ' + test_dir_path + ' && ' + command)
@@ -81,13 +74,8 @@ def test_that_appio_clean_is_succeeding(host, case, command, app_name):
     assert appio.rc == 0
     assert appio.stdout != ''
 
-    for file_path in file_paths:
-        f = host.file(file_path)
-        assert f.exists
-
-    for file_path in missing_file_paths:
-        f = host.file(file_path)
-        assert not f.exists
+    assert_that_files_are_existing(host, file_paths)
+    assert_that_files_are_missing(host, removed_file_paths)
 
 
 @pytest.mark.parametrize('case, command', [
@@ -109,9 +97,7 @@ def test_that_appio_clean_is_failing(host, case, command):
     ]
 
     # arrange
-    for file_path in file_paths:
-        f = host.file(file_path)
-        assert not f.exists
+    assert_that_files_are_missing(host, file_paths)
 
     # act
     appio = host.run('cd ' + test_dir_path + ' && ' + command)
@@ -120,6 +106,4 @@ def test_that_appio_clean_is_failing(host, case, command):
     assert appio.rc != 0
     assert appio.stdout != ''
 
-    for file_path in file_paths:
-        f = host.file(file_path)
-        assert f.exists
+    assert_that_files_are_existing(host, file_paths)
