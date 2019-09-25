@@ -122,9 +122,9 @@ def test_that_appio_new_opcuaapp_server_is_succeeding(host, case, command, app_n
         assert f.exists
         assert f.is_directory
 
-    openssl_priv_der = host.run('openssl  rsa -in ' + app_name + '/certificates/priv.der -inform der -noout')  # noqa: #501
+    openssl_priv_der = host.run('openssl  rsa -in ' + priv_der_file_path + ' -inform der -noout')  # noqa: #501
     assert openssl_priv_der.rc == 0
-    openssl_cert_der = host.run('openssl x509 -in ' + app_name + '/certificates/cert.der -inform der -noout')  # noqa: #501
+    openssl_cert_der = host.run('openssl x509 -in ' + cert_der_file_path + ' -inform der -noout')  # noqa: #501
     assert openssl_cert_der.rc == 0
 
 
@@ -202,10 +202,15 @@ def test_that_appio_new_opcuaapp_clientserver_is_succeeding(host, case, command,
         assert f.exists
         assert f.is_directory
 
-    openssl_priv_der = host.run('openssl  rsa -in ' + app_name + '/certificates/priv.der -inform der -noout')  # noqa: #501
-    assert openssl_priv_der.rc == 0
-    openssl_cert_der = host.run('openssl x509 -in ' + app_name + '/certificates/cert.der -inform der -noout')  # noqa: #501
-    assert openssl_cert_der.rc == 0
+    openssl_client_priv_der = host.run('openssl  rsa -in ' + client_priv_der_file_path + ' -inform der -noout')  # noqa: #501
+    assert openssl_client_priv_der.rc == 0
+    openssl_client_cert_der = host.run('openssl x509 -in ' + client_cert_der_file_path + ' -inform der -noout')  # noqa: #501
+    assert openssl_client_cert_der.rc == 0
+
+    openssl_server_priv_der = host.run('openssl  rsa -in ' + server_priv_der_file_path + ' -inform der -noout')  # noqa: #501
+    assert openssl_server_priv_der.rc == 0
+    openssl_server_cert_der = host.run('openssl x509 -in ' + server_cert_der_file_path + ' -inform der -noout')  # noqa: #501
+    assert openssl_server_cert_der.rc == 0
 
 
 @pytest.mark.parametrize('case, command', [
