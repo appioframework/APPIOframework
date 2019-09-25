@@ -40,11 +40,15 @@ def test_that_appio_build_help_is_succeeding(host, case, command):
         assert f.exists
 
 
-@pytest.mark.parametrize('case, command, app_name', [
-    ['1', 'appio build --name my-app', 'my-app'],
-    ['2', 'appio build -n     my-app', 'my-app'],
+@pytest.mark.parametrize('case, command, app_name, new_command', [
+    ['1_c', 'appio build --name my-app', 'my-app', 'appio new opcuaapp -n my-app -t Client'],  # noqa: #501
+    ['2_c', 'appio build -n     my-app', 'my-app', 'appio new opcuaapp -n my-app -t Client'],  # noqa: #501
+    ['1_cs', 'appio build --name my-app', 'my-app', 'appio new opcuaapp -n my-app -t ClientServer -u 127.0.0.1 -p 4840'],  # noqa: #501
+    ['2_cs', 'appio build -n     my-app', 'my-app', 'appio new opcuaapp -n my-app -t ClientServer -u 127.0.0.1 -p 4840'],  # noqa: #501
+    ['1_s', 'appio build --name my-app', 'my-app', 'appio new opcuaapp -n my-app -t Server -u 127.0.0.1 -p 4840'],  # noqa: #501
+    ['2_s', 'appio build -n     my-app', 'my-app', 'appio new opcuaapp -n my-app -t Server -u 127.0.0.1 -p 4840'],  # noqa: #501
 ])
-def test_that_appio_build_opcuaapp_is_succeeding(host, case, command, app_name):  # noqa: #501
+def test_that_appio_build_opcuaapp_is_succeeding(host, case, command, app_name, new_command):  # noqa: #501
     # prepare
     test_dir_path = prepare_provide_test_directory(host, case)
 
@@ -60,7 +64,7 @@ def test_that_appio_build_opcuaapp_is_succeeding(host, case, command, app_name):
     ]
 
     for prepare_command in (
-        'appio new opcuaapp -n ' + app_name + ' -t ClientServer -u 127.0.0.1 -p 4840',  # noqa: #501
+        new_command,
         'rm -f appio.log',
     ):
         prepare = host.run('cd ' + test_dir_path + ' && ' + prepare_command)
