@@ -40,23 +40,27 @@ def test_that_appio_build_help_is_succeeding(host, case, command):
         assert f.exists
 
 
-@pytest.mark.parametrize('case, command, app_name, new_command', [
-    ['1_c', 'appio build --name my-app', 'my-app', 'appio new opcuaapp -n my-app -t Client'],  # noqa: #501
-    ['2_c', 'appio build -n     my-app', 'my-app', 'appio new opcuaapp -n my-app -t Client'],  # noqa: #501
-    ['1_cs', 'appio build --name my-app', 'my-app', 'appio new opcuaapp -n my-app -t ClientServer -u 127.0.0.1 -p 4840'],  # noqa: #501
-    ['2_cs', 'appio build -n     my-app', 'my-app', 'appio new opcuaapp -n my-app -t ClientServer -u 127.0.0.1 -p 4840'],  # noqa: #501
-    ['1_s', 'appio build --name my-app', 'my-app', 'appio new opcuaapp -n my-app -t Server -u 127.0.0.1 -p 4840'],  # noqa: #501
-    ['2_s', 'appio build -n     my-app', 'my-app', 'appio new opcuaapp -n my-app -t Server -u 127.0.0.1 -p 4840'],  # noqa: #501
+@pytest.mark.parametrize('case, command, app_name, new_command, has_client, has_server', [  # noqa: #501
+    ['1_c', 'appio build --name my-app', 'my-app', 'appio new opcuaapp -n my-app -t Client', true, false],  # noqa: #501
+    ['2_c', 'appio build -n     my-app', 'my-app', 'appio new opcuaapp -n my-app -t Client', true, false],  # noqa: #501
+    ['1_cs', 'appio build --name my-app', 'my-app', 'appio new opcuaapp -n my-app -t ClientServer -u 127.0.0.1 -p 4840', true, true],  # noqa: #501
+    ['2_cs', 'appio build -n     my-app', 'my-app', 'appio new opcuaapp -n my-app -t ClientServer -u 127.0.0.1 -p 4840', true, true],  # noqa: #501
+    ['1_s', 'appio build --name my-app', 'my-app', 'appio new opcuaapp -n my-app -t Server -u 127.0.0.1 -p 4840', false, true],  # noqa: #501
+    ['2_s', 'appio build -n     my-app', 'my-app', 'appio new opcuaapp -n my-app -t Server -u 127.0.0.1 -p 4840', false, true],  # noqa: #501
 ])
-def test_that_appio_build_opcuaapp_is_succeeding(host, case, command, app_name, new_command):  # noqa: #501
+def test_that_appio_build_opcuaapp_is_succeeding(host, case, command, app_name, new_command, has_client, has_server):  # noqa: #501
     # prepare
     test_dir_path = prepare_provide_test_directory(host, case)
 
     file_paths = [
         test_dir_path + 'appio.log',
-        test_dir_path + app_name + '/build/client-app',
-        test_dir_path + app_name + '/build/server-app',
     ]
+
+    if has_client:
+        file_paths.append(test_dir_path + app_name + '/build/client-app')
+
+    if has_server:
+        file_paths.append(test_dir_path + app_name + '/build/server-app')
 
     exe_file_paths = [
         file_paths[1],
