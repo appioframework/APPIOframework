@@ -112,8 +112,8 @@ def test_that_appio_deploy_is_failing(host, case, command):
 
 
 @pytest.mark.parametrize('case, command, app_name', [
-    ['1', 'appio deploy --name my-app', 'my-app'],
-    ['2', 'appio deploy -n     my-app', 'my-app'],
+    ['1f_no_publish', 'appio deploy --name my-app', 'my-app'],
+    ['2f_no_publish', 'appio deploy -n     my-app', 'my-app'],
 ])
 def test_that_appio_deploy_is_failing_when_published_files_are_missing(host, case, command, app_name):  # noqa: #501
     # prepare
