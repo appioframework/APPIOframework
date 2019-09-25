@@ -3,6 +3,9 @@ import os
 
 import testinfra.utils.ansible_runner
 
+from .util.prepare import assert_that_files_are_directories
+from .util.prepare import assert_that_files_are_existing
+from .util.prepare import assert_that_files_are_missing
 from .util.prepare import prepare_provide_test_directory
 
 testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
@@ -34,9 +37,7 @@ def test_that_appio_new_opcuaapp_client_is_succeeding(host, case, command, app_n
     ]
 
     # arrange
-    for file_path in file_paths:
-        f = host.file(file_path)
-        assert not f.exists
+    assert_that_files_are_missing(host, file_paths)
 
     # act
     appio = host.run('cd ' + test_dir_path + ' && ' + command)
@@ -45,9 +46,7 @@ def test_that_appio_new_opcuaapp_client_is_succeeding(host, case, command, app_n
     assert appio.rc == 0
     assert appio.stdout != ''
 
-    for file_path in file_paths:
-        f = host.file(file_path)
-        assert f.exists
+    assert_that_files_are_existing(host, file_paths)
 
     openssl_priv_der = host.run('openssl  rsa -in ' + priv_der_file_path + ' -inform der -noout')  # noqa: #501
     assert openssl_priv_der.rc == 0
@@ -98,13 +97,8 @@ def test_that_appio_new_opcuaapp_server_is_succeeding(host, case, command, app_n
     ]
 
     # arrange
-    for file_path in file_paths:
-        f = host.file(file_path)
-        assert not f.exists
-
-    for dir_path in dir_paths:
-        f = host.file(dir_path)
-        assert not f.exists
+    assert_that_files_are_missing(host, file_paths)
+    assert_that_files_are_missing(host, dir_paths)
 
     # act
     appio = host.run('cd ' + test_dir_path + ' && ' + command)
@@ -113,14 +107,9 @@ def test_that_appio_new_opcuaapp_server_is_succeeding(host, case, command, app_n
     assert appio.rc == 0
     assert appio.stdout != ''
 
-    for file_path in file_paths:
-        f = host.file(file_path)
-        assert f.exists
-
-    for dir_path in dir_paths:
-        f = host.file(dir_path)
-        assert f.exists
-        assert f.is_directory
+    assert_that_files_are_existing(host, file_paths)
+    assert_that_files_are_existing(host, dir_paths)
+    assert_that_files_are_directories(host, dir_paths)
 
     openssl_priv_der = host.run('openssl  rsa -in ' + priv_der_file_path + ' -inform der -noout')  # noqa: #501
     assert openssl_priv_der.rc == 0
@@ -178,13 +167,8 @@ def test_that_appio_new_opcuaapp_clientserver_is_succeeding(host, case, command,
     ]
 
     # arrange
-    for file_path in file_paths:
-        f = host.file(file_path)
-        assert not f.exists
-
-    for dir_path in dir_paths:
-        f = host.file(dir_path)
-        assert not f.exists
+    assert_that_files_are_missing(host, file_paths)
+    assert_that_files_are_missing(host, dir_paths)
 
     # act
     appio = host.run('cd ' + test_dir_path + ' && ' + command)
@@ -193,14 +177,9 @@ def test_that_appio_new_opcuaapp_clientserver_is_succeeding(host, case, command,
     assert appio.rc == 0
     assert appio.stdout != ''
 
-    for file_path in file_paths:
-        f = host.file(file_path)
-        assert f.exists
-
-    for dir_path in dir_paths:
-        f = host.file(dir_path)
-        assert f.exists
-        assert f.is_directory
+    assert_that_files_are_existing(host, file_paths)
+    assert_that_files_are_existing(host, dir_paths)
+    assert_that_files_are_directories(host, dir_paths)
 
     openssl_client_priv_der = host.run('openssl  rsa -in ' + client_priv_der_file_path + ' -inform der -noout')  # noqa: #501
     assert openssl_client_priv_der.rc == 0
@@ -237,9 +216,7 @@ def test_that_appio_new_opcuaapp_is_failing(host, case, command):
     ]
 
     # arrange
-    for file_path in file_paths:
-        f = host.file(file_path)
-        assert not f.exists
+    assert_that_files_are_missing(host, file_paths)
 
     # act
     appio = host.run('cd ' + test_dir_path + ' && ' + command)
@@ -248,6 +225,4 @@ def test_that_appio_new_opcuaapp_is_failing(host, case, command):
     assert appio.rc != 0
     assert appio.stdout != ''
 
-    for file_path in file_paths:
-        f = host.file(file_path)
-        assert f.exists
+    assert_that_files_are_existing(host, file_paths)

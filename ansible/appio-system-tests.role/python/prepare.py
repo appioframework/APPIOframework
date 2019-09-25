@@ -4,6 +4,13 @@ import os
 import testinfra.utils.ansible_runner
 
 
+def assert_that_files_are_directories(host, file_paths):
+    for file_path in file_paths:
+        f = host.file(file_path)
+
+        assert f.is_directory
+
+
 def assert_that_files_are_executable(host, file_paths):
     for file_path in file_paths:
         f = host.file(file_path)
