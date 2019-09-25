@@ -2,13 +2,6 @@
 
 set -euo pipefail
 
-echo "Testing publish-opcuaapp--success -"
-/bin/bash bash-gitlab-ci/integration-tests/run-publish-opcuaapp--success.sh -
-echo "Testing publish-opcuaapp--success verbose"
-/bin/bash bash-gitlab-ci/integration-tests/run-publish-opcuaapp--success.sh verbose
-echo "Testing publish-opcuaapp--failure"
-/bin/bash bash-gitlab-ci/integration-tests/run-publish-opcuaapp--failure.sh
-
 echo "Testing import information-model--success"
 /bin/bash bash-gitlab-ci/integration-tests/run-import-information-model--success.sh
 echo "Testing import information-model--success--extended"
