@@ -15,5 +15,5 @@
 
 - name: import_test_data
   copy:
-    dest: /test-data
+    dest: /
     src: ./test-data
