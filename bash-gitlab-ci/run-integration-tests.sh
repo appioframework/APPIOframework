@@ -10,8 +10,8 @@ set -euo pipefail
 # /bin/bash bash-gitlab-ci/integration-tests/run-import-information-model--failure.sh
 echo "Testing import information-model sample--success"
 /bin/bash bash-gitlab-ci/integration-tests/run-import-information-model-sample--success.sh
-echo "Testing import information-model sample--failure"
-/bin/bash bash-gitlab-ci/integration-tests/run-import-information-model-sample--failure.sh
+# echo "Testing import information-model sample--failure"
+# /bin/bash bash-gitlab-ci/integration-tests/run-import-information-model-sample--failure.sh
 # echo "Testing import--failure"
 # /bin/bash bash-gitlab-ci/integration-tests/run-import--failure.sh
 
