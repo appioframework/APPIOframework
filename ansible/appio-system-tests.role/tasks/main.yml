@@ -12,3 +12,8 @@
     validate: dpkg --info %s
     src: ./../../installer/appio-terminal.deb
   notify: install_appio_terminal
+
+- name: import_test_data
+  copy:
+    dest: /test-data
+    src: ./test-data

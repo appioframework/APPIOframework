@@ -185,7 +185,7 @@ def test_that_appio_import_information_model_is_succeeding_when_importing_model_
 
     for prepare_command in (
         'appio new opcuaapp -n ' + app_name + ' -t ClientServer -u 127.0.0.1 -p 4840',  # noqa: #501
-        'echo "<?xml version=\"1.0\" encoding=\"utf-8\"?><UANodeSet xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" LastModified=\"2012-12-31T00:00:00Z\" xmlns=\"http://opcfoundation.org/UA/2011/03/UANodeSet.xsd\"><NamespaceUris><Uri>sample_namespace</Uri></NamespaceUris><Models><Model ModelUri=\"sample_namespace\" Version=\"1.01\" PublicationDate=\"2012-12-31T00:00:00Z\" /></Models></UANodeSet>" > model.xml',  # noqa: #501
+        'cp /test-data/information-models/model.xml model.xml',
         'rm -f appio.log',
     ):
         prepare = host.run('cd ' + test_dir_path + ' && ' + prepare_command)
@@ -227,7 +227,7 @@ def test_that_appio_import_information_model_is_succeeding_when_importing_model_
 
     for prepare_command in (
         'appio new opcuaapp -n ' + app_name + ' -t ClientServer -u 127.0.0.1 -p 4840',  # noqa: #501
-        'echo "<?xml version=\"1.0\" encoding=\"utf-8\"?><UANodeSet xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" LastModified=\"2012-12-31T00:00:00Z\" xmlns=\"http://opcfoundation.org/UA/2011/03/UANodeSet.xsd\"><NamespaceUris><Uri>sample_namespace</Uri></NamespaceUris><Models><Model ModelUri=\"sample_namespace\" Version=\"1.01\" PublicationDate=\"2012-12-31T00:00:00Z\" /></Models></UANodeSet>" > model.xml',  # noqa: #501
+        'cp /test-data/information-models/model.xml model.xml',
         'touch types.bsd',
         'rm -f appio.log',
     ):
