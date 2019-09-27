@@ -3,7 +3,6 @@ import os
 
 import testinfra.utils.ansible_runner
 
-from .util.prepare import assert_that_files_are_executable
 from .util.prepare import assert_that_files_are_existing
 from .util.prepare import assert_that_files_are_missing
 from .util.prepare import prepare_provide_test_directory
@@ -53,15 +52,15 @@ def test_that_appio_import_is_failing(host, case, command, app_name):
 
 
 @pytest.mark.parametrize('case, command, app_name', [
-    ['1f', 'appio import information-model -n my-app -p model.txt', 'my-app'],
-    ['2f', 'appio import information-model -n my-app --path model.xml2', 'my-app'],
-    ['3f', 'appio import information-model -n my-app --Path model.xml2', 'my-app'],
-    ['4f', 'appio import information-model -n my-app -P model.xml2', 'my-app'],
-    ['5f', 'appio import information-model -n my-app -p notExistingModel.xml', 'my-app'],
-    ['6f', 'appio import information-model -nn my-app -p notExistingModel.xml', 'my-app'],
-    ['7f', 'appio import information-model my-app -p notExistingModel.xml', 'my-app'],
+    ['1f', 'appio import information-model -n my-app -p model.txt', 'my-app'],  # noqa: #501
+    ['2f', 'appio import information-model -n my-app --path model.xml2', 'my-app'],  # noqa: #501
+    ['3f', 'appio import information-model -n my-app --Path model.xml2', 'my-app'],  # noqa: #501
+    ['4f', 'appio import information-model -n my-app -P model.xml2', 'my-app'],  # noqa: #501
+    ['5f', 'appio import information-model -n my-app -p notExistingModel.xml', 'my-app'],  # noqa: #501
+    ['6f', 'appio import information-model -nn my-app -p notExistingModel.xml', 'my-app'],  # noqa: #501
+    ['7f', 'appio import information-model my-app -p notExistingModel.xml', 'my-app'],  # noqa: #501
 ])
-def test_that_appio_import_information_model_is_failing(host, case, command, app_name):
+def test_that_appio_import_information_model_is_failing(host, case, command, app_name):  # noqa: #501
     # prepare
     test_dir_path = prepare_provide_test_directory(host, case)
 
