@@ -91,6 +91,43 @@ def test_that_appio_import_information_model_is_failing(host, case, command, app
 
 
 @pytest.mark.parametrize('case, command, app_name', [
+    ['1f', 'appio import information-model -n my-app -p model.xml', 'my-app'],  # noqa: #501
+    ['2f', 'appio import information-model -n my-app --path model.xml', 'my-app'],  # noqa: #501
+    ['3f', 'appio import information-model --name my-app -p model.xml', 'my-app'],  # noqa: #501
+    ['4f', 'appio import information-model --name my-app --path model.xml', 'my-app'],  # noqa: #501
+])
+def test_that_appio_import_information_model_is_succeeding_when_importing_model_file(host, case, command, app_name):  # noqa: #501
+    # prepare
+    test_dir_path = prepare_provide_test_directory(host, case)
+
+    file_paths = [
+        test_dir_path + 'appio.log',
+        test_dir_path + app_name + '/models/model.xml',
+    ]
+
+    for prepare_command in (
+        'appio new opcuaapp -n ' + app_name + ' -t ClientServer -u 127.0.0.1 -p 4840',  # noqa: #501
+        'echo "<?xml version=\"1.0\" encoding=\"utf-8\"?><UANodeSet xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" LastModified=\"2012-12-31T00:00:00Z\" xmlns=\"http://opcfoundation.org/UA/2011/03/UANodeSet.xsd\"><NamespaceUris><Uri>sample_namespace</Uri></NamespaceUris><Models><Model ModelUri=\"sample_namespace\" Version=\"1.01\" PublicationDate=\"2012-12-31T00:00:00Z\" /></Models></UANodeSet>" > model.xml',  # noqa: #501
+        'rm -f appio.log',
+    ):
+        prepare = host.run('cd ' + test_dir_path + ' && ' + prepare_command)
+
+        assert prepare.rc == 0
+
+    # arrange
+    assert_that_files_are_missing(host, file_paths)
+
+    # act
+    appio = host.run('cd ' + test_dir_path + ' && ' + command)
+
+    # assert
+    assert appio.rc == 0
+    assert appio.stdout != ''
+
+    assert_that_files_are_existing(host, file_paths)
+
+
+@pytest.mark.parametrize('case, command, app_name', [
     ['1f', 'appio import information-model -n my-app -p model.xml -t types.bsd', 'my-app'],  # noqa: #501
     ['2f', 'appio import information-model -n my-app -p model.xml --types types.bsd', 'my-app'],  # noqa: #501
     ['3f', 'appio import information-model -n my-app --path model.xml -t types.bsd', 'my-app'],  # noqa: #501
