@@ -39,11 +39,11 @@ def test_that_appio_publish_help_is_succeeding(host, case, command):
     assert_that_files_are_existing(host, file_paths)
 
 
-@pytest.mark.parametrize('case, command', [
-    ['1', 'appio publish --name my-app'],
-    ['2', 'appio publish -n     my-app'],
+@pytest.mark.parametrize('case, command, app_name', [
+    ['1', 'appio publish --name my-app', 'my-app'],
+    ['2', 'appio publish -n     my-app', 'my-app'],
 ])
-def test_that_appio_publish_is_succeeding(host, case, command):
+def test_that_appio_publish_is_succeeding(host, case, command, app_name):
     # prepare
     test_dir_path = prepare_provide_test_directory(host, case)
 
