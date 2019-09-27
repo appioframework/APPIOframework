@@ -2,19 +2,6 @@
 
 set -euo pipefail
 
-# echo "Testing import information-model--success"
-# /bin/bash bash-gitlab-ci/integration-tests/run-import-information-model--success.sh
-# echo "Testing import information-model--success--extended"
-# /bin/bash bash-gitlab-ci/integration-tests/run-import-information-model--success--extended.sh
-# echo "Testing import information-model--failure"
-# /bin/bash bash-gitlab-ci/integration-tests/run-import-information-model--failure.sh
-echo "Testing import information-model sample--success"
-/bin/bash bash-gitlab-ci/integration-tests/run-import-information-model-sample--success.sh
-# echo "Testing import information-model sample--failure"
-# /bin/bash bash-gitlab-ci/integration-tests/run-import-information-model-sample--failure.sh
-# echo "Testing import--failure"
-# /bin/bash bash-gitlab-ci/integration-tests/run-import--failure.sh
-
 echo "Testing generate--failure"
 /bin/bash bash-gitlab-ci/integration-tests/run-generate--failure.sh
 echo "Testing generate-information-model--failure"
