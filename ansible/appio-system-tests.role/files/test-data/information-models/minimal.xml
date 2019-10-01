@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UANodeSet xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd"
+           >
+  <Models>
+    <Model ModelUri="test"
+           Version="1.01"
+           PublicationDate="2012-12-31T00:00:00Z"
+           />
+  </Models>
+</UANodeSet>

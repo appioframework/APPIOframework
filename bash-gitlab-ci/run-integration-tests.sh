@@ -2,12 +2,12 @@
 
 set -euo pipefail
 
-echo "Testing generate--failure"
-/bin/bash bash-gitlab-ci/integration-tests/run-generate--failure.sh
-echo "Testing generate-information-model--failure"
-/bin/bash bash-gitlab-ci/integration-tests/run-generate-information-model--failure.sh
-echo "Testing generate-information-model--success"
-/bin/bash bash-gitlab-ci/integration-tests/run-generate-information-model--success.sh
+# echo "Testing generate--failure"
+# /bin/bash bash-gitlab-ci/integration-tests/run-generate--failure.sh
+# echo "Testing generate-information-model--failure"
+# /bin/bash bash-gitlab-ci/integration-tests/run-generate-information-model--failure.sh
+# echo "Testing generate-information-model--success"
+# /bin/bash bash-gitlab-ci/integration-tests/run-generate-information-model--success.sh
 
 echo "Testing sln-add--failure"
 /bin/bash bash-gitlab-ci/integration-tests/run-sln-add--failure.sh
