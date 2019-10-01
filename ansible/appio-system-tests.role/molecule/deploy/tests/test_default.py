@@ -51,7 +51,7 @@ def test_that_appio_deploy_is_succeeding(host, case, command, app_name):
 
     file_paths = [
         test_dir_path + 'appio.log',
-        deb_file_path
+        deb_file_path,
     ]
 
     installed_file_paths = [
