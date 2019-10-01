@@ -36,11 +36,11 @@ echo "Testing sln-deploy--failure--extended"
 # echo "Testing sln-deploy--success"
 # /bin/bash bash-gitlab-ci/integration-tests/run-sln-deploy--success.sh
 
-echo "Testing reference-add--failure"
-/bin/bash bash-gitlab-ci/integration-tests/run-reference-add--failure.sh
-echo "Testing reference-add--success"
-/bin/bash bash-gitlab-ci/integration-tests/run-reference-add--success.sh
-echo "Testing reference-remove--failure"
-/bin/bash bash-gitlab-ci/integration-tests/run-reference-remove--failure.sh
-echo "Testing reference-remove--success"
-/bin/bash bash-gitlab-ci/integration-tests/run-reference-remove--success.sh
+# echo "Testing reference-add--failure"
+# /bin/bash bash-gitlab-ci/integration-tests/run-reference-add--failure.sh
+# echo "Testing reference-add--success"
+# /bin/bash bash-gitlab-ci/integration-tests/run-reference-add--success.sh
+# echo "Testing reference-remove--failure"
+# /bin/bash bash-gitlab-ci/integration-tests/run-reference-remove--failure.sh
+# echo "Testing reference-remove--success"
+# /bin/bash bash-gitlab-ci/integration-tests/run-reference-remove--success.sh
