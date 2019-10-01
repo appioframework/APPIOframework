@@ -8,3 +8,6 @@
 appio.log
 **/__pycache__/**
 *.opencover.xml
+/installer/*.deb
+/installer/appio-terminal/usr/bin/
+!/installer/appio-terminal/usr/bin/appio
