@@ -35,7 +35,7 @@ def test_meson_is_present(host):
 
 def test_open62541_is_present(host):
 
-    package = host.package('open62541--v0.3.0')
+    package = host.package('open62541--v1.0.0')
     assert package.is_installed
 
 

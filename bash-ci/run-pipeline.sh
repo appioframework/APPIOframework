@@ -21,7 +21,7 @@ function run_stage_2() {
     local CI_JOB_ID=${1}
 
     sudo docker exec ${CI_JOB_ID} mv ${CI_ARTIFACT_DIR}/publish .
-    sudo docker exec ${CI_JOB_ID} /bin/bash bash-ci/run-dpkg-build--open62541--v0.3.0.sh
+    sudo docker exec ${CI_JOB_ID} /bin/bash bash-ci/run-dpkg-build--open62541--v1.0.0.sh
     sudo docker exec ${CI_JOB_ID} /bin/bash bash-ci/run-dpkg-build--appio-terminal.sh
 }
 
@@ -41,7 +41,7 @@ function run_pipeline_using_docker() {
     local CI_TEST_NAMES[2]="Build debian installer"
     local CI_TEST_IDS[2]="build-debian-installer"
     local CI_TEST_IMAGES[2]="ubuntu:bionic"
-    local CI_JOB_ARTIFACTS[2]="installer/open62541--v0.3.0.deb installer/appio-terminal.deb"
+    local CI_JOB_ARTIFACTS[2]="installer/open62541--v1.0.0.deb installer/appio-terminal.deb"
 
     for INDEX in ${!CI_TEST_NAMES[@]}
     do

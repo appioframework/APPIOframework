@@ -11,7 +11,7 @@ To uninstall APPIO simply execute the following commands:
 .. code-block:: bash
 
    dpkg -r appio-terminal
-   dpkg -r open62541--v0.3.0
+   dpkg -r open62541--v1.0.0
 
 *************************
 Testing

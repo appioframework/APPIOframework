@@ -2,17 +2,18 @@ project('simple-meson-example', 'c',
         version : '1.0',
         default_options : [ 'warning_level=3', 'buildtype=debugoptimized', 'c_std=c11' ]
 )
-
+add_global_arguments('-DUA_ENABLE_AMALGAMATION=ON', language : 'c')
 client_app_sources  = [ files('src/client/main.c')
 ]
 
-client_app_inc      = [ include_directories('src/client'), include_directories('/etc/appio/tools/open62541/v0.3.0/src')
+client_app_inc      = [ include_directories('src/client'), include_directories('/etc/appio/tools/open62541/v1.0.0/src')
 ]
 
-client_app_deps     = [ meson.get_compiler('c').find_library('/etc/appio/tools/open62541/v0.3.0/src/libopen62541')
+client_app_deps     = [ meson.get_compiler('c').find_library('/etc/appio/tools/open62541/v1.0.0/src/libopen62541')
 ]
 
 client_app_exe      = executable('client-app',
                           client_app_sources,
                           include_directories: client_app_inc,
-                          dependencies:        client_app_deps)
+                          dependencies:        client_app_deps,
+                          c_args : '-DUA_ENABLE_AMALGAMATION=ON')

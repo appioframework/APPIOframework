@@ -23,8 +23,9 @@ int main(int argc, char *argv[])
 	for (int index = 0; index < numberOfReferences; index++)
 	{
 		char* serverAddress = SERVER_APP_URL[index];
-		UA_ClientConfig clientConfig = UA_ClientConfig_default;
-		client[index] = UA_Client_new(clientConfig);
+
+		client[index] = UA_Client_new();
+		UA_ClientConfig_setDefault(UA_Client_getConfig(client[index]));
 
 		UA_StatusCode connectStatus = UA_Client_connect(client[index], serverAddress);
 

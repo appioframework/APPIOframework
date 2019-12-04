@@ -10,10 +10,10 @@ Please clone the `APPIO repository <https://github.com/appioframework/APPIO-Term
 
 Two packages will be installed:
 
--  open62541--v0.3.0
+-  open62541--v1.0.0
 -  appio-terminal
 
-open62541--v0.3.0 is the used OPC UA Stack.
+open62541--v1.0.0 is the used OPC UA Stack.
 
 ********************
 List of dependencies
@@ -46,7 +46,7 @@ First you need to install the open62541 stack. Continue with installing APPIO.
 .. code-block:: bash
 
    cd /home/appiodev/Downloads/artifacts/installer/
-   dpkg --install open62541--v0.3.0.deb
+   dpkg --install open62541--v1.0.0.deb
    dpkg --install appio-terminal.deb 
 
 *************************

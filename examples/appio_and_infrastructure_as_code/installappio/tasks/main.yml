@@ -75,7 +75,7 @@
 
 - name: Install open62541
   apt:
-    deb: "/installer/open62541--v0.3.0.deb"
+    deb: "/installer/open62541--v1.0.0.deb"
     state: present
     update_cache: yes
   become: true

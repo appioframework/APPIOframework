@@ -1,6 +1,6 @@
 ---
 - name: install_open62541_terminal
-  command: dpkg --install /tmp/open62541--v0.3.0.deb
+  command: dpkg --install /tmp/open62541--v1.0.0.deb
   become: true
 
 - name: install_appio_terminal
