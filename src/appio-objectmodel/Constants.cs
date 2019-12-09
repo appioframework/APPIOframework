@@ -104,7 +104,7 @@ namespace Appio.ObjectModel
             public const string PythonScript = @"python3";
             public static readonly string GenerateDatatypesScriptPath = System.IO.Path.Combine(new string[] { " ", "etc", "appio", "tools", "open62541", "v1.0.0", "python-scripts", "generate_datatypes.py" });
             // 0 bsd types source path
-            public const string GenerateDatatypesTypeBsd = @" --type-bsd={0} --type-csv={1}";
+            public const string GenerateDatatypesTypeBsd = @" --type-bsd={0} --type-csv={1} --type-csv={2}";
             public static readonly string NodesetCompilerCompilerPath = System.IO.Path.Combine(new string[] { " ", "etc", "appio", "tools", "open62541", "v1.0.0", "python-scripts", "nodeset_compiler", "nodeset_compiler.py" });
             public const string NodesetCompilerInternalHeaders = @" --internal-headers";
             // 0 ua types
@@ -113,6 +113,7 @@ namespace Appio.ObjectModel
             public const string NodesetCompilerExisting = @" --existing {0}";
             // 0 existing model xml source path
             public static readonly string NodesetCompilerBasicNodeset = System.IO.Path.Combine(new string[] { " ", "etc", "appio", "tools", "open62541", "v1.0.0", "existing-nodes", "Opc.Ua.NodeSet2.xml" });
+            public static readonly string NodesetCompilerBasicNodeIdsTypeDescriptionsFile = System.IO.Path.Combine(new string[] { " ", "etc", "appio", "tools", "open62541", "v1.0.0", "existing-nodes", "NodeIds.csv" });
             // 0 xml model source path
             // 1 output directory with name for generated files and method
             public const string NodesetCompilerXml = @" --xml {0} {1}";
@@ -135,7 +136,8 @@ namespace Appio.ObjectModel
             public const string Certificate                         = "cert.der";
             public const string ServerCryptoPrefix                  = "server";
             public const string ClientCryptoPrefix                  = "client";
-		}
+            public const string NodeIdsTypeDescriptionsFile = "NodeIds.csv";            
+        }
 
         public static class ExternalExecutableArguments
         {

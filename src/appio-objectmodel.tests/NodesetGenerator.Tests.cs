@@ -180,7 +180,7 @@ namespace Appio.ObjectModel.Tests
             var typeDescriptoinsSourceFullPath = @"../../" + typeDescriptionsSourcePath;
             var typesTargetFullPath = Path.Combine(Constants.DirectoryName.InformationModels, modelName.ToLower());
 			var generatedTypesArgs = Constants.ExecutableName.GenerateDatatypesScriptPath +
-										string.Format(Constants.ExecutableName.GenerateDatatypesTypeBsd, typesSourceFullPath, typeDescriptoinsSourceFullPath) +
+										string.Format(Constants.ExecutableName.GenerateDatatypesTypeBsd, typesSourceFullPath, typeDescriptoinsSourceFullPath, Constants.ExecutableName.NodesetCompilerBasicNodeIdsTypeDescriptionsFile) +
 										" " +
 										typesTargetFullPath + Constants.InformationModelsName.Types;
 			var serverMesonBuildFilePath = Path.Combine(srcDirectory, Constants.FileName.SourceCode_meson_build);

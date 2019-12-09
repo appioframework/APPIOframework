@@ -86,7 +86,7 @@ namespace Appio.ObjectModel
 
             // Build types generation script arguments
             var generatedTypesArgs = Constants.ExecutableName.GenerateDatatypesScriptPath +
-										string.Format(Constants.ExecutableName.GenerateDatatypesTypeBsd, typesSourceRelativePath, typeDefinitionsSourceRelativePath) +
+										string.Format(Constants.ExecutableName.GenerateDatatypesTypeBsd, typesSourceRelativePath, typeDefinitionsSourceRelativePath, Constants.ExecutableName.NodesetCompilerBasicNodeIdsTypeDescriptionsFile) +
 										" " +
 										typesTargetRelativePath +
 										Constants.InformationModelsName.Types;
