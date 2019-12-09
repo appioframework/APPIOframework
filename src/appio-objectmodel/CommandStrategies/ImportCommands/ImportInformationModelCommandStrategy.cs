@@ -194,7 +194,7 @@ namespace Appio.ObjectModel.CommandStrategies.ImportCommands
 				AppioLogger.Warn(LoggingText.InvalidOpcuaappName);
 				_outputMessages.Add(string.Format(OutputText.ImportInformationModelCommandInvalidOpcuaappName, opcuaAppName), string.Empty);
 				return false;
-			}
+			} 
 
 			return true;
 		}
