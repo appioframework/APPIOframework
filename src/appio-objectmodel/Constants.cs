@@ -113,7 +113,7 @@ namespace Appio.ObjectModel
             public const string NodesetCompilerExisting = @" --existing {0}";
             // 0 existing model xml source path
             public static readonly string NodesetCompilerBasicNodeset = System.IO.Path.Combine(new string[] { " ", "etc", "appio", "tools", "open62541", "v1.0.0", "existing-nodes", "Opc.Ua.NodeSet2.xml" });
-            public static readonly string NodesetCompilerBasicNodeIdsTypeDescriptionsFile = System.IO.Path.Combine(new string[] { " ", "etc", "appio", "tools", "open62541", "v1.0.0", "existing-nodes", "NodeIds.csv" });
+            public static readonly string NodesetCompilerBasicNodeIdsTypeDescriptionsFile = System.IO.Path.Combine(new string[] {"etc", "appio", "tools", "open62541", "v1.0.0", "existing-nodes", "NodeIds.csv" });
             // 0 xml model source path
             // 1 output directory with name for generated files and method
             public const string NodesetCompilerXml = @" --xml {0} {1}";
