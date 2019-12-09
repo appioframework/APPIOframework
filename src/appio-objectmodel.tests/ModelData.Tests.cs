@@ -17,14 +17,15 @@ namespace Appio.ObjectModel.Tests
         private string _name = "sampleModelName";
         private string _uri = "sampleModelUri";
 		private string _types = "sampleModelTypes";
-		private string _namespaceVariable = "sampleModelNamespaceVariable";
+        private string _typeDescriptions = "sampleModelTypeDescriptions";
+        private string _namespaceVariable = "sampleModelNamespaceVariable";
 		private List<string> _requiredModelUris = new List<string>(new string[] { "sampleRequiredModelUri_1", "sampleRequiredModelUri_2" });
 
         [SetUp]
         public void SetupTest()
         {
 			_defaultModelData = new ModelData();
-			_modelData = new ModelData(_name, _uri, _types, _namespaceVariable, _requiredModelUris);   
+			_modelData = new ModelData(_name, _uri, _types, _typeDescriptions, _namespaceVariable, _requiredModelUris);   
         }
 
         [TearDown]

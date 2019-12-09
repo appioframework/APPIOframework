@@ -22,7 +22,8 @@ namespace Appio.ObjectModel.Tests.CommandStrategies
 		private readonly string _validModelExtension = ".xml";
 		private readonly string _invalidModelExtension = ".txt";
 		private readonly string _validTypesExtension = ".bsd";
-		private readonly string _modelName = "model.xml";
+        private readonly string _validTypeDescriptionsExtension = ".csv";
+        private readonly string _modelName = "model.xml";
 
 		private static string[][] ValidInputs()
 		{
@@ -48,14 +49,14 @@ namespace Appio.ObjectModel.Tests.CommandStrategies
 		{
 			return new[]
 			{
-				new[] { "-n", "myApp", "-p", "model.xml", "-t", "types.bsd" },
-				new[] { "-n", "myApp", "-p", "model.xml", "--types", "types.bsd" },
-				new[] { "-n", "myApp", "--path", "model.xml", "-t", "types.bsd" },
-				new[] { "-n", "myApp", "--path", "model.xml", "--types", "types.bsd" },
-				new[] { "--name", "myApp", "-p", "model.xml", "-t", "types.bsd" },
-				new[] { "--name", "myApp", "-p", "model.xml", "--types", "types.bsd" },
-				new[] { "--name", "myApp", "--path", "model.xml", "-t", "types.bsd" },
-				new[] { "--name", "myApp", "--path", "model.xml", "--types", "types.bsd" }
+				new[] { "-n", "myApp", "-p", "model.xml", "-t", "types.bsd", "-td", "typeDescriptions.csv" },
+				new[] { "-n", "myApp", "-p", "model.xml", "--types", "types.bsd", "--typedescriptions", "typeDescriptions.csv" },
+				new[] { "-n", "myApp", "--path", "model.xml", "-t", "types.bsd", "-td", "typeDescriptions.csv" },
+				new[] { "-n", "myApp", "--path", "model.xml", "--types", "types.bsd", "--typedescriptions", "typeDescriptions.csv" },
+				new[] { "--name", "myApp", "-p", "model.xml", "-t", "types.bsd", "-td", "typeDescriptions.csv" },
+				new[] { "--name", "myApp", "-p", "model.xml", "--types", "types.bsd", "--typedescriptions", "typeDescriptions.csv" },
+				new[] { "--name", "myApp", "--path", "model.xml", "-t", "types.bsd", "-td", "typeDescriptions.csv" },
+				new[] { "--name", "myApp", "--path", "model.xml", "--types", "types.bsd", "--typedescriptions", "typeDescriptions.csv" }
 			};
 		}
 
@@ -807,26 +808,33 @@ namespace Appio.ObjectModel.Tests.CommandStrategies
 			var projectName = inputParams.ElementAtOrDefault(1);
 			var modelFilePath = inputParams.ElementAtOrDefault(3);
 			var typesFilePath = inputParams.ElementAtOrDefault(5);
+            var typeDescriptionsFilePath = inputParams.ElementAtOrDefault(7);
 
-			var appioprojFilePath = Path.Combine(projectName, projectName + Constants.FileExtension.Appioproject);
+            var appioprojFilePath = Path.Combine(projectName, projectName + Constants.FileExtension.Appioproject);
 			var modelsDirectory = Path.Combine(projectName, Constants.DirectoryName.Models);
 			var modelName = Path.GetFileName(modelFilePath);
 			var modelTargetPath = Path.Combine(modelsDirectory, modelName);
 			var typesName = Path.GetFileName(typesFilePath);
 			var typesTargetPath = Path.Combine(modelsDirectory, typesName);
+            var typeDescriptionsName = Path.GetFileName(typeDescriptionsFilePath);
+            var typeDescriptionsTargetPath = Path.Combine(modelsDirectory, typeDescriptionsName);
 
-			_fileSystemMock.Setup(x => x.DirectoryExists(projectName)).Returns(true);
+            _fileSystemMock.Setup(x => x.DirectoryExists(projectName)).Returns(true);
 			_fileSystemMock.Setup(x => x.FileExists(modelFilePath)).Returns(true);
 			_fileSystemMock.Setup(x => x.GetExtension(modelFilePath)).Returns(_validModelExtension);
 			_fileSystemMock.Setup(x => x.GetExtension(typesFilePath)).Returns(_validTypesExtension);
-			_fileSystemMock.Setup(x => x.FileExists(typesFilePath)).Returns(true);
-			_fileSystemMock.Setup(x => x.GetFileName(typesFilePath)).Returns(typesName);
-			_fileSystemMock.Setup(x => x.CombinePaths(projectName, projectName + Constants.FileExtension.Appioproject)).Returns(appioprojFilePath);
+            _fileSystemMock.Setup(x => x.GetExtension(typeDescriptionsFilePath)).Returns(_validTypeDescriptionsExtension);
+            _fileSystemMock.Setup(x => x.FileExists(typesFilePath)).Returns(true);
+            _fileSystemMock.Setup(x => x.FileExists(typeDescriptionsFilePath)).Returns(true);
+            _fileSystemMock.Setup(x => x.GetFileName(typesFilePath)).Returns(typesName);
+            _fileSystemMock.Setup(x => x.GetFileName(typeDescriptionsFilePath)).Returns(typeDescriptionsName);
+            _fileSystemMock.Setup(x => x.CombinePaths(projectName, projectName + Constants.FileExtension.Appioproject)).Returns(appioprojFilePath);
 			_fileSystemMock.Setup(x => x.CombinePaths(projectName, Constants.DirectoryName.Models)).Returns(modelsDirectory);
 			_fileSystemMock.Setup(x => x.CombinePaths(modelsDirectory, typesName)).Returns(typesTargetPath);
-			_modelValidatorMock.Setup(x => x.Validate(modelFilePath, It.IsAny<string>())).Returns(true);
+            _fileSystemMock.Setup(x => x.CombinePaths(modelsDirectory, typeDescriptionsName)).Returns(typeDescriptionsTargetPath);
+            _modelValidatorMock.Setup(x => x.Validate(modelFilePath, It.IsAny<string>())).Returns(true);
 
-			using (var serverAppioprojFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_defaultOpcuaServerAppContent)))
+            using (var serverAppioprojFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_defaultOpcuaServerAppContent)))
 			using (var nodesetFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_sampleNodesetContent)))
 			{
 				_fileSystemMock.Setup(x => x.ReadFile(appioprojFilePath)).Returns(serverAppioprojFileStream);
@@ -840,7 +848,8 @@ namespace Appio.ObjectModel.Tests.CommandStrategies
 				Assert.IsNotNull(commandResult.OutputMessages);
 				Assert.AreEqual(string.Format(OutputText.ImportInformationModelCommandSuccess, modelFilePath), commandResult.OutputMessages.First().Key);
 				_fileSystemMock.Verify(x => x.CopyFile(typesFilePath, typesTargetPath), Times.Once);
-			}
+                _fileSystemMock.Verify(x => x.CopyFile(typeDescriptionsFilePath, typeDescriptionsTargetPath), Times.Once);
+            }
 		}
 	}
 }

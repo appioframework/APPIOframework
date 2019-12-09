@@ -22,7 +22,8 @@ namespace Appio.ObjectModel.Tests
 		private readonly string _projectName = "testApp";
 		private readonly string _modelFullName = "model.xml";
 		private readonly string _typesFullName = "types.bsd";
-		private readonly string _namespaceVariable = "ns_model";
+        private readonly string _typeDescriptionsFullName = "types.csv";
+        private readonly string _namespaceVariable = "ns_model";
 		private readonly List<RequiredModelsData> _requiredModelData = new List<RequiredModelsData>{ new RequiredModelsData("requiredModel.xml", true) };
 
 		protected static string[] InvalidTypesFullNames()
@@ -71,7 +72,7 @@ namespace Appio.ObjectModel.Tests
 		[SetUp]
 		public void SetupTest()
 		{
-			_defaultModelData = new ModelData(_modelFullName, null, _typesFullName, _namespaceVariable, null);
+			_defaultModelData = new ModelData(_modelFullName, null, _typesFullName, _typeDescriptionsFullName, _namespaceVariable, null);
 			_fileSystemMock = new Mock<IFileSystem>();
 			_modelValidator = new Mock<IModelValidator>();
 			_loggerListenerMock = new Mock<ILoggerListener>();
@@ -106,7 +107,7 @@ namespace Appio.ObjectModel.Tests
 			_loggerListenerMock.Setup(listener => listener.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidFile, invalidTypesFullName))).Callback(delegate { _loggerWroteOut = true; });
 
 			// Act
-			var result = _objectUnderTest.GenerateTypesSourceCodeFiles(_projectName, new ModelData(_modelFullName, null, invalidTypesFullName, null, null));
+			var result = _objectUnderTest.GenerateTypesSourceCodeFiles(_projectName, new ModelData(_modelFullName, null, invalidTypesFullName, null, null, null));
 
 			// Assert
 			Assert.IsFalse(result);
@@ -175,9 +176,11 @@ namespace Appio.ObjectModel.Tests
 			var modelName = Path.GetFileNameWithoutExtension(_modelFullName);
 			var typesSourcePath = Path.Combine(Constants.DirectoryName.Models, _typesFullName);
 			var typesSourceFullPath = @"../../" + typesSourcePath;
-			var typesTargetFullPath = Path.Combine(Constants.DirectoryName.InformationModels, modelName.ToLower());
+            var typeDescriptionsSourcePath = Path.Combine(Constants.DirectoryName.Models, _typeDescriptionsFullName);
+            var typeDescriptoinsSourceFullPath = @"../../" + typeDescriptionsSourcePath;
+            var typesTargetFullPath = Path.Combine(Constants.DirectoryName.InformationModels, modelName.ToLower());
 			var generatedTypesArgs = Constants.ExecutableName.GenerateDatatypesScriptPath +
-										string.Format(Constants.ExecutableName.GenerateDatatypesTypeBsd, typesSourceFullPath) +
+										string.Format(Constants.ExecutableName.GenerateDatatypesTypeBsd, typesSourceFullPath, typeDescriptoinsSourceFullPath) +
 										" " +
 										typesTargetFullPath + Constants.InformationModelsName.Types;
 			var serverMesonBuildFilePath = Path.Combine(srcDirectory, Constants.FileName.SourceCode_meson_build);
@@ -189,7 +192,8 @@ namespace Appio.ObjectModel.Tests
 			_fileSystemMock.Setup(x => x.GetFileNameWithoutExtension(_modelFullName)).Returns(modelName);
 			_fileSystemMock.Setup(x => x.CombinePaths(Constants.DirectoryName.InformationModels, modelName.ToLower())).Returns(typesTargetFullPath);
 			_fileSystemMock.Setup(x => x.CombinePaths(Constants.DirectoryName.Models, _typesFullName)).Returns(typesSourcePath);
-			_fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, generatedTypesArgs)).Returns(true);
+            _fileSystemMock.Setup(x => x.CombinePaths(Constants.DirectoryName.Models, _typeDescriptionsFullName)).Returns(typeDescriptionsSourcePath);
+            _fileSystemMock.Setup(x => x.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, generatedTypesArgs)).Returns(true);
 			_fileSystemMock.Setup(x => x.CombinePaths(srcDirectory, Constants.FileName.SourceCode_meson_build)).Returns(serverMesonBuildFilePath);
 
 			using (var serverMesonBuildFileStream = new MemoryStream(Encoding.ASCII.GetBytes(_defaultServerMesonBuild)))
@@ -230,7 +234,7 @@ namespace Appio.ObjectModel.Tests
 			_loggerListenerMock.Setup(listener => listener.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidModelFile, invalidModelFullName))).Callback(delegate { _loggerWroteOut = true; });
 
 			// Act
-			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, new ModelData(invalidModelFullName, null, _typesFullName, null, null), new List<RequiredModelsData>());
+			var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, new ModelData(invalidModelFullName, null, _typesFullName, null, null, null), new List<RequiredModelsData>());
 
 			// Assert
 			Assert.IsFalse(result);
@@ -371,7 +375,7 @@ namespace Appio.ObjectModel.Tests
 				_fileSystemMock.Setup(x => x.ReadFile(mainCallbacksFilePath)).Returns(mainCallbacksFileStream);
 
 				// Act
-				var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, new ModelData(_modelFullName, null, null, _namespaceVariable, null), _requiredModelData);
+				var result = _objectUnderTest.GenerateNodesetSourceCodeFiles(_projectName, new ModelData(_modelFullName, null, null, null, _namespaceVariable, null), _requiredModelData);
 
 				// Assert
 				Assert.IsTrue(result);

@@ -23,6 +23,7 @@ namespace Appio.ObjectModel
             public const string DebianInstaller = ".deb";
             public const string InformationModel = ".xml";
             public const string ModelTypes = ".bsd";
+            public const string ModelTypeDescriptions = ".csv";            
             public const string CFile = ".c";
 			public const string ZipFile = ".zip";
 			public const string DerFile = ".der";
@@ -103,7 +104,7 @@ namespace Appio.ObjectModel
             public const string PythonScript = @"python3";
             public static readonly string GenerateDatatypesScriptPath = System.IO.Path.Combine(new string[] { " ", "etc", "appio", "tools", "open62541", "v1.0.0", "python-scripts", "generate_datatypes.py" });
             // 0 bsd types source path
-            public const string GenerateDatatypesTypeBsd = @" --type-bsd={0}";
+            public const string GenerateDatatypesTypeBsd = @" --type-bsd={0} --type-csv={1}";
             public static readonly string NodesetCompilerCompilerPath = System.IO.Path.Combine(new string[] { " ", "etc", "appio", "tools", "open62541", "v1.0.0", "python-scripts", "nodeset_compiler", "nodeset_compiler.py" });
             public const string NodesetCompilerInternalHeaders = @" --internal-headers";
             // 0 ua types
@@ -127,6 +128,7 @@ namespace Appio.ObjectModel
             public const string SourceCode_meson_build              = "meson.build";
             public const string SampleInformationModelFile          = "DiNodeset.xml";
 			public const string SampleInformationModelTypesFile     = "DiTypes.bsd";
+            public const string SampleInformationModelTypeDescriptionsFile = "DiTypes.csv";            
             public const string CertificateConfig                   = "certConfig.cnf";
             public const string PrivateKeyDER                       = "priv.der";
             public const string PrivateKeyPEM                       = "priv.pem";
@@ -237,6 +239,8 @@ namespace Appio.ObjectModel
             public const string VerbosePath = "--path";
 			public const string Types = "-t";
 			public const string VerboseTypes = "--types";
+            public const string TypeDescriptions = "-td";
+            public const string VerboseTypeDescriptions = "--typedescriptions";
             public const string Help = "-h";
             public const string VerboseHelp = "--help";
             public const string Sample = "-s";
