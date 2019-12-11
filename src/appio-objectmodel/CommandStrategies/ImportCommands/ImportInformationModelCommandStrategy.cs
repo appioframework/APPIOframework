@@ -18,7 +18,7 @@ namespace Appio.ObjectModel.CommandStrategies.ImportCommands
 {
     public class ImportInformationModelCommandStrategy : ICommand<ImportStrategy>
     {
-	    enum ParamId {AppName, ModelPath, TypesPath, TypeDescriptions, Sample}
+	    enum ParamId {AppName, ModelPath, TypesPath, Sample}
 
 	    private readonly ParameterResolver<ParamId> _resolver;
         private readonly IFileSystem _fileSystem;
@@ -52,15 +52,8 @@ namespace Appio.ObjectModel.CommandStrategies.ImportCommands
 					Short = Constants.ImportCommandOptions.Types,
 					Verbose = Constants.ImportCommandOptions.VerboseTypes,
 					Default = string.Empty
-				},
-                new StringParameterSpecification<ParamId>
-                {
-                    Identifier = ParamId.TypeDescriptions,
-                    Short = Constants.ImportCommandOptions.TypeDescriptions,
-                    Verbose = Constants.ImportCommandOptions.VerboseTypeDescriptions,
-                    Default = string.Empty
-                }
-            }, new []
+				}
+			}, new []
 			{
 				new BoolParameterSpecification<ParamId>
 				{
@@ -83,10 +76,9 @@ namespace Appio.ObjectModel.CommandStrategies.ImportCommands
 			var opcuaAppName = parameters[ParamId.AppName];
 			var modelPath = parameters[ParamId.ModelPath];
 			var typesPath = parameters[ParamId.TypesPath];
-            var typeDescriptionsPath = parameters[ParamId.TypeDescriptions];
-
-            // opcuaapp name validation
-            if (!ValidateOpcuaAppName(opcuaAppName))
+			
+			// opcuaapp name validation
+			if (!ValidateOpcuaAppName(opcuaAppName))
 			{
 				return new CommandResult(false, _outputMessages);
 			}
@@ -107,7 +99,7 @@ namespace Appio.ObjectModel.CommandStrategies.ImportCommands
 				var typesFilePath = _fileSystem.CombinePaths(modelsDir, Constants.FileName.SampleInformationModelTypesFile);
 				_fileSystem.CreateFile(typesFilePath, typesContent);
 
-				if (!UpdateAppioProjFile(appioprojFilePath, modelData, opcuaAppName, Constants.FileName.SampleInformationModelFile, nodesetFilePath, Constants.FileName.SampleInformationModelTypesFile, Constants.FileName.SampleInformationModelTypeDescriptionsFile))
+				if (!UpdateAppioProjFile(appioprojFilePath, modelData, opcuaAppName, Constants.FileName.SampleInformationModelFile, nodesetFilePath, Constants.FileName.SampleInformationModelTypesFile))
 					return new CommandResult(false, _outputMessages);
 
 				_outputMessages.Add(string.Format(OutputText.ImportSampleInformationModelSuccess, Constants.FileName.SampleInformationModelFile), string.Empty);
@@ -129,14 +121,7 @@ namespace Appio.ObjectModel.CommandStrategies.ImportCommands
 				return new CommandResult(false, _outputMessages);
 			}
 
-            // typeDescriptions validation
-            var typeDescriptionsFileName = string.Empty;
-            if (typeDescriptionsPath != string.Empty && !ValidateTypeDescriptions(out typeDescriptionsFileName, typeDescriptionsPath))
-            {
-                return new CommandResult(false, _outputMessages);
-            }
-
-            if (!UpdateAppioProjFile(appioprojFilePath, modelData, opcuaAppName, modelFileName, modelPath, typesFileName, typeDescriptionsFileName))
+			if (!UpdateAppioProjFile(appioprojFilePath, modelData, opcuaAppName, modelFileName, modelPath, typesFileName))
 				return new CommandResult(false, _outputMessages);
 
 			// copy model file
@@ -151,21 +136,14 @@ namespace Appio.ObjectModel.CommandStrategies.ImportCommands
 				_fileSystem.CopyFile(typesPath, targetTypesFilePath);
 			}
 
-            // copy typeDescriptions file
-            if (typeDescriptionsPath != string.Empty)
-            {
-                var targetTypeDescriptionsFilePath = _fileSystem.CombinePaths(modelsDirectory, typeDescriptionsFileName);
-                _fileSystem.CopyFile(typeDescriptionsPath, targetTypeDescriptionsFilePath);
-            }                       
-
-            // exit with success
+			// exit with success
             AppioLogger.Info(string.Format(LoggingText.ImportInforamtionModelCommandSuccess, modelPath));
 			_outputMessages.Add(string.Format(OutputText.ImportInformationModelCommandSuccess, modelPath), string.Empty);
             return new CommandResult(true, _outputMessages);
         }
 
 		private bool UpdateAppioProjFile(string appioprojFilePath, ModelData modelData,
-			string opcuaAppName, string modelFileName, string modelPath, string typesFileName, string typeDescriptionsFileName)
+			string opcuaAppName, string modelFileName, string modelPath, string typesFileName)
 		{
 			// deserialize appioproj file
 			if (!DeserializeAppioprojFile(appioprojFilePath, out var opcuaappData))
@@ -175,7 +153,7 @@ namespace Appio.ObjectModel.CommandStrategies.ImportCommands
 
 			// build model data
 			var opcuaappDataAsServer = opcuaappData as IOpcuaServerApp;
-			if (!BuildModelData(ref modelData, opcuaappDataAsServer, opcuaAppName, modelFileName, modelPath, typesFileName, typeDescriptionsFileName))
+			if (!BuildModelData(ref modelData, opcuaappDataAsServer, opcuaAppName, modelFileName, modelPath, typesFileName))
 			{
 				return false;
 			}
@@ -263,27 +241,7 @@ namespace Appio.ObjectModel.CommandStrategies.ImportCommands
 			return true;
 		}
 
-        private bool ValidateTypeDescriptions(out string typeDescriptionsFileName, string typeDescriptionsPath)
-        {
-            typeDescriptionsFileName = _fileSystem.GetFileName(typeDescriptionsPath);
-            if (_fileSystem.GetExtension(typeDescriptionsPath) != Constants.FileExtension.ModelTypeDescriptions)
-            {
-                AppioLogger.Warn(LoggingText.ImportInformationModelCommandFailureTypesHasInvalidExtension);
-                _outputMessages.Add(string.Format(OutputText.ImportInformationModelCommandFailureTypesHasInvalidExtension, typeDescriptionsFileName), string.Empty);
-                return false;
-            }
-
-            if (!_fileSystem.FileExists(typeDescriptionsPath))
-            {
-                AppioLogger.Warn(LoggingText.ImportInformationModelCommandFailureTypesFileDoesNotExist);
-                _outputMessages.Add(string.Format(OutputText.ImportInformationModelCommandFailureTypesFileDoesNotExist, typeDescriptionsPath), string.Empty);
-                return false;
-            }
-
-            return true;
-        }
-
-        private bool ExtractNodesetUris(ref ModelData modelData, string nodesetPath)
+		private bool ExtractNodesetUris(ref ModelData modelData, string nodesetPath)
 		{
 			// read XML file
 			XmlDocument nodesetXml = new XmlDocument();
@@ -346,7 +304,7 @@ namespace Appio.ObjectModel.CommandStrategies.ImportCommands
 			return true;
 		}
 
-		private bool BuildModelData(ref ModelData modelData, IOpcuaServerApp opcuaServerData, string opcuaAppName, string modelFileName, string modelPath, string typesFileName, string typeDescriptionsFileName)
+		private bool BuildModelData(ref ModelData modelData, IOpcuaServerApp opcuaServerData, string opcuaAppName, string modelFileName, string modelPath, string typesFileName)
 		{
 			// build model data
 			modelData.Name = modelFileName;
@@ -355,8 +313,7 @@ namespace Appio.ObjectModel.CommandStrategies.ImportCommands
 				return false;
 			}
 			modelData.Types = typesFileName;
-            modelData.TypeDescriptions = typeDescriptionsFileName;
-            modelData.NamespaceVariable = Constants.NodesetXml.NamespaceVariablePrefix + _fileSystem.GetFileNameWithoutExtension(modelFileName);
+			modelData.NamespaceVariable = Constants.NodesetXml.NamespaceVariablePrefix + _fileSystem.GetFileNameWithoutExtension(modelFileName);
 
 			// check if appioproj file already contains model with imported model name
 			var modelName = modelData.Name;

@@ -81,12 +81,9 @@ namespace Appio.ObjectModel
 			var typesSourceRelativePath = @"../../" + _fileSystem.CombinePaths(Constants.DirectoryName.Models, modelData.Types);
 			var typesTargetRelativePath = _fileSystem.CombinePaths(Constants.DirectoryName.InformationModels, modelName.ToLower());
 
-            // Build typeDefinitions
-            var typeDefinitionsSourceRelativePath = @"../../" + _fileSystem.CombinePaths(Constants.DirectoryName.Models, modelData.TypeDescriptions);
-
-            // Build types generation script arguments
-            var generatedTypesArgs = Constants.ExecutableName.GenerateDatatypesScriptPath +
-										string.Format(Constants.ExecutableName.GenerateDatatypesTypeBsd, typesSourceRelativePath, typeDefinitionsSourceRelativePath, Constants.ExecutableName.NodesetCompilerBasicNodeIdsTypeDescriptionsFile) +
+			// Build types generation script arguments
+			var generatedTypesArgs = Constants.ExecutableName.GenerateDatatypesScriptPath +
+										string.Format(Constants.ExecutableName.GenerateDatatypesTypeBsd, typesSourceRelativePath) +
 										" " +
 										typesTargetRelativePath +
 										Constants.InformationModelsName.Types;
