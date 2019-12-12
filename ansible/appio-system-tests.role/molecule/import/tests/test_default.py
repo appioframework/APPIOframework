@@ -242,4 +242,4 @@ def test_that_appio_import_information_model_is_failing_when_importing_model_and
     assert appio.rc == 0
     assert appio.stdout != ''
 
-	assert_that_files_are_missing(host, file_paths)
+    assert_that_files_are_missing(host, file_paths)
