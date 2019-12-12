@@ -220,7 +220,7 @@ namespace Appio.ObjectModel.CommandStrategies.GenerateCommands
 			foreach(var requiredModelUri in model.RequiredModelUris)
 			{
 				var requiredModel = models.SingleOrDefault(x => x.Uri == requiredModelUri);
-				result.Add(new RequiredModelsData(requiredModel.Name, requiredModel.Types != string.Empty));
+				result.Add(new RequiredModelsData(requiredModel.Name));
 			}
 
 			return result;

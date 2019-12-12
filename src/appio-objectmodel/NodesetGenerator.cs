@@ -20,11 +20,9 @@ namespace Appio.ObjectModel
 	public struct RequiredModelsData
 	{
 		public string ModelName { get; set; }
-		public bool RequiredTypes { get; set; }
-		public RequiredModelsData(string modelName, bool requiredTypes)
+		public RequiredModelsData(string modelName)
 		{
 			ModelName = modelName;
-			RequiredTypes = requiredTypes;
 		}
 	}
 
@@ -132,11 +130,11 @@ namespace Appio.ObjectModel
 			// add types for each required nodeset
 			foreach(var nodeset in requiredModelsData)
 			{
-				var requiredModelTypes = nodeset.RequiredTypes ? (_fileSystem.GetFileNameWithoutExtension(nodeset.ModelName) + Constants.InformationModelsName.Types).ToUpper() : Constants.ExecutableName.NodesetCompilerBasicTypes;
+				var requiredModelTypes = Constants.ExecutableName.NodesetCompilerBasicTypes;
 				compilerArgs.Append(string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, requiredModelTypes));
 			}
 			// add currently compiled nodeset types and basic nodeset path
-			var typesNameForScriptCall = string.IsNullOrEmpty(modelData.Types) ? Constants.ExecutableName.NodesetCompilerBasicTypes : (modelName + Constants.InformationModelsName.Types).ToUpper();
+			var typesNameForScriptCall = Constants.ExecutableName.NodesetCompilerBasicTypes;
 			compilerArgs.Append(string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, typesNameForScriptCall) + string.Format(Constants.ExecutableName.NodesetCompilerExisting, Constants.ExecutableName.NodesetCompilerBasicNodeset));
 			// add nodeset path for each required nodeset
 			foreach(var nodeset in requiredModelsData)
