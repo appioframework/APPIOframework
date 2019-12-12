@@ -143,8 +143,7 @@ def test_that_appio_import_information_model_is_succeeding_when_importing_sample
 
     file_paths = [
         test_dir_path + 'appio.log',
-        test_dir_path + app_name + '/models/DiNodeset.xml',
-        test_dir_path + app_name + '/models/DiTypes.bsd',
+        test_dir_path + app_name + '/models/DiNodeset.xml'
     ]
 
     for prepare_command in (
@@ -243,4 +242,4 @@ def test_that_appio_import_information_model_is_failing_when_importing_model_and
     assert appio.rc == 0
     assert appio.stdout != ''
 
-    assert_that_files_are_existing(host, file_paths)
+	assert_that_files_are_missing(host, file_paths)
