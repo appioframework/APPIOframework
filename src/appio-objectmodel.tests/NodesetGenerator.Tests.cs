@@ -43,7 +43,6 @@ namespace Appio.ObjectModel.Tests
 		private readonly string _defaultServerMesonBuild = "server_app_sources += [\n]";
 		private readonly string _defaultLoadInformationModelsC = "UA_StatusCode loadInformationModels(UA_Server* server)\n{\n\treturn UA_STATUSCODE_GOOD;\n}";
 
-		private readonly string _emptyNodesetContent = "<?xml version=\"1.0\" encoding=\"utf-8\"?><UANodeSet/>";
 		private readonly string _sampleNodesetContent = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
 														"<UANodeSet xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" LastModified=\"2012-12-31T00:00:00Z\" xmlns=\"http://opcfoundation.org/UA/2011/03/UANodeSet.xsd\">" +
 															"<NamespaceUris>" +
