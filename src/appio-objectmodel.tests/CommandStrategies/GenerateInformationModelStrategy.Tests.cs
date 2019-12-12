@@ -61,20 +61,20 @@ namespace Appio.ObjectModel.Tests.CommandStrategies
 		private Mock<INodesetGenerator> _nodesetGenerator;
 		
 		private static string _sampleOpcuaServerAppContent1 = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"models\":[" +
-																					"{\"name\":\"modelA.xml\",\"uri\": \"namespaceA\",\"types\": \"someTypesA.bsd\",\"namespaceVariable\": \"ns_modelA\", \"requiredModelUris\":[\"namespaceB\"]}," +
-																					"{\"name\":\"modelB.xml\",\"uri\": \"namespaceB\",\"types\": \"\",\"namespaceVariable\": \"ns_modelB\", \"requiredModelUris\":[\"namespaceE\",\"namespaceD\"]}," +
-																					"{\"name\":\"modelC.xml\",\"uri\": \"namespaceC\",\"types\": \"\",\"namespaceVariable\": \"ns_modelC\", \"requiredModelUris\":[\"namespaceA\",\"namespaceE\",\"namespaceD\"]}," +
-																					"{\"name\":\"modelD.xml\",\"uri\": \"namespaceD\",\"types\": \"someTypesD.bsd\",\"namespaceVariable\": \"ns_modelD\", \"requiredModelUris\":[]}," +
-																					"{\"name\":\"modelE.xml\",\"uri\": \"namespaceE\",\"types\": \"someTypesD.bsd\",\"namespaceVariable\": \"ns_modelE\", \"requiredModelUris\":[\"namespaceD\"]}," +
+																					"{\"name\":\"modelA.xml\",\"uri\": \"namespaceA\",\"namespaceVariable\": \"ns_modelA\", \"requiredModelUris\":[\"namespaceB\"]}," +
+																					"{\"name\":\"modelB.xml\",\"uri\": \"namespaceB\",\"namespaceVariable\": \"ns_modelB\", \"requiredModelUris\":[\"namespaceE\",\"namespaceD\"]}," +
+																					"{\"name\":\"modelC.xml\",\"uri\": \"namespaceC\",\"namespaceVariable\": \"ns_modelC\", \"requiredModelUris\":[\"namespaceA\",\"namespaceE\",\"namespaceD\"]}," +
+																					"{\"name\":\"modelD.xml\",\"uri\": \"namespaceD\",\"namespaceVariable\": \"ns_modelD\", \"requiredModelUris\":[]}," +
+																					"{\"name\":\"modelE.xml\",\"uri\": \"namespaceE\",\"namespaceVariable\": \"ns_modelE\", \"requiredModelUris\":[\"namespaceD\"]}," +
 																					"]}";
 
 		private static string _sampleOpcuaServerAppContent2 = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"models\":[" +
-																					"{\"name\":\"modelA.xml\",\"uri\": \"namespaceA\",\"types\": \"\",\"namespaceVariable\": \"ns_modelA\", \"requiredModelUris\":[\"namespaceB\"]}," +
-																					"{\"name\":\"modelB.xml\",\"uri\": \"namespaceB\",\"types\": \"\",\"namespaceVariable\": \"ns_modelB\", \"requiredModelUris\":[\"namespaceC\",\"namespaceF\"]}," +
-																					"{\"name\":\"modelD.xml\",\"uri\": \"namespaceD\",\"types\": \"\",\"namespaceVariable\": \"ns_modelD\", \"requiredModelUris\":[\"namespaceE\",\"namespaceF\"]}," +
-																					"{\"name\":\"modelE.xml\",\"uri\": \"namespaceE\",\"types\": \"\",\"namespaceVariable\": \"ns_modelE\", \"requiredModelUris\":[]}," +
-																					"{\"name\":\"modelC.xml\",\"uri\": \"namespaceC\",\"types\": \"\",\"namespaceVariable\": \"ns_modelC\", \"requiredModelUris\":[\"namespaceD\"]}," +
-																					"{\"name\":\"modelF.xml\",\"uri\": \"namespaceF\",\"types\": \"\",\"namespaceVariable\": \"ns_modelF\", \"requiredModelUris\":[]}," +
+																					"{\"name\":\"modelA.xml\",\"uri\": \"namespaceA\",\"namespaceVariable\": \"ns_modelA\", \"requiredModelUris\":[\"namespaceB\"]}," +
+																					"{\"name\":\"modelB.xml\",\"uri\": \"namespaceB\",\"namespaceVariable\": \"ns_modelB\", \"requiredModelUris\":[\"namespaceC\",\"namespaceF\"]}," +
+																					"{\"name\":\"modelD.xml\",\"uri\": \"namespaceD\",\"namespaceVariable\": \"ns_modelD\", \"requiredModelUris\":[\"namespaceE\",\"namespaceF\"]}," +
+																					"{\"name\":\"modelE.xml\",\"uri\": \"namespaceE\",\"namespaceVariable\": \"ns_modelE\", \"requiredModelUris\":[]}," +
+																					"{\"name\":\"modelC.xml\",\"uri\": \"namespaceC\",\"namespaceVariable\": \"ns_modelC\", \"requiredModelUris\":[\"namespaceD\"]}," +
+																					"{\"name\":\"modelF.xml\",\"uri\": \"namespaceF\",\"namespaceVariable\": \"ns_modelF\", \"requiredModelUris\":[]}," +
 																					"]}";
 
 		protected static string[] ValidOpcuaServerAppContent()
@@ -87,17 +87,17 @@ namespace Appio.ObjectModel.Tests.CommandStrategies
 		}
 
 		private static string _opcuaServerAppContentWithDuplicatedModels = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"models\":[" +
-																					"{\"name\":\"model.xml\",\"uri\": \"sample_namespace\",\"types\": \"\",\"namespaceVariable\": \"\"}," +
-																					"{\"name\":\"model.xml\",\"uri\": \"sample_namespace\",\"types\": \"\",\"namespaceVariable\": \"\"}" +
+																					"{\"name\":\"model.xml\",\"uri\": \"sample_namespace\",\"namespaceVariable\": \"\"}," +
+																					"{\"name\":\"model.xml\",\"uri\": \"sample_namespace\",\"namespaceVariable\": \"\"}" +
 																					"]}";
 
 		private static string _opcuaServerAppContentWithModelWhoRequiredItself = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"models\":[" +
-																					"{\"name\":\"model.xml\",\"uri\": \"sample_namespace\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[" +
+																					"{\"name\":\"model.xml\",\"uri\": \"sample_namespace\",\"namespaceVariable\": \"\", \"requiredModelUris\":[" +
 																					"\"sample_namespace\"" +
 																					"]}]}";
 
 		private static string _opcuaServerAppContentWithMissingRequiredModel = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"models\":[" +
-																					"{\"name\":\"model.xml\",\"uri\": \"sample_namespace\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[" +
+																					"{\"name\":\"model.xml\",\"uri\": \"sample_namespace\",\"namespaceVariable\": \"\", \"requiredModelUris\":[" +
 																					"\"sample_namespace1\"" +
 																					"]}]}";
 		protected static string[] InvalidOpcuaServerAppContent()
@@ -110,11 +110,11 @@ namespace Appio.ObjectModel.Tests.CommandStrategies
 			};
 		}
 		private readonly string _opcuaServerAppContentWithCircularDependency = "{\"name\":\"serverApp\",\"type\":\"Server\",\"url\":\"127.0.0.1\",\"port\":\"3000\",\"models\":[" +
-																					"{\"name\":\"modelA.xml\",\"uri\": \"namespaceA\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[\"namespaceB\"]}," +
-																					"{\"name\":\"modelB.xml\",\"uri\": \"namespaceB\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[]}," +
-																					"{\"name\":\"modelC.xml\",\"uri\": \"namespaceC\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[\"namespaceD\"]}," +
-																					"{\"name\":\"modelD.xml\",\"uri\": \"namespaceD\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[\"namespaceE\"]}," +
-																					"{\"name\":\"modelE.xml\",\"uri\": \"namespaceE\",\"types\": \"\",\"namespaceVariable\": \"\", \"requiredModelUris\":[\"namespaceC\"]}," +
+																					"{\"name\":\"modelA.xml\",\"uri\": \"namespaceA\",\"namespaceVariable\": \"\", \"requiredModelUris\":[\"namespaceB\"]}," +
+																					"{\"name\":\"modelB.xml\",\"uri\": \"namespaceB\",\"namespaceVariable\": \"\", \"requiredModelUris\":[]}," +
+																					"{\"name\":\"modelC.xml\",\"uri\": \"namespaceC\",\"namespaceVariable\": \"\", \"requiredModelUris\":[\"namespaceD\"]}," +
+																					"{\"name\":\"modelD.xml\",\"uri\": \"namespaceD\",\"namespaceVariable\": \"\", \"requiredModelUris\":[\"namespaceE\"]}," +
+																					"{\"name\":\"modelE.xml\",\"uri\": \"namespaceE\",\"namespaceVariable\": \"\", \"requiredModelUris\":[\"namespaceC\"]}," +
 																					"]}";
 
 
@@ -284,7 +284,6 @@ namespace Appio.ObjectModel.Tests.CommandStrategies
 				_fileSystemMock.Setup(x => x.ReadFile(appioprojFilePath)).Returns(appioprojFileStream);
 				_fileSystemMock.Setup(x => x.ReadFile(mainCallbacksFilePath)).Returns(mainCallbacksFileStream);
 
-				_nodesetGenerator.Setup(x => x.GenerateTypesSourceCodeFiles(It.IsAny<string>(), It.IsAny<IModelData>())).Returns(true);
 				_nodesetGenerator.Setup(x => x.GenerateNodesetSourceCodeFiles(It.IsAny<string>(), It.IsAny<IModelData>(), It.IsAny<List<RequiredModelsData>>())).Returns(true);
 
 				// Arrange logger listener
@@ -357,8 +356,8 @@ namespace Appio.ObjectModel.Tests.CommandStrategies
 			}
 		}
 
-		[Test, Sequential]
-		public void Fail_OnCallingNodesetGenerator([Values(false, true)] bool typesGeneratorResult, [Values(true, false)] bool nodesetGeneratorResult, [ValueSource(nameof(ValidInputs))] string[] inputParams)
+		[Test]
+		public void Fail_OnCallingNodesetGenerator([ValueSource(nameof(ValidInputs))] string[] inputParams)
 		{
 			// Arrange
 			var projectName = inputParams.ElementAtOrDefault(1);
@@ -370,8 +369,7 @@ namespace Appio.ObjectModel.Tests.CommandStrategies
 			{
 				_fileSystemMock.Setup(x => x.ReadFile(appioprojFilePath)).Returns(appioprojFileStream);
 
-				_nodesetGenerator.Setup(x => x.GenerateTypesSourceCodeFiles(It.IsAny<string>(), It.IsAny<IModelData>())).Returns(typesGeneratorResult);
-				_nodesetGenerator.Setup(x => x.GenerateNodesetSourceCodeFiles(It.IsAny<string>(), It.IsAny<IModelData>(), It.IsAny<List<RequiredModelsData>>())).Returns(nodesetGeneratorResult);
+				_nodesetGenerator.Setup(x => x.GenerateNodesetSourceCodeFiles(It.IsAny<string>(), It.IsAny<IModelData>(), It.IsAny<List<RequiredModelsData>>())).Returns(false);
 			
 				// Act
 				var commandResult = _strategy.Execute(inputParams);

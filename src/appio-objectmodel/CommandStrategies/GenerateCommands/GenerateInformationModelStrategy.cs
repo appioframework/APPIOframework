@@ -96,7 +96,7 @@ namespace Appio.ObjectModel.CommandStrategies.GenerateCommands
 			{
 				var requiredModelData = GetListOfRequiredModels(opcuaappModels, model);
 
-				if (!_nodesetGenerator.GenerateTypesSourceCodeFiles(projectName, model) || !_nodesetGenerator.GenerateNodesetSourceCodeFiles(projectName, model, requiredModelData))
+				if (!_nodesetGenerator.GenerateNodesetSourceCodeFiles(projectName, model, requiredModelData))
 				{
 					outputMessages.Add(_nodesetGenerator.GetOutputMessage(), string.Empty);
 					return new CommandResult(false, outputMessages);
