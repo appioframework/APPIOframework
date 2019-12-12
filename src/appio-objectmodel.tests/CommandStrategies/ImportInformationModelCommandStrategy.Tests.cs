@@ -490,7 +490,6 @@ namespace Appio.ObjectModel.Tests.CommandStrategies
             var modelsDirectory = projectName + "\\" + "models";
 			var appioprojFilePath = projectName + "\\" + projectName + ".appioproj";
 			var loadedModel = "anyModelName";
-			var loadedTypes = "anyTypesName";
 			var sampleModelName = "DiNodeset.xml";
 			var modelTargetPath = modelsDirectory + "\\" + sampleModelName;
 
@@ -499,7 +498,6 @@ namespace Appio.ObjectModel.Tests.CommandStrategies
 			_fileSystemMock.Setup(x => x.CombinePaths(projectName, Constants.DirectoryName.Models)).Returns(modelsDirectory);
 			_fileSystemMock.Setup(x => x.LoadTemplateFile(Resources.Resources.SampleInformationModelFileName)).Returns(loadedModel);
 			_fileSystemMock.Setup(x => x.CombinePaths(modelsDirectory, sampleModelName)).Returns(modelTargetPath);
-			_fileSystemMock.Setup(x => x.LoadTemplateFile(Resources.Resources.SampleInformationModelTypesFileName)).Returns(loadedTypes);
 			
 			var loggerListenerMock = new Mock<ILoggerListener>();
             loggerListenerMock.Setup(listener => listener.Info(string.Format(LoggingText.ImportInforamtionModelCommandSuccess, sampleModelName))).Callback(delegate { infoWrittenOut = true; });

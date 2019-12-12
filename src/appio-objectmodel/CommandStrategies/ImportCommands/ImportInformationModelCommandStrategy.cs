@@ -194,27 +194,7 @@ namespace Appio.ObjectModel.CommandStrategies.ImportCommands
 
 			return true;
 		}
-
-		private bool ValidateTypes(out string typesFileName, string typesPath)
-		{
-			typesFileName = _fileSystem.GetFileName(typesPath);
-			if (_fileSystem.GetExtension(typesPath) != Constants.FileExtension.ModelTypes)
-			{
-				AppioLogger.Warn(LoggingText.ImportInformationModelCommandFailureTypesHasInvalidExtension);
-				_outputMessages.Add(string.Format(OutputText.ImportInformationModelCommandFailureTypesHasInvalidExtension, typesFileName), string.Empty);
-				return false;
-			}
-
-			if (!_fileSystem.FileExists(typesPath))
-			{
-				AppioLogger.Warn(LoggingText.ImportInformationModelCommandFailureTypesFileDoesNotExist);
-				_outputMessages.Add(string.Format(OutputText.ImportInformationModelCommandFailureTypesFileDoesNotExist, typesPath), string.Empty);
-				return false;
-			}
-
-			return true;
-		}
-
+        
 		private bool ExtractNodesetUris(ref ModelData modelData, string nodesetPath)
 		{
 			// read XML file

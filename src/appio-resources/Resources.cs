@@ -39,8 +39,6 @@ namespace Appio.Resources
 
 		public const string SampleInformationModelFileName = "Appio.Resources.information_models.DiNodeset.xml";
 
-		public const string SampleInformationModelTypesFileName = "Appio.Resources.information_models.DiTypes.bsd";
-
 		public const string UANodeSetXsdFileName = "Appio.Resources.information_models.UANodeSet.xsd";
 
 	}

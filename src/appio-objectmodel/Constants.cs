@@ -22,7 +22,6 @@ namespace Appio.ObjectModel
             public const string Appioproject = ".appioproj";
             public const string DebianInstaller = ".deb";
             public const string InformationModel = ".xml";
-            public const string ModelTypes = ".bsd";
             public const string CFile = ".c";
 			public const string ZipFile = ".zip";
 			public const string DerFile = ".der";
