@@ -222,6 +222,10 @@ def test_that_appio_import_information_model_is_failing_when_importing_model_and
         test_dir_path + 'appio.log',
         test_dir_path + app_name + '/models/model.xml'
     ]
+    
+    missing_file_paths = [
+        test_dir_path + app_name + '/models/model.xml'
+    ]
 
     for prepare_command in (
         'appio new opcuaapp -n ' + app_name + ' -t ClientServer -u 127.0.0.1 -p 4840',  # noqa: #501
@@ -239,7 +243,7 @@ def test_that_appio_import_information_model_is_failing_when_importing_model_and
     appio = host.run('cd ' + test_dir_path + ' && ' + command)
 
     # assert
-    assert appio.rc == 0
+    assert appio.rc != 0
     assert appio.stdout != ''
 
-    assert_that_files_are_missing(host, file_paths)
+    assert_that_files_are_missing(host, missing_file_paths)
