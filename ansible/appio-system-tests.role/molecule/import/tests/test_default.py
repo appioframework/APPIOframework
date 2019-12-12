@@ -222,7 +222,7 @@ def test_that_appio_import_information_model_is_failing_when_importing_model_and
         test_dir_path + 'appio.log',
         test_dir_path + app_name + '/models/model.xml'
     ]
-    
+
     missing_file_paths = [
         test_dir_path + app_name + '/models/model.xml'
     ]
