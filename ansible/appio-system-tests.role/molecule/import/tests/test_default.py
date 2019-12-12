@@ -221,14 +221,12 @@ def test_that_appio_import_information_model_is_failing_when_importing_model_and
 
     file_paths = [
         test_dir_path + 'appio.log',
-        test_dir_path + app_name + '/models/model.xml'#,
- #       test_dir_path + app_name + '/models/types.bsd',
+        test_dir_path + app_name + '/models/model.xml'
     ]
 
     for prepare_command in (
         'appio new opcuaapp -n ' + app_name + ' -t ClientServer -u 127.0.0.1 -p 4840',  # noqa: #501
         'cp /test-data/information-models/model.xml model.xml',
-  #      'touch types.bsd',
         'rm -f appio.log',
     ):
         prepare = host.run('cd ' + test_dir_path + ' && ' + prepare_command)
