@@ -127,7 +127,7 @@ namespace Appio.ObjectModel.CommandStrategies.ImportCommands
 
 			// build model data
 			var opcuaappDataAsServer = opcuaappData as IOpcuaServerApp;
-			if (!BuildModelData(ref modelData, opcuaappDataAsServer, opcuaAppName, modelFileName, modelPath, string.Empty))
+			if (!BuildModelData(ref modelData, opcuaappDataAsServer, opcuaAppName, modelFileName, modelPath))
 			{
 				return false;
 			}
@@ -278,7 +278,7 @@ namespace Appio.ObjectModel.CommandStrategies.ImportCommands
 			return true;
 		}
 
-		private bool BuildModelData(ref ModelData modelData, IOpcuaServerApp opcuaServerData, string opcuaAppName, string modelFileName, string modelPath, string typesFileName)
+		private bool BuildModelData(ref ModelData modelData, IOpcuaServerApp opcuaServerData, string opcuaAppName, string modelFileName, string modelPath)
 		{
 			// build model data
 			modelData.Name = modelFileName;
@@ -286,7 +286,7 @@ namespace Appio.ObjectModel.CommandStrategies.ImportCommands
 			{
 				return false;
 			}
-			modelData.Types = typesFileName;
+			
 			modelData.NamespaceVariable = Constants.NodesetXml.NamespaceVariablePrefix + _fileSystem.GetFileNameWithoutExtension(modelFileName);
 
 			// check if appioproj file already contains model with imported model name
