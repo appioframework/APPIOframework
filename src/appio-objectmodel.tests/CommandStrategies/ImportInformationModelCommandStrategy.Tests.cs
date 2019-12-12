@@ -23,8 +23,9 @@ namespace Appio.ObjectModel.Tests.CommandStrategies
 		private readonly string _invalidModelExtension = ".txt";
 		private readonly string _validTypesExtension = ".bsd";
 		private readonly string _modelName = "model.xml";
+        private readonly string _expectedErrorMessage = "'-n', '--name', '-p', '--path', '-s' or '--sample'";
 
-		private static string[][] ValidInputs()
+        private static string[][] ValidInputs()
 		{
 			return new[]
 			{
@@ -44,7 +45,7 @@ namespace Appio.ObjectModel.Tests.CommandStrategies
 			};
 		}
 
-		private static string[][] ValidInputsExtraTypes()
+		private static string[][] InvalidInputsExtraTypes()
 		{
 			return new[]
 			{
@@ -491,9 +492,7 @@ namespace Appio.ObjectModel.Tests.CommandStrategies
 			var loadedModel = "anyModelName";
 			var loadedTypes = "anyTypesName";
 			var sampleModelName = "DiNodeset.xml";
-			var sampleTypesName = "DiTypes.bsd";
 			var modelTargetPath = modelsDirectory + "\\" + sampleModelName;
-			var typesTargetPath = modelsDirectory + "\\" + sampleTypesName;
 
 			 _fileSystemMock.Setup(x => x.DirectoryExists(projectName)).Returns(true);
 			_fileSystemMock.Setup(x => x.CombinePaths(projectName, projectName + Constants.FileExtension.Appioproject)).Returns(appioprojFilePath);
@@ -501,7 +500,6 @@ namespace Appio.ObjectModel.Tests.CommandStrategies
 			_fileSystemMock.Setup(x => x.LoadTemplateFile(Resources.Resources.SampleInformationModelFileName)).Returns(loadedModel);
 			_fileSystemMock.Setup(x => x.CombinePaths(modelsDirectory, sampleModelName)).Returns(modelTargetPath);
 			_fileSystemMock.Setup(x => x.LoadTemplateFile(Resources.Resources.SampleInformationModelTypesFileName)).Returns(loadedTypes);
-			_fileSystemMock.Setup(x => x.CombinePaths(modelsDirectory, sampleTypesName)).Returns(typesTargetPath);
 			
 			var loggerListenerMock = new Mock<ILoggerListener>();
             loggerListenerMock.Setup(listener => listener.Info(string.Format(LoggingText.ImportInforamtionModelCommandSuccess, sampleModelName))).Callback(delegate { infoWrittenOut = true; });
@@ -522,7 +520,6 @@ namespace Appio.ObjectModel.Tests.CommandStrategies
 				Assert.IsTrue(infoWrittenOut);
 				Assert.AreEqual(string.Format(OutputText.ImportSampleInformationModelSuccess, sampleModelName), result.OutputMessages.First().Key);
 				_fileSystemMock.Verify(x => x.CreateFile(modelTargetPath, loadedModel), Times.Once);
-				_fileSystemMock.Verify(x => x.CreateFile(typesTargetPath, loadedTypes), Times.Once);
 				_fileSystemMock.Verify(x => x.ReadFile(appioprojFilePath), Times.Once);
 				_fileSystemMock.Verify(x => x.WriteFile(appioprojFilePath, It.IsAny<IEnumerable<string>>()));
 				AppioLogger.RemoveListener(loggerListenerMock.Object);
@@ -765,43 +762,19 @@ namespace Appio.ObjectModel.Tests.CommandStrategies
 			_modelValidatorMock.Setup(x => x.Validate(modelFilePath, It.IsAny<string>())).Returns(true);
 
 			_fileSystemMock.Setup(x => x.GetExtension(typesFilePath)).Returns(typesFileExtension);
+           
 
-			// Act
-			var commandResult = _objectUnderTest.Execute(inputParams);
-
-			// Assert
-			Assert.IsFalse(commandResult.Success);
-			Assert.IsNotNull(commandResult.OutputMessages);
-			Assert.AreEqual(string.Format(OutputText.ImportInformationModelCommandFailureTypesHasInvalidExtension, typesFilePath), commandResult.OutputMessages.First().Key);
-		}
-
-		[Test]
-		public void Fail_OnMissingExtraTypesFile([ValueSource(nameof(ValidInputsExtraTypes))] string[] inputParams)
-		{
-			// Arrange
-			var projectName = inputParams.ElementAtOrDefault(1);
-			var modelFilePath = inputParams.ElementAtOrDefault(3);
-			var typesFilePath = inputParams.ElementAtOrDefault(5);
-
-			_fileSystemMock.Setup(x => x.DirectoryExists(projectName)).Returns(true);
-			_fileSystemMock.Setup(x => x.FileExists(modelFilePath)).Returns(true);
-			_fileSystemMock.Setup(x => x.GetExtension(modelFilePath)).Returns(_validModelExtension);
-			_fileSystemMock.Setup(x => x.GetExtension(typesFilePath)).Returns(_validTypesExtension);
-			_modelValidatorMock.Setup(x => x.Validate(modelFilePath, It.IsAny<string>())).Returns(true);
-
-			_fileSystemMock.Setup(x => x.FileExists(typesFilePath)).Returns(false);
-
-			// Act
-			var commandResult = _objectUnderTest.Execute(inputParams);
+            // Act
+            var commandResult = _objectUnderTest.Execute(inputParams);
 
 			// Assert
 			Assert.IsFalse(commandResult.Success);
 			Assert.IsNotNull(commandResult.OutputMessages);
-			Assert.AreEqual(string.Format(OutputText.ImportInformationModelCommandFailureTypesFileDoesNotExist, typesFilePath), commandResult.OutputMessages.First().Key);
+			Assert.AreEqual(string.Format(OutputText.UnknownParameterProvided, inputParams.ElementAtOrDefault(4), _expectedErrorMessage), commandResult.OutputMessages.First().Key);
 		}
-
+	
 		[Test]
-		public void Success_OnImportingModelAndExtraTypes([ValueSource(nameof(ValidInputsExtraTypes))] string[] inputParams)
+		public void Fail_OnImportingModelAndExtraTypes([ValueSource(nameof(InvalidInputsExtraTypes))] string[] inputParams)
 		{
 			// Arrange
 			var projectName = inputParams.ElementAtOrDefault(1);
@@ -836,10 +809,9 @@ namespace Appio.ObjectModel.Tests.CommandStrategies
 				var commandResult = _objectUnderTest.Execute(inputParams);
 
 				// Assert
-				Assert.IsTrue(commandResult.Success);
+				Assert.IsFalse(commandResult.Success);
 				Assert.IsNotNull(commandResult.OutputMessages);
-				Assert.AreEqual(string.Format(OutputText.ImportInformationModelCommandSuccess, modelFilePath), commandResult.OutputMessages.First().Key);
-				_fileSystemMock.Verify(x => x.CopyFile(typesFilePath, typesTargetPath), Times.Once);
+                Assert.AreEqual(string.Format(OutputText.UnknownParameterProvided, inputParams.ElementAtOrDefault(4), _expectedErrorMessage), commandResult.OutputMessages.First().Key);
 			}
 		}
 	}

@@ -126,7 +126,6 @@ namespace Appio.ObjectModel
 			public const string SourceCode_mainCallbacks_c			= "mainCallbacks.c";
             public const string SourceCode_meson_build              = "meson.build";
             public const string SampleInformationModelFile          = "DiNodeset.xml";
-			public const string SampleInformationModelTypesFile     = "DiTypes.bsd";
             public const string CertificateConfig                   = "certConfig.cnf";
             public const string PrivateKeyDER                       = "priv.der";
             public const string PrivateKeyPEM                       = "priv.pem";
