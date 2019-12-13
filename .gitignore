@@ -6,6 +6,7 @@
 /.vs
 *.user
 *.dll
+*.pyc
 appio.log
 **/__pycache__/**
 *.opencover.xml
