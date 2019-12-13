@@ -43,6 +43,8 @@ function run_pipeline_using_docker() {
     local CI_TEST_IMAGES[2]="ubuntu:bionic"
     local CI_JOB_ARTIFACTS[2]="installer/open62541--v1.0.0.deb installer/appio-terminal.deb"
 
+    sudo rm --force --recursive ${CI_ARTIFACT_DIR}
+
     for INDEX in ${!CI_TEST_NAMES[@]}
     do
         local CI_JOB_NAME="${CI_TEST_NAMES[INDEX]}"
@@ -72,7 +74,9 @@ function run_pipeline_using_docker() {
         do
             if [ "${ARTIFACT}" != "" ];
             then
+                sudo mkdir --parents $( dirname ${CI_ARTIFACT_DIR}/${ARTIFACT} )
                 sudo docker cp --archive ${CI_JOB_ID}:${CI_JOB_WORKDIR}/${ARTIFACT} ${CI_ARTIFACT_DIR}/${ARTIFACT}
+                sudo chown --recursive ${USER}:${USER} ${CI_ARTIFACT_DIR}
             fi
         done
 
