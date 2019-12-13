@@ -1,4 +1,5 @@
 /.idea/
+/artifacts/
 /publish/
 /src/*/obj/
 /src/*/bin/
