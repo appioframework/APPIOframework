@@ -33,5 +33,4 @@ server_app_deps     = [ meson.get_compiler('c').find_library('/etc/appio/tools/o
 server_app_exe      = executable('server-app',
                           server_app_sources,
                           include_directories: server_app_inc,
-                          dependencies:        client_app_deps,
-                          c_args : '-DUA_ENABLE_AMALGAMATION=ON')
+                          dependencies:        server_app_deps)
