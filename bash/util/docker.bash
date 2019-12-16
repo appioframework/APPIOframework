@@ -52,6 +52,25 @@ function ci_job_create() {
     "done"
 }
 
+function ci_job_prepare() {
+    local CI_JOB_ID=${1}
+
+    local TITLE="${CI_JOB_ID} > Prepare"
+
+    print_entry \
+    "${TITLE}"
+
+    sudo \
+    docker cp \
+    --archive \
+    . \
+    ${CI_JOB_ID}:${CI_JOB_WORKDIR}
+
+    print_entry \
+    "${TITLE}" \
+    "done"
+}
+
 function print_ci_job_id() {
     echo "stage--${1}"
 }

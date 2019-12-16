@@ -25,6 +25,9 @@ function run_build_and_test() {
         "${CI_JOB_ID}" \
         "${CI_JOB_IMAGE}"
 
+        ci_job_prepare \
+        "${CI_JOB_ID}"
+
         print_job \
         "${TITLE}" \
         "done"
