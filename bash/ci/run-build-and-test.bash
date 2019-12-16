@@ -7,6 +7,8 @@ source bash/util/flags.bash
 source bash/util/functions.bash
 
 function run_build_and_test() {
+    local CI_JOB_IMAGE="appioframework/dotnet-core:v2.1-sdk"
+
     local TITLE="Running build and test ( $( print_condition_for_build_and_test ) )"
 
     print_job \
@@ -18,6 +20,10 @@ function run_build_and_test() {
 
         ci_job_destroy \
         "${CI_JOB_ID}"
+
+        ci_job_create \
+        "${CI_JOB_ID}" \
+        "${CI_JOB_IMAGE}"
 
         print_job \
         "${TITLE}" \
