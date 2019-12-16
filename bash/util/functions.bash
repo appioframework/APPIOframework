@@ -7,7 +7,7 @@ function __() {
 }
 
 function __0() {
-    __
+    __done
 }
 
 function __1() {
