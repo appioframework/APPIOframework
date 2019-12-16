@@ -19,8 +19,8 @@ jobs:
   include:
     before_script:
       - mkdir --parents ./artifacts/installer
-      - sudo docker pull appioframework/dotnet-core-runtime:v2.1
-      - sudo docker pull appioframework/dotnet-core-sdk:v2.1
+      - sudo docker pull appioframework/dotnet-core:v2.1-runtime
+      - sudo docker pull appioframework/dotnet-core:v2.1-sdk
       - sudo docker pull ubuntu:bionic
     script:
       - /bin/bash bash-ci/run-pipeline.sh

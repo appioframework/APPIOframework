@@ -30,12 +30,12 @@ function run_pipeline_using_docker() {
 
     local CI_TEST_NAMES[0]="Build and test dotnet application"
     local CI_TEST_IDS[0]="build-and-test"
-    local CI_TEST_IMAGES[0]="appioframework/dotnet-core-sdk:v2.1"
+    local CI_TEST_IMAGES[0]="appioframework/dotnet-core:v2.1-sdk"
     local CI_JOB_ARTIFACTS[0]=""
 
     local CI_TEST_NAMES[1]="Publish dotnet application"
     local CI_TEST_IDS[1]="publish"
-    local CI_TEST_IMAGES[1]="appioframework/dotnet-core-sdk:v2.1"
+    local CI_TEST_IMAGES[1]="appioframework/dotnet-core:v2.1-sdk"
     local CI_JOB_ARTIFACTS[1]="publish"
 
     local CI_TEST_NAMES[2]="Build debian installer"
