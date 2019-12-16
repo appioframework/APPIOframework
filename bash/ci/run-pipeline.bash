@@ -10,12 +10,14 @@ function run_pipeline_stages_via_docker() {
     print_stage \
     "${TITLE}"
 
+    begin_observe_exit_code
     /bin/bash \
     bash/ci/run-build-and-test.bash ${@}
+    end_observe_exit_code
 
     print_stage \
     "${TITLE}" \
-    "done"
+    "${EXIT_CODE}"
 }
 
 function run_pipeline() {
@@ -29,7 +31,9 @@ function run_pipeline() {
 
     print_title \
     "${TITLE}" \
-    "done"
+    "${EXIT_CODE}"
+
+    exit ${EXIT_CODE}
 }
 
 run_pipeline ${@}

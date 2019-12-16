@@ -1,15 +1,38 @@
 #!/bin/bash
 
+EXIT_CODE=
+
 function __() {
     echo ""
+}
+
+function __0() {
+    __
+}
+
+function __1() {
+    __error
 }
 
 function __done() {
     echo "\033[0;32mdone\033[0m"
 }
 
+function __error() {
+    echo "\033[0;31merror\033[0m"
+}
+
 function __skipped() {
     echo "\033[0;33mskipped\033[0m"
+}
+
+function begin_observe_exit_code() {
+    set +e
+}
+
+function end_observe_exit_code() {
+    EXIT_CODE=${?}
+    set -e
 }
 
 function print_date_now() {

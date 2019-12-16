@@ -71,6 +71,28 @@ function ci_job_prepare() {
     "done"
 }
 
+function ci_job_converge() {
+    local CI_JOB_ID=${1}
+    local CI_JOB_SCRIPT=${2}
+
+    local TITLE="${CI_JOB_ID} > Converge"
+
+    print_entry \
+    "${TITLE}"
+
+    begin_observe_exit_code
+    sudo \
+    docker exec \
+    ${CI_JOB_ID} \
+    /bin/bash \
+    ${CI_JOB_SCRIPT}
+    end_observe_exit_code
+
+    print_entry \
+    "${TITLE}" \
+    "${EXIT_CODE}"
+}
+
 function print_ci_job_id() {
     echo "stage--${1}"
 }

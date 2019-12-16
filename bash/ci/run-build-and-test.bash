@@ -28,14 +28,20 @@ function run_build_and_test() {
         ci_job_prepare \
         "${CI_JOB_ID}"
 
+        ci_job_converge \
+        "${CI_JOB_ID}" \
+        bash/inject/build-and-test.bash
+
         print_job \
         "${TITLE}" \
-        "done"
+        "${EXIT_CODE}"
     else
         print_job \
         "${TITLE}" \
         "skipped"
     fi
+
+    exit ${EXIT_CODE}
 }
 
 run_build_and_test ${@}
