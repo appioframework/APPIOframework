@@ -5,6 +5,30 @@ source bash/util/functions.bash
 
 CI_JOB_WORKDIR="/APPIOframework"
 
+function ci_job_cleanup() {
+    local CI_JOB_ID=${1}
+    local CI_JOB_ARTIFACTS=${2}
+
+    local TITLE="${CI_JOB_ID} > Cleanup"
+
+    print_entry \
+    "${TITLE}"
+
+    if [ are_empty_args ${CI_JOB_ARTIFACTS} ];
+    then
+        print_entry \
+        "${TITLE}" \
+        "skipped"
+    else
+        begin_observe_exit_code
+        end_observe_exit_code
+
+        print_entry \
+        "${TITLE}" \
+        "${EXIT_CODE}"
+    fi
+}
+
 function ci_job_destroy() {
     local CI_JOB_ID=${1}
 

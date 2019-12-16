@@ -17,6 +17,11 @@ function run_build_and_test() {
     if $( should_run_build_and_test ${@} ) ;
     then
         local CI_JOB_ID=$( print_ci_job_id "build-and-test" )
+        local CI_JOB_ARTIFACTS=""
+
+        ci_job_cleanup \
+        "${CI_JOB_ID}" \
+        "${CI_JOB_ARTIFACTS}"
 
         ci_job_destroy \
         "${CI_JOB_ID}"
@@ -34,7 +39,7 @@ function run_build_and_test() {
 
         ci_job_collect \
         "${CI_JOB_ID}" \
-        ""
+        "${CI_JOB_ARTIFACTS}"
 
         ci_job_destroy \
         "${CI_JOB_ID}"
