@@ -180,8 +180,4 @@ function run_ci_job() {
 
     ci_job_destroy \
     "${CI_JOB_ID}"
-
-    print_job \
-    "${TITLE}" \
-    "${EXIT_CODE}"
 }

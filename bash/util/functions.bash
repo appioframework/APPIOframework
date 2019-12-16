@@ -1,5 +1,6 @@
 #!/bin/bash
 
+DID_FAIL=0
 EXIT_CODE=
 
 function __() {
@@ -32,6 +33,10 @@ function begin_observe_exit_code() {
 
 function end_observe_exit_code() {
     EXIT_CODE=${?}
+    if [ ${EXIT_CODE} != 0 ];
+    then
+        DID_FAIL=1
+    fi
     set -e
 }
 

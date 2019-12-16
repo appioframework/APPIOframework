@@ -15,9 +15,14 @@ function run_pipeline_jobs_via_docker() {
     bash/ci/run-build-and-test.bash ${@}
     end_observe_exit_code
 
+    begin_observe_exit_code
+    /bin/bash \
+    bash/ci/run-publish.bash ${@}
+    end_observe_exit_code
+
     print_stage \
     "${TITLE}" \
-    "${EXIT_CODE}"
+    "${DID_FAIL}"
 }
 
 function run_pipeline() {
@@ -33,7 +38,7 @@ function run_pipeline() {
     "${TITLE}" \
     "${EXIT_CODE}"
 
-    exit ${EXIT_CODE}
+    exit ${DID_FAIL}
 }
 
 run_pipeline ${@}
