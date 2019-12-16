@@ -75,11 +75,11 @@ function ci_job_prepare() {
     "done"
 }
 
-function ci_job_converge() {
+function ci_job_inject() {
     local CI_JOB_ID=${1}
     local CI_JOB_SCRIPT=${2}
 
-    local TITLE="${CI_JOB_ID} > Converge"
+    local TITLE="${CI_JOB_ID} > Inject"
 
     print_entry \
     "${TITLE}"

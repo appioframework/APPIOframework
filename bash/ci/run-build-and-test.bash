@@ -28,7 +28,7 @@ function run_build_and_test() {
         ci_job_prepare \
         "${CI_JOB_ID}"
 
-        ci_job_converge \
+        ci_job_inject \
         "${CI_JOB_ID}" \
         bash/inject/build-and-test.bash
 
