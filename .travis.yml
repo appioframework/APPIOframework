@@ -18,7 +18,6 @@ install:
 jobs:
   include:
     before_script:
-      - mkdir --parents ./artifacts/installer
       - sudo docker pull appioframework/dotnet-core:v2.1-runtime
       - sudo docker pull appioframework/dotnet-core:v2.1-sdk
       - sudo docker pull ubuntu:bionic
