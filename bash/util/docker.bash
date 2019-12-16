@@ -12,11 +12,12 @@ function ci_job_destroy() {
     print_entry \
     "${TITLE}"
 
-    set +e
     if [ $( sudo docker ps --all --quiet --filter name=${CI_JOB_ID} ) ];
     then
+        begin_observe_exit_code
         sudo docker kill ${CI_JOB_ID} &> /dev/null
         sudo docker rm ${CI_JOB_ID} > /dev/null
+        end_observe_exit_code
 
         print_entry \
         "${TITLE}" \
@@ -26,7 +27,6 @@ function ci_job_destroy() {
         "${TITLE}" \
         "skipped"
     fi
-    set -e
 }
 
 function ci_job_create() {
@@ -38,6 +38,7 @@ function ci_job_create() {
     print_entry \
     "${TITLE}"
 
+    begin_observe_exit_code
     sudo \
     docker run \
     --detach \
@@ -46,6 +47,7 @@ function ci_job_create() {
     ${CI_JOB_IMAGE} \
     sleep infinity \
     > /dev/null
+    end_observe_exit_code
 
     print_entry \
     "${TITLE}" \
@@ -60,11 +62,13 @@ function ci_job_prepare() {
     print_entry \
     "${TITLE}"
 
+    begin_observe_exit_code
     sudo \
     docker cp \
     --archive \
     . \
     ${CI_JOB_ID}:${CI_JOB_WORKDIR}
+    end_observe_exit_code
 
     print_entry \
     "${TITLE}" \
