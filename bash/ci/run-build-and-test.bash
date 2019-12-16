@@ -8,9 +8,9 @@ source bash/util/functions.bash
 
 function run_build_and_test() {
     local CI_JOB_ARTIFACTS=""
-    local CI_JOB_ID=$( print_ci_job_id "build-and-test" )
+    local CI_JOB_ID="build-and-test"
     local CI_JOB_IMAGE="appioframework/dotnet-core:v2.1-sdk"
-    local CI_JOB_SCRIPT="bash/inject/build-and-test.bash"
+    local CI_JOB_SCRIPT="bash/inject/${CI_JOB_ID}.bash"
 
     local TITLE="Running build and test ( $( print_condition_for_build_and_test ) )"
 
@@ -19,34 +19,11 @@ function run_build_and_test() {
 
     if $( should_run_build_and_test ${@} ) ;
     then
-        ci_job_cleanup \
+        run_ci_job \
+        "${CI_JOB_ARTIFACTS}" \
         "${CI_JOB_ID}" \
-        "${CI_JOB_ARTIFACTS}"
-
-        ci_job_destroy \
-        "${CI_JOB_ID}"
-
-        ci_job_create \
-        "${CI_JOB_ID}" \
-        "${CI_JOB_IMAGE}"
-
-        ci_job_prepare \
-        "${CI_JOB_ID}"
-
-        ci_job_inject \
-        "${CI_JOB_ID}" \
+        "${CI_JOB_IMAGE}" \
         "${CI_JOB_SCRIPT}"
-
-        ci_job_collect \
-        "${CI_JOB_ID}" \
-        "${CI_JOB_ARTIFACTS}"
-
-        ci_job_destroy \
-        "${CI_JOB_ID}"
-
-        print_job \
-        "${TITLE}" \
-        "${EXIT_CODE}"
     else
         print_job \
         "${TITLE}" \

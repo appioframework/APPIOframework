@@ -4,8 +4,8 @@ set -euo pipefail
 
 source bash/util/functions.bash
 
-function run_pipeline_stages_via_docker() {
-    local TITLE="Running stages via docker"
+function run_pipeline_jobs_via_docker() {
+    local TITLE="Running jobs via docker"
 
     print_stage \
     "${TITLE}"
@@ -26,7 +26,7 @@ function run_pipeline() {
     print_title \
     "${TITLE}"
 
-    run_pipeline_stages_via_docker \
+    run_pipeline_jobs_via_docker \
     ${@}
 
     print_title \

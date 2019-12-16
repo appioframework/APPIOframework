@@ -147,5 +147,41 @@ function ci_job_collect() {
 }
 
 function print_ci_job_id() {
-    echo "stage--${1}"
+    echo "job--${1}"
+}
+
+function run_ci_job() {
+    local CI_JOB_ARTIFACTS="${1}"
+    local CI_JOB_ID=$( print_ci_job_id "${2}" )
+    local CI_JOB_IMAGE="${3}"
+    local CI_JOB_SCRIPT="${4}"
+
+    ci_job_cleanup \
+    "${CI_JOB_ID}" \
+    "${CI_JOB_ARTIFACTS}"
+
+    ci_job_destroy \
+    "${CI_JOB_ID}"
+
+    ci_job_create \
+    "${CI_JOB_ID}" \
+    "${CI_JOB_IMAGE}"
+
+    ci_job_prepare \
+    "${CI_JOB_ID}"
+
+    ci_job_inject \
+    "${CI_JOB_ID}" \
+    "${CI_JOB_SCRIPT}"
+
+    ci_job_collect \
+    "${CI_JOB_ID}" \
+    "${CI_JOB_ARTIFACTS}"
+
+    ci_job_destroy \
+    "${CI_JOB_ID}"
+
+    print_job \
+    "${TITLE}" \
+    "${EXIT_CODE}"
 }
