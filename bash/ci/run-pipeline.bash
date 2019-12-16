@@ -10,6 +10,9 @@ function run_pipeline_stages_via_docker() {
     print_stage \
     "${TITLE}"
 
+    /bin/bash \
+    bash/ci/run-build-and-test.bash ${@}
+
     print_stage \
     "${TITLE}" \
     "done"
