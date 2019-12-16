@@ -7,7 +7,7 @@ source bash/util/flags.bash
 source bash/util/functions.bash
 
 function run_publish() {
-    local CI_JOB_ARTIFACTS=""
+    local CI_JOB_ARTIFACTS="cache/publish"
     local CI_JOB_ID="publish"
     local CI_JOB_IMAGE="appioframework/dotnet-core:v2.1-sdk"
     local CI_JOB_SCRIPT="bash/inject/${CI_JOB_ID}.bash"

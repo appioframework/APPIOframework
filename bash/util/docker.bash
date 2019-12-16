@@ -14,13 +14,17 @@ function ci_job_cleanup() {
     print_entry \
     "${TITLE}"
 
-    if [ are_empty_args ${CI_JOB_ARTIFACTS} ];
+    if $( are_empty_args ${CI_JOB_ARTIFACTS} );
     then
         print_entry \
         "${TITLE}" \
         "skipped"
     else
         begin_observe_exit_code
+        rm \
+        --force \
+        --recursive \
+        ${CI_JOB_ARTIFACTS}
         end_observe_exit_code
 
         print_entry \
@@ -131,14 +135,29 @@ function ci_job_collect() {
     print_entry \
     "${TITLE}"
 
-    if [ are_empty_args ${CI_JOB_ARTIFACTS} ];
+    if $( are_empty_args ${CI_JOB_ARTIFACTS} );
     then
         print_entry \
         "${TITLE}" \
         "skipped"
     else
+        mkdir \
+        --parents \
+        $( dirname ${CI_JOB_ARTIFACTS} )
+
         begin_observe_exit_code
+        sudo \
+        docker cp \
+        --archive \
+        ${CI_JOB_ID}:${CI_JOB_WORKDIR}/${CI_JOB_ARTIFACTS} \
+        ${CI_JOB_ARTIFACTS}
         end_observe_exit_code
+
+        sudo \
+        chown \
+        --recursive \
+        ${USER}:${USER} \
+        $( dirname ${CI_JOB_ARTIFACTS} )
 
         print_entry \
         "${TITLE}" \

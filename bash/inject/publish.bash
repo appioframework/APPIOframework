@@ -3,7 +3,7 @@
 set -euo pipefail
 
 function publish() {
-    local CACHE_DIR="cache"
+    local CACHE_DIR="$( realpath . )/cache"
 
     mkdir \
     --parents \
