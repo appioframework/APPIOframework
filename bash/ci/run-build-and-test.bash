@@ -32,6 +32,13 @@ function run_build_and_test() {
         "${CI_JOB_ID}" \
         bash/inject/build-and-test.bash
 
+        ci_job_collect \
+        "${CI_JOB_ID}" \
+        ""
+
+        ci_job_destroy \
+        "${CI_JOB_ID}"
+
         print_job \
         "${TITLE}" \
         "${EXIT_CODE}"
