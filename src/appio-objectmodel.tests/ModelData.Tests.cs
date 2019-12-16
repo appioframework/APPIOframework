@@ -16,7 +16,6 @@ namespace Appio.ObjectModel.Tests
         private IModelData _defaultModelData, _modelData;
         private string _name = "sampleModelName";
         private string _uri = "sampleModelUri";
-		private string _types = "sampleModelTypes";
 		private string _namespaceVariable = "sampleModelNamespaceVariable";
 		private List<string> _requiredModelUris = new List<string>(new string[] { "sampleRequiredModelUri_1", "sampleRequiredModelUri_2" });
 
@@ -24,7 +23,7 @@ namespace Appio.ObjectModel.Tests
         public void SetupTest()
         {
 			_defaultModelData = new ModelData();
-			_modelData = new ModelData(_name, _uri, _types, _namespaceVariable, _requiredModelUris);   
+			_modelData = new ModelData(_name, _uri, _namespaceVariable, _requiredModelUris);   
         }
 
         [TearDown]
@@ -42,7 +41,6 @@ namespace Appio.ObjectModel.Tests
             // Assert
             Assert.IsEmpty(_defaultModelData.Name);
 			Assert.IsEmpty(_defaultModelData.Uri);
-			Assert.IsEmpty(_defaultModelData.Types);
 			Assert.IsEmpty(_defaultModelData.NamespaceVariable);
 			Assert.IsEmpty(_defaultModelData.RequiredModelUris);
 		}
@@ -57,7 +55,6 @@ namespace Appio.ObjectModel.Tests
             // Assert
             Assert.AreEqual(_name, _modelData.Name);
 			Assert.AreEqual(_uri, _modelData.Uri);
-			Assert.AreEqual(_types, _modelData.Types);
 			Assert.AreEqual(_namespaceVariable, _modelData.NamespaceVariable);
 			Assert.AreEqual(_requiredModelUris, _modelData.RequiredModelUris);
 		}
@@ -75,7 +72,6 @@ namespace Appio.ObjectModel.Tests
             Assert.AreNotEqual(string.Empty, modelDataAsJson);
             Assert.IsTrue(modelDataAsJson.Contains(_name));
 			Assert.IsTrue(modelDataAsJson.Contains(_uri));
-			Assert.IsTrue(modelDataAsJson.Contains(_types));
 			Assert.IsTrue(modelDataAsJson.Contains(_namespaceVariable));
 			foreach(var requiredModelUri in _requiredModelUris)
 			{
@@ -92,7 +88,6 @@ namespace Appio.ObjectModel.Tests
                 "{" +    
                     "\"name\": \"" + _name + "\", " +
 					"\"uri\": \"" + _uri + "\", " +
-                    "\"types\": \"" +  _types + "\", " +
 					"\"namespaceVariable\": \"" + _namespaceVariable + "\", " +
 					"\"requiredModelUris\": [ \"" + _requiredModelUris[0] + "\", \"" + _requiredModelUris[1] + "\" ]" +
 				"}";
@@ -104,7 +99,6 @@ namespace Appio.ObjectModel.Tests
             Assert.IsNotNull(modelData);
             Assert.AreEqual(_name, modelData.Name);
 			Assert.AreEqual(_uri, modelData.Uri);
-			Assert.AreEqual(_types, modelData.Types);
 			Assert.AreEqual(_namespaceVariable, modelData.NamespaceVariable);
 			Assert.AreEqual(_requiredModelUris, modelData.RequiredModelUris);
 		}

@@ -16,11 +16,10 @@ namespace Appio.ObjectModel
 		{
 		}
 
-		public ModelData(string name, string uri, string types, string namespaceVariable, List<string> requiredModelUris)
+		public ModelData(string name, string uri, string namespaceVariable, List<string> requiredModelUris)
 		{
 			Name = name;
 			Uri = uri;
-			Types = types;
 			NamespaceVariable = namespaceVariable;
 			RequiredModelUris = requiredModelUris;
 		}
@@ -30,9 +29,6 @@ namespace Appio.ObjectModel
 
 		[JsonProperty("uri")]
 		public string Uri { get; set; } = string.Empty;
-
-		[JsonProperty("types")]
-		public string Types { get; set; } = string.Empty;
 
 		[JsonProperty("namespaceVariable")]
 		public string NamespaceVariable { get; set; } = string.Empty;

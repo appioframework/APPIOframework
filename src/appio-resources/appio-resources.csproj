@@ -23,7 +23,6 @@
 
   <ItemGroup>
 	<EmbeddedResource Include="information_models\DiNodeset.xml" />
-	<EmbeddedResource Include="information_models\DiTypes.bsd" />
 	<EmbeddedResource Include="information_models\UANodeSet.xsd" />
     <EmbeddedResource Include="installer\opcuaapp\appio-opcuaapp.zip" />
     <EmbeddedResource Include="open62541\globalVariables-client.h" />

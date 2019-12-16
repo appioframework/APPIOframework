@@ -55,8 +55,8 @@ The information-models for the SmartPump and the SmartLiter are provided by us. 
 
 .. code-block:: bash
 
-   appio import information-model -n SmartLiter -p path/to/DiNodeset.xml -t path/to/DiTypes.bsd  && \
-   appio import information-model -n SmartPump -p path/to/DiNodeset.xml -t path/to/DiTypes.bsd
+   appio import information-model -n SmartLiter -p path/to/DiNodeset.xml && \
+   appio import information-model -n SmartPump -p path/to/DiNodeset.xml
 
 
 Finally we need to import the real information models:
@@ -114,30 +114,31 @@ Example:
        return UA_STATUSCODE_GOOD;
    }
 
-For the convience of this tutorial we prepared all files. You will find them in the folder we provided.
+For the convience of this tutorial we prepared all files. You will find them in the examples folder we provided.
 
 Here for the SmartPump:
 
 .. code-block:: bash
 
-   cp SmartPump/mainCallbacks.c /path/to/SmartPump/src/server  && \
-   cp SmartPump/pumpSimulation.c /path/to/SmartPump/src/server
-
+   cp pathTo/APPIOframework/examples/smart_pump_example/source/smart_pump/mainCallbacks.c SmartPump/src/server/mainCallbacks.c  && 
+   cp pathTo/APPIOframework/examples/smart_pump_example/source/smart_pump/pumpSimulation.c SmartPump/src/server/pumpSimulation.c 
+   
 
 Here for the smart liter sensor:
 
 .. code-block:: bash
 
-   cp SmartLiterSensor/mainCallbacks.c /path/to/SmartLiter/src/server  && \
-   cp SmartLiterSensor/tankSimulation.c /path/to/SmartLiter/src/server
+   cp pathTo/APPIOframework/examples/smart_pump_example/source/smart_liter_sensor/tankSimulation.c SmartLiter/src/server/tankSimulation.c &&
+   cp pathTo/APPIOframework/examples/smart_pump_example/source/smart_liter_sensor/mainCallbacks.c SmartLiterSensor/src/server/mainCallbacks.c 
+
 
 And now for the client:
 
 .. code-block:: bash
 
-   cp SmartWaterManager/main.c /path/to/SmartWaterManager/src/client  && \
-   cp SmartWaterManager/manager.c /path/to/SmartWaterManager/src/client
-
+   cp pathTo/APPIOframework/examples/smart_pump_example/source/smart_water_manager/main.c SmartWaterManager/src/client/main.c && 
+   cp pathTol/APPIOframework/examples/smart_pump_example/source/smart_water_manager/manager.c SmartWaterManager/src/client/manager.c 
+   
 ************************************
 building and testing
 ************************************

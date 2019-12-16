@@ -9,8 +9,8 @@ static void stopHandler(int sig) {
 }
 
 static void createTemperatureVariableNode(UA_Server* server) {
-    const char* nodeName            = "temperature";
-    const char* nodeLocale          = "en-US";
+    char* nodeName            = "temperature";
+    char* nodeLocale          = "en-US";
 
     UA_VariableAttributes attr      = UA_VariableAttributes_default;
     UA_Int32 temperatureValue       = 45;
@@ -41,11 +41,12 @@ int main(void) {
     signal(SIGINT, stopHandler);
     signal(SIGTERM, stopHandler);
 
-	UA_ServerConfig *config = UA_ServerConfig_new_minimal(SERVER_APP_PORT, NULL);
-	UA_ServerConfig_set_customHostname(config, UA_STRING(SERVER_APP_HOSTNAME));
-	UA_Server *server = UA_Server_new(config);
-
-    createTemperatureVariableNode(server);
+	UA_Server *server = UA_Server_new();
+	UA_ServerConfig *config = UA_Server_getConfig(server);
+	UA_ServerConfig_setCustomHostname(config, ((const UA_String) UA_String_fromChars(SERVER_APP_HOSTNAME)));
+	UA_ServerConfig_setMinimal(config, SERVER_APP_PORT, NULL);
+    
+	createTemperatureVariableNode(server);
 
 	UA_StatusCode retval;
 	if (loadInformationModels(server) == UA_STATUSCODE_GOOD && addCallbacks(server) == UA_STATUSCODE_GOOD)
@@ -54,6 +55,5 @@ int main(void) {
 	}
 
     UA_Server_delete(server);
-    UA_ServerConfig_delete(config);
     return (int)retval;
 }

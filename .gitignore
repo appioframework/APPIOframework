@@ -1,10 +1,12 @@
 /.idea/
+/artifacts/
 /publish/
 /src/*/obj/
 /src/*/bin/
 /.vs
 *.user
 *.dll
+*.pyc
 appio.log
 **/__pycache__/**
 *.opencover.xml

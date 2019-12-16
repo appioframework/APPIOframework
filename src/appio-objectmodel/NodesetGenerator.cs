@@ -20,11 +20,9 @@ namespace Appio.ObjectModel
 	public struct RequiredModelsData
 	{
 		public string ModelName { get; set; }
-		public bool RequiredTypes { get; set; }
-		public RequiredModelsData(string modelName, bool requiredTypes)
+		public RequiredModelsData(string modelName)
 		{
 			ModelName = modelName;
-			RequiredTypes = requiredTypes;
 		}
 	}
 
@@ -46,63 +44,7 @@ namespace Appio.ObjectModel
 		{
 			return _outputMessage;
 		}
-
-		public bool GenerateTypesSourceCodeFiles(string projectName, IModelData modelData)
-		{
-			// Verify if model has types
-			if(string.IsNullOrEmpty(modelData.Types))
-			{
-				return true;
-			}
-
-			// Verify types extension
-			if (_fileSystem.GetExtension(modelData.Types) != Constants.FileExtension.ModelTypes)
-			{
-				AppioLogger.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsInvalidFile, modelData.Types));
-				_outputMessage = string.Format(OutputText.GenerateInformationModelFailureInvalidFile, projectName, modelData.Name, modelData.Types);
-				return false;
-			}
-
-			// Verify if types file exists
-			var typesPath = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.Models, modelData.Types);
-			if(!_fileSystem.FileExists(typesPath))
-			{
-				AppioLogger.Warn(string.Format(LoggingText.NodesetCompilerExecutableFailsMissingFile, typesPath));
-				_outputMessage = string.Format(OutputText.GenerateInformationModelFailureMissingFile, projectName, modelData.Name, typesPath);
-				return false;
-			}
-			
-			// Create a directory for generated C code
-			var srcDirectory = _fileSystem.CombinePaths(projectName, Constants.DirectoryName.SourceCode, Constants.DirectoryName.ServerApp);
-			CreateDirectoryForGeneratedModelsSourceCode(srcDirectory);
-
-			// Build types source file and target files directories
-			var modelName = _fileSystem.GetFileNameWithoutExtension(modelData.Name);
-			var typesSourceRelativePath = @"../../" + _fileSystem.CombinePaths(Constants.DirectoryName.Models, modelData.Types);
-			var typesTargetRelativePath = _fileSystem.CombinePaths(Constants.DirectoryName.InformationModels, modelName.ToLower());
-
-			// Build types generation script arguments
-			var generatedTypesArgs = Constants.ExecutableName.GenerateDatatypesScriptPath +
-										string.Format(Constants.ExecutableName.GenerateDatatypesTypeBsd, typesSourceRelativePath) +
-										" " +
-										typesTargetRelativePath +
-										Constants.InformationModelsName.Types;
-
-			// Execute types generation script call
-			var generatedTypesResult = _fileSystem.CallExecutable(Constants.ExecutableName.PythonScript, srcDirectory, generatedTypesArgs);
-			if (!generatedTypesResult)
-			{
-				AppioLogger.Warn(LoggingText.GeneratedTypesExecutableFails);
-				_outputMessage = string.Format(OutputText.GenerateInformationModelGenerateTypesFailure, projectName, modelData.Name, modelData.Types);
-				return false;
-			}
-
-			// Add generated types header file to server's meson build
-			AdjustServerMesonBuildCFile(srcDirectory, modelName.ToLower() + Constants.InformationModelsName.TypesGenerated);
-
-			return true;
-		}
-		
+        		
 		private void CreateDirectoryForGeneratedModelsSourceCode(string srcDirectory)
 		{
 			var pathToCreate = _fileSystem.CombinePaths(srcDirectory, Constants.DirectoryName.InformationModels);
@@ -188,11 +130,11 @@ namespace Appio.ObjectModel
 			// add types for each required nodeset
 			foreach(var nodeset in requiredModelsData)
 			{
-				var requiredModelTypes = nodeset.RequiredTypes ? (_fileSystem.GetFileNameWithoutExtension(nodeset.ModelName) + Constants.InformationModelsName.Types).ToUpper() : Constants.ExecutableName.NodesetCompilerBasicTypes;
+				var requiredModelTypes = Constants.ExecutableName.NodesetCompilerBasicTypes;
 				compilerArgs.Append(string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, requiredModelTypes));
 			}
 			// add currently compiled nodeset types and basic nodeset path
-			var typesNameForScriptCall = string.IsNullOrEmpty(modelData.Types) ? Constants.ExecutableName.NodesetCompilerBasicTypes : (modelName + Constants.InformationModelsName.Types).ToUpper();
+			var typesNameForScriptCall = Constants.ExecutableName.NodesetCompilerBasicTypes;
 			compilerArgs.Append(string.Format(Constants.ExecutableName.NodesetCompilerTypesArray, typesNameForScriptCall) + string.Format(Constants.ExecutableName.NodesetCompilerExisting, Constants.ExecutableName.NodesetCompilerBasicNodeset));
 			// add nodeset path for each required nodeset
 			foreach(var nodeset in requiredModelsData)

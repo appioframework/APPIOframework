@@ -22,7 +22,6 @@ namespace Appio.ObjectModel
             public const string Appioproject = ".appioproj";
             public const string DebianInstaller = ".deb";
             public const string InformationModel = ".xml";
-            public const string ModelTypes = ".bsd";
             public const string CFile = ".c";
 			public const string ZipFile = ".zip";
 			public const string DerFile = ".der";
@@ -101,17 +100,17 @@ namespace Appio.ObjectModel
             public const string AppioResourcesDll = "appio-resources.dll";
 
             public const string PythonScript = @"python3";
-            public static readonly string GenerateDatatypesScriptPath = System.IO.Path.Combine(new string[] { " ", "etc", "appio", "tools", "open62541", "v0.3.0", "python-scripts", "generate_datatypes.py" });
+            public static readonly string GenerateDatatypesScriptPath = System.IO.Path.Combine(new string[] { " ", "etc", "appio", "tools", "open62541", "v1.0.0", "python-scripts", "generate_datatypes.py" });
             // 0 bsd types source path
             public const string GenerateDatatypesTypeBsd = @" --type-bsd={0}";
-            public static readonly string NodesetCompilerCompilerPath = System.IO.Path.Combine(new string[] { " ", "etc", "appio", "tools", "open62541", "v0.3.0", "python-scripts", "nodeset_compiler", "nodeset_compiler.py" });
+            public static readonly string NodesetCompilerCompilerPath = System.IO.Path.Combine(new string[] { " ", "etc", "appio", "tools", "open62541", "v1.0.0", "python-scripts", "nodeset_compiler", "nodeset_compiler.py" });
             public const string NodesetCompilerInternalHeaders = @" --internal-headers";
             // 0 ua types
             public const string NodesetCompilerTypesArray = @" --types-array={0}";
             public const string NodesetCompilerBasicTypes = @"UA_TYPES";
             public const string NodesetCompilerExisting = @" --existing {0}";
             // 0 existing model xml source path
-            public static readonly string NodesetCompilerBasicNodeset = System.IO.Path.Combine(new string[] { " ", "etc", "appio", "tools", "open62541", "v0.3.0", "existing-nodes", "Opc.Ua.NodeSet2.xml" });
+            public static readonly string NodesetCompilerBasicNodeset = System.IO.Path.Combine(new string[] { " ", "etc", "appio", "tools", "open62541", "v1.0.0", "existing-nodes", "Opc.Ua.NodeSet2.xml" });
             // 0 xml model source path
             // 1 output directory with name for generated files and method
             public const string NodesetCompilerXml = @" --xml {0} {1}";
@@ -126,7 +125,6 @@ namespace Appio.ObjectModel
 			public const string SourceCode_mainCallbacks_c			= "mainCallbacks.c";
             public const string SourceCode_meson_build              = "meson.build";
             public const string SampleInformationModelFile          = "DiNodeset.xml";
-			public const string SampleInformationModelTypesFile     = "DiTypes.bsd";
             public const string CertificateConfig                   = "certConfig.cnf";
             public const string PrivateKeyDER                       = "priv.der";
             public const string PrivateKeyPEM                       = "priv.pem";
