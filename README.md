@@ -13,6 +13,43 @@
 [![Read the Docs](https://img.shields.io/readthedocs/appioframework.svg?style=for-the-badge)](//appioframework.readthedocs.io/en/latest/)
 [![GitHub](https://img.shields.io/github/license/appioframework/APPIOframework.svg?style=for-the-badge)](LICENCE)
 
+## Dependencies
+
+### Development dependencies
+
+To develop on APPIO the following modules must be installed:  
+
+- ansible
+- docker
+- dotnet core sdk 2.1
+- molecule
+
+To build its debian installer on your local system following modules must be installed:  
+
+- docker
+
+### Runtime dependencies
+
+To install and use APPIO the following modules must be installed:  
+
+- dotnet core runtime 2.1
+- gcc
+- g++
+- meson
+
+### Privilege escalation dependencies
+
+To correctly handle priviledge escalation an SSH askpass package needs to be installed.  
+Here are three possible packages available on the Ubuntu distro by default:  
+
+```bash
+- sudo apt install ssh-askpass # or
+- sudo apt install ssh-askpass-fullscreen # or
+- sudo apt install ssh-askpass-gnome
+```
+
+Another solution is it to have root access on your local machine without being prompted for gaining priviledge (aka passwordless root access), this is only relevant / recommended for a development setup.  
+
 ## Debian/Ubuntu Installation Instructions
 
 After cloning the project and installing all dependencies listed below, simply call 
