@@ -2,9 +2,9 @@
 
 set -euo pipefail
 
-function publish() {
-    local CACHE_DIR=$( realpath . )/cache
+source bash/config/cache-dir.bash
 
+function publish() {
     mkdir \
     --parents \
     ${CACHE_DIR}
@@ -12,7 +12,7 @@ function publish() {
     dotnet \
     publish \
     --configuration Release \
-    --output ${CACHE_DIR}/publish \
+    --output ${CACHE_DIR_ABS}/publish \
     src/appio-terminal/appio-terminal.csproj
 }
 
