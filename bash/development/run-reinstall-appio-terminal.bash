@@ -38,6 +38,8 @@ function run_reinstall_appio_terminal() {
     print_title \
     "${TITLE}" \
     "${DID_FAIL}"
+
+    exit ${DID_FAIL}
 }
 
 run_reinstall_appio_terminal ${@}
