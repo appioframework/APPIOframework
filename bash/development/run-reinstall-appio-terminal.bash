@@ -30,6 +30,11 @@ function run_reinstall_appio_terminal() {
     bash/development/run-job-install.bash ${@}
     end_observe_exit_code
 
+    begin_observe_exit_code
+    /bin/bash \
+    bash/development/run-job-help.bash ${@}
+    end_observe_exit_code
+
     print_title \
     "${TITLE}" \
     "${DID_FAIL}"
