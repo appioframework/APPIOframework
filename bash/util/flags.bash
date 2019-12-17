@@ -4,6 +4,7 @@ FLAG_BUILD_AND_TEST="--build-and-test"
 FLAG_BUILD_INSTALLER="--build-installer"
 FLAG_FULL_PIPELINE="--full-pipeline"
 FLAG_PUBLISH="--publish"
+FLAG_REMOVE="--remove"
 
 function are_empty_args() {
     if [ ${#} = 0 ];
@@ -65,6 +66,23 @@ function should_run_publish() {
     exit 1
 }
 
+function should_run_remove() {
+    if $( are_empty_args ${@} );
+    then
+        exit 0
+    fi
+
+    for ARG in ${@}
+    do
+        if [ "${ARG}" == "${FLAG_REMOVE}" ] || [ "${ARG}" == "${FLAG_FULL_PIPELINE}" ];
+        then
+            exit 0
+        fi
+    done
+
+    exit 1
+}
+
 function print_condition_for_build_and_test() {
     echo "${FLAG_BUILD_AND_TEST} or ${FLAG_FULL_PIPELINE}"
 }
@@ -75,4 +93,8 @@ function print_condition_for_build_installer() {
 
 function print_condition_for_publish() {
     echo "${FLAG_PUBLISH} or ${FLAG_FULL_PIPELINE}"
+}
+
+function print_condition_for_remove() {
+    echo "${FLAG_REMOVE} or ${FLAG_FULL_PIPELINE}"
 }

@@ -22,10 +22,7 @@ function run_reinstall_appio_terminal() {
 
     begin_observe_exit_code
     /bin/bash \
-    bash/util/elevate.bash \
-    root \
-    /bin/bash \
-    bash/inject/remove.bash
+    bash/development/run-job-remove.bash ${@}
     end_observe_exit_code
 
     begin_observe_exit_code
