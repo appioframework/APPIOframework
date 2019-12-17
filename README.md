@@ -8,6 +8,7 @@
 
 **APPIO is a command-line utility for managing an OPC UA infrastructure. It is built on [open62541](https://github.com/open62541/open62541/), an open-source implementation of OPC UA, and it is published under the Mozilla Public License.**
 
+[![Travis (.org) master](https://img.shields.io/travis/appioframework/APPIOframework/master?style=for-the-badge)](//travis-ci.org/appioframework/APPIOframework)
 [![Travis (.org)](https://img.shields.io/travis/appioframework/APPIOframework?style=for-the-badge)](//travis-ci.org/appioframework/APPIOframework)
 [![Read the Docs](https://img.shields.io/readthedocs/appioframework.svg?style=for-the-badge)](//appioframework.readthedocs.io/en/latest/)
 [![GitHub](https://img.shields.io/github/license/appioframework/APPIOframework.svg?style=for-the-badge)](LICENCE)
