@@ -20,12 +20,15 @@ function ci_job_cleanup() {
         "${TITLE}" \
         "skipped"
     else
-        begin_observe_exit_code
-        rm \
-        --force \
-        --recursive \
-        ${CI_JOB_ARTIFACTS}
-        end_observe_exit_code
+        for ARTIFACT in ${CI_JOB_ARTIFACTS}
+        do
+            begin_observe_exit_code
+            rm \
+            --force \
+            --recursive \
+            ${ARTIFACT}
+            end_observe_exit_code
+        done
 
         print_entry \
         "${TITLE}" \
@@ -141,23 +144,26 @@ function ci_job_collect() {
         "${TITLE}" \
         "skipped"
     else
-        mkdir \
-        --parents \
-        $( dirname ${CI_JOB_ARTIFACTS} )
+        for ARTIFACT in ${CI_JOB_ARTIFACTS}
+        do
+            mkdir \
+            --parents \
+            $( dirname ${ARTIFACT} )
 
-        begin_observe_exit_code
-        sudo \
-        docker cp \
-        --archive \
-        ${CI_JOB_ID}:${CI_JOB_WORKDIR}/${CI_JOB_ARTIFACTS} \
-        ${CI_JOB_ARTIFACTS}
-        end_observe_exit_code
+            begin_observe_exit_code
+            sudo \
+            docker cp \
+            --archive \
+            ${CI_JOB_ID}:${CI_JOB_WORKDIR}/${ARTIFACT} \
+            ${ARTIFACT}
+            end_observe_exit_code
 
-        sudo \
-        chown \
-        --recursive \
-        ${USER}:${USER} \
-        $( dirname ${CI_JOB_ARTIFACTS} )
+            sudo \
+            chown \
+            --recursive \
+            ${USER}:${USER} \
+            $( dirname ${ARTIFACT} )
+        done
 
         print_entry \
         "${TITLE}" \
