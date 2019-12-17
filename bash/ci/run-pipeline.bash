@@ -4,6 +4,17 @@ set -euo pipefail
 
 source bash/util/functions.bash
 
+function run_pipeline_jobs_via_ansible() {
+    local TITLE="Running jobs via ansible"
+
+    print_stage \
+    "${TITLE}"
+
+    print_stage \
+    "${TITLE}" \
+    "${DID_FAIL}"
+}
+
 function run_pipeline_jobs_via_docker() {
     local TITLE="Running jobs via docker"
 
@@ -37,6 +48,9 @@ function run_pipeline() {
     "${TITLE}"
 
     run_pipeline_jobs_via_docker \
+    ${@}
+
+    run_pipeline_jobs_via_ansible \
     ${@}
 
     print_title \
