@@ -2,14 +2,14 @@
 
 set -euo pipefail
 
-function run_dotnet_build() {
+function dotnet_build() {
     dotnet \
     build \
     --configuration Release \
     appio.build.sln 
 }
 
-function run_dotnet_test() {
+function dotnet_test() {
     dotnet \
     test \
     --configuration Release \
@@ -18,5 +18,9 @@ function run_dotnet_test() {
     /p:CoverletOutputFormat=opencover
 }
 
-run_dotnet_test
-run_dotnet_build
+function build_and_test() {
+    dotnet_test
+    dotnet_build
+}
+
+build_and_test ${@}

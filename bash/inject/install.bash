@@ -8,7 +8,7 @@ source bash/config/open62541.bash
 
 source bash/util/functions.bash
 
-function run_dpkg_install() {
+function install() {
     dpkg \
     --install \
     ${CACHE_DIR}/installer/${OPEN62541_VERSION}.deb
@@ -18,4 +18,4 @@ function run_dpkg_install() {
     ${CACHE_DIR}/installer/${APPIO_TERMINAL_VERSION}.deb
 }
 
-run_dpkg_install ${@}
+install ${@}
