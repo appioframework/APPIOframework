@@ -24,6 +24,7 @@ function run_reinstall_appio_terminal() {
     /bin/bash \
     bash/util/elevate.bash \
     root \
+    /bin/bash \
     bash/inject/remove.bash
     end_observe_exit_code
 
@@ -31,6 +32,7 @@ function run_reinstall_appio_terminal() {
     /bin/bash \
     bash/util/elevate.bash \
     root \
+    /bin/bash \
     bash/inject/install.bash
     end_observe_exit_code
 

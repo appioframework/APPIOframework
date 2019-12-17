@@ -16,8 +16,8 @@ function elevate() {
     --askpass \
     --group ${VAR_USER_NAME} \
     --user ${VAR_USER_NAME} \
-    /bin/bash \
-    ${2} ${@:3}
+    ${2} \
+    ${3} ${@:4}
 }
 
 elevate ${@}
