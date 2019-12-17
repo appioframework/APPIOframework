@@ -2,7 +2,7 @@
 
 function ci_job_inject() {
     local CI_JOB_ID=${1}
-    local CI_JOB_PRIVILEDGE=${2}
+    local CI_JOB_PRIVILEGE=${2}
     local CI_JOB_SCRIPT=${3}
 
     local TITLE="${CI_JOB_ID} > Inject"
@@ -13,7 +13,7 @@ function ci_job_inject() {
     begin_observe_exit_code
     /bin/bash \
     bash/util/elevate.bash \
-    ${CI_JOB_PRIVILEDGE} \
+    ${CI_JOB_PRIVILEGE} \
     /bin/bash \
     ${CI_JOB_SCRIPT}
     end_observe_exit_code
@@ -25,11 +25,11 @@ function ci_job_inject() {
 
 function run_ci_job() {
     local CI_JOB_ID=${1}
-    local CI_JOB_PRIVILEDGE=${2}
+    local CI_JOB_PRIVILEGE=${2}
     local CI_JOB_SCRIPT=${3}
 
     ci_job_inject \
     "${CI_JOB_ID}" \
-    "${CI_JOB_PRIVILEDGE}" \
+    "${CI_JOB_PRIVILEGE}" \
     "${CI_JOB_SCRIPT}"
 }

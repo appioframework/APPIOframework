@@ -8,7 +8,7 @@ source bash/util/localhost.bash
 
 function run_job_help() {
     local CI_JOB_ID="check-docker"
-    local CI_JOB_PRIVILEDGE="${USER}"
+    local CI_JOB_PRIVILEGE="root"
     local CI_JOB_SCRIPT="bash/inject/${CI_JOB_ID}.bash"
 
     local TITLE="Checking dependency 'docker'"
@@ -18,7 +18,7 @@ function run_job_help() {
 
     run_ci_job \
     "${CI_JOB_ID}" \
-    "${CI_JOB_PRIVILEDGE}" \
+    "${CI_JOB_PRIVILEGE}" \
     "${CI_JOB_SCRIPT}"
 
     print_job \
