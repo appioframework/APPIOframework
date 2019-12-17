@@ -11,7 +11,7 @@ function run_job_install() {
     local CI_JOB_PRIVILEDGE="${USER}"
     local CI_JOB_SCRIPT="bash/inject/${CI_JOB_ID}.bash"
 
-    local TITLE="Running APPIO help ( $( print_condition_for_help ) )"
+    local TITLE="Running 'appio --help' ( $( print_condition_for_help ) )"
 
     print_job \
     "${TITLE}"
