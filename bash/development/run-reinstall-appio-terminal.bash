@@ -27,10 +27,7 @@ function run_reinstall_appio_terminal() {
 
     begin_observe_exit_code
     /bin/bash \
-    bash/util/elevate.bash \
-    root \
-    /bin/bash \
-    bash/inject/install.bash
+    bash/development/run-job-install.bash ${@}
     end_observe_exit_code
 
     print_title \
