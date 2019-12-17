@@ -6,7 +6,7 @@ source bash/util/flags.bash
 source bash/util/functions.bash
 source bash/util/localhost.bash
 
-function run_job_install() {
+function run_job_help() {
     local CI_JOB_ID="help"
     local CI_JOB_PRIVILEDGE="${USER}"
     local CI_JOB_SCRIPT="bash/inject/${CI_JOB_ID}.bash"
@@ -35,4 +35,4 @@ function run_job_install() {
     exit ${DID_FAIL}
 }
 
-run_job_install ${@}
+run_job_help ${@}

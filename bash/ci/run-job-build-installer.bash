@@ -9,7 +9,7 @@ source bash/util/docker.bash
 source bash/util/flags.bash
 source bash/util/functions.bash
 
-function run_publish() {
+function run_job_build_installer() {
     local CI_JOB_ARTIFACTS="cache/installer/${OPEN62541_VERSION}.deb cache/installer/${APPIO_TERMINAL_VERSION}.deb"
     local CI_JOB_ID="build-installer"
     local CI_JOB_IMAGE="ubuntu:bionic"
@@ -40,4 +40,4 @@ function run_publish() {
     exit ${DID_FAIL}
 }
 
-run_publish ${@}
+run_job_build_installer ${@}

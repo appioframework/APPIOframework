@@ -6,7 +6,7 @@ source bash/util/docker.bash
 source bash/util/flags.bash
 source bash/util/functions.bash
 
-function run_build_and_test() {
+function run_job_build_and_test() {
     local CI_JOB_ARTIFACTS=""
     local CI_JOB_ID="build-and-test"
     local CI_JOB_IMAGE="appioframework/dotnet-core:v2.1-sdk"
@@ -37,4 +37,4 @@ function run_build_and_test() {
     exit ${DID_FAIL}
 }
 
-run_build_and_test ${@}
+run_job_build_and_test ${@}

@@ -6,7 +6,7 @@ source bash/util/docker.bash
 source bash/util/flags.bash
 source bash/util/functions.bash
 
-function run_publish() {
+function run_job_publish() {
     local CI_JOB_ARTIFACTS="cache/publish"
     local CI_JOB_ID="publish"
     local CI_JOB_IMAGE="appioframework/dotnet-core:v2.1-sdk"
@@ -37,4 +37,4 @@ function run_publish() {
     exit ${DID_FAIL}
 }
 
-run_publish ${@}
+run_job_publish ${@}
