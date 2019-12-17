@@ -2,12 +2,14 @@
 
 set -euo pipefail
 
+source bash/config/open62541.bash
+
 source bash/util/docker.bash
 source bash/util/flags.bash
 source bash/util/functions.bash
 
 function run_publish() {
-    local CI_JOB_ARTIFACTS=""
+    local CI_JOB_ARTIFACTS="cache/installer/${OPEN62541_VERSION}.deb"
     local CI_JOB_ID="build-installer"
     local CI_JOB_IMAGE="ubuntu:bionic"
     local CI_JOB_SCRIPT="bash/inject/${CI_JOB_ID}.bash"
