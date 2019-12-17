@@ -7,17 +7,24 @@ function export_askpass_gui_prompt_for_sudo() {
 }
 
 function elevate() {
-    VAR_USER_NAME=${1}
-    VAR_FILE_APPLICATION_ENVIRONMENT=${2}
+    local TARGET_USER=${1}
+    local TARGET_BINARY=${2}
+    local TARGET_COMMAND=${3}
 
     export_askpass_gui_prompt_for_sudo
 
-    sudo \
-    --askpass \
-    --group ${VAR_USER_NAME} \
-    --user ${VAR_USER_NAME} \
-    ${2} \
-    ${3} ${@:4}
+    if [ ${USER} != ${TARGET_USER} ];
+    then
+        sudo \
+        --askpass \
+        --group ${TARGET_USER} \
+        --user ${TARGET_USER} \
+        ${TARGET_BINARY} \
+        ${TARGET_COMMAND} ${@:4}
+    else
+        ${TARGET_BINARY} \
+        ${TARGET_COMMAND} ${@:4}
+    fi
 }
 
 elevate ${@}
