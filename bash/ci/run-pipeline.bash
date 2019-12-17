@@ -12,17 +12,17 @@ function run_pipeline_jobs_via_docker() {
 
     begin_observe_exit_code
     /bin/bash \
-    bash/ci/run-build-and-test.bash ${@}
+    bash/ci/run-job-build-and-test.bash ${@}
     end_observe_exit_code
 
     begin_observe_exit_code
     /bin/bash \
-    bash/ci/run-publish.bash ${@}
+    bash/ci/run-job-publish.bash ${@}
     end_observe_exit_code
 
     begin_observe_exit_code
     /bin/bash \
-    bash/ci/run-build-installer.bash ${@}
+    bash/ci/run-job-build-installer.bash ${@}
     end_observe_exit_code
 
     print_stage \
