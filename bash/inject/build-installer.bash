@@ -3,24 +3,24 @@
 set -euo pipefail
 
 source bash/config/cache-dir.bash
+source bash/config/installer-dir.bash
 source bash/config/publish-dir.bash
 
 source bash/config/appio-terminal.bash
 source bash/config/open62541.bash
 
-INSTALLER_DIR=installer
-
 function build_installer_for_open62541() {
     local WORKING_DIR=$( pwd )
-    local BUILD_DIR=${CACHE_DIR}/installer/${OPEN62541_VERSION}
+    local SRC_DIR=${INSTALLER_SRC_DIR}/${OPEN62541_VERSION}
+    local BUILD_DIR=${INSTALLER_DIR}/${OPEN62541_VERSION}
 
     mkdir \
     --parents \
-    $( dirname ${BUILD_DIR} )
+    $( dirname ${INSTALLER_DIR} )
 
     cp \
     --archive \
-    ${INSTALLER_DIR}/${OPEN62541_VERSION} \
+    ${SRC_DIR} \
     ${BUILD_DIR}
 
     chmod \
@@ -41,15 +41,16 @@ function build_installer_for_open62541() {
 
 function build_installer_for_appio_terminal() {
     local WORKING_DIR=$( pwd )
-    local BUILD_DIR=${CACHE_DIR}/installer/${APPIO_TERMINAL_VERSION}
+    local SRC_DIR=${INSTALLER_SRC_DIR}/${APPIO_TERMINAL_VERSION}
+    local BUILD_DIR=${INSTALLER_DIR}/${APPIO_TERMINAL_VERSION}
 
     mkdir \
     --parents \
-    $( dirname ${BUILD_DIR} )
+    $( dirname ${INSTALLER_DIR} )
 
     cp \
     --archive \
-    ${INSTALLER_DIR}/${APPIO_TERMINAL_VERSION} \
+    ${SRC_DIR} \
     ${BUILD_DIR}
 
     chmod \
