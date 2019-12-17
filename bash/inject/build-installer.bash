@@ -2,10 +2,12 @@
 
 set -euo pipefail
 
+source bash/config/cache-dir.bash
+source bash/config/publish-dir.bash
+
 source bash/config/appio-terminal.bash
 source bash/config/open62541.bash
 
-CACHE_DIR=cache
 INSTALLER_DIR=installer
 
 function build_installer_for_open62541() {
@@ -56,7 +58,7 @@ function build_installer_for_appio_terminal() {
     ${BUILD_DIR}/DEBIAN
 
     cp \
-    ${CACHE_DIR}/publish/* \
+    ${PUBLISH_DIR}/* \
     ${BUILD_DIR}/usr/bin
 
     rm \

@@ -2,17 +2,17 @@
 
 set -euo pipefail
 
-source bash/config/cache-dir.bash
+source bash/config/publish-dir.bash
 
 function publish() {
     mkdir \
     --parents \
-    ${CACHE_DIR}
+    ${PUBLISH_DIR}
 
     dotnet \
     publish \
     --configuration Release \
-    --output ${CACHE_DIR_ABS}/publish \
+    --output ${PUBLISH_DIR_ABS} \
     src/appio-terminal/appio-terminal.csproj
 }
 
