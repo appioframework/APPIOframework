@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-function run_molecule() {
+function system_test() {
     cd \
     ansible/appio-system-tests.role/
 
@@ -11,4 +11,4 @@ function run_molecule() {
     --all
 }
 
-run_molecule ${@}
+system_test ${@}

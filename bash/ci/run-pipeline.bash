@@ -12,7 +12,7 @@ function run_pipeline_jobs_via_ansible() {
 
     begin_observe_exit_code
     /bin/bash \
-    bash/ci/run-job-molecule.bash ${@}
+    bash/ci/run-job-system-test.bash ${@}
     end_observe_exit_code
 
     print_stage \

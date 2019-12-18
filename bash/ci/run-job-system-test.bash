@@ -6,17 +6,17 @@ source bash/util/flags.bash
 source bash/util/functions.bash
 source bash/util/localhost.bash
 
-function run_job_molecule() {
-    local CI_JOB_ID="molecule"
+function run_job_system_test() {
+    local CI_JOB_ID="system-test"
     local CI_JOB_PRIVILEGE="${USER}"
     local CI_JOB_SCRIPT="bash/inject/${CI_JOB_ID}.bash"
 
-    local TITLE="Running molecule test --all ( $( print_condition_for_molecule ) )"
+    local TITLE="Running system tests ( $( print_condition_for_system_test ) )"
 
     print_job \
     "${TITLE}"
 
-    if $( should_run_molecule ${@} ) ;
+    if $( should_run_system_test ${@} ) ;
     then
         run_ci_job \
         "${CI_JOB_ID}" \
@@ -35,4 +35,4 @@ function run_job_molecule() {
     exit ${DID_FAIL}
 }
 
-run_job_molecule ${@}
+run_job_system_test ${@}
