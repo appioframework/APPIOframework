@@ -47,6 +47,8 @@ function run_pipeline_jobs_via_docker() {
 }
 
 function run_pipeline() {
+    local STAMP_START=$( date +%s )
+
     local TITLE="Running CI pipeline"
 
     print_title \
@@ -61,6 +63,12 @@ function run_pipeline() {
     print_title \
     "${TITLE}" \
     "${EXIT_CODE}"
+
+    local STAMP_END=$( date +%s )
+    local DURATION=$(( STAMP_END - STAMP_START ))
+
+    print_title \
+    "Pipeline ran for ${DURATION} seconds"
 
     exit ${DID_FAIL}
 }

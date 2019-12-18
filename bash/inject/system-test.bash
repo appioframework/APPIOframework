@@ -28,7 +28,7 @@ function instantiate_scenarios() {
         "Instantiate scenario '${SCENARIO}' as process '${PID}'"
 
         sleep \
-        3
+        10
     done
 }
 
@@ -36,7 +36,7 @@ function find_cached_files() {
     local MOLECULE_CACHE_DIR=${1}
     local EXTENSION=${2}
 
-    find ${MOLECULE_CACHE_DIR} -type f -name *.${EXTENSION} -printf "%p " | sort --general-numeric-sort
+    find ${MOLECULE_CACHE_DIR} -type f -name *.${EXTENSION} -printf "%p\n" | sort --general-numeric-sort
 }
 
 function inspect_scenarios() {
@@ -61,11 +61,14 @@ function inspect_scenarios() {
         else
             local SCENARIO_EXIT=$( cat ${MOLECULE_CACHE_DIR}/${SCENARIO}.exit )
 
-            print_entry_step_sub \
-            "Scenario '${SCENARIO}' exited with ${SCENARIO_EXIT}"
-
-            if [[ ${SCENARIO_EXIT} != 0 ]] && [[ "${SHOW_LOG_ON_ERROR_FLAG}" = "--show-log-on-error" ]];
+            if [ "${SHOW_LOG_ON_ERROR_FLAG}" = "" ];
             then
+                print_entry_step_sub \
+                "Scenario '${SCENARIO}' exited with ${SCENARIO_EXIT}"
+            elif [[ "${SHOW_LOG_ON_ERROR_FLAG}" = "--show-log-on-error" ]] && [[ ${SCENARIO_EXIT} != 0 ]];
+            then
+                print_entry_step_sub \
+                "Scenario '${SCENARIO}' exited with ${SCENARIO_EXIT}"
                 cat ${MOLECULE_CACHE_DIR}/${SCENARIO}.log
                 echo ""
             fi
@@ -124,7 +127,7 @@ function system_test() {
         ${MOLECULE_CACHE_DIR}
 
         sleep \
-        10
+        30
     done
 
     inspect_scenarios \

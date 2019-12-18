@@ -3,14 +3,14 @@
   copy:
     dest: /tmp/open62541--v1.0.0.deb
     validate: dpkg --info %s
-    src: ./../../installer/open62541--v1.0.0.deb
+    src: ./../../cache/installer/open62541--v1.0.0.deb
   notify: install_open62541_terminal
 
 - name: import_debian_installer_for_appio_terminal
   copy:
     dest: /tmp/appio-terminal.deb
     validate: dpkg --info %s
-    src: ./../../installer/appio-terminal.deb
+    src: ./../../cache/installer/appio-terminal.deb
   notify: install_appio_terminal
 
 - name: import_test_data
