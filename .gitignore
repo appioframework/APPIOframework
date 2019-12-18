@@ -1,6 +1,7 @@
 /.idea/
 /artifacts/
 /cache/
+/cache/
 /publish/
 /src/*/obj/
 /src/*/bin/
