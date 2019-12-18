@@ -44,6 +44,18 @@ function print_date_now() {
     echo $( date "+%Y-%m-%d %H:%M:%S" )
 }
 
+function print_entry_step_sub() {
+    set +u
+    echo -e "$( print_date_now ):      * ${1} ... $( __${2} )"
+    set -u
+}
+
+function print_entry_step() {
+    set +u
+    echo -e "$( print_date_now ):     * ${1} ... $( __${2} )"
+    set -u
+}
+
 function print_entry() {
     set +u
     echo -e "$( print_date_now ):    * ${1} ... $( __${2} )"
