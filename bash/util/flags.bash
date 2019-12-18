@@ -5,6 +5,7 @@ FLAG_BUILD_INSTALLER="--build-installer"
 FLAG_FULL_PIPELINE="--full-pipeline"
 FLAG_HELP="--help"
 FLAG_INSTALL="--install"
+FLAG_MOLECULE="--molecule"
 FLAG_PUBLISH="--publish"
 FLAG_REMOVE="--remove"
 
@@ -85,6 +86,23 @@ function should_run_install() {
     exit 1
 }
 
+function should_run_molecule() {
+    if $( are_empty_args ${@} );
+    then
+        exit 0
+    fi
+
+    for ARG in ${@}
+    do
+        if [ "${ARG}" == "${FLAG_MOLECULE}" ] || [ "${ARG}" == "${FLAG_FULL_PIPELINE}" ];
+        then
+            exit 0
+        fi
+    done
+
+    exit 1
+}
+
 function should_run_publish() {
     if $( are_empty_args ${@} );
     then
@@ -133,6 +151,10 @@ function print_condition_for_help() {
 
 function print_condition_for_install() {
     echo "${FLAG_INSTALL} or ${FLAG_FULL_PIPELINE}"
+}
+
+function print_condition_for_molecule() {
+    echo "${FLAG_MOLECULE} or ${FLAG_FULL_PIPELINE}"
 }
 
 function print_condition_for_publish() {

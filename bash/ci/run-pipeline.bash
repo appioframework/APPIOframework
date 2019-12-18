@@ -10,6 +10,11 @@ function run_pipeline_jobs_via_ansible() {
     print_stage \
     "${TITLE}"
 
+    begin_observe_exit_code
+    /bin/bash \
+    bash/ci/run-job-molecule.bash ${@}
+    end_observe_exit_code
+
     print_stage \
     "${TITLE}" \
     "${DID_FAIL}"
