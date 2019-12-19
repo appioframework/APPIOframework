@@ -16,7 +16,7 @@ function build_installer_for_open62541() {
 
     mkdir \
     --parents \
-    $( dirname ${INSTALLER_DIR} )
+    ${INSTALLER_DIR}
 
     cp \
     --archive \
@@ -46,7 +46,7 @@ function build_installer_for_appio_terminal() {
 
     mkdir \
     --parents \
-    $( dirname ${INSTALLER_DIR} )
+    ${INSTALLER_DIR}
 
     cp \
     --archive \
