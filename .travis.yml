@@ -22,4 +22,4 @@ jobs:
       - sudo docker pull appioframework/dotnet-core:v2.1-sdk
       - sudo docker pull ubuntu:bionic
     script:
-      - /bin/bash bash-ci/run-pipeline.sh
+      - /bin/bash bash/ci/run-pipeline.sh --full-pipeline
