@@ -50,27 +50,79 @@ Here are three possible packages available on the Ubuntu distro by default:
 
 Another solution is it to have root access on your local machine without being prompted for gaining priviledge (aka passwordless root access), this is only relevant / recommended for a development setup.  
 
-## Debian/Ubuntu Installation Instructions
+### Miscellaneous
 
-After cloning the project and installing all dependencies listed below, simply call 
+Install instructions for dotnet SDK can be found here: https://dotnet.microsoft.com/download/linux-package-manager/ubuntu19-04/sdk-2.1.700.  
+To easily install ansible and molecule on your development system follow the [travis CI install steps ('before_install' and 'install' sections)](.travis.yml).  
 
+## Scripts
+
+To run any of the following scripts locally open a terminal in the APPIOframework repository root and run listed commands.  
+
+### Continuous Integration Scripts
+
+The build and unit test step can be started with:  
 ```bash
-bash bash-developer/run-reinstall--appio-terminal--local.sh
+/bin/bash bash/ci/run-pipeline.bash --build-and-test
 ```
 
-at the project root.
+The publish step can be started with:  
+```bash
+/bin/bash bash/ci/run-pipeline.bash --publish
+```
 
-### Dependencies
+The installer build step can be started with:  
+```bash
+/bin/bash bash/ci/run-pipeline.bash --build-installer
+```
 
-APPIO is built on dotnet 2.1. Install it by following the instructions by Microsoft: https://dotnet.microsoft.com/download/linux-package-manager/ubuntu19-04/sdk-2.1.700. 
+The system test step can be started with:  
+```bash
+/bin/bash bash/ci/run-pipeline.bash --system-test
+```
 
-Certain features of APPIO require additional dependencies:
+The full pipeline can be started with:  
+```bash
+/bin/bash bash/ci/run-pipeline.bash # or
+/bin/bash bash/ci/run-pipeline.bash --full-pipeline # or
+/bin/bash bash/ci/run-pipeline.bash --build-and-test --publish --build-installer --system-test
+```
 
-- Python with Meson & GCC for building projects
-- Python3 for information model management
-- OpenSSL for certificate management
+### Development Scripts
 
----
+The publish step can be started with:  
+```bash
+bash bash/development/run-reinstall-appio-terminal.bash --publish
+```
+
+The installer build step can be started with:  
+```bash
+/bin/bash bash/development/run-reinstall-appio-terminal.bash --build-installer
+```
+
+The uninstall appio step can be started with:  
+```bash
+bash bash/development/run-reinstall-appio-terminal.bash --remove
+```
+
+The install appio step can be started with:  
+```bash
+bash bash/development/run-reinstall-appio-terminal.bash --install
+```
+
+The check appio step can be started with:  
+```bash
+bash bash/development/run-reinstall-appio-terminal.bash --help
+```
+
+The full pipeline can be started with:  
+```bash
+/bin/bash bash/development/run-reinstall-appio-terminal.bash # or
+/bin/bash bash/development/run-reinstall-appio-terminal.bash --full-pipeline # or
+/bin/bash bash/development/run-reinstall-appio-terminal.bash --publish --build-installer --remove --install --help
+```
+
+## System Inspection
 
 You can print the debian package information for APPIO by calling
 
@@ -78,7 +130,7 @@ You can print the debian package information for APPIO by calling
 dpkg --list | grep appio-terminal
 ```
 
-and you can purge APPIO with
+and you can purge APPIO manually with
 
 ```bash
 dpkg --purge appio-terminal
@@ -90,26 +142,10 @@ Documentation can be found at https://appioframework.readthedocs.io
 
 ## Contributing
 
-Please use GitHub's issue and pull request system for submitting bugs, suggestions and changes to APPIO.
+Please use GitHub's issue and pull request system for submitting bugs, suggestions and changes to APPIO.  
 
-If you want to contribute to APPIO, you will need further development dependencies, namely the dotnet SDK v2.1, the meson build system, ninja build, gcc and a SSH askpass.
-
-The installation instructions for the dotnet SDK can be found here: https://dotnet.microsoft.com/download/linux-package-manager/ubuntu19-04/sdk-2.1.700.
-
-For SSH askpass there are three packages available:
-
-- `ssh-askpass`
-- `ssh-askpass-fullscreen`
-- `ssh-askpass-gnome`
-
-Just install one of them:  
-
-```bash
-apt-get update  
-apt-get install <ssh-askpass-package-name>
-```
+If you want to contribute to APPIO, you will need further development [dependencies](#dependencies).  
 
 ## License
 
-APPIO is released under the Mozilla Public License. You can find details in [LICENCE](LICENCE).
-
+APPIO is released under the Mozilla Public License v2. You can find details in [LICENCE](LICENCE).  
